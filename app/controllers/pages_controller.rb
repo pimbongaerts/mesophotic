@@ -8,12 +8,7 @@ class PagesController < ApplicationController
     @locations = Location.joins(:publications).group('locations.id').
                  order('count(locations.id) DESC')
     @focusgroups = Focusgroup.all
-    
-    @client = Twitter::REST::Client.new do |config|
-      config.consumer_key    = ENV['TWITTER_KEY']
-      config.consumer_secret = ENV['TWITTER_SECRET']
-    end
-    
+    @twitter_feed = TwitterFeed.search("#mesophotic -filter:retweets").take(6)
     @latest_update = Publication.maximum(:updated_at)
   end
 
@@ -55,7 +50,6 @@ class PagesController < ApplicationController
     redirect_to root_path
   end
 
-  
   def email
     @name = params[:name]
     @email = params[:email]
@@ -82,5 +76,4 @@ class PagesController < ApplicationController
       redirect_to root_path, notice: 'Your message was sent. Thank you.'
     end
   end
-
 end
