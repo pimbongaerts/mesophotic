@@ -1,0 +1,14 @@
+<% if @user.department %>
+  <%= @user.department %><br>
+<% end %>
+<% if @user.organisation %>
+  <%= @user.organisation.name %><br>
+  <%= ISO3166::Country[@user.organisation.country] %><br>
+<% end %>
+<% if @user.other_organizations %>
+  <%= @user.other_organizations %><br>
+<% end %>
+<% if !@user.phone.blank? %>
+  <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+  &nbsp;<%= @user.phone %><br>
+<% end %>

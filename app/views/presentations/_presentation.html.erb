@@ -1,0 +1,33 @@
+<tr>
+  <td width="150px" align="center">
+    <span id="<%= presentation.id %>"></span>
+    <% if presentation.oral %>
+      <p class="bg-primary">&nbsp;Oral presentation
+    <% else %>
+      <p class="bg-success">Poster presentation (<%= presentation.poster_id %>)
+    <% end %><br>
+    <strong>
+    Session 
+    <%= presentation.session %>
+    </strong>
+    <% if presentation.session == "29" %>
+      &nbsp;(<i>Mesophotic</i>)
+    <% else %>
+      &nbsp;(<i>Other</i>)
+    <% end %>
+    <br>
+    <%= presentation.date %><br>
+    <%= presentation.time %><br>
+    <%= presentation.location %><br></p>
+    <%= render partial: 'first_author', locals: { presentation: presentation } %>
+  </td>
+  <td>
+    <strong><%= link_to truncate(presentation.title, length: 150), presentation %></strong><br />
+    <%= format_authors(presentation) %><br>
+    <small><%= truncate(presentation.abstract, length: 400) %>
+    </small><br>
+  </td>
+  <td width="150px" align="center">
+    
+  </td>
+</tr>

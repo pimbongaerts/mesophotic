@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-sm-6 ">
+    <h1>Sign in</h1>
+    <br>
+    <p class="bg-warning">&nbsp;
+      Involved in mesophotic research and not yet a member? 
+      <%= link_to "Register here!", new_user_registration_path %>
+    </p>
+
+
+    
+    <%= form_for(resource, :as => resource_name,
+    :url => session_path(resource_name),
+    role: "form") do |f| %>
+
+    <div class="form-group">
+      <%= f.label :email %>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.text_field :email, :autofocus => true, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password %>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.password_field :password, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
+
+
+    <% if devise_mapping.rememberable? -%>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.check_box :remember_me %> <%= f.label :remember_me %>
+        </div>
+      </div>
+    </div>
+    <% end -%>
+
+    <div class="row">
+      <div class="col-sm-2">
+        <%= f.submit "Sign in", class: "btn btn-primary" %>
+      </div>
+      <div class="col-sm-2">
+        <%= link_to "Sign up as a new member", new_user_registration_path,
+                                               class: "btn btn-info" %>
+      </div>
+    </div>
+    <% end %>
+    <!-- <%= render "devise/shared/links" %> -->
+
+  </div>
+</div>

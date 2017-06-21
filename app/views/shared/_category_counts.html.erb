@@ -1,0 +1,6 @@
+<% for category in categories %>
+  <% if not defined? exclusion or category.description != exclusion %>
+    <span class="badge"><%= category.count %></span>&nbsp;
+    <%= category.description %><br>
+  <% end %>
+<% end %>

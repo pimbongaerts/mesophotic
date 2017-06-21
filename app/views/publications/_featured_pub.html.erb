@@ -1,0 +1,13 @@
+<% featured_publication = get_featured_publication(@publications) %>
+<div class="panel panel-default">
+  <div class="panel-heading"><strong>Featured publication</strong></div>
+  <div class="panel-body" align="center">
+    <%= image_tag featured_publication.pdf.url(:medium) %>
+  </div>
+  <div class="panel-footer" align="center">
+    <%= link_to "#{featured_publication.title_truncated}" \
+                "(#{featured_publication.publication_year})", 
+                featured_publication %>
+    <br />
+  </div>
+</div>

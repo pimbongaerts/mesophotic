@@ -1,0 +1,12 @@
+<% contributor = User.find_by_first_name_and_last_name(first_name, last_name) %>
+<div class="row">
+  <div class="col-sm-4">
+    <%= image_tag contributor.profile_picture.url(:thumb) %>
+  </div>
+  <div class="col-sm-8">
+    <strong><%= link_to "#{first_name} #{last_name}", member_path(contributor.id) %></strong><br>
+	<%= contributor.organisation.name %><br>
+    <i><%= role %></i><br>
+  </div>
+</div>
+<br>

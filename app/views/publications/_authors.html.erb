@@ -1,0 +1,13 @@
+<% authors = [] %>
+<% @publications.each do |publication| %>
+  <% authors_temp = publication.authors.strip().split(",")  %>
+  <% authors_temp.each do |author| %>
+    <% author_strip = author.split()[0].strip %>
+    <% authors << author_strip %>
+  <% end %>
+<% end %>
+<% author_count = authors.each_with_object(Hash.new(0)) { |author,counts| counts[author] += 1 } %>
+<% author_sort = author_count.sort_by {|k,v| v}.reverse %>
+<% author_sort.each do |author, count| %>
+  <%= author %> : <%= count %><br />
+<% end %>

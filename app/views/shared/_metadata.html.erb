@@ -1,0 +1,29 @@
+<% if entity.fields.count > 0 %>
+  <strong>Fields</strong><br>
+  <% for field in entity.fields %>
+    <span class="label label-default"><%= field.description %></span>
+  <% end %>
+  <br>
+<% end %>
+<% if entity.focusgroups.count > 0 %>
+  <br><strong>Research focus</strong><br>
+  <% for focusgroup in entity.focusgroups %>
+    <span class="label label-default"><%= focusgroup.description %>
+    </span>
+  <% end %>
+  <br>
+<% end %>
+<% if entity.locations.count > 0 %>
+  <br><strong>Locations</strong><br>
+  <% for location in entity.locations %>
+    <span class="label label-default"><%= location.description %></span>
+  <% end %>
+  <br>
+<% end %>
+<% if entity.platforms.count > 0 %>
+  <br><strong>Research platforms</strong><br>
+  <% for platform in entity.platforms %>
+    <span class="label label-default"><%= platform.description %></span>
+  <% end %>
+  <br>
+<% end %>

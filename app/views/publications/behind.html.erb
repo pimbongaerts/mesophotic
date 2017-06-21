@@ -1,0 +1,92 @@
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Behind the science",
+          subtitle: @publication.short_citation,
+          backlink: publications_path } %>
+
+<div class="row">
+  <div class="col-sm-8">
+
+    <div class="panel panel-default">
+      <div class="panel-body" style="background: #CCCCCC;">
+        <div class="col-sm-10">
+          <p>
+            <strong>
+              <%= @publication.publication_type %>
+              <%= @publication.publication_format %> | 
+              <%= @publication.journal.name %>
+              <% if @publication.open_access? %>
+                |
+                <font color="red">
+                  open access
+                </font>
+                <%= image_tag('open_access_small.png', 
+                              style: 'float: right;') %>
+              <% end %>
+            </strong>
+            <% if can? :update, @article %>
+              | <%= link_to "edit", 
+                            edit_publication_path(@publication) %>
+            <% end %>
+          </p>
+          <h3><%= @publication.title %></h3>
+          <p><%= @publication.authors %></p>
+        </div>
+        <div class="col-sm-2" align="right">
+          <%= render partial: 'publication_links', 
+                       locals: { user: @user } %>          
+        </div>
+      </div>
+    </div>
+
+    <% if @publication.photos.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Behind the science</strong>
+        </div>
+        <div class="panel-body">    
+          <%= render partial: 'shared/behind_the_scenes',
+                     locals: {publication: @publication,
+                              style: 'full'} %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+
+  
+  <div class="col-sm-4">
+    <% if @publication.pdf.exists? %>
+      <div class="panel panel-default">
+        <div class="panel-body" align="center">
+          <%= link_to image_tag(@publication.pdf.url(:medium)),
+                      publication_path %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if not @publication.contents.blank? %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Keywords</strong></div>
+        <div class="panel-body">    
+          <%= render partial: 'shared/wordcloud', 
+                     locals: { title: 'publication_contents',
+                     data: @publication.contents,
+                     cut_off: 40, height: 230 } %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Author profiles</strong></div>
+      <div class="panel-body">
+        <% @publication.users.each do |user| %>
+          <%= link_to "#{user.first_name} #{user.last_name}", 
+                      member_path(user.id) %>
+          ( <span class="badge"><%= user.publications.count %></span> pubs)
+          <br>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<br /><br />

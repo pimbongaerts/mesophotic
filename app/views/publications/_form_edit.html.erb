@@ -1,0 +1,148 @@
+<% if @publication.authors %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Users linked to publication</h4>
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <%= f.label :user %>&nbsp;(list automatically generated)<br />
+        <div class="row">
+          <div class="col-xs-12">
+            <% for author in @publication.authors.split(', ') %>
+              <% last_name = author.split()[0] %>
+              <% for user in User.where(:last_name => last_name)  %>
+                <%= check_box_tag "publication[user_ids][]", user.id, 
+                                  @publication.users.include?(user) %>
+                <%= user.first_name %>
+                <%= user.last_name %><br />
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Publication metadata</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :min_depth %><br>
+          <%= f.text_field :min_depth, 
+              class: "form-control monospaced-control", 
+              placeholder: "10" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :max_depth %><br>
+          <%= f.text_field :max_depth, 
+                           class: "form-control monospaced-control", 
+                           placeholder: "40" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.check_box :mesophotic %>
+          <%= f.label "Mesophotic-focused" %>
+          <small>(publication is focused on the mesophotic)</small>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :mce %>
+          <%= f.label "MCE-focused" %>
+          <small>
+            (publication is focused on a `mesophotic coral ecosystem`)
+          </small>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :original_data %>
+          <%= f.label :original_data %>
+          <small>(publication documents original data)</small>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :new_species %>
+          <%= f.label :new_species %>
+          <small>(publication describes new species)</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-3">
+        <div class="form-group">
+          <%= f.label :platform %><br />
+          <div class="row">
+            <div class="col-xs-12">
+              <% for platform in Platform.all.order("LOWER(description) ASC") %>
+                <%= check_box_tag "publication[platform_ids][]", platform.id, 
+                                  @publication.platforms.include?(platform) %>
+                <%= platform.description %>&nbsp;
+                <strong><%= count_word_in_contents(platform.description, 
+                                                   @publication.contents) %>
+                </strong><br />
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-3">
+        <div class="form-group">
+          <%= f.label :field %><br />
+          <div class="row">
+            <div class="col-xs-12">
+              <% for field in Field.all.order("LOWER(description) ASC") %>
+                <%= check_box_tag "publication[field_ids][]", field.id, 
+                                  @publication.fields.include?(field) %>
+                <%= field.description %>&nbsp;
+                <strong><%= count_word_in_contents(field.description, 
+                                                   @publication.contents) %>
+                </strong><br />
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-3">
+        <div class="form-group">
+          <%= f.label :focusgroup %><br />
+          <div class="row">
+            <div class="col-xs-12">
+              <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
+                <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id, 
+                                  @publication.focusgroups.include?(focusgroup) %>
+                <%= focusgroup.description %>&nbsp;
+                <strong><%= count_word_in_contents(focusgroup.description, 
+                                                   @publication.contents) %>
+                </strong><br />
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-3">
+        <div class="form-group">
+          <%= f.label :location %><br />
+          <div class="row">
+            <div class="col-xs-12">
+              <% for location in Location.all.order("LOWER(description) ASC") %>
+                <%= check_box_tag "publication[location_ids][]", location.id, 
+                                  @publication.locations.include?(location) %>
+                <%= location.description %><br />
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+

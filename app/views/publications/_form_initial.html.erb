@@ -1,0 +1,99 @@
+<%# Basic publication information %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Publication information</h4>
+  </div>
+  
+  <div class="panel-body">
+    <div class="row">
+      
+      <%# Left column %>
+      <div class="col-xs-9">
+        <div class="form-group">
+          <%= f.label 'Title', class: "required" %>
+          <small>(use the chapter title for a book chapter, or book title when
+          referring to an entire book)</small>
+          <br>
+          <%= f.text_field :title, :autofocus => true, 
+                    class: "form-control monospaced-control", 
+                    placeholder: "Coral reef crisis in deep and shallow " \
+                                 "reefs: 30 years of constancy and change " \
+                                 "in reefs of Curacao and Bonaire" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :authors, class: "required" %>
+          <small>(use the chapter authors for a book chapter, or book editors
+          / authors when referring to an entire book)</small>
+          <br>
+          <%= f.text_field :authors, 
+                           class: "form-control monospaced-control", 
+                           placeholder: "Bak RPM, Nieuwland G, Meesters EH" %>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="form-group">
+              <%= f.label :publication_year, class: "required" %><br>
+              <%= f.select :publication_year, 
+                        (Time.zone.now.year - 116)..(Time.zone.now.year + 1),
+                        class: "form-control monospaced-control" %>
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <%= f.label :publication_type, class: "required" %><br>
+            <%= f.select :publication_type, Publication::PUBLICATION_TYPES, 
+                         class: "form-control" %>
+          </div>
+          <div class="col-xs-4">
+            <%= f.label :publication_format, class: "required" %><br>
+            <%= f.select :publication_format, Publication::PUBLICATION_FORMATS, 
+                         class: "form-control" %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :abstract %><br>
+          <%= f.text_area :abstract, rows: 8, 
+                          class: "form-control monospaced-control", 
+                          placeholder: "Post abstract (without title)..." %>
+        </div>
+      </div>
+
+      <%# Right column %>
+      <div class="col-xs-3">
+        <% if defined?(@publication.pdf) %>
+          <%= image_tag @publication.pdf.url(:medium) %>
+        <% end %>
+        <%= f.label 'Full-text PDF' %><br>
+        <%= f.file_field :pdf %>
+        <small>Note: image only updates after saving.</small>
+      </div>
+    </div> <%# div: row %>
+  </div> <%# div: panel-body %>
+</div> <%# div: panel %>
+
+<%# Basic publication information %>
+<%= render partial: 'form_initial_specific', locals: {f: f } %>
+
+<%# Contents container for admins %>
+<% if current_user.try(:admin?) || current_user.try(:editor?) %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Publication contents (<em>admin only</em>)</h4>
+    </div>
+    
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <%= f.label :contents %>
+            <small>(please include abstract but <em>not</em> references)</small>
+            <br>
+            <%= f.text_area :contents, rows: 15, 
+                            class: "form-control monospaced-control", 
+                            placeholder: "Post content (including abstract but " \
+                                         "without references)..." %>
+          </div>
+        </div>
+      </div> <%# div: row %>
+    </div> <%# div: panel-body %>
+  </div> <%# div: panel %>
+<% end %>

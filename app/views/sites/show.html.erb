@@ -1,0 +1,48 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Sites",
+       			subtitle: @site.site_name,
+                backlink: home_path } %>
+
+<div class="row">
+  <div class="col-sm-8">
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+	      <table class="table table-striped">
+				  <% @site.publications.where(original_data: true)
+				              .order('publication_year DESC, created_at DESC')
+				              .each do |publication| %>
+				    <%= render publication %>
+				  <% end %>
+				</table>
+			</div>
+		</div>
+	</div>
+
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Research keywords</strong>
+      </div>
+      <div class="panel-body">
+        <%= render partial: 'shared/wordcloud', 
+                   locals: { title: 'location_publication_contents',
+                   data: overall_publication_contents(@site.publications),
+                   cut_off: 40, width: 400, height: 200 } %>
+			</div>
+		</div>
+
+    <% if @site.publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Research details</strong> (top 5 / category)
+        </div>
+        <div class="panel-body">        
+          <%= render partial: 'shared/location_keywords', 
+                     locals: { publications: @site.publications } %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

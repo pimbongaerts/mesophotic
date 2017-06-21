@@ -1,0 +1,250 @@
+<%# Profile %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">User profile</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="form-group">
+              <%= f.label :title, class: 'required' %><br>
+              <%= f.select :title, User::TITLES, class: "form-control" %>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <br>
+            <% if current_user.try(:admin?)  %>
+            <%#devise_mapping.confirmable? && 
+                resource.pending_reconfirmation?
+              Currently waiting confirmation for: 
+              <%= resource.unconfirmed_email %>
+            <% else %>
+              <div class="form-group">
+                <% if current_user.try(:admin?) %>
+                  <%= f.check_box :editor %>
+                  <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
+                  <%= f.check_box :admin %>
+                  <%= f.label :admin %>
+                <% else %>
+                  <%= f.check_box :editor, disabled: true %>
+                  <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
+                  <%= f.check_box :admin, disabled: true %>
+                  <%= f.label :admin %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :first_name, class: 'required' %><br>
+          <%= f.text_field :first_name, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :last_name, class: 'required' %><br>
+          <%= f.text_field :last_name, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :email , class: 'required' %><br>
+          <%= f.email_field :email, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label :profile_picture, class: 'required' %><br>
+          <%= image_tag @user.profile_picture.url(:medium) %><br>
+          <%= f.file_field :profile_picture, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Affiliations %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">User affiliations</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :organisation_id %>
+          <small>
+            (primary organisation that you are affiliated with)
+          </small>
+          <br>
+          <%= f.collection_select :organisation_id, 
+                                  Organisation.find_each, 
+                                  :id, :name, 
+                                  class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :department %>
+          <small>(department of primary affiliation)</small>
+          <br>
+          <%= f.text_field :department, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          or organisation that is not already listed:
+          <%= f.text_field :new_organisation_name, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :country %><br />
+          <%= f.country_select :country, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <%= f.label :other_organizations %>
+          <small>(other organisations that you are affiliated with; each
+          organisation on a new line)</small>
+          <br>
+          <%= f.text_area :other_organizations, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Contact details %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Contact details</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :google_scholar %>
+          <small>(e.g. http://scholar.google.com/citations?user=you)</small>
+          <br>
+          <%= f.text_field :google_scholar, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :twitter %> 
+          <small>(e.g. @mesophotic)</small><br>
+          <%= f.text_field :twitter, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :website %>
+          <small>(e.g. http://www.mesophotic.org)</small><br>
+          <%= f.text_field :website, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :alt_website %> 
+          <small>(e.g. http://www.mesophotic.org)</small><br>
+          <%= f.text_field :alt_website, class: "form-control" %>
+        </div>
+
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :address %>
+          <br>
+          <%= f.text_area :address, class: "form-control", rows: 7 %>
+        </div>
+        <div class="form-group">
+          <%= f.label :phone %>
+          <br>
+          <%= f.text_field :phone, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Research interests %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Research interests</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :research_interests %>
+          <small>(bio or description of research interests)</small>
+          <br>
+          <%= f.text_area :research_interests, class: "form-control",
+                          rows: 12 %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :platforms %>
+          <small>(that you have actively used in past research)</small>
+          <br>
+          <% for platform in Platform.find_each %>
+            <div class="field">
+              <%= check_box_tag "user[platform_ids][]", platform.id, @user.platforms.include?(platform) %>
+              <%= platform.description %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Publications %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Publications
+      <small>(to link to your profile)</small>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <% for publication in Publication.where("authors LIKE ?", "%#{@user.last_name}%") %>
+            <div class="field">
+              <%= check_box_tag "user[publication_ids][]", publication.id, @user.publications.include?(publication) %>
+              <%= publication.authors %> (<%= publication.publication_year %>)
+              <%= publication.title %>.
+              <i><%= publication.journal.name if publication.journal %></i>
+              <b><%= publication.volume %></b>:<%= publication.pages %><br /><br />
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Change password %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Change password
+      <small>(only fill out if you would like to change your password)</small>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label "New password" %>
+          <br>
+          <%= f.password_field :password, :autocomplete => "off", 
+                                class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label "New password confirmation" %>
+          <br>
+          <%= f.password_field :password_confirmation, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        

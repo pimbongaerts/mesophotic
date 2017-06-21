@@ -1,0 +1,9 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Edit meeting",
+          subtitle: @meeting.title,
+          backlink: meetings_path } %>
+
+<%= form_for(@meeting) do |f| %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <div class="actions"><%= f.submit %></div>
+<% end %>

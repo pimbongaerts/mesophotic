@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @presentation.title %>
+</p>
+
+<p>
+  <strong>Abstract:</strong>
+  <%= @presentation.abstract %>
+</p>
+
+<p>
+  <strong>Authors:</strong>
+  <%= @presentation.authors %>
+</p>
+
+<p>
+  <strong>Presentation:</strong>
+  <% if @presentation.oral %>
+    Oral
+  <% else %>
+    Poster (#<%= @presentation.poster_id %>)
+  <% end %>
+</p>
+
+<p>
+  <strong>Session:</strong>
+  <%= @presentation.session %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @presentation.date %>
+</p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @presentation.time %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @presentation.location %>
+</p>
+
+<%= link_to 'Back', presentations_path %>

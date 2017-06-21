@@ -1,0 +1,244 @@
+<% title("About") %>
+<div class="row">
+  <div class="col-sm-7">
+    <p class="bg-warning">
+      <font color="red">&nbsp;You are currently looking at a <em>beta</em> 
+                        release of the new website.
+      </font> 
+      Apologies for the inconvenience, but for now expect some (= lots of) 
+      bugs & mistakes!
+    </p>
+    <h4>Mission</h4>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>Collate available research</strong> focusing on the 
+        mesophotic depth zone, and make it accessible through a 
+        single webportal.
+      </li>
+      <li class="list-group-item">
+        Allow for the <strong>identification of knowledge gaps</strong> 
+        around particular taxa and geographic areas at mesophotic depths
+      </li>
+      <li class="list-group-item">
+        Provide a central place on the web for the <strong>exchange of 
+        scientific information and ongoing research efforts</strong>
+      </li>
+      <li class="list-group-item">
+        Act as an <strong>independent platform and shared resource</strong> for
+        and by the mesophotic research community.
+      </li>
+    </ul>
+    <h4>Metadata</h4>
+    <p>
+      The primary entities in the database are scientific publications, for 
+      which standard citation data and the full-text contents are indexed. In 
+      addition, the following metadata are manually curated, and validated by 
+      at least 3 editorial members:
+    </p>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>Mesophotic</strong>:
+        <code>true</code> / <code>false</code>.
+        Indicates whether the publications presents data from, or a discussion 
+        on, the mesophotic depth range (<code>true</code>), or whether it is 
+        focused on another depth range (e.g. shallow or deep-sea) but relevant 
+        to mesophotic studies (<code>false</code>), and therefore included in 
+        the database. The upper depth limit for the mesophotic range is 30 m
+        with the lower depth limit determined by the presence of 
+        light-dependent / photosynthesizing taxa (e.g. corals or macro-algae).
+        A study on Mediterranean azooxanthellate corals at 80 m depth in a 
+        habitat with macro-algae, is categorized as mesophotic 
+        (<code>true</code>), but not as a "coral reef".
+      </li>
+        <li class="list-group-item">
+        <strong>Coral reefs (tropical & subtropical) </strong>:
+        <code>true</code> / <code>false</code>.
+        Indicates whether the publication presents data from a (sub)tropical
+        coral reef environment (<code>true</code>), or instead from a temperate
+        environment (<code>false</code>).
+      </li>
+      <li class="list-group-item">
+        <strong>Original data</strong>:
+        <code>true</code> / <code>false</code>.
+        Indicates whether the publication presents novel data 
+        (<code>true</code>) or instead represents a review or meta-analysis 
+        (<code>false</code>).
+      </li>
+      <li class="list-group-item">
+        <strong>Reports new species</strong>:
+        <code>true</code> / <code>false</code>.
+        Indicates whether the publications presents the description of one or
+        more new species (<code>true</code>). Publications reporting on new
+        species without describing them are not included.
+      </li>
+      <li class="list-group-item">
+        <strong>Upper / lower depth</strong>:
+        <code>integer</code> (in meters).
+        Indicates the shallowest / deepest data record (e.g. specimen or 
+        transect) in the presented dataset or meta-analysis (using normal
+        rounding to obtain <code>integer</code>). Only given for publications
+        that present `<em>Original data</em>`. Personal observations
+        mentioned in the publication are not included.
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>Platform</strong>:
+          <code>categorical</code>.
+          Indicates the platform(s) used to collect the presented data. Only 
+          given for publications that present `<em>Original data</em>`.
+          <%= render partial: 'shared/list_categories', 
+                     locals: { category_name: 'platform',
+                               categories: @platforms } %>
+        </p>
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>Research field</strong>:
+          <code>categorical</code>.
+          Indicates the research field(s) the publication can be categorized
+          under.
+          <%= render partial: 'shared/list_categories', 
+                     locals: { category_name: 'fields',
+                               categories: @fields } %>
+        </p>
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>Focus taxon/taxa</strong>:
+          <code>categorical</code>.
+          Indicates the focal taxon/taxa of the publication.
+          <%= render partial: 'shared/list_categories', 
+                     locals: { category_name: 'focusgroups',
+                               categories: @focusgroups } %>
+        </p>
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>Geographic location</strong>:
+          <code>categorical</code>.
+          Indicates the geographic location the publication focuses on.
+          <%= render partial: 'shared/list_categories', 
+                     locals: { category_name: 'locations',
+                               categories: @locations } %>    
+          
+        </p>
+      </li>
+      <li class="list-group-item">
+        <strong>Study sites and coordinates</strong>: 
+        <code>name</code> and <code>coordinates</code>.
+        Provides a list the names (if given) and coordinates (in decimal 
+        degrees) of study sites listed in the publication. If coordinates are 
+        not listed, a rough approximation is given and the site is marked as 
+        <code>estimated</code>.
+      </li>
+    </ul>
+    <h4>Release history</h4>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <p>
+          <strong>2016-now: The second (latest) release</strong>:
+          A beta version of the new mesophotic.org went on-line
+          in June 2016, coinciding with the 13th International Coral Reef 
+          Symposium in Hawai'i (USA). This new version is backed by a 
+          relational database that contains extensive metadata on all of 
+          the listed publications, and offers searching across the full 
+          contents of the indexed publications. 
+        </p>
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>2012-2016: Wordpress & social media</strong>:
+          Over the past several years, a simplified semi-static (Wordpress) 
+          version with just news items and a list of publications/abstracts 
+          replaced the original (databases-backed) website. Admittedly only as
+          a temporary solution, however due to a lack of time a new back-end 
+          was not developed until 2016. Instead, there was an increased focus 
+          on using social media (Facebook and Twitter) to communicate news 
+          around mesophotic coral ecosystems.
+        </p>
+      </li>
+      <li class="list-group-item">
+        <p>
+          <strong>2008-2011: The original release</strong>:
+          The mesophotic.org website officially went on-line in 2008 when it 
+          was first announced at the 11th International Coral Reef Symposium in
+          Ft. Lauderdale (Florida / USA) and the International Collaborative 
+          Workshop to Prioritize Research and Management Needs for Mesophotic 
+          Coral Ecosystems in Jupiter (Florida / USA). The original website was
+          started by Pim Bongaerts (The University of Queensland), with support
+          from Felix Martinez and Lara Hinderstein (National Oceanic 
+          Atmospheric Administration - Center for Sponsored Coastal Ocean 
+          Research). Over these initial years, the website received small 
+          grants from the Center for Sponsored Coastal Ocean Research 
+          (CSCOR/NOAA), the Perry Institute for Marine Science (PIMS), the 
+          University of Puerto Rico at Mayagüez (UPR) and the Pacific Blue 
+          Foundation. The website eventually went down due to being hacked 
+          (and admittedly not the most secure PHP coding practises).
+        </p>
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-1">
+    &nbsp;
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Current contributors</strong></div>
+      <div class="panel-body">
+        <%= render partial: 'contributor', 
+                   locals: { first_name: "Pim", 
+                             last_name: "Bongaerts", 
+                             role: "Website development & Content Editor" } %>
+        <% User.where(editor: true).each do |editor| %>
+          <%= render partial: 'contributor', 
+                     locals: { first_name: editor.first_name, 
+                               last_name: editor.last_name,
+                               role: "Content Editor" } %>
+        <% end %>
+
+        <p class="bg-info">&nbsp;
+          <em>Are you interested in helping out?</em> Let us know!
+        </p>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Past contributors</strong></div>
+      <div class="panel-body">
+        <%= render partial: 'contributor', 
+                   locals: { first_name: "Felix", 
+                   last_name: "Martinez", 
+                   role: "Editorial board" } %>
+        <%= render partial: 'contributor', 
+                   locals: { first_name: "Norbert", 
+                             last_name: "Englebert",
+                             role: "Data curation" } %>
+      </div>
+    </div>    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Source code</strong>
+      </div>
+      <div class="panel-body">
+        The website source code was written in 
+        <a href="https://www.ruby-lang.org/en/">Ruby (2.2.1)</a> on 
+        <a href="http://rubyonrails.org/">Rails (4.2.0)</a> and is (for now 
+        privately) hosted on 
+        <a href="https://github.com/pimbongaerts">GitHub</a>. 
+        Original set-up was done using 
+        <a href="https://github.com/athalas/railsbricks">RailsBricks</a>, 
+        layout was formatted using 
+        <a href="http://getbootstrap.com/">Bootstrap</a>, and authentication 
+        done with <a href="https://github.com/plataformatec/devise">Devise</a>.
+        Charts and maps are generated with 
+        <a href="www.highcharts.com">Highcharts</a>.
+      </div>
+    </div>
+     <div class="panel panel-default">
+        <div class="panel-heading"><strong>Contact</strong></div>
+        <div class="panel-body">
+          For any questions, please contact us at: info[at]mesophotic.org
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

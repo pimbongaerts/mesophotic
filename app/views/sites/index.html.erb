@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Sites</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="7"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sites.each do |site| %>
+      <tr>
+        <td>
+          <% if site.site_name.blank? %>
+            <%= link_to "Unnamed site", site %>
+          <% else %>
+            <%= link_to site.site_name, site %>
+          <% end %>
+        </td>
+        <td><%= site.latitude %></td>
+        <td><%= site.longitude %></td>
+        <td><%= site.location.description %></td>
+        <td><%= site.estimated %></td>
+        <td>
+          <%= link_to edit_site_path(site) do %>
+            <span class="glyphicon glyphicon-pencil"></span>
+          <% end %>
+          &nbsp;&nbsp;
+        </td>
+        <td>
+          <%= link_to site, method: :delete, 
+                      data: { confirm: 'Are you sure?' } do %>
+            <span class="glyphicon glyphicon-remove"></span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Site', new_site_path %>

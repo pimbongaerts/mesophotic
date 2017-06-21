@@ -1,0 +1,20 @@
+<div class="col-sm-4">
+  <h2 align='right'>Member stats</h2>
+
+                                                 
+  <% data = count_geographic_occurrences_of_users(@users) %>
+  <%= render partial: 'shared/world_map', locals: { title: 'Sites',
+                                                    data: data } %>
+</div>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <% data = format_sites_and_coordinates(@sites) %>
+    <%= render partial: 'shared/sitemap', locals: { title: 'Sites',
+                                                      data: data } %>
+  </div>  
+</div>
+
+
+<%= link_to 'New Publication', new_publication_path %>

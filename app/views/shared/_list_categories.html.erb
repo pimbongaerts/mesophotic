@@ -1,0 +1,12 @@
+<a href="#<%= category_name %>" data-toggle="collapse">
+	show categories
+</a>
+<div id="<%= category_name %>" class="collapse">
+	<% categories.each do |category| %>
+	  <code><%= category.description %></code>
+	  <span class="badge"><%= category.publications.count %></span>
+	  <% if category != categories.last %>
+	  	,&nbsp;  
+	  <% end %>
+	<% end %>.
+</div>

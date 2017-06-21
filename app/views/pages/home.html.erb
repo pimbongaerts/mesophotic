@@ -1,0 +1,50 @@
+<%= render partial: "layouts/home_title" %>
+
+<div class="panel panel-default">
+  <div class="panel-body  background_image" align="center">
+    <div class="row">&nbsp;</div>
+    <div class="row">
+      <div class="col-sm-1">&nbsp;</div>
+      <div class="col-sm-7" style="border: 5px">
+        <% data = count_geographic_occurrences_of_publications(@locations) %>
+        <%= render partial: 'shared/world_map_clickable', 
+                   locals: { title: 'Locations',
+                             data: data,
+                             backgroundcolor: '#FCFFC5',
+                             height: 300 } %>
+      </div>
+      <div class="col-sm-4">&nbsp;</div>
+    </div>
+    <div class="row">&nbsp;</div>
+  </div>
+</div>
+
+<!-- Latest news and publications -->
+<div class="row">
+  <div class="col-sm-7">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Newsfeed</strong></div>
+      <div class="panel-body">
+        <%= render partial: 'newsfeed', 
+                   locals: { publications: @publications.limit(10) } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-5">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Latest mentions</strong>
+
+      </div>
+      <div class="panel-body">
+        <%= render 'twitterfeed' %>
+      </div>
+      <div class="panel-footer">
+        To contribute posts simply use the <code>#mesophotic</code> 
+        handle in Twitter
+      </div>
+    </div>
+  </div>
+</div>
+

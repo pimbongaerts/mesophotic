@@ -1,0 +1,20 @@
+<div id="graph_<%= title %>" style="height:<%= height %>px;">
+  <script type="text/javascript" charset="utf-8">
+    var <%= title %>_categories = <%= raw categories.to_json %>
+    var <%= title %>_occurrences = <%= raw occurrences.to_json %>
+    $(function () { 
+        $('#graph_<%= title %>').highcharts({
+            chart: { type: 'area', inverted: true },
+            credits: { enabled: false },
+            title: { text: '' },
+            legend:{ enabled: false },
+            xAxis: { categories: <%= title %>_categories},
+            yAxis: { title: { text: '<%= unit %>'} },
+            plotOptions: { area: { stacking: 'normal'} },
+            series: [{ name: '<%= unit %>', data: <%= title %>_occurrences},
+                     { name: '<%= unit %>', data: <%= title %>_occurrences},
+                     { name: '<%= unit %>', data: <%= title %>_occurrences}]
+        });
+    });
+  </script>
+</div>

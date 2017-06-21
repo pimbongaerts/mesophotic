@@ -1,0 +1,136 @@
+<tr>
+  <td align="center">
+    <% if publication.pdf.file? %>
+      <%= link_to image_tag('adobe_pdf.png'), 
+                  publication.pdf.url(:original) %>
+    <% elsif !publication.DOI.blank? %>
+      <%= link_to publication.doi_url do %>
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      <% end %>
+    <% end %>   
+  </td>
+
+  <%# Publication links %>
+  <td align="center">
+    <% if !publication.user_validations.include? current_user %>      
+      <%= button_to "Validate", 
+                    add_validation_publication_path(publication, 
+                                                    current_user),
+                    method: "get", class: "btn btn-success" %>
+    <% else %>
+      <% if publication.updated_at > publication.validations
+                                    .find_by_user_id(current_user.id)
+                                    .updated_at %>
+        <%= button_to "Revalidate", 
+                      touch_validation_publication_path(publication, 
+                                                        current_user),
+                      method: "get", class: "btn btn-success" %>
+      <% else %>
+        <%= button_to "Unvalidate", 
+                      remove_validation_publication_path(publication, 
+                                                         current_user),
+                      method: "get", class: "btn" %>
+      <% end %>
+    <% end %>
+    <%= link_to 'Edit', edit_publication_path(publication), target: :_blank %>
+    &nbsp;|&nbsp;
+    <%= link_to 'Del',  publication, method: :delete, target: :_blank,
+                  data: { confirm: 'Are you sure?' } %><br>
+
+  </td>
+
+  <%# Formatted publication %>
+  <td>
+    <%# format_publication_citation(publication).html_safe %>
+    <%= link_to publication.short_citation, publication_path(publication), 
+                target: :_blank, title: publication.title %><br>
+    <small>
+      <%= publication.DOI %><br>
+      <%= publication.publication_type %> <%= publication.publication_format %>
+    </small>
+  </td>
+
+  <%# Editor links %>
+  <td>
+    <% if publication.mesophotic %>
+      <strong>mesophotic</strong><br>
+    <% end %>
+    <% if publication.mce %>
+      <strong>coral_reef</strong><br>
+    <% end %>
+    <% if publication.original_data %>
+      <strong>original_data</strong><br>
+    <% end %>
+    <% if publication.new_species %>
+      <strong>new_species</strong><br>
+    <% end %>
+  </td>
+
+  <td>
+    <%= publication.min_depth %>- <%= publication.max_depth %> m
+  </td>
+
+  <td>
+    <% for field in publication.fields %>
+      <span class="label label-info"><%= field.description %>
+      <%= link_to "x", 
+            detach_field_publication_path(publication, field),
+            data: {:confirm => 'Are you sure?'} %>
+     </span><br>
+    <% end %>
+  </td>
+  <td>
+    <% for focusgroup in publication.focusgroups %>
+      <span class="label label-primary"><%= focusgroup.description %>
+      <%= link_to "x", 
+            detach_focusgroup_publication_path(publication, focusgroup),
+            data: {:confirm => 'Are you sure?'} %>
+     </span><br>
+    <% end %>
+  </td>
+  <td>
+    <% for platform in publication.platforms %>
+      <span class="label label-info"><%= platform.description %>
+      <%= link_to "x", 
+            detach_platform_publication_path(publication, platform),
+            data: {:confirm => 'Are you sure?'} %>
+      </span><br>
+    <% end %>
+  </td>
+  <td>
+    <% for location in publication.locations %>
+      <span class="label label-primary"><%= location.description %>
+      <%= link_to "x", 
+            detach_location_publication_path(publication, location),
+            data: {:confirm => 'Are you sure?'} %>
+      </span><br>
+    <% end %>
+  </td>
+  <td>
+    <% if publication.user_validations.present? %>
+      <strong>Validators</strong>:
+      <% for validation in publication.validations %>
+        <% if publication.updated_at > validation.updated_at %>
+          <% expiration_label = "label-warning" %>
+        <% else %>
+          <% expiration_label = "label-success" %>
+        <% end %>
+
+        <span class="label <%= expiration_label %>">
+          <%= validation.user.first_name %> <%= validation.user.last_name  %>
+          <% if publication.updated_at > validation.updated_at %>
+            EXPIRED
+          <% end %>     
+          <% if validation.user == current_user %>
+            <%= link_to "x", 
+                  remove_validation_publication_path(publication, 
+                                     current_user),
+                  data: {:confirm => 'Are you sure?'} %>
+          <% end %>
+        </span>&nbsp;
+      <% end %>
+    <% else %>
+      Not yet validated.
+    <% end %>
+  </td>
+</tr>

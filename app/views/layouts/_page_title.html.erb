@@ -1,0 +1,28 @@
+<div class="row">
+  <% if defined?(title) && defined?(subtitle) %>
+    <% title("#{title}: #{subtitle}") %>
+  <% else %>
+    <% title("#{title}") %>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    <h3 class="page-title">
+      <%= title %>
+    </h3>
+  </div>
+  <div class="col-xs-7">
+    <h3 class="page-title">
+      <small><%= subtitle if defined?(subtitle) %></small>
+    </h3>
+  </div>
+  <div class="col-xs-2">
+    <% if backlink %>
+      <h3 class="page-title" align="right">
+        <small><%= link_to '<<< back', backlink %></small>
+      </h3>
+    <% end %>
+  </div>
+</div>
+<hr>

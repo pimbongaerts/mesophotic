@@ -1,0 +1,9 @@
+<%= render partial: 'layouts/page_title', 
+		   locals: {title: 'New publication',
+					backlink: publications_path } %>
+
+<%= form_for(@publication) do |f| %>
+	<%= render partial: 'form_errorheader', locals: {f: f} %>
+	<%= render partial: 'form_initial', locals: {f: f} %>
+	<div class="actions"><%= f.submit %></div>
+<% end %>

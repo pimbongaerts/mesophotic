@@ -1,0 +1,8 @@
+  # constants
+  # attributes
+  # associations
+  # validations
+  # callbacks
+  # other
+  # class methods
+  # instance methods

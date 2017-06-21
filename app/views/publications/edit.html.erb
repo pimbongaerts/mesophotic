@@ -1,0 +1,24 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Edit publication",
+          subtitle: @publication.title_truncated,
+          backlink: :back } %>
+
+<%= form_for(@publication) do |f| %>
+  <%= render partial: 'form_errorheader', locals: {f: f} %>
+  <%= render partial: 'form_initial', locals: {f: f} %>
+  <%= render partial: 'form_edit', locals: {f: f} %>
+  <div class="row">
+  	<div class="col-sm-6">
+		<%= button_to "Cancel", 
+		              publications_path,
+		              method: "get", class: "btn" %>		</div>
+		<div class="col-sm-6" align="right">
+		  <div class="actions">
+		  	<small>Updating will expire existing validations</small>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+		  	<%= f.submit "Update publication", 
+		  				 class: "btn btn-primary" %>
+			</div>
+		</div>
+	</div>
+<% end %>

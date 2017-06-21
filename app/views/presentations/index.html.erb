@@ -1,0 +1,84 @@
+<% title("Presentations") %>
+
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <h2>ICRS Hawaii Conference 2016 <small> - Overview</small></h2><br>
+  <div class="panel panel-default">
+    <div class="panel-heading panel-primary"><strong>Presentations</strong></div>
+    <div class="panel-body">      
+      <% last_date = "" %>
+      <% @presentations.where(:oral =>  true).each do |presentation| %>
+        <% if last_date == "" %>
+          <div class="col-sm-2">
+          <strong><%= last_date = presentation.date %></strong><br>
+        <% elsif not presentation.date == last_date %>
+          </div><div class="col-sm-2">
+          <strong><%= last_date = presentation.date %></strong><br>
+        <% end %>
+  
+        <small><a href="#<%= presentation.id %>">
+        <%= presentation.time %> S<%= presentation.session %>&nbsp;
+        <% if presentation.authors.include? "," %>
+          <%= truncate(presentation.authors.split(",")[0], length:8) %>
+        <% else%>
+          <%= truncate(presentation.authors, length:8) %>
+        <% end %>
+        <br>
+        </a></small>
+      <% end %>
+      </div>
+  
+      <div class="col-sm-2">
+      <strong>Posters</strong><br>
+      <% @presentations.where(:oral =>  false).each do |presentation| %>
+        <small><a href="#<%= presentation.id %>">
+        #<%= presentation.poster_id %> S<%= presentation.session %>&nbsp;
+        <% if presentation.authors.include? "," %>
+          <%= truncate(presentation.authors.split(",")[0], length:8) %>
+        <% else%>
+          <%= truncate(presentation.authors, length:8) %>
+        <% end %>
+        <br>
+        </a></small>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <h2>Details<small> - Oral Presentations</small></h2>
+  <br>
+  <div class="col-sm-12">
+    <table class="table table-striped">
+    <% last_date = "" %>
+    <% @presentations.where(:oral =>  true).each do |presentation| %>
+      <% if not presentation.date == last_date %>
+        <tr>
+          <td><h3><%= last_date = presentation.date %></h3></td>
+          <td></td>
+        </tr>
+      <% end %>
+      <%= render presentation %>
+    <% end %>
+    </table>
+  </div>
+
+  <h2>Details<small> - Poster Presentations</small></h2>
+  <br>
+  <div class="col-sm-12">
+    <table class="table table-striped">
+    <% last_date = "" %>
+    <% @presentations.where(:oral =>  false).each do |presentation| %>
+      <% if not presentation.date == last_date %>
+        <tr>
+          <td><h3><%= last_date = presentation.date %></h3></td>
+          <td></td>
+        </tr>
+      <% end %>
+      <%= render presentation %>
+    <% end %>
+    </table>
+  </div>
+</div>

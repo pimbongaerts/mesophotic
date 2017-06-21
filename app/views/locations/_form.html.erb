@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Location</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :description %><br>
+          <%= f.text_field :description, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :latitude %><br>
+          <%= f.text_field :latitude, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :longitude %><br>
+          <%= f.text_field :longitude, style: 'width:90%;' %>
+        </div>
+        <% if location.publications.count > 0 %>
+          <p class="bg-danger">
+            &nbsp;Note: <%= location.publications.count %>
+            publications are linked to this location
+          </p>
+        <% end %>
+      </div>
+      <div class="col-xs-5">
+        <% data = [] %>
+        <% data << {name: location.description, 
+                   lat: location.latitude, 
+                   lon: location.longitude, 
+                   z: 10 } %>
+        <%= render partial: 'shared/world_map_clickable', 
+                   locals: { title: 'Locations',
+                             data: data,
+                             height: 230 } %>
+      </div>
+    </div>
+  </div>
+</div>

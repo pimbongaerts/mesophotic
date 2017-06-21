@@ -1,0 +1,72 @@
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Stats",
+                subtitle: "Latest update: #{@latest_update.to_date}",
+                backlink: home_path } %>
+<div class="row">
+  <%# Left column %>
+  <div class="col-sm-12">
+
+    <%# Depth range stats %>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>The deeper we go, the less we know</strong></div>
+      <div class="panel-body">
+        <div class="col-sm-4">
+          <% categories, occurrences = get_depth_range_data(@publications) %>
+          <%= render partial: 'shared/depth_graph', locals: { title: 'Depth',
+                                                            categories: categories, 
+                                                            occurrences: occurrences,
+                                                            height: 400,
+                                                            unit: "Publications" } %>
+            The deeper we go, the less we know.
+        </div>
+        <div class="col-sm-4">
+          <% categories, occurrences = get_depth_range_data(@publications) %>
+          <%= render partial: 'shared/depth_graph', locals: { title: 'Depth2',
+                                                            categories: categories, 
+                                                            occurrences: occurrences,
+                                                            height: 400,
+                                                            unit: "Publications" } %>
+        </div>
+        <div class="col-sm-4">
+          <% categories, occurrences = get_depth_range_data(@publications) %>
+          <%= render partial: 'shared/depth_graph', locals: { title: 'Depth3',
+                                                            categories: categories, 
+                                                            occurrences: occurrences,
+                                                            height: 400,
+                                                            unit: "Publications" } %>
+        </div>
+      </div>
+    </div>
+
+    <%# Publications over time stats %>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>A growing research field and community</strong></div>
+      <div class="panel-body">
+        <div class="col-sm-4">
+          <% categories, occurrences = count_publications_over_time(@publications.group(:publication_year).count) %>
+          <%= render partial: 'shared/area_graph', locals: { title: 'Publications',
+                                                             categories: categories, 
+                                                             occurrences: occurrences,
+                                                             height: 200,
+                                                             unit: "Publications"  } %>
+                                                             
+        </div>
+        <div class="col-sm-4">
+          <% cats, occurs = count_first_authors_over_time(@publications) %>
+          <%= render partial: 'shared/area_graph', 
+                     locals: { title: 'authors',
+                               categories: cats, 
+                               occurrences: occurs,
+                               height: 200,
+                               unit: "Unique first-authors" } %>
+        </div>
+        <div class="col-sm-4">
+          <% data = count_geographic_occurrences_of_users(@users) %>
+          <%= render partial: 'shared/world_map', locals: { title: 'Sites',
+                                                            data: data,
+                                                            height: 200 } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

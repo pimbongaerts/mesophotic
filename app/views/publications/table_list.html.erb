@@ -1,0 +1,32 @@
+
+
+<p id="notice"><%= notice %></p>
+
+<h1>Publications</h1>
+
+<table border='1'>
+	<tr>
+   	<td>Author</td>
+		<td>publication_year</td>
+		<td>title</td>
+		<td>journal.name</td>
+		<td>volume</td>
+		<td>issue</td>
+		<td>pages</td>
+		<td>doi</td>
+		<td>abstract</td>
+	</tr>
+	<% @publications.each do |publication| %>
+		<tr>
+	   	<td><%= publication.authors %></td>
+			<td><%= publication.publication_year %></td>
+			<td><%= publication.title %></td>
+			<td><%= publication.journal.name if publication.journal %></td>
+			<td><%= publication.volume %></td>
+			<td><%= publication.issue %></td>
+			<td><%= publication.pages %></td>
+			<td><%= publication.DOI %></td>
+			<td><%= publication.abstract %></td>
+		</tr>
+	<% end %>
+</table>

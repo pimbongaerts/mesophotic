@@ -1,0 +1,94 @@
+<% subtitle = "Search results for: '#{params[:search]}'" if params[:search] %>
+<% subtitle = "Editor Mode" if current_user.try(:editor_or_admin?) %>
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Publications",
+                subtitle: subtitle,
+                backlink: home_path } %>
+
+<%# Wide screen for search results or editor view %>
+<div class='row'>
+  <% if !params[:search].blank? || current_user.try(:editor_or_admin?) %>
+    <div class="col-sm-12">
+  <% else %>
+    <div class="col-sm-8">
+  <% end %>
+
+  <%# Search field and pagination %>
+  <%= render 'search_field' %>
+  <% if current_user.try(:editor_or_admin?) %>
+    Reverse sorted by filename | 
+    <%= link_to "Download as CSV", publications_path(format: "csv") %><br><br>
+  <% else %>
+    <%= will_paginate @publications %>
+  <% end %>
+  
+  <%# Render publications %>
+  <table class="table table-striped">
+    <% @publications.each do |publication| %>
+      <% if current_user.try(:editor_or_admin?) %>
+        <%= render partial: "publication_validation", 
+                   locals: {publication: publication } %>
+      <% else %>
+        <%= render publication %>
+      <% end %>
+    <% end %>
+  </table>
+</div>
+
+<%# Right column (only visible when not searching/editor ) %>
+<% if params[:search].blank? && !current_user.try(:editor_or_admin?) %>
+  <div class="col-sm-4">
+    
+    <%= render partial: 'featured_pub' %>
+    
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Locations</strong></div>
+      <div class="panel-body" align="center">
+        <% data = count_geographic_occurrences_of_publications(@locations) %>
+        <%= render partial: 'shared/world_map', locals: { title: 'Locations',
+                                                          data: data,
+                                                          height: 150 } %>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Research focus</strong></div>
+      <div class="panel-body" align="center">
+        <% categories, occurrences = 
+            count_category_in_publications(@focusgroups.limit("8")) %>
+        <%= render partial: 'shared/bar_graph', 
+                   locals: { title: 'Focus',
+                             categories: categories, 
+                             occurrences: occurrences,
+                             height: 200,
+                             unit: "Publications" } %>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Fields</strong></div>
+      <div class="panel-body" align="center">
+        <% categories, occurrences = 
+            count_category_in_publications(@fields.limit("8")) %>
+        <%= render partial: 'shared/bar_graph', 
+                   locals: { title: 'Fields',
+                             categories: categories, 
+                             occurrences: occurrences,
+                             height: 200,
+                             unit: "Publications" } %>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Research platforms</strong></div>
+      <div class="panel-body" align="center">
+        <% categories, occurrences = 
+            count_category_in_publications(@platforms.limit("8")) %>
+        <%= render partial: 'shared/bar_graph', 
+                   locals: { title: 'Platforms',
+                   categories: categories, 
+                   occurrences: occurrences,
+                   height: 200,
+                   unit: "Publications" } %>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>

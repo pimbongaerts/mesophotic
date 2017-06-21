@@ -1,0 +1,18 @@
+<% publications.each do |publication| %>
+  <div class="row">
+    <div class="col-sm-3">
+      <%= image_tag publication.pdf.url(:thumb) %>
+      <br /><br />
+    </div>
+    <div class="col-sm-9">
+      <p>
+        <strong>
+        <%= link_to truncate(publication.title, length: 90), 
+                    publication %>
+        </strong><br />
+        <%= format_authors(publication) %>
+        (<%= publication.publication_year %>)
+        <i><%= publication.journal.name if publication.journal %></i>
+    </div>
+  </div>
+<% end %>

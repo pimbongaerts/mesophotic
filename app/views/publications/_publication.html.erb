@@ -1,0 +1,71 @@
+<tr>
+  <%# Publication thumbnail %>
+  <td width="100px">
+    <% if params[:search] %>
+      <%= image_tag publication.pdf.url(:thumb), :width => "100" %>
+    <% else %>
+      <%= image_tag publication.pdf.url(:thumb) %>    
+    <% end %>
+  </td>
+
+  <%# Formatted publication %>
+  <td>
+    <%= format_publication_citation(publication).html_safe %><br>
+  </td>
+
+  <%# Publication links %>
+  <td width="60px" align="center">
+    <% if user_signed_in? || publication.open_access? %>
+      <% if publication.pdf.file? %>
+        <%= link_to image_tag('adobe_pdf.png'), 
+                    publication.pdf.url(:original) %>
+      <% end %>
+      <% if publication.open_access? %>
+        <br><%= image_tag('open_access_small.png') %>
+      <% end %>
+    <% else %>
+      <% if publication.pdf.file? %>
+        <%= image_tag "adobe_pdf_disabled.png",
+                    :title => 'PDFs only available when logged in' %>
+      <% end %>
+    <% end %>
+    <% if not publication.DOI.blank? %>
+      <br>
+      <%= link_to publication.doi_url do %>
+          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+      <% end %><br>
+    <% end %>
+  </td>
+</tr>
+
+<%# Extra information for search results %>
+<% if !params[:search].blank? %>
+  <tr valign='top'>
+    <td>
+      <i>Word occurrence:</i><br>
+      <h1><%= publication.occurrence_in_contents(params[:search]) %> x</h1>
+    </td>
+    <td>
+      <blockquote>
+        <%= obtain_snippet(publication.contents, params[:search]) %>
+      </blockquote>
+    </td>
+  </tr>
+<% end %>
+
+<%# Behind the scenes if home page TODO: TEMPORARY FIX PRIOR TO NEWSFEED %>
+<% if publication.behind_the_science? && current_page?(root_path) %>
+  <tr valign='top'>
+    <td>
+      <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+      <%= link_to "behind the science:", 
+                  behind_publication_path(publication) %>
+      <br>
+    </td>
+    <td>
+      <%= render partial: 'shared/behind_the_scenes',
+         locals: {publication: publication,
+                  style: 'overview'} %>
+    </td>
+  </tr>
+<% end %>

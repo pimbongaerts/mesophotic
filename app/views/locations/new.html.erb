@@ -1,0 +1,10 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "New location",
+          subtitle: "",
+          backlink: locations_path } %>
+
+<%= form_for(@location) do |f| %>
+  <%= render partial: 'form', locals: {f: f, 
+  									   location: @location} %>
+  <div class="actions"><%= f.submit %></div>
+<% end %>

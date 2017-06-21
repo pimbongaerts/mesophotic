@@ -1,0 +1,88 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Expeditions",
+                subtitle: "#{@expedition.title}",
+                backlink: expeditions_path } %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body" style="background: #CCCCCC;">
+        <div class="col-sm-6">
+          <% if @expedition.featured_image? %>
+            <%= image_tag @expedition.featured_image.url(:medium) %>
+            <% if @expedition.featured_image_credits? %>
+              <small>
+                (C) <%= @expedition.featured_image_credits %>
+              </small>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-sm-4">
+          <p><strong>
+            Expedition | <%= @expedition.start_date.year %>
+          </strong></p>
+          <h2><%= @expedition.title %></h2>
+        </div>
+        <div class="col-sm-2" align="right">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Expedition description</strong></div>
+      <div class="panel-body">
+        <p><%= @expedition.description %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Institutions / Members</strong></div>
+      <div class="panel-body">
+        <strong>Institutions</strong><br>
+        <% @expedition.organisations.each do |organisation| %>
+          <%= organisation.name %>
+          <br>
+        <% end %>
+        <br>
+        <strong>Members involved</strong><br>
+        <% @expedition.users.each do |user| %>
+          <%= link_to "#{user.first_name} #{user.last_name}", 
+                      member_path(user.id) %>
+          <br>
+        <% end %>    
+      </div>
+      <div class="panel-footer">Listed in alphabetical order</div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Expedition metadata</strong></div>
+      <div class="panel-body">
+        <%= render partial: 'shared/metadata', 
+                   locals: { entity: @expedition } %>          
+      </div>
+    </div>
+
+    <% if @expedition.posts.count > 1 %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Expedition posts</strong></div>
+        <div class="panel-body">
+          
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>
+
+
+<%= link_to 'Edit', edit_expedition_path(@expedition) %> |
+<%= link_to 'Back', expeditions_path %>
+        

@@ -1,0 +1,15 @@
+<% if !@user.email.blank? %>
+	<%= mail_to @user.email, image_tag("email.png") %><br>
+<% end %>
+<% if !@user.website.blank? %>
+  <%= link_to image_tag("www.png"), @user.website %><br>
+<% end %>
+<% if !@user.alt_website.blank? %>
+  <%= link_to image_tag("www.png"), @user.alt_website %><br>
+<% end %>
+<% if !@user.google_scholar.blank? %>
+  <%= link_to image_tag("gscholar.png"), @user.google_scholar %><br>
+<% end %>
+<% if !@user.twitter.blank? %>
+  <%= link_to image_tag("twitter.png"), @user.twitter_url %><br>
+<% end %>

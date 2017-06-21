@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Site</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :site_name %><br>
+          <%= f.text_field :site_name, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :latitude %><br>
+          <%= f.text_field :latitude, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :longitude %><br>
+          <%= f.text_field :longitude, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :location %><br />
+          <%= f.collection_select :location_id, 
+                                  Location.find_each, 
+                                  :id, :description, 
+                                  class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <% data = [] %>
+        <% data << {name: site.site_name, 
+                   lat: site.latitude, 
+                   lon: site.longitude, 
+                   z: 10 } %>
+        <%= render partial: 'shared/world_map_clickable', 
+                   locals: { title: 'Locations',
+                             data: data,
+                             height: 230 } %>
+      </div>
+    </div>
+  </div>
+</div>

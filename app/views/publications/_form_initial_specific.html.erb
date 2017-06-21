@@ -1,0 +1,137 @@
+<div class="panel panel-default" >
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Details for Scientific (Review) Articles
+      <small>
+        (do not fill out for other categories)
+      </small>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12">
+       <div class="form-group">
+          <%= f.label :journal_id %><br>
+          <%= f.collection_select :journal_id, 
+                                  Journal.all.order("LOWER(name) ASC"), 
+                                  :id, 
+                                  :name, 
+                                  class: "form-control" %>
+          / not yet listed:
+          <%= f.text_field :new_journal_name, 
+                           class: "form-control,small-form-width" %>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <%= f.label 'DOI' %>
+              <small>(important to format correctly)</small>
+              <br>
+              <%= f.text_field :DOI, 
+                               class: "form-control monospaced-control", 
+                               placeholder: "10.1007/s00338-005-0009-1" %>
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <%= f.label :volume %><br>
+              <%= f.text_field :volume, 
+                               class: "form-control monospaced-control", 
+                               placeholder: "24" %>
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <%= f.label :issue %><br>
+              <%= f.text_field :issue, 
+                               class: "form-control monospaced-control", 
+                               placeholder: "3" %>
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <%= f.label :pages %><br>
+              <%= f.text_field :pages, 
+                               class: "form-control monospaced-control", 
+                               placeholder: "475-497" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <%# div: row %>
+  </div> <%# div: panel-body %>
+</div>
+
+<div class="panel panel-default" >
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Details for Chapters (of a Book / Thesis / Report)
+      <small>
+        (do not fill out for non-chapter publications)
+      </small>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label "Title of book / report / thesis" %>
+          <small>
+            (title of publication (book / report / thesis) containing the 
+            chapter title filled in at the top of this page)
+          </small>
+          <br>
+          <%= f.text_field :book_title, 
+                           class: "form-control monospaced-control", 
+                           placeholder: "The Great Barrier Reef" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+         <div class="form-group">
+          <%= f.label "Book / report / thesis editors" %>
+          <small>
+            (authors/editors of publication (book / report / thesis); 
+            <em>not</em> the authors of the chapter)
+          </small>
+          <br>
+          <%= f.text_field :book_authors, 
+                           class: "form-control monospaced-control", 
+                           placeholder: "Hutchings P, Kingsford M, " \
+                                        " Hoegh-Guldberg O" %>
+        </div>
+      </div>
+    </div> <%# div: row %>
+  </div> <%# div: panel-body %>
+</div> <%# div: panel %>
+
+<div class="panel panel-default" >
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Details for all publications other than scientific (review) articles
+      <small>
+        (do not fill out for scientific (review) articles)
+      </small>
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label 'Publisher / Organisation / University / Magazine' %>
+          <%= f.text_field :book_publisher, 
+                           class: "form-control monospaced-control", 
+                           placeholder: "CSIRO Publishing" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <%= f.label 'URL' %>
+        <small>(link to on-line version or related website)</small>
+        <br>
+        <%= f.text_field :url, 
+                         class: "form-control monospaced-control", 
+                         placeholder: "http://www.publish.csiro.au/book/5921/" %>
+      </div>
+    </div> <%# div: row %>
+  </div> <%# div: panel-body %>
+</div> <%# div: panel %>
+

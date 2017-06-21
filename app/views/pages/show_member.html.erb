@@ -1,0 +1,103 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "People",
+                subtitle: "#{@user.first_name} #{@user.last_name}",
+                backlink: members_path } %>
+
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-body" style="background: #CCCCCC;">
+        <div class="col-sm-4">
+          <% if not @user.profile_picture.url(:medium).include? "missing" %>
+            <%= image_tag @user.profile_picture.url(:medium) %>
+          <% end %>
+        </div>
+        <div class="col-sm-6">
+          <h2><%= @user.first_name %> <%= @user.last_name %></h2>
+          <address>
+            <%= render partial: 'contact_details', 
+                       locals: { user: @user } %>
+          </address>
+        </div>
+        <div class="col-sm-2" align="right">
+          <%= render partial: 'contact_links', 
+                       locals: { user: @user } %>
+        </div>
+      </div>
+    </div>
+
+    <% if @user.research_interests %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Research interests</strong></div>
+        <div class="panel-body">
+          <p class="bg-warning">&nbsp;
+            Please note that this section was automatically populated - and 
+            has not yet been edited by this user.
+          </p>
+          <p><%= @user.research_interests %></p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Publications</strong></div>
+      <div class="panel-body">
+        <% if @user.publications.count > 0 %>
+          <p class="bg-info">&nbsp;
+            Please note that only publications relevant to mesophotic reefs 
+            are indexed.
+          </p>
+          <table class="table table-striped">
+            <% @user.publications.each do |publication| %>
+              <%= render publication %>
+            <% end %>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-sm-4">
+
+    <% if @user.publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <% data = count_geographic_occurrences_of_publications_from_user(@user) %>
+          <%= render partial: 'shared/world_map', locals: { title: 'Locations',
+                                                            data: data,
+                                                            height: 200 } %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @user.publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Research keywords</strong>
+        </div>
+        <div class="panel-body" align="center" valign="center">
+          <%= render partial: 'shared/wordcloud', 
+                     locals: { title: 'publication_contents',
+                     data: overall_publication_contents(@user.publications),
+                     cut_off: 40, width: 400, height: 200 } %>
+        </div>
+      </div>
+    <% end %>
+
+
+
+    <% if @user.publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Research details</strong> (top 5 / category)
+        </div>
+        <div class="panel-body">        
+          <%= render partial: 'member_keywords', 
+                     locals: { user: @user } %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

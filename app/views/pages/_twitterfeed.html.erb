@@ -1,0 +1,61 @@
+<% @client.search("#mesophotic -filter:retweets").take(6).each do |tweet| %>
+	
+	<div class="row">
+		<div class="col-sm-2">
+		  <%# Avatar %>
+		  <% profile_pic_url = tweet.user.profile_image_uri.to_s %>
+			<% tweet_user = @users.find_by(twitter: "@#{tweet.user.screen_name}")  %>
+			<% if tweet_user %>
+			  <%= link_to image_tag(profile_pic_url.sub! 'normal', 'bigger'), 
+			  						member_path(tweet_user) %>			
+			<% else %>
+			  <%= image_tag(profile_pic_url.sub! 'normal', 'bigger') %>
+			<% end %>
+		</div>
+		
+		<div class="col-sm-10">
+			<p>
+				<%# Twitter name and handle %>
+				<strong>
+					<% if tweet_user %>
+					  <%= link_to tweet.user.name, member_path(tweet_user) %>
+					<% else %>
+					  <%= tweet.user.name %>
+					<% end %>
+				</strong>
+				&nbsp;@<%= tweet.user.screen_name %>
+				<%= link_to (image_tag "twitter_icon.png", size: "18x18", 
+																style: "float: right"), 
+										"#{tweet.uri}" %>
+				<br>
+			
+				<%# Tweet content %>
+				<% tweet_content = tweet.text.gsub(/(?:f|ht)tps?:\/[^\s]+/, '') %>
+				<% tweet_content.gsub!(/#mesophotic/, '**#mesophotic**') %>
+				<%= markdown(tweet_content) %>
+				<%# Tweet links %>
+				<% tweet.urls.each do |url|  %>
+				  <%= link_to "#{url.expanded_url}" do %>
+	            <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+	        <% end %>
+				<% end %>
+			</p>
+			
+			<%# Tweet media %>
+			<p>
+				<% if tweet.media.count > 0 %>
+					<%= link_to "#{tweet.media[0].media_url}" do %>
+						<%= image_tag tweet.media[0].media_url %>
+					<% end %>
+				<% end %>
+			</p>
+
+		</div>
+	</div>
+	<div class="row">
+	  <div class="col-sm-12">
+	    <hr>
+	  </div>
+	</div>
+
+<% end %>

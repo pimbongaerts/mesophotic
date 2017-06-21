@@ -1,0 +1,14 @@
+<% title("Published posts") %>
+<h3 class="page-title">Publications</h3>
+<p><%= link_to "Back to dashboard", admin_posts_dashboard_path %></p>
+<hr/>
+
+<div class="col-sm-12">
+	<%= will_paginate @publications %>
+	<table class="table table-striped">
+	<% @publications.each do |publication| %>
+  	<%= render publication %>
+	<% end %>	
+	</table>
+	<%= will_paginate @publications %>
+</div>

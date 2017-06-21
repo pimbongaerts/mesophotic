@@ -1,0 +1,190 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Photo metadata</h4>
+  </div>
+  <div class="panel-body">
+    <% if @photo.image.exists? %>
+      <div class="row">
+        <div class="col-xs-12">
+          <%= image_tag @photo.image.url(:medium) %>
+          <hr>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :image %><br>
+          <%= f.file_field :image %>
+        </div>
+        <div class="form-group">
+          <%= f.label :description %><br>
+          <%= f.text_field :description, style: 'width:90%;',
+                           class: "form-control monospaced-control"  %>
+        </div>
+        <div class="form-group">
+          <%= f.label :credit %>&nbsp;
+          <small>
+            (do not include a copyright symbol - this will automatically
+            be added)
+          </small><br>
+          <%= f.text_field :credit, style: 'width:90%;', 
+                           class: "form-control monospaced-control"  %>
+        </div>
+        <div class="form-group">
+          <%= f.label :photographer %><br>
+          <%= f.text_field :photographer_id, style: 'width:90%;', 
+                            class: "form-control monospaced-control" %>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label :location %><br>
+          <%= f.collection_select :location_id, 
+                                  Location.all.order("description ASC"), 
+                                  :id, :description,
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :site %><br>
+          <%= f.collection_select :site_id, 
+                                  Site.all.order("site_name ASC"), 
+                                  :id, :site_name,
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :contains_species %>
+          <%= f.label "Photo contains species" %>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :underwater %>
+          <%= f.label "Photo taken underwater" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :depth %> <small>(use `0` for surface shots and '-1' for unknown depth)</small><br>
+          <%= f.text_field :depth, 
+              class: "form-control monospaced-control",
+              value: 0 %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Tag researchers / organisations depicted in the photo
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label "Researchers:" %><br>
+          <div class="scrollbox">
+            <% for user in User.all.order("last_name ASC, first_name ASC") %>
+              <%= check_box_tag "photo[user_ids][]", user.id, 
+                                @photo.users.include?(user) %>
+              <%= user.first_name %> <em><%= user.last_name %></em><br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label "Organisations:" %><br>
+          <div class="scrollbox">
+            <% for organisation in Organisation.all.order("name ASC") %>
+              <%= check_box_tag "photo[organisation_ids][]", 
+                                organisation.id, 
+                                @photo.organisations.include?(organisation) %>
+              <%= organisation.name %><br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Tag technologies / species depicted in the photo
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :platforms %><br>
+          <div class="scrollbox">
+            <% for platform in Platform.all.order("LOWER(description) ASC") %>
+              <%= check_box_tag "photo[platform_ids][]", platform.id, 
+                                @photo.platforms.include?(platform) %>
+              <%= platform.description %>&nbsp;<br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label :species %><br>
+          Not yet available.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Link photo to specific entities:
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :publication %><br>
+          <%= f.collection_select :publication_id, 
+                                  Publication.all.order("authors ASC, publication_year ASC"),
+                                  :id, :short_citation_with_title,
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :expedition %><br>
+          <%= f.collection_select :expedition_id,
+                                  Expedition.find_each,
+                                  :id, :title,
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <%= f.label :meeting %><br>
+          <%= f.collection_select :meeting_id, 
+                                  Meeting.find_each, 
+                                  :id, :title, 
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :post %><br>
+          <%= f.collection_select :post_id,
+                                  Post.find_each,
+                                  :id, :title,
+                                  :include_blank => true,
+                                  class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

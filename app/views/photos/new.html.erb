@@ -1,0 +1,9 @@
+<%= render partial: "layouts/page_title",
+       	   locals: {title: "New photo",
+           subtitle: "",
+           backlink: photos_path } %>
+
+<%= form_for(@photo) do |f| %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <div class="actions"><%= f.submit %></div>
+<% end %>

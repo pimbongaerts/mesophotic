@@ -1,0 +1,12 @@
+<%= render partial: 'layouts/page_title', 
+		   locals: {title: 'Edit publication',
+					subtitle: @publication.title_truncated,
+					backlink: publication_path } %>
+
+<%= form_for(@publication) do |f| %>
+	<%= render partial: 'form_errorheader', locals: {f: f} %>
+	<%= render partial: 'form_edit', locals: {f: f, locations: @locations} %>
+	<div class="actions"><%= f.submit %></div>
+<% end %>
+
+<%= link_to 'Back', publications_path %>

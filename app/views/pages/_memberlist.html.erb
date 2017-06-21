@@ -1,0 +1,46 @@
+<table class="table table-condensed table-striped">
+  <tr>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Institution</th>
+    <th>Country</th>
+    <th>Twitter</th>
+    <th>Publications</th>
+    <% if current_user.try(:admin?) %>
+      <th>Admin</th>
+    <% end %>
+  </tr>
+  <% users.each do |user| %>
+    <tr>
+      <td><%= user.first_name %> </td>
+      <td>
+        <strong>
+        <% if user.publications.count > 0 or user.research_interests %>
+          <%= link_to user.last_name, member_path(user.id) %>
+        <% else %>
+          <%= user.last_name %>
+        <% end %>
+        </strong>
+      </td>
+      <td><%= truncate(user.organisation.name, length:30) if user.organisation %></td>
+      <td>
+        <%= user.organisation.country if user.organisation %>
+      </td>
+      <td>
+        <% if user.twitter? %>
+          <%= link_to (image_tag "twitter_icon.png"), user.twitter_url %>
+        <% end %>
+      </td>
+      <td>
+      <% if user.publications.count > 0 %>
+        <span class="badge"><%= user.publications.count %></span>
+      <% end %>
+      <% if can? [:update, :destroy], user %>
+        <td>
+          <%= link_to "Edit",  edit_admin_user_path(user.id) %>
+        </td>
+      <% end %>
+      </td>
+      <td></td>
+  <% end %>
+</table>

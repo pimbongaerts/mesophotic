@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-sm-6">
+  	<select onchange="window.location=this.value">
+		<option>Select a location</option>
+		<% @locations.each do |location| %> 
+			<option value="<%= location_path(location) %>">
+			<%= location.description %></option>
+		<% end %>
+	</select>
+  </div>
+  <div class="col-sm-6">
+    <% if @publications.present? %>
+      <p class="bg-primary">&nbsp;Showing <%= @publications.count %> publications</p><br />
+    <% else %>
+      <p class="bg-warning">No location selected</p><br />
+    <% end %>
+  </div>
+</div>

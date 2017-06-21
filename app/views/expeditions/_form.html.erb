@@ -1,0 +1,135 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">Expedition metadata</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :title %><br>
+          <%= f.text_field :title, style: 'width:90%;' %>
+        </div>
+        <div class="form-group">
+          <%= f.label :description %><br>
+          <%= f.text_area :description, style: 'width:90%;',
+                          rows: 4 %>
+        </div>
+        <div class="form-group">
+          <%= f.label :url %><br>
+          <%= f.text_field :url, style: 'width:90%;' %>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label :start_date %><br>
+          <%= f.date_select :start_date, start_year: 1990  %>
+        </div>
+        <div class="form-group">
+          <%= f.label :end_date %><br>
+          <%= f.date_select :end_date, start_year: 1990 %>
+        </div>
+        <div class="form-group">
+          <%= f.label :featured_image %><br>
+          <%= f.file_field :featured_image %>
+        </div>
+        <div class="form-group">
+          <%= f.label :featured_image_credits %><br>
+          <%= f.text_field :featured_image_credits %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Expedition researchers / organisations
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label "Organisations involved:" %><br>
+          <div class="scrollbox">
+            <% for organisation in Organisation.all.order("name ASC") %>
+              <%= check_box_tag "expedition[organisation_ids][]", 
+                                organisation.id, 
+                                @expedition.organisations.include?(organisation) %>
+              <%= organisation.name %><br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label "Researchers involved:" %><br>
+          <div class="scrollbox">
+            <% for user in User.all.order("last_name ASC, first_name ASC") %>
+              <%= check_box_tag "expedition[user_ids][]", user.id, 
+                                @expedition.users.include?(user) %>
+              <%= user.first_name %> <em><%= user.last_name %></em><br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      Expedition metadata
+    </h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <div class="form-group">
+          <%= f.label :platform %><br>
+          <div class="scrollbox">
+            <% for platform in Platform.all.order("LOWER(description) ASC") %>
+              <%= check_box_tag "expedition[platform_ids][]", platform.id, 
+                                @expedition.platforms.include?(platform) %>
+              <%= platform.description %>&nbsp;<br>
+            <% end %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :field %><br>
+          <div class="scrollbox">
+            <% for field in Field.all.order("LOWER(description) ASC") %>
+              <%= check_box_tag "expedition[field_ids][]", field.id, 
+                                @expedition.fields.include?(field) %>
+              <%= field.description %>&nbsp;<br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <%= f.label :focusgroup %><br>
+          <div class="scrollbox">
+            <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
+              <%= check_box_tag "expedition[focusgroup_ids][]", focusgroup.id, 
+                                @expedition.focusgroups.include?(focusgroup) %>
+              <%= focusgroup.description %>&nbsp;<br>
+            <% end %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :location %><br>
+          <div class="scrollbox">
+            <% for location in Location.all.order("LOWER(description) ASC") %>
+              <%= check_box_tag "expedition[location_ids][]", location.id, 
+                                @expedition.locations.include?(location) %>
+              <%= location.description %>&nbsp;<br>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

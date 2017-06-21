@@ -1,0 +1,60 @@
+<%# Links accessible to everyone %>
+<ul class="nav navbar-nav navbar-right">
+    <%= render partial: 'layouts/link', 
+               locals: { path: root_path, 
+                         title: 'Home', 
+                         glyphicon: 'glyphicon-home'} %>
+
+    <%# render partial: 'layouts/link', 
+               locals: { path: root_path, 
+                         title: 'Info', 
+                         glyphicon: 'glyphicon-info-sign'} %>
+
+    <%= render partial: 'layouts/link', 
+               locals: { path: members_path, 
+                         title: 'People', 
+                         glyphicon: 'glyphicon-user'} %>
+
+    <%= render partial: 'layouts/link', 
+               locals: { path: publications_path, 
+                         title: 'Publications', 
+                         glyphicon: 'glyphicon-file'} %>
+
+    <%= render partial: 'layouts/link', 
+               locals: { path: locations_path, 
+                         title: 'Locations', 
+                         glyphicon: 'glyphicon-globe'} %>
+
+    <%# render partial: 'layouts/link', 
+               locals: { path: species_index_path, 
+                         title: 'Species', 
+                         glyphicon: 'glyphicon-tree-deciduous'} %>
+
+    <%= render partial: 'layouts/link', 
+               locals: { path: about_path, 
+                         title: 'About', 
+                         glyphicon: 'glyphicon-question-sign'} %>
+  
+  <%# Links accessible to signed in users %>
+  <% if !user_signed_in? %>
+      <%= render partial: 'layouts/link', 
+                 locals: { path: new_user_session_path, 
+                           title: 'Sign in', 
+                           glyphicon: ' glyphicon-cog'} %>
+
+  <% else %>
+
+      <%# Links accessible to admins %>
+      <% if current_user.admin? %>
+        <%= render partial: 'layouts/user_links', 
+                   locals: { user: 'admin'} %>
+
+      <%# Links accessible to regular users %>
+      <% else %>
+        <%= render partial: 'layouts/user_links', 
+             locals: { user: 'regular'} %>
+      <% end%>
+      
+    </li>
+  <% end %>
+</ul>
