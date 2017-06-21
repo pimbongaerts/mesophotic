@@ -2,6 +2,7 @@
 	show categories
 </a>
 <div id="<%= category_name %>" class="collapse">
+	<br>
 	<% categories.each do |category| %>
 	  <code><%= category.description %></code>
 	  <span class="badge"><%= category.publications.count %></span>

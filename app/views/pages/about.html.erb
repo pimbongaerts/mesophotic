@@ -1,4 +1,6 @@
-<% title("About") %>
+<%= render partial: "layouts/page_title", 
+       locals: {title: "About",
+                backlink: home_path } %>
 <div class="row">
   <div class="col-sm-7">
     <p class="bg-warning">
@@ -32,56 +34,62 @@
     <p>
       The primary entities in the database are scientific publications, for 
       which standard citation data and the full-text contents are indexed. In 
-      addition, the following metadata are manually curated, and validated by 
-      at least 3 editorial members:
+      addition, the following metadata are manually curated (and validated by 
+      at least 3 editorial members):
     </p>
     <ul class="list-group">
       <li class="list-group-item">
         <strong>Mesophotic</strong>:
         <code>true</code> / <code>false</code>.
-        Indicates whether the publications presents data from, or a discussion 
-        on, the mesophotic depth range (<code>true</code>), or whether it is 
-        focused on another depth range (e.g. shallow or deep-sea) but relevant 
-        to mesophotic studies (<code>false</code>), and therefore included in 
-        the database. The upper depth limit for the mesophotic range is 30 m
-        with the lower depth limit determined by the presence of 
-        light-dependent / photosynthesizing taxa (e.g. corals or macro-algae).
-        A study on Mediterranean azooxanthellate corals at 80 m depth in a 
-        habitat with macro-algae, is categorized as mesophotic 
-        (<code>true</code>), but not as a "coral reef".
+        Indicates whether the publications presents data from, or presents a discussion on, the mesophotic depth range (<code>true</code>), or whether it is focused on another depth range (e.g. shallow or deep-sea) but relevant to mesophotic studies (<code>false</code>), and therefore included in the database. The mesophotic depth range is defined to be from 30-150 m.
       </li>
         <li class="list-group-item">
-        <strong>Coral reefs (tropical & subtropical) </strong>:
+        <strong>Mesophotic Coral Ecosystem (tropical & subtropical) </strong>:
         <code>true</code> / <code>false</code>.
-        Indicates whether the publication presents data from a (sub)tropical
-        coral reef environment (<code>true</code>), or instead from a temperate
-        environment (<code>false</code>).
+        Indicates whether the publications presents data from, or presents a discussion on, a “mesophotic coral reef ecosystem (MCE)” as characterized by the following definition (altered from the Hinderstein et al. 2010 definition): “characterized by the presence of photosynthetically active corals, algae and associated communities at depths ranging from 30 to 150 m in tropical and subtropical regions” (<code>true</code>), or whether it is focused on an ecosystem that does not fall under this definition (<code>false</code>). The altered definition is to reflect the fact despite the “presence of light-dependent corals”, they are often a very small component of the overall ecosystem (particularly at lower mesophotic depths); additionally, while photosynthetically-active, the “dependence” on light may be debatable at lower mesophotic depths. Ecosystems that do not fall under this definition are those in Mediterranean and temperate systems (not subtropical/tropical), or azooxanthellate systems such as subtropical Oculina reefs (not a photosynthetically-active community).
       </li>
       <li class="list-group-item">
         <strong>Original data</strong>:
         <code>true</code> / <code>false</code>.
-        Indicates whether the publication presents novel data 
-        (<code>true</code>) or instead represents a review or meta-analysis 
-        (<code>false</code>).
+        Indicates whether the publication presents novel data (<code>true</code>) or instead represents a review or meta-analysis (<code>false</code>).
       </li>
       <li class="list-group-item">
         <strong>Reports new species</strong>:
         <code>true</code> / <code>false</code>.
-        Indicates whether the publications presents the description of one or
-        more new species (<code>true</code>). Publications reporting on new
-        species without describing them are not included.
+        Indicates whether the publication includes the establishment of one or more new scientific names of species (<code>true</code>). Publications reporting on new species without establishing new scientific names for them are not included (e.g. undescribed, cryptic lineages discovered in a phylogenetic study) (<code>false</code>).
       </li>
       <li class="list-group-item">
-        <strong>Upper / lower depth</strong>:
+        <strong>Minimum depth</strong>:
         <code>integer</code> (in meters).
-        Indicates the shallowest / deepest data record (e.g. specimen or 
-        transect) in the presented dataset or meta-analysis (using normal
-        rounding to obtain <code>integer</code>). Only given for publications
-        that present `<em>Original data</em>`. Personal observations
-        mentioned in the publication are not included.
+        “The lesser depth of a range of depth below the local surface, in meters” (<em>sensu</em> DarwinCore). More specifically, this indicates the depth (in meters) of the shallowest data record (e.g. specimen or transect) in the presented dataset or meta-analysis (using normal rounding to obtain integer). Only given for publications that present "Original data". Personal observations mentioned in the publication are not included.
       </li>
       <li class="list-group-item">
-        <p>
+        <strong>Maximum depth</strong>:
+        <code>integer</code> (in meters).
+        “The greater depth of a range of depth below the local surface, in meters” (<em>sensu</em> DarwinCore). More specifically, this indicates the depth (in meters) of the deepest data record (e.g. specimen or transect) in the presented dataset or meta-analysis (using normal rounding to obtain integer). Only given for publications that present "Original data". Personal observations mentioned in the publication are not included.
+      </li>
+      <li class="list-group-item">
+        <strong>Latitude</strong>:
+        <code>integer</code> (in meters).
+        “The geographic latitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a Location. Positive values are north of the Equator, negative values are south of it. Legal values lie between -90 and 90, inclusive” (<em>sensu</em> DarwinCore).
+      </li>
+      <li class="list-group-item">
+        <strong>Longitude</strong>:
+        <code>integer</code> (in meters).
+        “The geographic longitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a Location. Positive values are east of the Greenwich Meridian, negative values are west of it. Legal values lie between -180 and 180, inclusive.” (<em>sensu</em> DarwinCore).
+      </li>
+      <li class="list-group-item">
+        <strong>Publication type</strong>:
+        <code>Scientific</code> / <code>Technical</code> / <code>Popular</code>.
+        Indicates whether the publication is scientific (peer-reviewed), technical (which can be either peer-reviewed or non-peer-reviewed) and popular.
+      </li>
+      <li class="list-group-item">
+        <strong>Publication format</strong>:
+        <code>Article</code> / <code>Review</code> / <code>Chapter</code> /
+        <code>Book</code> / <code>Report</code> / <code>Thesis</code>.
+        Indicates the format of the publication.
+      </li>
+      <li class="list-group-item">
           <strong>Platform</strong>:
           <code>categorical</code>.
           Indicates the platform(s) used to collect the presented data. Only 
@@ -89,10 +97,8 @@
           <%= render partial: 'shared/list_categories', 
                      locals: { category_name: 'platform',
                                categories: @platforms } %>
-        </p>
       </li>
       <li class="list-group-item">
-        <p>
           <strong>Research field</strong>:
           <code>categorical</code>.
           Indicates the research field(s) the publication can be categorized
@@ -100,36 +106,22 @@
           <%= render partial: 'shared/list_categories', 
                      locals: { category_name: 'fields',
                                categories: @fields } %>
-        </p>
       </li>
       <li class="list-group-item">
-        <p>
           <strong>Focus taxon/taxa</strong>:
           <code>categorical</code>.
           Indicates the focal taxon/taxa of the publication.
           <%= render partial: 'shared/list_categories', 
                      locals: { category_name: 'focusgroups',
                                categories: @focusgroups } %>
-        </p>
       </li>
       <li class="list-group-item">
-        <p>
           <strong>Geographic location</strong>:
           <code>categorical</code>.
           Indicates the geographic location the publication focuses on.
           <%= render partial: 'shared/list_categories', 
                      locals: { category_name: 'locations',
-                               categories: @locations } %>    
-          
-        </p>
-      </li>
-      <li class="list-group-item">
-        <strong>Study sites and coordinates</strong>: 
-        <code>name</code> and <code>coordinates</code>.
-        Provides a list the names (if given) and coordinates (in decimal 
-        degrees) of study sites listed in the publication. If coordinates are 
-        not listed, a rough approximation is given and the site is marked as 
-        <code>estimated</code>.
+                               categories: @locations } %>
       </li>
     </ul>
     <h4>Release history</h4>
