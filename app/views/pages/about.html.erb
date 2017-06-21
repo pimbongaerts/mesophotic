@@ -180,7 +180,11 @@
         <%= render partial: 'contributor', 
                    locals: { first_name: "Pim", 
                              last_name: "Bongaerts", 
-                             role: "Website development & Content Editor" } %>
+                             role: "Website development" } %>
+        <%= render partial: 'contributor', 
+                   locals: { first_name: "Ryan", 
+                             last_name: "Booker", 
+                             role: "Website development" } %>
         <% User.where(editor: true).each do |editor| %>
           <%= render partial: 'contributor', 
                      locals: { first_name: editor.first_name, 
