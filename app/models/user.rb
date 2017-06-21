@@ -73,7 +73,6 @@ class User < ActiveRecord::Base
                           format: { with: URI.regexp(%w(http https)) }
   validates :google_scholar, allow_blank: true,
                              format: { with: URI.regexp(%w(http https)) }
-  validates :title, presence: true
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates_attachment :profile_picture,
