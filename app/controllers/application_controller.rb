@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
   def require_admin_or_editor!
     authenticate_user!
 
-    if current_user && !current_user.editor?
+    if current_user && !current_user.editor? && !@current_user.admin?
       redirect_to root_path
     end
   end
