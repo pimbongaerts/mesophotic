@@ -11,9 +11,7 @@
             xAxis: { categories: <%= title %>_categories},
             yAxis: { title: { text: '<%= unit %>'} },
             plotOptions: { area: { stacking: 'normal'} },
-            series: [{ name: '<%= unit %>', data: <%= title %>_occurrences},
-                     { name: '<%= unit %>', data: <%= title %>_occurrences},
-                     { name: '<%= unit %>', data: <%= title %>_occurrences}]
+            series: [{ name: '<%= unit %>', data: <%= title %>_occurrences}]
         });
     });
   </script>

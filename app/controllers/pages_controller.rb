@@ -17,6 +17,10 @@ class PagesController < ApplicationController
     @latest_update = Publication.maximum(:updated_at)
     @publications = Publication.all.order('publication_year DESC, 
                                            created_at DESC')
+    @platforms = Platform.joins(:publications).group('platforms.id')
+              .order('count(platforms.id) DESC').limit(9)
+    @focusgroups = Focusgroup.joins(:publications).group('focusgroups.id')
+                    .order('count(focusgroups.id) DESC').limit(9)
   end
 
   def inside

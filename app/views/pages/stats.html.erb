@@ -20,20 +20,38 @@
             The deeper we go, the less we know.
         </div>
         <div class="col-sm-4">
-          <% categories, occurrences = get_depth_range_data(@publications) %>
-          <%= render partial: 'shared/depth_graph', locals: { title: 'Depth2',
-                                                            categories: categories, 
-                                                            occurrences: occurrences,
-                                                            height: 400,
-                                                            unit: "Publications" } %>
+
         </div>
         <div class="col-sm-4">
-          <% categories, occurrences = get_depth_range_data(@publications) %>
-          <%= render partial: 'shared/depth_graph', locals: { title: 'Depth3',
+
+        </div>
+      </div>
+    </div>
+
+    <%# Depth range stats %>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>The deeper we go, the less we know</strong></div>
+      <div class="panel-body">
+        <div class="col-sm-4">
+          <% categories, occurrences = get_platform_use_over_depth(@platforms, 
+                                                                   @publications) %>
+          <%= render partial: 'shared/depth_graph_multiple_series', locals: { title: 'Depth2',
                                                             categories: categories, 
                                                             occurrences: occurrences,
                                                             height: 400,
-                                                            unit: "Publications" } %>
+                                                            unit: "Publications" } %>        
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-4">
+          <% categories, occurrences = get_focusgroup_over_depth(@focusgroups, 
+                                                                   @publications) %>
+          <%= render partial: 'shared/depth_graph_multiple_series', locals: { title: 'Depth3',
+                                                            categories: categories, 
+                                                            occurrences: occurrences,
+                                                            height: 400,
+                                                            unit: "Publications" } %>    
         </div>
       </div>
     </div>
@@ -49,9 +67,6 @@
                                                              occurrences: occurrences,
                                                              height: 200,
                                                              unit: "Publications"  } %>
-                                                             
-        </div>
-        <div class="col-sm-4">
           <% cats, occurs = count_first_authors_over_time(@publications) %>
           <%= render partial: 'shared/area_graph', 
                      locals: { title: 'authors',
@@ -65,6 +80,10 @@
           <%= render partial: 'shared/world_map', locals: { title: 'Sites',
                                                             data: data,
                                                             height: 200 } %>
+          gender balance
+        </div>
+        <div class="col-sm-4">
+          Strong growth of the research community
         </div>
       </div>
     </div>
