@@ -12,7 +12,7 @@
 
 class Validation < ActiveRecord::Base
   # constants
-  VALIDATION_TYPES = ["all", "validated", "expired"].freeze # TODO: "unvalidated"
+  VALIDATION_TYPES = ["all", "validated", "unvalidated", "expired"].freeze
   
   # attributes
 
