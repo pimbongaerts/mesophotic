@@ -162,20 +162,6 @@ class PublicationsController < ApplicationController
       end
     end
 
-    # Sort list of publications by frequency of search term in full text
-    def sort_by_relevance(publications, search_term)
-      # Obtain search term frequency in each publication
-      publication_wordfreq = Hash.new(0)
-      publications.each do |pub|
-        publication_wordfreq[pub] = pub.occurrence_in_contents(search_term)
-      end
-      
-      # Order hash by search term frequency
-      publication_wordfreq = publication_wordfreq.sort_by { |x, y| y }
-      publication_wordfreq.reverse!
-      publication_wordfreq.map { |key, value| key }
-    end
-
     def publication_params
       params.require(:publication).permit(
         :title,
