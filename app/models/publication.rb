@@ -167,7 +167,7 @@ class Publication < ActiveRecord::Base
     all.reduce({}) { |freqs, p| freqs.merge p => p.occurrence_in_contents(search_term) }
        .sort_by { |k, v| v }
        .reverse
-       .keys
+       .map { |k, v| k }
   end
 
   def occurrence_in_contents(search_term)
