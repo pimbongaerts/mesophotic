@@ -73,15 +73,44 @@ class Publication < ActiveRecord::Base
   before_save :create_journal_from_name
 
   # other
+  scope :validated, -> {
+    select("publications.*, COUNT(validations.id) AS validations_count")
+    .joins(:validations)
+    .where("validations.updated_at >= publications.updated_at")
+    .group("publications.id")
+    .having("validations_count >= 3")
+  }
 
-  # class methods
-  def self.search(search)
-    where("title LIKE ? OR contents LIKE ? OR abstract LIKE ?", 
-          "%#{search}%", "%#{search}%", "%#{search}%")
+  scope :unvalidated, -> {
+    select("publications.*, COUNT(validations.id) AS validations_count")
+    .joins("LEFT JOIN validations 
+            ON validations.validatable_id = publications.id 
+            AND validations.updated_at >= publications.updated_at")
+    .group("publications.id")
+    .having("validations_count < 3")
+  }
+
+  scope :expired, -> (user) {
+    select("publications.*, COUNT(validations.id) AS validations_count")
+    .joins(:validations) 
+    .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
+    .group("publications.id") if user.present?
+  }
+
+  scope :search, -> (string) {
+    term = "%#{string}%"
+    where("title LIKE ? OR contents LIKE ? OR abstract LIKE ?", term, term, term) if string.present?
+  }
+
+  def self.sorted string
+    if string.present?
+      relevant string
+    else
+      order 'filename ASC'
+    end
   end
 
-
-
+  # class methods
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << ["id", "publication_type", "publication_format", 
@@ -132,6 +161,13 @@ class Publication < ActiveRecord::Base
 
   def generate_filename_from_doi
     DOI.sub('/', '___')
+  end
+
+  def self.relevant search_term
+    all.reduce({}) { |freqs, p| freqs.merge p => p.occurrence_in_contents(search_term) }
+       .sort_by { |k, v| v }
+       .reverse
+       .map { |k, v| k }
   end
 
   def occurrence_in_contents(search_term)

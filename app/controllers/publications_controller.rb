@@ -14,30 +14,12 @@ class PublicationsController < ApplicationController
 
 
   def index
-    @sites = Site.all ###REMOVE
-    @publications = Publication.all
-    if params[:scientific]
-      @publications = @publications.where(publication_type: 'scientific')
-    end
-    if params[:validated] || params[:validation_type] == 'validated'
-      @publications = @publications
-        .select('publications.*, count(validations.id) AS validations_count')
-        .joins(:validations)
-        .where('validations.updated_at >= publications.updated_at')
-        .group('publications.id')
-        .having('validations_count > 2')
-    
-    elsif params[:validation_type] == 'expired'
-      @publications = @publications
-        .select('publications.*')
-        .joins(:validations)
-        .where('validations.user_id = ? AND 
-                validations.updated_at < publications.updated_at', 
-                current_user.id)
-        .group('publications.id')
+    args = params[:validation_type] == 'expired' ? [current_user] : []
+    @publications = Publication.send(params[:validation_type] || :all, *args)
+                               .search(params[:search])
+                               .sorted(params[:search])
 
-    #elsif params[:validation_type] == 'unvalidated'
-    elsif params[:search].blank?    
+    if !current_user.try(:editor_or_admin?)
       # Provide access to top 10 values of linked models
       @locations = Location.joins(:publications).group('locations.id')
                     .order('count(locations.id) DESC')
@@ -47,21 +29,12 @@ class PublicationsController < ApplicationController
                       .order('count(focusgroups.id) DESC')
       @fields = Field.joins(:publications).group('fields.id')
                   .order('count(fields.id) DESC')
-      @publications = @publications.order('filename ASC')
-    # Show only record that match search term
-    else
-      @publications = @publications.search(params[:search])
-      @publications = sort_by_relevance(@publications, params[:search])
-    end
 
-    if request.format.html? && !current_user.try(:editor_or_admin?)
-      @publications = @publications
-                        .paginate(:page => params[:page], 
-                                  :per_page => 20)
+      @publications = @publications.paginate(:page => params[:page], :per_page => 20) if request.format.html?
     end
 
     respond_to do |format|
-      format.html {  }
+      format.html { }
       format.csv { send_data @publications.to_csv }
     end
   end
@@ -189,52 +162,39 @@ class PublicationsController < ApplicationController
       end
     end
 
-    # Sort list of publications by frequency of search term in full text
-    def sort_by_relevance(publications, search_term)
-      # Obtain search term frequency in each publication
-      publication_wordfreq = Hash.new(0)
-      publications.each do |pub|
-        publication_wordfreq[pub] = pub.occurrence_in_contents(search_term)
-      end
-      # Order hash by search term frequency
-      publication_wordfreq = publication_wordfreq.sort_by {|x,y| y }
-      publication_wordfreq.reverse!
-      publication_wordfreq.collect {|key,value| key }
-    end
-
     def publication_params
       params.require(:publication).permit(
-      :title,
-      :authors,
-      :publication_year,
-      :journal_id,
-      :publication_type,
-      :publication_format,
-      :new_journal_name,
-      :volume,
-      :issue,
-      :pages,
-      :DOI,
-      :abstract,
-      :contents,
-      :min_depth,
-      :max_depth,
-      :mce,
-      :original_data,
-      :mesophotic,
-      :new_species,
-      :filename,
-      :book_title,
-      :book_publisher,
-      :book_authors,
-      :url,
-      :pdf,
-      :validations,
-      {:platform_ids => []},
-      {:field_ids => []},
-      {:location_ids => []},
-      {:focusgroup_ids => []},
-      {:user_ids => []}
+        :title,
+        :authors,
+        :publication_year,
+        :journal_id,
+        :publication_type,
+        :publication_format,
+        :new_journal_name,
+        :volume,
+        :issue,
+        :pages,
+        :DOI,
+        :abstract,
+        :contents,
+        :min_depth,
+        :max_depth,
+        :mce,
+        :original_data,
+        :mesophotic,
+        :new_species,
+        :filename,
+        :book_title,
+        :book_publisher,
+        :book_authors,
+        :url,
+        :pdf,
+        :validations,
+        {:platform_ids => []},
+        {:field_ids => []},
+        {:location_ids => []},
+        {:focusgroup_ids => []},
+        {:user_ids => []}
       )
     end
 end

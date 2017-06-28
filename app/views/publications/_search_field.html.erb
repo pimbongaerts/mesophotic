@@ -1,7 +1,7 @@
 <%= form_tag(publications_path, :method => "get", id: "search-form") do %>
   <div class="panel panel-default">
     <div class="panel-heading">
-      Search
+      Search full publication text
     </div>
     <div class="panel-body">
       <div class="row">
@@ -9,15 +9,8 @@
             <%= text_field_tag :search, params[:search],  class: "form-control",
                                placeholder: "Search Publications" %>
         </div>
-        <div class="col-sm-3">
-          <%= submit_tag "Search full-texts", class: "btn btn-basic" %>
-        </div>
-        <div class="col-sm-3">
-          <a data-toggle="collapse" href="#collapse1">Advanced search...</a>
-        </div>
-        
         <% if current_user.try(:editor_or_admin?) %>   
-         <div class="col-sm-3">
+         <div class="col-sm-2">
             <div class="form-group">
               <%= select_tag :validation_type, 
                              options_for_select(Validation::VALIDATION_TYPES,
@@ -25,12 +18,13 @@
                              class: "form-control" %>
             </div>
           </div>     
-        <% else %>   
-          <div class="col-sm-3">
-            &nbsp;
-          </div>
         <% end %>
-      
+        <div class="col-sm-2">
+          <%= submit_tag "Search", class: "btn btn-basic" %>
+        </div>
+        <div class="col-sm-2">
+          <a data-toggle="collapse" href="#collapse1">Advanced...</a>
+        </div>      
       </div>
     </div>
     <div id="collapse1" class="panel-collapse collapse">
