@@ -594,3 +594,22 @@ span.glyphicon-link {
   overflow-x: scroll;
   border: 1px;
 }
+
+.relevance {
+  span {
+    font-weight: bold;
+    font-size: 36px;
+
+    span {
+      font-weight: normal;
+      font-size: 14px;
+      font-style: italic;
+      vertical-align: top;
+    }
+  }
+
+  blockquote strong {
+    background-color: #ffee99;
+    font-weight: bold;
+  }
+}

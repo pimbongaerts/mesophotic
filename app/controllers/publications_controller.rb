@@ -16,21 +16,23 @@ class PublicationsController < ApplicationController
   def index
     args = params[:validation_type] == 'expired' ? [current_user] : []
     @publications = Publication.send(params[:validation_type] || :all, *args)
-                               .search(params[:search])
-                               .sorted(params[:search])
+                               .search(params[:search], current_user.try(:editor_or_admin?))
+    @publications = @publications.paginate(page: params[:page], per_page: 20) if request.format.html?
 
-    if !current_user.try(:editor_or_admin?)
+    unless current_user.try(:editor_or_admin?) || params[:search_term].present?
       # Provide access to top 10 values of linked models
-      @locations = Location.joins(:publications).group('locations.id')
-                    .order('count(locations.id) DESC')
-      @platforms = Platform.joins(:publications).group('platforms.id')
-                    .order('count(platforms.id) DESC')
-      @focusgroups = Focusgroup.joins(:publications).group('focusgroups.id')
-                      .order('count(focusgroups.id) DESC')
-      @fields = Field.joins(:publications).group('fields.id')
-                  .order('count(fields.id) DESC')
-
-      @publications = @publications.paginate(:page => params[:page], :per_page => 20) if request.format.html?
+      @locations = Location.joins(:publications)
+                           .group('locations.id')
+                           .order('count(locations.id) DESC')
+      @platforms = Platform.joins(:publications)
+                           .group('platforms.id')
+                           .order('count(platforms.id) DESC')
+      @focusgroups = Focusgroup.joins(:publications)
+                               .group('focusgroups.id')
+                               .order('count(focusgroups.id) DESC')
+      @fields = Field.joins(:publications)
+                     .group('fields.id')
+                     .order('count(fields.id) DESC')
     end
 
     respond_to do |format|
