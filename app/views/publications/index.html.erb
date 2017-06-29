@@ -16,11 +16,11 @@
   <%# Search field and pagination %>
   <%= render 'search_field' %>
   <% if current_user.try(:editor_or_admin?) %>
-    Reverse sorted by filename | 
+    Reverse sorted by filename |
     <%= link_to "Download as CSV", publications_path(format: "csv") %><br><br>
-  <% else %>
-    <%= will_paginate @publications %>
   <% end %>
+
+  <%= will_paginate @publications %>
   
   <%# Render publications %>
   <table class="table table-striped">
