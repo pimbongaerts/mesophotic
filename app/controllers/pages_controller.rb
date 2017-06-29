@@ -17,10 +17,42 @@ class PagesController < ApplicationController
     @latest_update = Publication.maximum(:updated_at)
     @publications = Publication.all.order('publication_year DESC, 
                                            created_at DESC')
+    # Search term
+    @publications_refug_counts = Publication.select('publication_year, count(id) as publications_count')
+                                     .search('refug')
+                                     .group('publication_year')
+    @publications_total_counts = Publication.select('*, count(id) as publications_count')
+                                     .all
+                                     .group('publication_year')
+    
     @platforms = Platform.joins(:publications).group('platforms.id')
-              .order('count(platforms.id) DESC').limit(9)
+              .order('count(platforms.id) DESC').limit(5)
     @focusgroups = Focusgroup.joins(:publications).group('focusgroups.id')
-                    .order('count(focusgroups.id) DESC').limit(9)
+                    .order('count(focusgroups.id) DESC').limit(5)
+    @locations = Location.joins(:publications).group('locations.id').
+                 order('count(locations.id) DESC')
+
+    # Publications across depth categories
+    depth_groups = {"30-60 m" => [30, 60], "60-90 m" => [60, 90],
+                    "90-120 m" => [90, 120], "120-150 m" => [120, 150]}
+    
+    @platform_by_depth_group = {}
+    @focusgroup_by_depth_group = {}
+    depth_groups.keys.each do |depth_group|
+      @platform_by_depth_group[depth_group] =  
+        Platform.joins(:publications)
+                .select('*, count(publications.id) as publications_count')
+                .where('publications.max_depth > ? AND publications.min_depth < ?', 
+                       depth_groups[depth_group][0], depth_groups[depth_group][1])
+                .group('platforms.id')
+      @focusgroup_by_depth_group[depth_group] =  
+        Focusgroup.joins(:publications)
+                .select('*, count(publications.id) as publications_count')
+                .where('publications.max_depth > ? AND publications.min_depth < ?', 
+                       depth_groups[depth_group][0], depth_groups[depth_group][1])
+                .group('focusgroups.id')
+    end
+
   end
 
   def inside
