@@ -97,18 +97,28 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (string) {
-    term = "%#{string}%"
-    where("title LIKE ? OR contents LIKE ? OR abstract LIKE ?", term, term, term) if string.present?
+  scope :search, -> (search_term, filter) {
+    if search_term.present?
+      filter ? filter(search_term) : relevance(search_term)
+    else
+      order(filename: :asc)
+    end
   }
 
-  def self.sorted string
-    if string.present?
-      relevant string
-    else
-      order 'filename ASC'
-    end
-  end
+  scope :filter, -> (search_term) {
+    term = "%#{search_term}%"
+    where("title LIKE ? OR abstract LIKE ? OR contents LIKE ?", term, term, term)
+  }
+
+  scope :relevance, -> (search_term) {
+      select("*,
+        ( (LENGTH(title) - LENGTH(REPLACE(LOWER(title), LOWER('#{search_term}'), '')))
+        + (LENGTH(abstract) - LENGTH(REPLACE(LOWER(abstract), LOWER('#{search_term}'), '')))
+        + (LENGTH(contents) - LENGTH(REPLACE(LOWER(contents), LOWER('#{search_term}'), ''))) )
+        / LENGTH('#{search_term}') AS relevance"
+      )
+      .order("relevance DESC, filename ASC") if search_term.present?
+  }
 
   # class methods
   def self.to_csv(options = {})
@@ -161,21 +171,6 @@ class Publication < ActiveRecord::Base
 
   def generate_filename_from_doi
     DOI.sub('/', '___')
-  end
-
-  def self.relevant search_term
-    all.reduce({}) { |freqs, p| freqs.merge p => p.occurrence_in_contents(search_term) }
-       .sort_by { |k, v| v }
-       .reverse
-       .map { |k, v| k }
-  end
-
-  def occurrence_in_contents(search_term)
-    if !contents.nil?
-      return contents.downcase.scan(/#{search_term.downcase}/).count
-    else
-      return 0
-    end
   end
 
   def title_truncated

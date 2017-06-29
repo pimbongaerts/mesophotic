@@ -39,11 +39,10 @@
 </tr>
 
 <%# Extra information for search results %>
-<% if !params[:search].blank? %>
-  <tr valign='top'>
+<% if params[:search].present? %>
+  <tr valign='top' class='relevance'>
     <td>
-      <i>Word occurrence:</i><br>
-      <h1><%= publication.occurrence_in_contents(params[:search]) %> x</h1>
+      <span><%= publication.relevance %> <span>occurrences</span></span>
     </td>
     <td>
       <blockquote>

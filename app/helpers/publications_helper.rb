@@ -25,23 +25,13 @@ module PublicationsHelper
   
   # Obtain search result snippet for a particular publication
   def obtain_snippet(contents, search_term)
-    # Find first occurrence of search term
-    first_occurrence_index = contents.index(search_term)
-    length_of_contents = contents.length
-    # Determine beginning position of snippet
-    if first_occurrence_index
-      if first_occurrence_index < 300
-        snippet_start = 0
-      else
-        snippet_start = first_occurrence_index - 300
-      end
-      # Extract snippet
-      snippet =  contents.force_encoding("UTF-8")[snippet_start,600].squish.
-                          gsub! search_term, "<b>#{search_term}</b>"
-     simple_format "... #{snippet}..."
-    else
-      "Search term not found!"
-    end
+    return "…" if contents.blank?
+    
+    start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
+    snippet = contents.force_encoding("UTF-8")[start, 600]
+                      .squish
+                      .gsub(search_term, "<strong>#{search_term}</strong>")
+    simple_format "…#{snippet}…"
   end
 
   # Count occurrence of word in contents
