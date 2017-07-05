@@ -1,0 +1,66 @@
+<strong>Image category tags</strong><br>
+<% if @photo.contains_species %>
+	<span class="badge">Contains species</span>&nbsp;
+<% end %>
+<% if @photo.underwater %>
+	<span class="badge">Underwater photo</span>&nbsp;
+<% else %>
+	<span class="badge">Surface photo</span>&nbsp;
+<% end %><br>
+<% if @photo.platforms.count > 0 %>
+  <% @photo.platforms.each do |platform| %>
+  	<span class="badge"><%= platform.description %></span>&nbsp;
+  <% end %><br>
+<% end %>
+
+
+<% if @photo.underwater? %>
+	<br><strong>Image depth</strong><br>
+	<%= @photo.depth %> m<br>
+<% end %>
+
+<% if @photo.location %>
+  <br><strong>Image location</strong><br>
+  <%= link_to @photo.location.description, location_path(@photo.location) %><br>
+<% end %>
+
+<% if @photo.site %>
+  <br><strong>Image site</strong><br>
+  <%= link_to @photo.site.site_name, site_path(@photo.site) %><br>
+<% end %>
+
+<% if @photo.expedition %>
+  <br><strong>Coupled expedition</strong><br>
+  <%= link_to @photo.expedition.title, expedition_path(@photo.expedition) %>
+  <br>
+<% end %>
+
+<% if @photo.meeting %>
+  <br><strong>Coupled meeting</strong><br>
+  <%= link_to @photo.meeting.title, meeting_path(@photo.meeting) %>
+  <br>
+<% end %>
+
+<% if @photo.publication %>
+  <br><strong>Coupled publication</strong><br>
+  <%= link_to @photo.publication.short_citation_with_title, 
+  						publication_path(@photo.publication) %>
+  <br>
+<% end %>
+
+<% if @photo.organisations.count > 0 %>
+  <br><strong>Organisations (tagged)</strong><br>
+  <% @photo.organisations.each do |organisation| %>
+  	<%= organisation.name %><br>
+  <% end %>
+<% end %>
+
+<% if @photo.users.count > 0 %>
+  <br><strong>Researchers (tagged)</strong><br>
+  <% @photo.users.each do |user| %>
+  	<%= link_to user.full_name, member_path(user) %><br>
+  <% end %>
+<% end %>
+
+<br><strong>Date uploaded</strong><br>
+<%= @photo.image_updated_at.to_date %><br>

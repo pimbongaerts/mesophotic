@@ -6,6 +6,12 @@ module ApplicationHelper
     end
   end
 
+  def new_table_row_on_iteration(i, iteration)
+    if i/iteration.to_f == i/iteration.to_i && i > 0
+      "</tr><tr>".html_safe
+    end
+  end
+
   # Count frequency of words and return most frequent (cut_off)
   def word_count(value, cut_off)
       exclusion_list = WordExclusion.pluck(:word)
@@ -123,6 +129,18 @@ module ApplicationHelper
     locations.each do |location|
       data << {name: location.description, lat: location.latitude, 
                lon: location.longitude, z: location.publications.count,
+               ownURL: location_path(location) }
+    end
+    data
+  end
+
+  # Counts the number of occurrences for each location in the photo model 
+  # and outputs corresponding coordinates
+  def count_geographic_occurrences_of_photos(locations)
+    data = []
+    locations.each do |location|
+      data << {name: location.description, lat: location.latitude, 
+               lon: location.longitude, z: location.photos.count,
                ownURL: location_path(location) }
     end
     data

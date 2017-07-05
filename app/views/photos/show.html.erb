@@ -1,2 +1,63 @@
-<h1>Photos#show</h1>
-<p>Find me in app/views/photos/show.html.erb</p>
+<%= render partial: "layouts/page_title",
+       locals: {title: "Images",
+       			subtitle: @photo.description_truncated,
+                backlink: photos_path } %>
+
+<div class="row">
+  <div class="col-sm-8">
+
+  <div class="row">
+	  <div class="col-sm-1" align="left">
+	  	<h3>
+		  	<%= link_to photo_path(@photo.previous), title: "" do %>
+		  		<span class="glyphicon glyphicon-step-backward"></span>
+				<% end %>
+			</h3>
+		</div>
+		<div class="col-sm-10">
+	    <h4>
+	      <%= @photo.description %>
+	    </h4>
+		</div>
+		<div class="col-sm-1" align="right">
+			<h3>
+		  	<%= link_to photo_path(@photo.next), title:  "" do %>
+		  		<span class="glyphicon  glyphicon-step-forward"></span>
+				<% end %>
+			</h3>  	
+	  </div>
+  </div>
+
+	<%= image_tag @photo.image(:large) %><br>
+	<small>(C) <%= @photo.credit %> </small>
+  <% if current_user.try(:editor_or_admin?) %>
+  	<br><br>
+  	<%= link_to "Edit photo", edit_photo_path(@photo) %><br>
+  	<%= link_to "Delete photo", @photo, method: :delete, 
+  							data: { confirm: "Are you certain you want to delete this photo?" } %>
+  <% end %>
+	</div>
+
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Image location/site</strong></div>
+      <div class="panel-body" align="center">
+        <% data = format_photo_for_world_map(@photo) %>
+        <%= render partial: 'shared/world_map_clickable', locals: { title: 'Locations',
+                                                          data: data,
+                                                          height: 150 } %>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Image metadata </strong>
+	  	</div>
+      <div class="panel-body">        
+      	<%= render partial: 'photo_metadata' %>
+      </div>
+    </div>
+
+  </div>
+</div>

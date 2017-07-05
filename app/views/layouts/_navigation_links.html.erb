@@ -25,6 +25,11 @@
                          title: 'Locations', 
                          glyphicon: 'glyphicon-globe'} %>
 
+    <%= render partial: 'layouts/link', 
+               locals: { path: photos_path, 
+                         title: 'Images', 
+                         glyphicon: 'glyphicon-picture'} %>
+
     <%# render partial: 'layouts/link', 
                locals: { path: species_index_path, 
                          title: 'Species', 

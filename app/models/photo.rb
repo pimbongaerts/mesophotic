@@ -57,5 +57,25 @@ class Photo < ActiveRecord::Base
   # callbacks
   # other
   # class methods
+
   # instance methods
+  def previous
+    if id == Photo.first.id
+      Photo.first
+    else
+      Photo.where("id < ?", id).last
+    end
+  end
+
+  def next
+    if id == Photo.last.id
+      Photo.last  
+    else
+      Photo.where("id > ?", id).first
+    end
+  end
+
+  def description_truncated
+    description.truncate(70)
+  end
 end

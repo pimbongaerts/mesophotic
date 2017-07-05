@@ -1,2 +1,46 @@
-<h1>Photos#index</h1>
-<p>Find me in app/views/photos/index.html.erb</p>
+<%= render partial: "layouts/page_title",
+       locals: {title: "Images",
+                backlink: home_path } %>
+
+<div class="row">
+  <div class="col-sm-8">
+	  <%= will_paginate @photos %>
+
+	  <table class="table table-striped">
+	    <tr>
+		    <% @photos.each_with_index do |photo, i| %>
+	        <%= new_table_row_on_iteration(i, 3) %>
+	        <td><%= render photo %></td>
+		    <% end %>
+		   </tr>
+	  </table>
+
+	  <% if current_user.try(:editor_or_admin?) %>
+	  	<%= link_to "Upload new photo", new_photo_path %>
+	  <% end %>
+	</div>
+
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Image locations</strong></div>
+      <div class="panel-body" align="center">
+        <% data = format_counts_for_world_map(@location_counts) %>
+        <%= render partial: 'shared/world_map', locals: { title: 'Locations',
+                                                          data: data,
+                                                          height: 150 } %>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Images metadata summary</strong> (top 5 / category)
+      </div>
+      <div class="panel-body">        
+        <%= render partial: 'photo_keywords', 
+                   locals: { photos: @photos } %>
+      </div>
+    </div>
+
+  </div>
+</div>
