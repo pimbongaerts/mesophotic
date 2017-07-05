@@ -1,0 +1,27 @@
+<strong>Locations</strong><br>
+<% cats = Location.joins(:photos)
+				  .select("locations.description, count(locations.id) as count")
+				  .group("locations.id")
+				  .limit(5) %>
+
+<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+
+<br><strong>Tagged platforms</strong><br>
+<% cats = photos.joins(:platforms)
+            .select("platforms.description, count(platforms.id) as count")
+            .group("platforms.id").order("count(platforms.id) DESC").limit(5) %>
+<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+
+<br><strong>Tagged organisations</strong><br>
+<% cats = photos.joins(:organisations)
+            .select("organisations.name as description, count(organisations.id) as count")
+            .group("organisations.id").order("count(organisations.id) DESC")
+            .limit(5) %>
+<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+
+<br><strong>Tagged researchers</strong><br>
+<% cats = photos.joins(:users)
+            .select("users.last_name as description, count(users.id) as count")
+            .group("users.id").order("count(users.id) DESC").limit(6) %>
+<%= render partial: 'shared/category_counts', 
+           locals: { categories: cats } %>

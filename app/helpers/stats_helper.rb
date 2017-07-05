@@ -70,6 +70,16 @@ module StatsHelper
     return categories, found_occurrences, not_found_occurrences
   end
 
+  def format_counts_for_world_map(location_counts)
+    data = []
+    location_counts.each do |location|
+      data << {name: location.description, lat: location.latitude, 
+               lon: location.longitude, z: location.item_count,
+               ownURL: location_path(location) }
+    end
+    data    
+  end
+
   # Publications over depth
   def get_depth_range_data(publications)
     require 'histogram/array'  
