@@ -92,35 +92,6 @@ module ApplicationHelper
   	return categories, values  
   end
 
-  # Gather depth range data
-  def get_depth_range_data(publications)
-    require 'histogram/array'  
-    depths = []
-    # Obtain min and max depth for each publication and transform into range
-    publications.each do |publication|
-      if publication.min_depth and publication.max_depth
-        # Trim min and max depths to 30-200 m
-        if publication.min_depth < 30
-          min_depth = 30
-        else
-          min_depth = publication.min_depth
-        end
-        if publication.max_depth > 150
-          max_depth = 150
-        else
-          max_depth = publication.max_depth
-        end
-        # Transform to ranges
-        depths.push(*(min_depth..max_depth))
-      end
-    end
-    # Define depth bins for histogram
-    depth_bins = (30..150).step(1).map(&:to_i)
-    categories, occurrences = depths.histogram(depth_bins, 
-                                               :bin_boundary => :avg)
-    return categories, occurrences
-  end
-
   # Counts the number of occurrences for each location in the user model
   def count_geographic_occurrences_of_users(users)
     freqs = Hash.new(0)

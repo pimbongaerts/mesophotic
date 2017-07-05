@@ -1,0 +1,36 @@
+<div id="graph_<%= title %>" style="height:<%= height %>px;">
+  <script type="text/javascript" charset="utf-8">
+    var <%= title %>_categories_occurrences = <%= raw data.to_json %>
+    $(function () { 
+        $('#graph_<%= title %>').highcharts({
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+             '#FF9655', '#FFF263', '#6AF9C4'],
+            chart: { type: 'pie' },
+            title: { text: '' },
+            credits: { enabled: false },
+            legend: { enabled: false },
+            plotOptions: {
+                pie: {
+                    size: 100,
+                    dataLabels: {
+                        enabled: true,
+                        distance: 0,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '90%']
+                }
+            },
+            series: [{
+                name: '<%= unit  %>',
+                data: <%= title %>_categories_occurrences
+
+            }]
+        });
+    });
+  </script>
+</div>
