@@ -577,7 +577,7 @@ span.glyphicon-link {
     font-size: 1.2em;
 }
 
-.required:after { 
+.required:after {
   content: " *";
   color: red;
 }
@@ -611,5 +611,19 @@ span.glyphicon-link {
   blockquote strong {
     background-color: #ffee99;
     font-weight: bold;
+  }
+}
+
+.search {
+  ul {
+    font-weight: bold;
+
+    li {
+      list-style-type: none;
+    }
+  }
+
+  label {
+    font-weight: normal;
   }
 }
