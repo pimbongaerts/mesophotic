@@ -97,7 +97,7 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, fields, is_editor_or_admin) {
+  scope :search, -> (search_term, fields = Publication.default_search_fields, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, fields)
     when [true, false] then relevance(search_term, fields)
@@ -105,7 +105,7 @@ class Publication < ActiveRecord::Base
     end
   }
 
-  scope :filter, -> (search_term, fields) {
+  scope :filter, -> (search_term, fields = Publication.default_search_fields) {
     if search_term.present?
       clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term}%")
@@ -113,7 +113,7 @@ class Publication < ActiveRecord::Base
     end
   }
 
-  scope :relevance, -> (search_term, fields) {
+  scope :relevance, -> (search_term, fields = Publication.default_search_fields) {
     if search_term.present?
       filter = fields.map { |field|
         "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
