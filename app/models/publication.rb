@@ -39,7 +39,7 @@ class Publication < ActiveRecord::Base
 
   # constants
   PUBLICATION_TYPES = ['scientific', 'technical', 'popular'].freeze
-  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 
+  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis',
                        'book', 'chapter'].freeze
   WORDCLOUD_FREQLIMIT = 50.freeze
 
@@ -83,8 +83,8 @@ class Publication < ActiveRecord::Base
 
   scope :unvalidated, -> {
     select("publications.*, COUNT(validations.id) AS validations_count")
-    .joins("LEFT JOIN validations 
-            ON validations.validatable_id = publications.id 
+    .joins("LEFT JOIN validations
+            ON validations.validatable_id = publications.id
             AND validations.updated_at >= publications.updated_at")
     .group("publications.id")
     .having("validations_count < 3")
@@ -92,43 +92,43 @@ class Publication < ActiveRecord::Base
 
   scope :expired, -> (user) {
     select("publications.*, COUNT(validations.id) AS validations_count")
-    .joins(:validations) 
+    .joins(:validations)
     .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, filter) {
-    if search_term.present?
-      filter ? filter(search_term) : relevance(search_term)
-    else
-      order(filename: :asc)
+  scope :search, -> (search_term, fields, is_editor_or_admin) {
+    case [search_term.present?, is_editor_or_admin]
+    when [true, true] then filter(search_term, fields)
+    when [true, false || nil] then relevance(search_term, fields)
+    else order(filename: :asc)
     end
   }
 
-  scope :filter, -> (search_term) {
-    term = "%#{search_term}%"
-    where("title LIKE ? OR abstract LIKE ? OR contents LIKE ?", term, term, term)
+  scope :filter, -> (search_term, fields) {
+    clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
+    terms = Array.new(fields.count, "%#{search_term}%")
+    where(clause, *terms)
   }
 
-  scope :relevance, -> (search_term) {
-      select("*,
-        ( (LENGTH(title) - LENGTH(REPLACE(LOWER(title), LOWER('#{search_term}'), '')))
-        + (LENGTH(abstract) - LENGTH(REPLACE(LOWER(abstract), LOWER('#{search_term}'), '')))
-        + (LENGTH(contents) - LENGTH(REPLACE(LOWER(contents), LOWER('#{search_term}'), ''))) )
-        / LENGTH('#{search_term}') AS relevance"
-      )
+  scope :relevance, -> (search_term, fields) {
+    filter = fields.map { |field|
+      "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
+    }.join(" + ")
+
+    select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       .order("relevance DESC, filename ASC") if search_term.present?
   }
 
   # class methods
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << ["id", "publication_type", "publication_format", 
+      csv << ["id", "publication_type", "publication_format",
               "publication_year", "authors", "title",
-              "journal_name", "volume", "issue", "pages", "doi", "url", 
+              "journal_name", "volume", "issue", "pages", "doi", "url",
               "book_title", "book_authors", "book_publisher", "pdf_present",
               " ", "mesophotic", "coralreef", "original_data", "new_species",
-              "min_depth", "max_depth", " ", "fields", "focusgroups", 
+              "min_depth", "max_depth", " ", "fields", "focusgroups",
               "platforms", "locations"]
       all.each do |publication|
         csv_line = [publication.id,
@@ -182,7 +182,7 @@ class Publication < ActiveRecord::Base
   end
 
   def scientific_article?
-    (publication_type == "scientific") && 
+    (publication_type == "scientific") &&
     (['article', 'review'].include? publication_format)
   end
 

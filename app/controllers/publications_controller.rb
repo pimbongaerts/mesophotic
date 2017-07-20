@@ -2,13 +2,13 @@ class PublicationsController < ApplicationController
   require 'will_paginate/array' # in order to paginate static array
 
   before_action :require_admin_or_editor!, :except => [:show, :index, :behind]
-  before_action :set_publication, only: [:show, :edit, :edit_meta, :update, 
+  before_action :set_publication, only: [:show, :edit, :edit_meta, :update,
                                          :behind, :destroy, :detach_field,
                                          :detach_focusgroup, :detach_platform,
                                          :detach_location, :add_validation,
                                          :remove_validation, :touch_validation,
                                          :behind_edit]
-  before_action :touch_publication, only: [:detach_field, :detach_focusgroup, 
+  before_action :touch_publication, only: [:detach_field, :detach_focusgroup,
                                            :detach_platform, :detach_location]
   before_action :contents_convert_utf8, only: [:edit]
   before_action :empty_unused_fields, only: [:edit, :edit_meta, :update]
@@ -17,7 +17,7 @@ class PublicationsController < ApplicationController
   def index
     args = params[:validation_type] == 'expired' ? [current_user] : []
     @publications = Publication.send(params[:validation_type] || :all, *args)
-                               .search(params[:search], current_user.try(:editor_or_admin?))
+                               .search(params[:search], [:title, :abstract, :contents], current_user.try(:editor_or_admin?))
     @publications = @publications.paginate(page: params[:page], per_page: 20) if request.format.html?
 
     unless current_user.try(:editor_or_admin?) || params[:search_term].present?
@@ -63,7 +63,7 @@ class PublicationsController < ApplicationController
 
     respond_to do |format|
       if @publication.save
-        format.html { redirect_to edit_meta_publication_path(@publication), 
+        format.html { redirect_to edit_meta_publication_path(@publication),
                       notice: 'Publication was successfully created.' }
       else
         format.html { render :new }
@@ -74,7 +74,7 @@ class PublicationsController < ApplicationController
   def update
     respond_to do |format|
       if @publication.update(publication_params)
-        format.html { redirect_to :back, 
+        format.html { redirect_to :back,
                       notice: 'Publication was successfully updated.' }
       else
         format.html { render :edit }
@@ -85,7 +85,7 @@ class PublicationsController < ApplicationController
   def destroy
     @publication.destroy
     respond_to do |format|
-      format.html { redirect_to :back, 
+      format.html { redirect_to :back,
                     notice: 'Publication was successfully destroyed.' }
     end
   end
