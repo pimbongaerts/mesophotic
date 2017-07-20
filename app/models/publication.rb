@@ -169,6 +169,10 @@ class Publication < ActiveRecord::Base
     end
   end
 
+  def self.default_search_fields
+    ["title", "abstract", "contents"]
+  end
+
   # instance methods
   def create_journal_from_name
     create_journal(name: new_journal_name) unless new_journal_name.blank?

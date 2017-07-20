@@ -9,29 +9,38 @@
             <%= text_field_tag :search, params[:search],  class: "form-control",
                                placeholder: "Search Publications" %>
         </div>
-        <% if current_user.try(:editor_or_admin?) %>   
+        <% if current_user.try(:editor_or_admin?) %>
          <div class="col-sm-2">
             <div class="form-group">
-              <%= select_tag :validation_type, 
+              <%= select_tag :validation_type,
                              options_for_select(Validation::VALIDATION_TYPES,
                                                 params[:validation_type]),
                              class: "form-control" %>
             </div>
-          </div>     
+          </div>
         <% end %>
         <div class="col-sm-2">
           <%= submit_tag "Search", class: "btn btn-basic" %>
         </div>
         <div class="col-sm-2">
           <a data-toggle="collapse" href="#collapse1">Advanced...</a>
-        </div>      
+        </div>
       </div>
     </div>
-    <div id="collapse1" class="panel-collapse collapse">
+    <div id="collapse1" class="panel-collapse collapse search">
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-12">
-            TO BE DONE
+            <ul>Search in
+              <% Publication.default_search_fields.each do |field| %>
+                <li>
+                  <%= label_tag "fields_#{field}" do %>
+                    <%= check_box_tag "fields[]", field, params[:fields].include?(field), id: "fields_#{field}" %>
+                    <%= field.to_s.titleize %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
           </div>
         </div>
       </div>
