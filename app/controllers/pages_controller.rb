@@ -19,7 +19,7 @@ class PagesController < ApplicationController
                                            created_at DESC')
     # Search term
     @publications_refug_counts = Publication.select('publication_year, count(id) as publications_count')
-                                     .search('refug')
+                                     .relevance('refug')
                                      .group('publication_year')
     @publications_total_counts = Publication.select('*, count(id) as publications_count')
                                      .all
