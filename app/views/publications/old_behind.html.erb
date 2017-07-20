@@ -1,0 +1,55 @@
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Behind the science",
+          subtitle: @publication.short_citation,
+          backlink: publications_path } %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body" style="background: #2b82bc;">
+        <div class="col-sm-10">
+          <h3><%= @publication.title %></h3>
+          <p><%= @publication.authors %></p>
+        </div>
+        <div class="col-sm-2" align="right">
+            <% if @publication.pdf.exists? %>
+              <%= link_to image_tag(@publication.pdf.url(:thumb), 
+                                    :width => "100"), 
+                          publication_path %>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <% if @publication.behind_contents? %>
+    <div class="col-sm-7">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Q & A</strong>
+        </div>
+        <div class="panel-body">    
+          <%= markdown(@publication.behind_contents) %>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-5">
+  <% else %>
+    <div class="col-sm-12">
+  <% end %>
+  <% if @publication.photos.count > 0 %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Photos</strong>
+      </div>
+      <div class="panel-body">    
+        <%= render partial: 'shared/behind_the_scenes',
+                   locals: {publication: @publication,
+                            style: 'full'} %>
+      </div>
+    </div>
+    </div> <%# for div column class %>
+  <% end %>
+</div>
