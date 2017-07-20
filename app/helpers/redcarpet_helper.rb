@@ -9,6 +9,7 @@ module RedcarpetHelper
 									   	   space_after_headers: false)
     render = @@markdown.render(content)
     # remove the <p> tags that markdown wraps by default
-    filtered_text = Regexp.new('^<p>(.*)<\/p>$').match(render)[1].html_safe
+    # filtered_text = Regexp.new('^<p>(.*)<\/p>$').match(render)[1].html_safe
+    render.html_safe   
   end
 end

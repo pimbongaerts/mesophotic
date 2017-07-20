@@ -23,6 +23,7 @@ Mesophotic::Application.routes.draw do
       get 'remove_validation'
       get 'touch_validation'
       get 'behind'
+      get 'behind_edit'
     end
   end
 
