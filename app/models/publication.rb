@@ -106,18 +106,23 @@ class Publication < ActiveRecord::Base
   }
 
   scope :filter, -> (search_term, fields) {
-    clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
-    terms = Array.new(fields.count, "%#{search_term}%")
-    where(clause, *terms)
+    if search_term.present?
+      clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
+      terms = Array.new(fields.count, "%#{search_term}%")
+      where(clause, *terms)
+    end
   }
 
   scope :relevance, -> (search_term, fields) {
-    filter = fields.map { |field|
-      "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
-    }.join(" + ")
+    if search_term.present?
+      filter = fields.map { |field|
+        "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
+      }.join(" + ")
 
-    select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
-      .order("relevance DESC, filename ASC") if search_term.present?
+      relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
+      limited = relevance.where("relevance > 0")
+      relevance.where("id IN (SELECT id FROM (#{limited.to_sql}))").order("relevance DESC, filename ASC")
+    end
   }
 
   # class methods
