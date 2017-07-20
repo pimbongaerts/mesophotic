@@ -1,0 +1,74 @@
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Behind the science",
+          subtitle: @publication.short_citation,
+          backlink: publications_path } %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body" style="background: #2b82bc;">
+        <div class="col-sm-10">
+          <h3><%= @publication.title %></h3>
+          <p><%= @publication.authors %></p>
+        </div>
+        <div class="col-sm-2" align="right">
+            <% if @publication.pdf.exists? %>
+              <%= link_to image_tag(@publication.pdf.url(:thumb), 
+                                    :width => "100"), 
+                          publication_path %>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-7">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Questions and answers</strong>
+      </div>
+      <div class="panel-body">    
+      
+      	<%= form_for(@publication) do |f| %>
+					<div class="form-group">
+        		<%= f.label :behind_contents %><br>
+        		<%= f.text_area :behind_contents, style: 'width:90%;', rows: 20%>
+      		</div>
+					<div class="actions"><%= f.submit %></div>
+				<% end %>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5">
+  <% if @publication.photos.count > 0 %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Photos</strong>
+      </div>
+      <div class="panel-body">    
+        <%= render partial: 'shared/behind_the_scenes',
+                   locals: {publication: @publication,
+                            style: 'full'} %>
+      </div>
+    </div>
+    </div> <%# for div column class %>
+  <% end %>
+</div>
+
+
+
+
+<% if not @publication.contents.blank? %>
+  <div class="panel panel-default">
+    <div class="panel-heading"><strong>Keywords</strong></div>
+    <div class="panel-body">    
+      <%= render partial: 'shared/wordcloud', 
+                 locals: { title: 'publication_contents',
+                 data: @publication.contents,
+                 cut_off: 40, height: 230 } %>
+    </div>
+  </div>
+<% end %>
