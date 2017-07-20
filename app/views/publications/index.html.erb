@@ -1,6 +1,6 @@
 <% subtitle = "Search results for: '#{params[:search]}'" if params[:search] %>
 <% subtitle = "Editor Mode" if current_user.try(:editor_or_admin?) %>
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Publications",
                 subtitle: subtitle,
                 backlink: home_path } %>
@@ -21,12 +21,12 @@
   <% end %>
 
   <%= will_paginate @publications %>
-  
+
   <%# Render publications %>
   <table class="table table-striped">
     <% @publications.each do |publication| %>
       <% if current_user.try(:editor_or_admin?) %>
-        <%= render partial: "publication_validation", 
+        <%= render partial: "publication_validation",
                    locals: {publication: publication } %>
       <% else %>
         <%= render publication %>
@@ -38,9 +38,9 @@
 <%# Right column (only visible when not searching/editor ) %>
 <% if params[:search].blank? && !current_user.try(:editor_or_admin?) %>
   <div class="col-sm-4">
-    
+
     <%= render partial: 'featured_pub' %>
-    
+
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Locations</strong></div>
       <div class="panel-body" align="center">
@@ -53,11 +53,11 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Research focus</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences = 
+        <% categories, occurrences =
             count_category_in_publications(@focusgroups.limit("8")) %>
-        <%= render partial: 'shared/bar_graph', 
+        <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Focus',
-                             categories: categories, 
+                             categories: categories,
                              occurrences: occurrences,
                              height: 200,
                              unit: "Publications" } %>
@@ -66,11 +66,11 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Fields</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences = 
+        <% categories, occurrences =
             count_category_in_publications(@fields.limit("8")) %>
-        <%= render partial: 'shared/bar_graph', 
+        <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Fields',
-                             categories: categories, 
+                             categories: categories,
                              occurrences: occurrences,
                              height: 200,
                              unit: "Publications" } %>
@@ -79,11 +79,11 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Research platforms</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences = 
+        <% categories, occurrences =
             count_category_in_publications(@platforms.limit("8")) %>
-        <%= render partial: 'shared/bar_graph', 
+        <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Platforms',
-                   categories: categories, 
+                   categories: categories,
                    occurrences: occurrences,
                    height: 200,
                    unit: "Publications" } %>
