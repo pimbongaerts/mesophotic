@@ -100,7 +100,7 @@ class Publication < ActiveRecord::Base
   scope :search, -> (search_term, fields, is_editor_or_admin) {
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, fields)
-    when [true, false || nil] then relevance(search_term, fields)
+    when [true, false] then relevance(search_term, fields)
     else order(filename: :asc)
     end
   }
