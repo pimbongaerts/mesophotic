@@ -1,5 +1,5 @@
 module PublicationsHelper
-  # Counts the number of occurrences for each value of a particular category 
+  # Counts the number of occurrences for each value of a particular category
   # (e.g. location, platform) in the publication model
   def count_category_in_publications(category_model)
     categories = []
@@ -11,22 +11,22 @@ module PublicationsHelper
     [categories, occurrences]
   end
 
-  # Counts the number of occurrences for each location in the publication model 
+  # Counts the number of occurrences for each location in the publication model
   # and outputs corresponding coordinates
   def format_sites_and_coordinates(sites)
     data = []
     sites.each do |site|
-      data << {name: "#{site.site_name} (#{site.location.description})", 
-               lat: site.latitude, 
+      data << {name: "#{site.site_name} (#{site.location.description})",
+               lat: site.latitude,
                lon: site.longitude, z: 1 }
     end
     data
   end
-  
+
   # Obtain search result snippet for a particular publication
   def obtain_snippet(contents, search_term)
     return "…" if contents.blank?
-    
+
     start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
     snippet = contents.force_encoding("UTF-8")[start, 600]
                       .squish
@@ -39,13 +39,14 @@ module PublicationsHelper
     word_count = contents.scan(/\b#{word}\b/i).count
     if word_count > 0
       word_count
-    else 
+    else
       ""
     end
   end
 
   # Return a randomly selected "featured" publication
   def get_featured_publication(publications)
+    publications = publications.empty? ? Publication.all : publications
     offset = rand(publications.count)
     publications.offset(offset).first
   end
@@ -60,7 +61,7 @@ module PublicationsHelper
     end
     return contents.join(" ")
   end
-  
+
   def format_authors(publication)
     # Authors of publication (string)
     authors = publication.authors
@@ -120,5 +121,16 @@ module PublicationsHelper
       citation << "<em>#{publication.book_publisher}</em> "
     end
     return citation
+  end
+
+  def search_list title, options, param_name, params
+    return ("<ul>#{title}" + options.map do |option|
+              "<li>" \
+              "  <label for=\"#{param_name}_#{option}\">" \
+              "    <input type=\"checkbox\" name=\"#{param_name}[]\" id=\"#{param_name}_#{option}\" value=\"#{option}\" #{params[param_name].include?(option) ? "checked=\"checked\"" : ""}>" \
+              "    #{option.to_s.titleize}" \
+              "  </label>" \
+              "</li>"
+            end.join + "</ul>").html_safe
   end
 end
