@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170720082808) do
+ActiveRecord::Schema.define(version: 20170726041158) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -390,11 +390,11 @@ ActiveRecord::Schema.define(version: 20170720082808) do
   create_table "species", force: :cascade do |t|
     t.string   "name"
     t.integer  "focusgroup_id"
-    t.string   "url_fishbase"
-    t.string   "url_aims"
-    t.string   "url_coraltraits"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.string   "fishbase_webid"
+    t.string   "aims_webid"
+    t.string   "coraltraits_webid"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "users", force: :cascade do |t|

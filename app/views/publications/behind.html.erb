@@ -6,7 +6,7 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="panel panel-default">
-      <div class="panel-body" style="background: #2b82bc;">
+      <div class="panel-body" style="background: #3c90ce;">
         <div class="col-sm-10">
           <h3><%= @publication.title %></h3>
           <p><%= @publication.authors %></p>
@@ -14,7 +14,9 @@
         <div class="col-sm-2" align="right">
             <% if @publication.pdf.exists? %>
               <%= link_to image_tag(@publication.pdf.url(:thumb), 
-                                    :width => "100"), 
+                                    width: "120px",
+                                    style: "background-color: white; 
+                                            padding: 5px;"), 
                           publication_path %>
             <% end %>
         </div>

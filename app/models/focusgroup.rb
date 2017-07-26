@@ -12,6 +12,7 @@ class Focusgroup < ActiveRecord::Base
   # constants
   # attributes
   # associations
+  has_many :species
   has_and_belongs_to_many :publications, touch: true
   has_and_belongs_to_many :expeditions, touch: true
 

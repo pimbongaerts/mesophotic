@@ -1,0 +1,20 @@
+<table class="table table-condensed table-striped">
+  <tr>
+    <th>Taxon group</th>
+    <th>Species</th>
+    <th>Observations</th>
+    <th>Novel</th>
+  </tr>
+  <% species.each do |species| %>
+    <tr>
+      <td><%= species.focusgroup.description %> </td>
+      <td><%= link_to species.name, species_path(species.id) %> </td>
+      <td>
+        <% if species.observations.count > 0 %>
+          <span class="badge"><%= species.observations.count %></span>
+        <% end %>
+      </td>
+      <td><%# TODO: new species observation? %></td>
+    </tr>
+  <% end %>
+</table>

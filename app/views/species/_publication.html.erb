@@ -1,0 +1,9 @@
+<tr>
+  <%# Formatted publication %>
+  <td>
+    <%= format_publication_citation(publication).html_safe %><br>
+    <small><font color="red">
+      <%= publication.relevance %> x mention(s)
+    </font></small>
+  </td>
+</tr>
