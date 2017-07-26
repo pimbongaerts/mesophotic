@@ -97,23 +97,24 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, fields = Publication.default_search_fields, is_editor_or_admin = false) {
+  scope :search, -> (search_term, fields = default_search_fields, publication_types = default_publication_types, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
-    when [true, true] then filter(search_term, fields)
-    when [true, false] then relevance(search_term, fields)
-    else order(filename: :asc)
+    when [true, true] then filter(search_term, fields, publication_types)
+    when [true, false] then relevance(search_term, fields, publication_types)
+    else where("publication_type IN (?)", publication_types).order(filename: :asc)
     end
   }
 
-  scope :filter, -> (search_term, fields = Publication.default_search_fields) {
+  scope :filter, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
     if search_term.present?
       clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term}%")
       where(clause, *terms)
+        .where("publication_type IN (?)", publication_types)
     end
   }
 
-  scope :relevance, -> (search_term, fields = Publication.default_search_fields) {
+  scope :relevance, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
     if search_term.present?
       filter = fields.map { |field|
         "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
@@ -121,7 +122,10 @@ class Publication < ActiveRecord::Base
 
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
-      relevance.where("id IN (SELECT id FROM (#{limited.to_sql}))").order("relevance DESC, filename ASC")
+      relevance
+        .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+        .where("publication_type IN (?)", publication_types)
+        .order("relevance DESC, filename ASC")
     end
   }
 
@@ -170,7 +174,11 @@ class Publication < ActiveRecord::Base
   end
 
   def self.default_search_fields
-    ["title", "abstract", "contents"]
+    ["title", "abstract", "contents", "authors"]
+  end
+
+  def self.default_publication_types
+    ["scientific", "technical", "popular"]
   end
 
   # instance methods

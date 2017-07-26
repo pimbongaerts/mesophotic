@@ -6,11 +6,12 @@
                 backlink: home_path } %>
 
 <%# Wide screen for search results or editor view %>
+<% sidebar = !(params[:search].present? || current_user.try(:editor_or_admin?)) %>
 <div class='row'>
-  <% if !params[:search].blank? || current_user.try(:editor_or_admin?) %>
-    <div class="col-sm-12">
-  <% else %>
+  <% if sidebar %>
     <div class="col-sm-8">
+  <% else %>
+    <div class="col-sm-12">
   <% end %>
 
   <%# Search field and pagination %>
@@ -36,7 +37,7 @@
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>
-<% if params[:search].blank? && !current_user.try(:editor_or_admin?) %>
+<% if sidebar %>
   <div class="col-sm-4">
 
     <%= render partial: 'featured_pub' %>
