@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-6">
             <%= text_field_tag :search, params[:search],  class: "form-control",
                                placeholder: "Search Publications" %>
         </div>
@@ -30,17 +30,11 @@
     <div id="collapse1" class="panel-collapse collapse search">
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-12">
-            <ul>Search in
-              <% Publication.default_search_fields.each do |field| %>
-                <li>
-                  <%= label_tag "fields_#{field}" do %>
-                    <%= check_box_tag "fields[]", field, params[:fields].include?(field), id: "fields_#{field}" %>
-                    <%= field.to_s.titleize %>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+          <div class="col-sm-3">
+            <%= search_list "Fields", Publication.default_search_fields, :fields, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_list "Publication types", Publication.default_publication_types, :publication_types, params %>
           </div>
         </div>
       </div>
