@@ -13,7 +13,7 @@
             <strong>
               <%= @publication.publication_type %>
               <%= @publication.publication_format %> | 
-              <%= @publication.journal.name %>
+              <%= @publication.journal.name if @publication.journal %>
               <% if @publication.open_access? %>
                 |
                 <font color="red">
