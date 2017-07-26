@@ -12,6 +12,15 @@ module ApplicationHelper
     end
   end
 
+def url_exists?(url_string)
+  url = URI.parse(url_string)
+  req = Net::HTTP.new(url.host, url.port)
+  res = req.request_head(url.path)
+  res.code != "404" && res.code != "500" # false if returns 404 or 500
+rescue Errno::ENOENT
+  false # false if can't find the server
+end
+
   # Count frequency of words and return most frequent (cut_off)
   def word_count(value, cut_off)
       exclusion_list = WordExclusion.pluck(:word)

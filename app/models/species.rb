@@ -17,6 +17,7 @@ class Species < ActiveRecord::Base
   # attributes
 
   # associations
+  belongs_to :focusgroup
   has_many :observations
 
   # validations
@@ -24,4 +25,11 @@ class Species < ActiveRecord::Base
   # other
   # class methods
   # instance methods
+  def img_url
+    if aims_webid
+      "http://coral.aims.gov.au/factsheet.jsp?speciesCode=#{aims_webid}"
+    elsif fishbase_webid
+      "http://www.fishbase.org/summary/#{fishbase_webid}"
+    end
+  end
 end

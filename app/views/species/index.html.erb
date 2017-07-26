@@ -1,2 +1,18 @@
-<h1>Species#index</h1>
-<p>Find me in app/views/species/index.html.erb</p>
+<%= render partial: "layouts/page_title",
+       	   locals: {title: "Species",
+            		backlink: home_path } %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Under construction: this list of mesophotic species (i.e. occurring in 
+        the mesophotic depth range) is still in the process of being populated.
+      </div>
+      <div class="panel-body">
+        <%= render partial: 'specieslist', locals: { species: @species } %>
+      </div>
+    </div>
+  </div>
+
+</div>

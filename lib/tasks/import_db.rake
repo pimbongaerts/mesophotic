@@ -14,6 +14,9 @@ namespace :db do
     task :import_sites => :environment do  # Step 2
       import_sites
     end
+    task :import_species => :environment do
+      import_species
+    end
     # TEMPORARY
     task :test_db => :environment do
       test_db
@@ -180,6 +183,33 @@ def test_db
     unless publication.article_title.nil?
       puts publication.article_title.encoding
     end
+  end
+end
+
+# Import species data from excel sheet
+def import_species
+  Species.delete_all
+  CSV.foreach("#{::Rails.root}/db/species_import.csv") do |row|
+      @focusgroup = Focusgroup.find_by_description(row[1])
+      
+      if not @focusgroup.present?
+        puts "ERROR: No focusgroup called #{row[1]}"
+        break
+      end
+
+      if row[4].nil?
+        aims_webid = nil
+      else
+        aims_webid = row[4].to_s.rjust(4, "0")
+      end
+
+      @species = Species.new(name: row[0],
+                             focusgroup_id: @focusgroup.id,
+                             #region: ignore row[2],
+                             fishbase_webid: row[3],
+                             aims_webid: aims_webid,
+                             coraltraits_webid: row[5])
+      @species.save!
   end
 end
 
