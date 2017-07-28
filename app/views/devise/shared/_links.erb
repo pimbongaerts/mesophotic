@@ -1,3 +1,4 @@
+<br>
 <div class="row shared-links">
   <div class="col-sm-8">
     <%- if controller_name != 'sessions' %>
@@ -9,7 +10,7 @@
     <% end -%>
 
     <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <%= link_to "Sign up", new_registration_path(resource_name) %><br />
+  <%# link_to "Sign up", new_registration_path(resource_name) %>
 <% end -%>
 
 <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
