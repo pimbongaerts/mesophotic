@@ -17,6 +17,9 @@ namespace :db do
     task :import_species => :environment do
       import_species
     end
+    task :import_emails => :environment do
+      import_emails
+    end
     # TEMPORARY
     task :test_db => :environment do
       test_db
@@ -188,7 +191,7 @@ end
 
 # Import species data from excel sheet
 def import_species
-  Species.delete_all
+  #Species.delete_all
   CSV.foreach("#{::Rails.root}/db/species_import.csv") do |row|
       @focusgroup = Focusgroup.find_by_description(row[1])
       
@@ -213,6 +216,27 @@ def import_species
   end
 end
 
+def import_emails
+  # Update all emails
+  CSV.foreach("#{::Rails.root}/emails.txt") do |row|
+    @user = User.find_by_last_name(row[0])
+    if @user
+      puts row[1].strip
+      @user.email = row[1].strip
+      @user.skip_reconfirmation!
+      @user.save!
+    else
+      puts "ERROR: No user with last name #{row[0]}"
+    end
+  end
+  # List all emails that are still ending in @mesophotic.org
+  puts "Following users still have email ending in @mesophotic.org:"
+  User.find_each do |user|
+    if user.email.strip.last(15) == "@mesophotic.org"
+      puts "#{user.last_name},#{user.email}"
+    end
+  end
+end
 
 private
 
