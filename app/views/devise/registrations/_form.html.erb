@@ -10,13 +10,14 @@
           <div class="col-xs-4">
             <div class="form-group">
               <%= f.label :title, class: 'required' %><br>
-              <%= f.select :title, User::TITLES, class: "form-control" %>
+              <%= f.select :title, User::TITLES, class: "form-control",
+                           :prompt => "Title..." %>
             </div>
           </div>
           <div class="col-xs-8">
             <br>
             <% if current_user.try(:admin?)  %>
-            <%#devise_mapping.confirmable? && 
+              <%# devise_mapping.confirmable? && 
                 resource.pending_reconfirmation?
               Currently waiting confirmation for: 
               <%= resource.unconfirmed_email %>
@@ -77,8 +78,9 @@
           <br>
           <%= f.collection_select :organisation_id, 
                                   Organisation.find_each, 
-                                  :id, :name, 
-                                  class: "form-control" %>
+                                  :id, :name,
+                                  class: "form-control",
+                                  :prompt => "Organisation..." %>
         </div>
         <div class="form-group">
           <%= f.label :department %>
@@ -94,7 +96,8 @@
         </div>
         <div class="form-group">
           <%= f.label :country %><br />
-          <%= f.country_select :country, class: "form-control" %>
+          <%= f.country_select :country, class: "form-control", 
+                               :prompt => "Country..." %>
         </div>
       </div>
     </div>
@@ -213,35 +216,6 @@
               <b><%= publication.volume %></b>:<%= publication.pages %><br /><br />
             </div>
           <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<%# Change password %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      Change password
-      <small>(only fill out if you would like to change your password)</small>
-    </h4>
-  </div>
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="form-group">
-          <%= f.label "New password" %>
-          <br>
-          <%= f.password_field :password, :autocomplete => "off", 
-                                class: "form-control" %>
-        </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <%= f.label "New password confirmation" %>
-          <br>
-          <%= f.password_field :password_confirmation, class: "form-control" %>
         </div>
       </div>
     </div>
