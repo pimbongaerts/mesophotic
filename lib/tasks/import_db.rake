@@ -223,6 +223,7 @@ def import_emails
     if @user
       puts row[1].strip
       @user.email = row[1].strip
+      
       @user.skip_reconfirmation!
       @user.save!
     else

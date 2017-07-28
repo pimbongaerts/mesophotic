@@ -31,11 +31,13 @@
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Research interests</strong></div>
         <div class="panel-body">
-          <p class="bg-warning">&nbsp;
-            Please note that this section was automatically populated - and 
-            has not yet been edited by this user.
-          </p>
-          <p><%= @user.research_interests %></p>
+          <% if @user.last_sign_in_at.nil? %>        
+            <p class="bg-warning">&nbsp;
+              Please note that this section was automatically populated - and 
+              has not yet been edited by this user.
+            </p>
+          <% end %>
+          <%= markdown(@user.research_interests) if @user.research_interests.present? %>
         </div>
       </div>
     <% end %>
@@ -85,12 +87,38 @@
       </div>
     <% end %>
 
+    <% if @user.platforms.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Research platform experience</strong>
+        </div>
+        <div class="panel-body">
+        <% @user.platforms.each do |platform| %>
+           <span class="glyphicon glyphicon-ok"></span>&nbsp;
+          <%= platform.description %><br>
+        <% end %>
+        </div>
+      </div>
+    <% end %>
 
+    <% if @user.photos.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Photographs</strong>
+        </div>
+        <div class="panel-body">
+        <% @user.photos.each do |photo| %>
+          <%= link_to image_tag(photo.image(:small)), 
+                      photo_path(photo) %>
+        <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <% if @user.publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Research details</strong> (top 5 / category)
+          <strong>Research summary</strong> (from publications)
         </div>
         <div class="panel-body">        
           <%= render partial: 'member_keywords', 
