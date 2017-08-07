@@ -31,6 +31,10 @@ namespace :db do
       #Rake::Task['db:reset'].invoke
       create_sites
     end
+  desc "Reset passwords after adding this file to gitignore"
+    task :reset_passwords => :environment do
+      reset_passwords
+    end
 end
 
 def create_organisations
@@ -311,4 +315,13 @@ def create_publications_from_xml
     @publication.save!
   end
   f.close
+end
+
+def reset_passwords
+  User.find_each do |user|
+    if !user.editor? and !user.admin?
+      user.password = user.last_name.downcase.reverse + "_meso"
+      user.save!
+    end
+  end
 end
