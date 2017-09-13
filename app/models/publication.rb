@@ -101,7 +101,7 @@ class Publication < ActiveRecord::Base
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, fields, publication_types)
     when [true, false] then relevance(search_term, fields, publication_types)
-    else where("publication_type IN (?)", publication_types).order(id: :asc)
+    else where("publication_type IN (?) OR publication_type IS NULL", publication_types).order(id: :asc)
     end
   }
 
@@ -110,21 +110,21 @@ class Publication < ActiveRecord::Base
       clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term}%")
       where(clause, *terms)
-        .where("publication_type IN (?)", publication_types)
+        .where("publication_type IN (?) OR publication_type IS NULL", publication_types)
     end
   }
 
   scope :relevance, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
     if search_term.present?
       filter = fields.map { |field|
-        "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
-      }.join(" + ")
+      "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
+    }.join(" + ")
 
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
         .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-        .where("publication_type IN (?)", publication_types)
+        .where("publication_type IN (?) OR publication_type IS NULL", publication_types)
         .order("relevance DESC, filename ASC")
     end
   }
