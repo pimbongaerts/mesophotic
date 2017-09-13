@@ -1,6 +1,7 @@
 <tr>
   <td align="center">
     <% if publication.pdf.file? %>
+      [<%= publication.id %>]
       <%= link_to image_tag('adobe_pdf.png'), 
                   publication.pdf.url(:original) %>
     <% elsif !publication.DOI.blank? %>

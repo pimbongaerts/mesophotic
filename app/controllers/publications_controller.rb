@@ -22,7 +22,7 @@ class PublicationsController < ApplicationController
 
     @publications = Publication.send(params[:validation_type] || :all, *args)
                                .search(params[:search], params[:fields], params[:publication_types], is_editor_or_admin)
-    @publications = @publications.paginate(page: params[:page], per_page: is_editor_or_admin ? 200 : 20) if request.format.html?
+    @publications = @publications.paginate(page: params[:page], per_page: is_editor_or_admin ? 95 : 20) if request.format.html?
 
     unless current_user.try(:editor_or_admin?) || params[:search_term].present?
       # Provide access to top 10 values of linked models

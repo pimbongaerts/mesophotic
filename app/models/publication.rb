@@ -101,7 +101,7 @@ class Publication < ActiveRecord::Base
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, fields, publication_types)
     when [true, false] then relevance(search_term, fields, publication_types)
-    else where("publication_type IN (?)", publication_types).order(filename: :asc)
+    else where("publication_type IN (?)", publication_types).order(id: :asc)
     end
   }
 
