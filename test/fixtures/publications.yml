@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one:
+  title: "Led Zeppelin"
+  authors: "Robert Plant, Jimmy Page, John Paul Jones, John Bonham"
+  publication_year: 1969
+  publication_type: "popular"
+
+two:
+  title: "Led Zeppelin II"
+  authors: "Robert Plant, Jimmy Page, John Paul Jones, John Bonham"
+  publication_year: 1969
+  publication_type: "popular"
