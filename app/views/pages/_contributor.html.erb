@@ -5,7 +5,7 @@
   </div>
   <div class="col-sm-8">
     <strong><%= link_to "#{first_name} #{last_name}", member_path(contributor.id) %></strong><br>
-	<%= contributor.organisation.name %><br>
+	<%= contributor.organisation.name if contributor.organisation %><br>
     <i><%= role %></i><br>
   </div>
 </div>
