@@ -31,7 +31,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "filtered everything" do
-    assert_equal [], (Publication.filter "Fred Astaire").to_a
+    assert_equal [], (Publication.filter "Fred Astaire")
   end
 
   test "no filter" do
@@ -49,10 +49,10 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "irrelevance" do
-    assert_equal [], (Publication.relevance "Fred Astaire").to_a
+    assert_equal [], (Publication.relevance "Fred Astaire")
   end
 
   test "no relevance" do
-    assert_equal Publication.all, (Publication.relevance "").to_a
+    assert_equal Publication.all, (Publication.relevance "")
   end
 end
