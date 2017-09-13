@@ -7,7 +7,7 @@ class PhotosController < ApplicationController
   end
 
   def index
-    @photos = Photo.all.paginate(:page => params[:page], :per_page => 30)
+    @photos = Photo.all.order('photos.id DESC').paginate(:page => params[:page], :per_page => 30)
     @location_counts = Location.joins(:photos)
                                .group('locations.id')
                                .select('locations.*, count(locations.id) as item_count')
