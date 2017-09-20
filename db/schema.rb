@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726041158) do
+ActiveRecord::Schema.define(version: 20170913080739) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -286,16 +286,19 @@ ActiveRecord::Schema.define(version: 20170726041158) do
   add_index "platforms_users", ["user_id"], name: "index_platforms_users_on_user_id"
 
   create_table "posts", force: :cascade do |t|
-    t.string   "title",         limit: 255
-    t.text     "content_md",    limit: 65535
-    t.text     "content_html",  limit: 65535
-    t.boolean  "draft",         limit: 1,     default: false
-    t.integer  "user_id",       limit: 4
-    t.string   "slug",          limit: 255
+    t.string   "title",                   limit: 255
+    t.text     "content_md",              limit: 65535
+    t.text     "content_html",            limit: 65535
+    t.boolean  "draft",                   limit: 1,     default: false
+    t.integer  "user_id",                 limit: 4
+    t.string   "slug",                    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "postable_id"
     t.string   "postable_type"
+    t.string   "post_type"
+    t.integer  "featured_user_id"
+    t.integer  "featured_publication_id"
   end
 
   add_index "posts", ["postable_type", "postable_id"], name: "index_posts_on_postable_type_and_postable_id"

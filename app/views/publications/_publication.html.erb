@@ -51,20 +51,3 @@
     </td>
   </tr>
 <% end %>
-
-<%# Behind the scenes if home page TODO: TEMPORARY FIX PRIOR TO NEWSFEED %>
-<% if publication.behind_the_science? && current_page?(root_path) %>
-  <tr valign='top'>
-    <td>
-      <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-      <%= link_to "behind the science:", 
-                  behind_publication_path(publication) %>
-      <br>
-    </td>
-    <td>
-      <%= render partial: 'shared/behind_the_scenes',
-         locals: {publication: publication,
-                  style: 'overview'} %>
-    </td>
-  </tr>
-<% end %>

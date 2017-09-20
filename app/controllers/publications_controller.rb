@@ -50,6 +50,9 @@ class PublicationsController < ApplicationController
   end
 
   def behind
+    #@post = Post.friendly.find_by_featured_publication_id(params[:id])
+    #rescue
+    #redirect_to root_path
   end
 
   def new
