@@ -39,8 +39,9 @@ class Publication < ActiveRecord::Base
 
   # constants
   PUBLICATION_TYPES = ['scientific', 'technical', 'popular'].freeze
-  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis',
-                       'book', 'chapter'].freeze
+  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
+  PUBLICATION_SEARCH_FIELDS = ["title", "abstract", "contents", "authors"].freeze
+  PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes
@@ -101,8 +102,14 @@ class Publication < ActiveRecord::Base
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, search_params)
     when [true, false] then relevance(search_term, search_params)
-    else where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types]).order(id: :asc)
+    else base_search(search_params).order(id: :asc)
     end
+  }
+
+  scope :base_search, -> (search_params = default_search_params) {
+    where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
+    .where("publication_format IN (?) OR publication_format IS NULL", search_params[:publication_formats])
+    .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
   }
 
   scope :filter, -> (search_term, search_params = default_search_params) {
@@ -110,7 +117,7 @@ class Publication < ActiveRecord::Base
       clause = search_params[:fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(search_params[:fields].count, "%#{search_term}%")
       where(clause, *terms)
-        .where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
+      .base_search(search_params)
     end
   }
 
@@ -123,9 +130,9 @@ class Publication < ActiveRecord::Base
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-        .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-        .where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
-        .order("relevance DESC, filename ASC")
+      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+      .base_search(search_params)
+      .order("relevance DESC, filename ASC")
     end
   }
 
@@ -175,22 +182,11 @@ class Publication < ActiveRecord::Base
 
   def self.default_search_params
     {
-      fields: default_search_fields,
-      publication_types: default_publication_types,
-      characteristics: default_characteristics
+      fields: PUBLICATION_SEARCH_FIELDS,
+      publication_types: PUBLICATION_TYPES,
+      publication_formats: PUBLICATION_FORMATS,
+      characteristics: []
     }
-  end
-
-  def self.default_search_fields
-    ["title", "abstract", "contents", "authors"]
-  end
-
-  def self.default_publication_types
-    ["scientific", "technical", "popular"]
-  end
-
-  def self.default_characteristics
-    Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort
   end
 
   # instance methods
