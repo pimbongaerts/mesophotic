@@ -40,8 +40,9 @@ class Publication < ActiveRecord::Base
 
   # constants
   PUBLICATION_TYPES = ['scientific', 'technical', 'popular'].freeze
-  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis',
-                       'book', 'chapter'].freeze
+  PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
+  PUBLICATION_SEARCH_FIELDS = ["title", "abstract", "contents", "authors"].freeze
+  PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes
@@ -99,35 +100,41 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, fields = default_search_fields, publication_types = default_publication_types, is_editor_or_admin = false) {
+  scope :search, -> (search_term, search_params = default_search_params, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
-    when [true, true] then filter(search_term, fields, publication_types)
-    when [true, false] then relevance(search_term, fields, publication_types)
-    else where("publication_type IN (?)", publication_types).order(id: :asc)
+    when [true, true] then filter(search_term, search_params)
+    when [true, false] then relevance(search_term, search_params)
+    else base_search(search_params).order(id: :asc)
     end
   }
 
-  scope :filter, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
+  scope :base_search, -> (search_params = default_search_params) {
+    where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
+    .where("publication_format IN (?) OR publication_format IS NULL", search_params[:publication_formats])
+    .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
+  }
+
+  scope :filter, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
-      terms = Array.new(fields.count, "%#{search_term}%")
+      clause = search_params[:fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
+      terms = Array.new(search_params[:fields].count, "%#{search_term}%")
       where(clause, *terms)
-        .where("publication_type IN (?)", publication_types)
+      .base_search(search_params)
     end
   }
 
-  scope :relevance, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
+  scope :relevance, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      filter = fields.map { |field|
-        "(LENGTH(#{field}) - LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')))"
-      }.join(" + ")
+      filter = search_params[:fields].map { |field|
+      "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
+    }.join(" + ")
 
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-        .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-        .where("publication_type IN (?)", publication_types)
-        .order("relevance DESC, filename ASC")
+      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+      .base_search(search_params)
+      .order("relevance DESC, filename ASC")
     end
   }
 
@@ -175,12 +182,13 @@ class Publication < ActiveRecord::Base
     end
   end
 
-  def self.default_search_fields
-    ["title", "abstract", "contents", "authors"]
-  end
-
-  def self.default_publication_types
-    ["scientific", "technical", "popular"]
+  def self.default_search_params
+    {
+      fields: PUBLICATION_SEARCH_FIELDS,
+      publication_types: PUBLICATION_TYPES,
+      publication_formats: PUBLICATION_FORMATS,
+      characteristics: []
+    }
   end
 
   # instance methods

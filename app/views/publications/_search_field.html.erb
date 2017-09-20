@@ -31,10 +31,16 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-3">
-            <%= search_list "Fields", Publication.default_search_fields, :fields, params %>
+            <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :fields, params %>
           </div>
           <div class="col-sm-3">
-            <%= search_list "Publication types", Publication.default_publication_types, :publication_types, params %>
+            <%= search_param "Types", Publication::PUBLICATION_TYPES, :publication_types, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_param "Formats", Publication::PUBLICATION_FORMATS, :publication_formats, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_param "Characteristics", Publication::PUBLICATION_CHARACTERISTICS, :characteristics, params %>
           </div>
         </div>
       </div>

@@ -15,13 +15,12 @@ class PublicationsController < ApplicationController
 
 
   def index
-    params[:fields] ||= Publication.default_search_fields
-    params[:publication_types] ||= Publication.default_publication_types
+    params[:search_params] = search_params || Publication.default_search_params
     args = params[:validation_type] == 'expired' ? [current_user] : []
     is_editor_or_admin = current_user.try(:editor_or_admin?) || false
 
     @publications = Publication.send(params[:validation_type] || :all, *args)
-                               .search(params[:search], params[:fields], params[:publication_types], is_editor_or_admin)
+                               .search(params[:search], params[:search_params], is_editor_or_admin)
     @publications = @publications.paginate(page: params[:page], per_page: is_editor_or_admin ? 95 : 20) if request.format.html?
 
     unless current_user.try(:editor_or_admin?) || params[:search_term].present?
@@ -208,4 +207,9 @@ class PublicationsController < ApplicationController
         {:user_ids => []}
       )
     end
-end
+
+    def search_params
+      return nil if params[:search_params].blank?
+      params[:search_params].reduce({}) { |ps, p| ps.merge(p.first => p.last.keys) }
+    end
+  end
