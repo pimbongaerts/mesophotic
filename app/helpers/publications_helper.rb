@@ -123,14 +123,18 @@ module PublicationsHelper
     return citation
   end
 
-  def search_list title, options, param_name, params
+  def search_param title, options, param_name, params
     return ("<ul>#{title}" + options.map do |option|
-              "<li>" \
-              "  <label for=\"#{param_name}_#{option}\">" \
-              "    <input type=\"checkbox\" name=\"#{param_name}[]\" id=\"#{param_name}_#{option}\" value=\"#{option}\" #{params[param_name].include?(option) ? "checked=\"checked\"" : ""}>" \
-              "    #{option.to_s.titleize}" \
-              "  </label>" \
-              "</li>"
-            end.join + "</ul>").html_safe
+      identifier = "search_params[#{param_name}[#{option}]]"
+      "<li>" \
+      "  <label for=\"#{identifier}\">" \
+      "    <input type=\"checkbox\"" \
+      "           name=\"#{identifier}\"" \
+      "           id=\"#{identifier}\"" \
+      "           #{params[:search_params][param_name].try(:include?, option) ? "checked=\"checked\"" : ""}>" \
+      "    #{option.to_s.titleize}" \
+      "  </label>" \
+      "</li>"
+    end.join + "</ul>").html_safe
   end
 end

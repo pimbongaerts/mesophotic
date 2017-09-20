@@ -97,26 +97,26 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, fields = default_search_fields, publication_types = default_publication_types, is_editor_or_admin = false) {
+  scope :search, -> (search_term, search_params = default_search_params, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
-    when [true, true] then filter(search_term, fields, publication_types)
-    when [true, false] then relevance(search_term, fields, publication_types)
-    else where("publication_type IN (?) OR publication_type IS NULL", publication_types).order(id: :asc)
+    when [true, true] then filter(search_term, search_params)
+    when [true, false] then relevance(search_term, search_params)
+    else where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types]).order(id: :asc)
     end
   }
 
-  scope :filter, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
+  scope :filter, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
-      terms = Array.new(fields.count, "%#{search_term}%")
+      clause = search_params[:fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
+      terms = Array.new(search_params[:fields].count, "%#{search_term}%")
       where(clause, *terms)
-        .where("publication_type IN (?) OR publication_type IS NULL", publication_types)
+        .where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
     end
   }
 
-  scope :relevance, -> (search_term, fields = default_search_fields, publication_types = default_publication_types) {
+  scope :relevance, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      filter = fields.map { |field|
+      filter = search_params[:fields].map { |field|
       "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
     }.join(" + ")
 
@@ -124,7 +124,7 @@ class Publication < ActiveRecord::Base
       limited = relevance.where("relevance > 0")
       relevance
         .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-        .where("publication_type IN (?) OR publication_type IS NULL", publication_types)
+        .where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
         .order("relevance DESC, filename ASC")
     end
   }
@@ -173,12 +173,24 @@ class Publication < ActiveRecord::Base
     end
   end
 
+  def self.default_search_params
+    {
+      fields: default_search_fields,
+      publication_types: default_publication_types,
+      characteristics: default_characteristics
+    }
+  end
+
   def self.default_search_fields
     ["title", "abstract", "contents", "authors"]
   end
 
   def self.default_publication_types
     ["scientific", "technical", "popular"]
+  end
+
+  def self.default_characteristics
+    Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort
   end
 
   # instance methods
