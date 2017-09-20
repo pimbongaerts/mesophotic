@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :photos
   has_many :validations
   has_many :posts
+  has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_user_id'
   has_attached_file :profile_picture,
                     default_url: '/images/:style/missing.png',
                     styles: { medium: '200x200>',

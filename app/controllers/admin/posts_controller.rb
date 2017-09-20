@@ -13,11 +13,11 @@ class Admin::PostsController < Admin::BaseController
   end
 
   def index
-    @posts = Post.published.page(params[:page]).per(50)
+    @posts = Post.published.page(params[:page])
   end
 
   def drafts
-    @posts = Post.drafted.page(params[:page]).per(50)
+    @posts = Post.drafted.page(params[:page])
   end
 
   def new
@@ -65,7 +65,10 @@ class Admin::PostsController < Admin::BaseController
     :title,
     :content_md,
     :draft,
-    :updated_at
+    :updated_at,
+    :post_type,
+    :featured_publication_id,
+    :featured_user_id
     )
   end
 

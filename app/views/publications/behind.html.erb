@@ -1,3 +1,7 @@
+<%# if @post.post_type == 'behind_the_science' %>
+	<%# render 'pages/post_behind' %>
+<%# end %>
+
 <%= render partial: "layouts/page_title", 
        locals: {title: "Behind the science",
           subtitle: @publication.short_citation,

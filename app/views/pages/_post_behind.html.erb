@@ -1,0 +1,140 @@
+<% @publication = @post.featured_publication %>
+
+<%= render partial: "layouts/page_title", 
+       locals: {title: "Behind the science",
+          subtitle: @publication.title_truncated,
+          backlink: publications_path } %>
+
+<div class="row">
+  <div class="col-sm-3">
+    <br>
+    <i class="fa fa-calendar"></i>&nbsp;&nbsp;
+    <%= @post.updated_at.strftime("%Y, %B %-d") %><br>
+    <small>
+      Posted by
+      <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
+                          member_path(@post.user) %>          
+    </small><br><br>
+    <% if not @post.featured_user.profile_picture.url(:medium).include? "missing" %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>An interview with:</strong></div>
+        <div class="panel-body">
+          <%= image_tag @post.featured_user.profile_picture.url(:medium) %>
+          <strong>
+            <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}",
+                        member_path(@post.featured_user) %>
+          </strong>
+        </div>
+      </div>
+    <% end %>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Talking about:</strong></div>
+      <div class="panel-body">
+        <%# image_tag @publication.pdf.url(:thumb) %>
+        <%= @publication.short_citation %><br>
+        <strong>
+          <%= link_to @publication.title, publication_path(@publication) %>
+        </strong>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Study location</strong></div>
+      <div class="panel-body">
+        <% data = format_locations_and_coordinates(@publication.locations)  %>
+        <%= render partial: 'shared/world_map',
+                   locals: { title: 'Locations',
+                             data: data,
+                             height: 150 } %>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Topics</strong></div>
+      <div class="panel-body">
+        <%= render partial: 'shared/metadata', 
+                   locals: { entity: @publication } %>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-sm-9">
+    <% if @post.content_md? and @post.photos.count > 0 %>
+      <% behind_sections = @post.content_md.split("\r\n\r\n") %>
+      <div class="row">
+        <div class="col-sm-12">
+          <font color="#2b82bc">
+            <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
+          </font><br>
+          <%= markdown(behind_sections[0]) %>
+          <%= markdown(behind_sections[1]) %>
+          <div class="panel panel-default">
+            <div class="panel-body">  
+              <div class="row">
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[0]} %>
+                </div>
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[1]} %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%= markdown(behind_sections[2]) %>
+          <%= markdown(behind_sections[3]) %>
+          <div class="panel panel-default">
+            <div class="panel-body">  
+              <div class="row">
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[2]} %>
+                </div>
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[3]} %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%= markdown(behind_sections[4]) %>
+          <%= markdown(behind_sections[5]) %>
+          <div class="panel panel-default">
+            <div class="panel-body">  
+              <div class="row">
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[4]} %>
+                </div>
+                <div class="col-sm-6">
+                  <%= render partial: 'photo_with_subtitle',
+                             locals: {photo: @publication.photos[5]} %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h4>Featured article:</h4>
+          <table class="table table-striped">
+            <%= render partial: 'publications/publication',
+               locals: {publication: @publication } %>
+          </table>
+        </div>
+      </div>
+    <% elsif @publication.photos.count > 0  %>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <strong>Photos</strong>
+            </div>
+            <div class="panel-body">    
+              <%= render partial: 'shared/behind_the_scenes',
+                         locals: {publication: @publication,
+                                  style: 'full'} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

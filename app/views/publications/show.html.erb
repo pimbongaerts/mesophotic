@@ -52,7 +52,7 @@
         </div>
         <div class="panel-body">    
           <%= render partial: 'shared/behind_the_scenes',
-                     locals: {publication: @publication,
+                     locals: {post: @publication.featured_post,
                               style: 'overview'} %>
         </div>
       </div>

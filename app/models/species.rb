@@ -2,14 +2,14 @@
 #
 # Table name: species
 #
-#  id              :integer          not null, primary key
-#  name            :string
-#  focusgroup_id   :integer
-#  url_fishbase    :string
-#  url_aims        :string
-#  url_coraltraits :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                :integer          not null, primary key
+#  name              :string
+#  focusgroup_id     :integer
+#  fishbase_webid    :string
+#  aims_webid        :string
+#  coraltraits_webid :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 
 class Species < ActiveRecord::Base

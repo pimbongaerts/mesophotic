@@ -32,6 +32,7 @@
 #  publication_type   :string
 #  mce                :boolean          default(TRUE)
 #  publication_format :string           default("article")
+#  behind_contents    :text
 #
 
 class Publication < ActiveRecord::Base
@@ -59,6 +60,7 @@ class Publication < ActiveRecord::Base
   has_many :user_validations, through: :validations, source: :user
   has_many :observations, as: :observable
   has_many :photos
+  has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
   has_attached_file :pdf,
                     styles: { medium: ['450x640>', :png],
                               thumb: ['100x140>', :png] },
@@ -241,6 +243,6 @@ class Publication < ActiveRecord::Base
   end
 
   def behind_the_science?
-    photos.count >= 6
+    featured_post && featured_post.post_type == 'behind_the_science'
   end
 end
