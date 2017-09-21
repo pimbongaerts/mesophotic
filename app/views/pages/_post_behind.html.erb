@@ -15,28 +15,7 @@
       <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
                           member_path(@post.user) %>          
     </small><br><br>
-    <% if not @post.featured_user.profile_picture.url(:medium).include? "missing" %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>An interview with:</strong></div>
-        <div class="panel-body">
-          <%= image_tag @post.featured_user.profile_picture.url(:medium) %>
-          <strong>
-            <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}",
-                        member_path(@post.featured_user) %>
-          </strong>
-        </div>
-      </div>
-    <% end %>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Talking about:</strong></div>
-      <div class="panel-body">
-        <%# image_tag @publication.pdf.url(:thumb) %>
-        <%= @publication.short_citation %><br>
-        <strong>
-          <%= link_to @publication.title, publication_path(@publication) %>
-        </strong>
-      </div>
-    </div>
+
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Study location</strong></div>
       <div class="panel-body">
