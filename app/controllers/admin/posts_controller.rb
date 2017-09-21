@@ -28,7 +28,7 @@ class Admin::PostsController < Admin::BaseController
     @post = Post.new(post_params)
     @post.user_id = current_user.id
     if @post.save
-      redirect_to admin_posts_dashboard_path, notice: "New post published."
+      redirect_to admin_posts_path, notice: "New post published."
     else
       flash[:alert] = "Post not published."
       render :new
@@ -41,7 +41,7 @@ class Admin::PostsController < Admin::BaseController
   def update
     @post.slug = nil
     if @post.update(post_params)
-      redirect_to admin_posts_dashboard_path, notice: "Post successfully edited."
+      redirect_to admin_posts_path, notice: "Post successfully edited."
     else
       flash[:alert] = "The post was not edited."
       render :edit
