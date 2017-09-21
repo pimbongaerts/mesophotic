@@ -4,17 +4,17 @@
 
 
 <div class="row">
-  <div class="col-sm-8">
+  <div class="col-sm-9">
     <% @posts.each do |post| %>
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-5">
           <% if post.post_type == "behind_the_science" %> 
             <%= render partial: 'shared/behind_the_scenes',
                        locals: {post: post,
                                 style: 'overview'} %>
-          <% end %>
+          <% end %><br><br>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-7">
           <h4><%= link_to "#{post.title}", post_path(post.slug) %></h4>
             <small><i class="fa fa-calendar"></i>&nbsp;&nbsp;
             <%= post.created_at.strftime("%Y, %B %-d") %>
@@ -33,7 +33,7 @@
 
     <% end %>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-3">
 
   </div>
 </div>
