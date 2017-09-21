@@ -15,7 +15,7 @@ class PublicationsController < ApplicationController
 
 
   def index
-    params[:search_params] = search_params || Publication.default_search_params
+    params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
     args = params[:validation_type] == 'expired' ? [current_user] : []
     is_editor_or_admin = current_user.try(:editor_or_admin?) || false
 
@@ -208,8 +208,13 @@ class PublicationsController < ApplicationController
       )
     end
 
-    def search_params
-      return nil if params[:search_params].blank?
-      params[:search_params].reduce({}) { |ps, p| ps.merge(p.first => p.last.keys) }
+    def search_params params
+      return params if params.blank?
+
+      # Ensure params are in the format key => [option], as checklists are
+      # posted with the format key => {option => option}
+      params.reduce({}) { |ps, p|
+        ps.merge(p.first => p.last.try(:keys) || p.last)
+      }
     end
   end
