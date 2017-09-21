@@ -1,18 +1,39 @@
-<% title("Posts") %>
-<h1>Posts</h1>
+<%= render partial: "layouts/page_title",
+       locals: {title: "Behind the Science",
+                backlink: home_path } %>
 
-<% @posts.each do |post| %>
 
-<div class="title-box">
-  <p>
-    <%= link_to "#{post.title}", post_path(post.slug) %> <br/>
-    <span><small><em><%= time_ago_in_words(post.updated_at) %> ago</em></small></span>
-  </p>
+<div class="row">
+  <div class="col-sm-8">
+    <% @posts.each do |post| %>
+      <div class="row">
+        <div class="col-sm-6">
+          <% if post.post_type == "behind_the_science" %> 
+            <%= render partial: 'shared/behind_the_scenes',
+                       locals: {post: post,
+                                style: 'overview'} %>
+          <% end %>
+        </div>
+        <div class="col-sm-6">
+          <h3><%= link_to "#{post.title}", post_path(post.slug) %></h3>
+            <i class="fa fa-calendar"></i>&nbsp;&nbsp;
+            <%= post.created_at.strftime("%Y, %B %-d") %>
+            - posted by
+            <%= link_to "#{post.user.first_name} #{post.user.last_name}",
+                                member_path(post.user) %>
+            <br><br>
+            <% if post.featured_user.present? %>
+              An interview with
+              <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
+              about
+              "<%= post.featured_publication.title %>".
+            <% end %>
+        </div>
+      </div>
 
-</div>
+    <% end %>
+  </div>
+  <div class="col-sm-4">
 
-<% end %>
-
-<div class="pagination-control text-center">
-  <%= paginate @posts %>
+  </div>
 </div>
