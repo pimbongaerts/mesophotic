@@ -72,11 +72,11 @@
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[0]} %>
+                             locals: {photo: @post.photos[0]} %>
                 </div>
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[1]} %>
+                             locals: {photo: @post.photos[1]} %>
                 </div>
               </div>
             </div>
@@ -88,11 +88,11 @@
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[2]} %>
+                             locals: {photo: @post.photos[2]} %>
                 </div>
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[3]} %>
+                             locals: {photo: @post.photos[3]} %>
                 </div>
               </div>
             </div>
@@ -104,11 +104,11 @@
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[4]} %>
+                             locals: {photo: @post.photos[4]} %>
                 </div>
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @publication.photos[5]} %>
+                             locals: {photo: @post.photos[5]} %>
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@
           </table>
         </div>
       </div>
-    <% elsif @publication.photos.count > 0  %>
+    <% elsif @post.photos.count > 0  %>
       <div class="row">
         <div class="col-sm-12">
           <div class="panel panel-default">
@@ -129,7 +129,7 @@
             </div>
             <div class="panel-body">    
               <%= render partial: 'shared/behind_the_scenes',
-                         locals: {publication: @publication,
+                         locals: {publication: @post,
                                   style: 'full'} %>
             </div>
           </div>
