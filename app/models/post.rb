@@ -33,6 +33,7 @@ class Post < ActiveRecord::Base
 
   # validations
   validates :post_type, presence: true
+  validates :user_id, presence: true
   validates :featured_publication_id, presence: true, 
             :if => lambda { self.post_type == 'behind_the_science'}
   validates :featured_user_id, presence: true, 

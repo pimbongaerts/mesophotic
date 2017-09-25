@@ -13,7 +13,7 @@ class Admin::PostsController < Admin::BaseController
   end
 
   def index
-    @posts = Post.published.page(params[:page])
+    @posts = Post.all.page(params[:page])
   end
 
   def drafts
