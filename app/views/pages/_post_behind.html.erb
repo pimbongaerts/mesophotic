@@ -13,8 +13,25 @@
     <small>
       Posted by
       <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
-                          member_path(@post.user) %>          
+                          member_path(@post.user) %>
+      <% if current_user.try(:editor_or_admin?) %>
+        <br><%= link_to "Edit post", edit_admin_post_path(@post.slug) %>    
+      <% end %>
     </small><br><br>
+
+    <% if @post.featured_user.present? %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>An interview with:</strong></div>
+        <div class="panel-body">
+          <% if @post.featured_user.profile_picture.present? %>
+            <%= image_tag @post.featured_user.profile_picture.url(:medium) %>
+          <% end %>
+          <strong>
+            <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_path(@post.featured_user) %>
+          </strong>
+        </div>
+      </div>
+    <% end %>
 
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Study location</strong></div>
