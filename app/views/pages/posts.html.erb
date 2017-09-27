@@ -1,5 +1,5 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Behind the Science",
+       locals: {title: "Latest blog posts",
                 backlink: home_path } %>
 
 
@@ -15,7 +15,10 @@
           <% end %><br><br>
         </div>
         <div class="col-sm-7">
-          <h4><%= link_to "#{post.title}", post_path(post.slug) %></h4>
+          <h4>
+            <%= post.category %>: 
+            <%= link_to "#{post.title}", post_path(post.slug) %>
+          </h4>
             <small><i class="fa fa-calendar"></i>&nbsp;&nbsp;
             <%= post.created_at.strftime("%Y, %B %-d") %>
             <% if post.user.present? %>
@@ -24,11 +27,18 @@
                                   member_path(post.user) %></small>
             <% end %>
             <br><br>
-            <% if post.featured_user.present? %>
+            <% if post.post_type == "behind_the_science" &&
+                  post.featured_user.present? %>
               An interview with
               <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
               about
               "<%= post.featured_publication.title %>".
+            <% elsif post.post_type == "early_career" &&
+                     post.featured_user.present? %>
+              An interview with
+              <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
+              about their research and experiences.            
+
             <% end %>
         </div>
       </div>
