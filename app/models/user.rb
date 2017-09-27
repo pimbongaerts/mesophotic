@@ -125,6 +125,10 @@ class User < ActiveRecord::Base
     [last_name, first_name].join(', ')
   end
 
+  def full_name_normal
+    [first_name, last_name].join(' ')
+  end
+
   def create_organisation_from_name
     new_organisation_name.blank? ||
       create_organisation(name: new_organisation_name)

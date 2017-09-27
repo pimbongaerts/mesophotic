@@ -62,4 +62,13 @@ class Post < ActiveRecord::Base
 
   # class methods
   # instance methods
+  def category
+    if post_type == 'behind_the_science'
+      "Behind the science"
+    elsif post_type == 'early_career'
+      "Early Career Scientist"
+    elsif post_type == 'method_feature'
+      "Methods Exposed"
+    end
+  end
 end

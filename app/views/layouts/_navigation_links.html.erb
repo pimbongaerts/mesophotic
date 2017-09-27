@@ -11,6 +11,11 @@
                          glyphicon: 'glyphicon-info-sign'} %>
 
     <%= render partial: 'layouts/link', 
+               locals: { path: posts_path, 
+                         title: 'Blog', 
+                         glyphicon: 'glyphicon-bullhorn'} %>
+
+    <%= render partial: 'layouts/link', 
                locals: { path: members_path, 
                          title: 'People', 
                          glyphicon: 'glyphicon-user'} %>

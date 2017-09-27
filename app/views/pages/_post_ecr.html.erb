@@ -1,8 +1,8 @@
-<% @publication = @post.featured_publication %>
+<% @researcher = @post.featured_user %>
 
 <%= render partial: "layouts/page_title", 
-       locals: {title: "Behind the science",
-          subtitle: @publication.title_truncated,
+       locals: {title: "Early Career Feature",
+          subtitle: @researcher.full_name_normal,
           backlink: posts_path } %>
 
 <div class="row">
@@ -19,26 +19,24 @@
       <% end %>
     </small><br><br>
 
-    <% if @post.featured_user.present? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>An interview with:</strong></div>
-        <div class="panel-body" align="center">
-          <% if @post.featured_user.profile_picture.present? %>
-            <%= link_to image_tag(@post.featured_user.profile_picture.url(:medium)),
-                        member_path(@post.featured_user) %>
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>An interview with:</strong></div>
+      <div class="panel-body" align="center">
+        <% if @researcher.profile_picture.present? %>
+          <%= link_to image_tag(@researcher.profile_picture.url(:medium)),
+                      member_path(@researcher) %>
+        <% end %>
+        <strong>
+          <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_path(@researcher) %>
+        </strong><br>
+        <small>        
+          <% if @researcher.organisation %>
+            <%= @researcher.organisation.name %>&nbsp;
+            (<%= ISO3166::Country[@researcher.organisation.country] %>)<br>
           <% end %>
-          <strong>
-            <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_path(@post.featured_user) %>
-          </strong><br>
-          <small>        
-            <% if @post.featured_user.organisation %>
-              <%= @post.featured_user.organisation.name %>&nbsp;
-              (<%= ISO3166::Country[@post.featured_user.organisation.country] %>)<br>
-            <% end %>
-          </small>
-        </div>
+        </small>
       </div>
-    <% end %>
+    </div>
 
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Interview keywords</strong></div>
@@ -50,23 +48,28 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Study location</strong></div>
-      <div class="panel-body">
-        <% data = format_locations_and_coordinates(@publication.locations)  %>
-        <%= render partial: 'shared/world_map',
-                   locals: { title: 'Locations',
-                             data: data,
-                             height: 150 } %>
+    <% if @researcher.research_interests.present? %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Short bio:</strong></div>
+        <div class="panel-body">
+          <small>
+            <%= markdown(@researcher.research_interests) %>
+          </small>
+        </div>
       </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Publication metadata</strong></div>
-      <div class="panel-body">
-        <%= render partial: 'shared/metadata', 
-                   locals: { entity: @publication } %>
+    <% end %>
+
+    <% if @researcher.publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Study locations</strong></div>
+        <div class="panel-body">
+          <% data = count_geographic_occurrences_of_publications_from_user(@researcher) %>
+          <%= render partial: 'shared/world_map', locals: { title: 'Locations',
+                                                            data: data,
+                                                            height: 150 } %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
   </div>
 
@@ -126,11 +129,7 @@
               </div>
             </div>
           </div>
-          <h4>Featured article:</h4>
-          <table class="table table-striped">
-            <%= render partial: 'publications/publication',
-               locals: {publication: @publication } %>
-          </table>
+
         </div>
       </div>
     <% elsif @post.photos.count > 0  %>
