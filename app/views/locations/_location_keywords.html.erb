@@ -1,20 +1,14 @@
-<strong>Fields</strong><br>
-<% cats = publications.joins(:fields)
-            .select("fields.description, count(fields.id) as count")
-            .group("fields.id").order("count(fields.id) DESC").limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Focusgroups</strong><br>
+<strong>Focusgroups</strong><br>
 <% cats = publications.joins(:focusgroups)
             .select("focusgroups.description, count(focusgroups.id) as count")
             .group("focusgroups.id").order("count(focusgroups.id) DESC")
             .limit(5) %>
 <%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-<br><strong>Locations</strong><br>
-<% cats = publications.joins(:locations)
-            .select("locations.description, count(locations.id) as count")
-            .group("locations.id").order("count(locations.id) DESC")
-            .limit(5) %>
+
+<br><strong>Fields</strong><br>
+<% cats = publications.joins(:fields)
+            .select("fields.description, count(fields.id) as count")
+            .group("fields.id").order("count(fields.id) DESC").limit(5) %>
 <%= render partial: 'shared/category_counts', locals: { categories: cats } %>
 
 <br><strong>Platforms</strong><br>
@@ -23,10 +17,3 @@
             .group("platforms.id").order("count(platforms.id) DESC")
             .limit(5) %>
 <%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Co-authors</strong><br>
-<% cats = publications.joins(:users)
-            .select("users.last_name as description, count(users.id) as count")
-            .group("users.id").order("count(users.id) DESC").limit(6) %>
-<%= render partial: 'shared/category_counts', 
-           locals: { categories: cats } %>
