@@ -1,18 +1,31 @@
+<% if @location %>
+  <% @publications = @location.publications %>
+<% end %>
+
 <div class="row">
   <div class="col-sm-6">
-  	<select onchange="window.location=this.value">
-		<option>Select a location</option>
-		<% @locations.each do |location| %> 
-			<option value="<%= location_path(location) %>">
-			<%= location.description %></option>
-		<% end %>
-	</select>
+    <select onchange="window.location=this.value">
+    <% if !@location %>
+      <option>Select a location</option>
+    <% end %>
+    <% @locations.each do |location| %> 
+      <% if @location && @location == location %>
+        <option value="<%= location_path(location) %>" selected="selected">
+          <%= location.description %>
+        </option>
+      <% else %>
+        <option value="<%= location_path(location) %>">
+          <%= location.description %>
+        </option>
+      <% end %>
+    <% end %>
+  </select>
   </div>
   <div class="col-sm-6">
     <% if @publications.present? %>
-      <p class="bg-primary">&nbsp;Showing <%= @publications.count %> publications</p><br />
+      <p class="bg-primary">&nbsp;Showing <%= @publications.count %> publications</p>
     <% else %>
-      <p class="bg-warning">No location selected</p><br />
+      <p class="bg-warning">No location selected</p>
     <% end %>
   </div>
 </div>

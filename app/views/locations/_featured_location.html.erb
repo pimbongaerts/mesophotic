@@ -1,10 +1,11 @@
-<% featured_location = @locations.get_featured %>
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Featured location</strong></div>
   <div class="panel-body" align="center">
-    <%= featured_location.description %>
+    <%= link_to image_tag(@featured_location.photos[0].image(:compo)), 
+                    	  location_path(@featured_location) %>
+    
   </div>
   <div class="panel-footer" align="center">
-    footer
+    <%= link_to @featured_location.description, location_path(@featured_location) %>
   </div>
 </div>

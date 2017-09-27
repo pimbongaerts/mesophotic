@@ -32,8 +32,5 @@ class Location < ActiveRecord::Base
   # callbacks
   # other
   # class methods
-  def self.get_featured
-    offset(offset = rand(count)).first
-  end
   # instance methods
 end
