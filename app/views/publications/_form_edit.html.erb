@@ -10,8 +10,9 @@
           <div class="col-xs-12">
             <% for author in @publication.authors.split(', ') %>
               <% last_name = author.split()[0] %>
+              <%= hidden_field_tag "publication[user_ids][]", "" %>
               <% for user in User.where(:last_name => last_name)  %>
-                <%= check_box_tag "publication[user_ids][]", user.id, 
+                <%= check_box_tag "publication[user_ids][]", user.id,
                                   @publication.users.include?(user) %>
                 <%= user.first_name %>
                 <%= user.last_name %><br />
@@ -33,14 +34,14 @@
       <div class="col-xs-6">
         <div class="form-group">
           <%= f.label :min_depth %><br>
-          <%= f.text_field :min_depth, 
-              class: "form-control monospaced-control", 
+          <%= f.text_field :min_depth,
+              class: "form-control monospaced-control",
               placeholder: "10" %>
         </div>
         <div class="form-group">
           <%= f.label :max_depth %><br>
-          <%= f.text_field :max_depth, 
-                           class: "form-control monospaced-control", 
+          <%= f.text_field :max_depth,
+                           class: "form-control monospaced-control",
                            placeholder: "40" %>
         </div>
       </div>
@@ -76,11 +77,12 @@
           <%= f.label :platform %><br />
           <div class="row">
             <div class="col-xs-12">
+              <%= hidden_field_tag "publication[platform_ids][]", "" %>
               <% for platform in Platform.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[platform_ids][]", platform.id, 
+                <%= check_box_tag "publication[platform_ids][]", platform.id,
                                   @publication.platforms.include?(platform) %>
                 <%= platform.description %>&nbsp;
-                <strong><%= count_word_in_contents(platform.description, 
+                <strong><%= count_word_in_contents(platform.description,
                                                    @publication.contents) %>
                 </strong><br />
               <% end %>
@@ -94,11 +96,12 @@
           <%= f.label :field %><br />
           <div class="row">
             <div class="col-xs-12">
+              <%= hidden_field_tag "publication[field_ids][]", "" %>
               <% for field in Field.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[field_ids][]", field.id, 
+                <%= check_box_tag "publication[field_ids][]", field.id,
                                   @publication.fields.include?(field) %>
                 <%= field.description %>&nbsp;
-                <strong><%= count_word_in_contents(field.description, 
+                <strong><%= count_word_in_contents(field.description,
                                                    @publication.contents) %>
                 </strong><br />
               <% end %>
@@ -112,11 +115,12 @@
           <%= f.label :focusgroup %><br />
           <div class="row">
             <div class="col-xs-12">
+              <%= hidden_field_tag "publication[focusgroup_ids][]", "" %>
               <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id, 
+                <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id,
                                   @publication.focusgroups.include?(focusgroup) %>
                 <%= focusgroup.description %>&nbsp;
-                <strong><%= count_word_in_contents(focusgroup.description, 
+                <strong><%= count_word_in_contents(focusgroup.description,
                                                    @publication.contents) %>
                 </strong><br />
               <% end %>
@@ -130,8 +134,9 @@
           <%= f.label :location %><br />
           <div class="row">
             <div class="col-xs-12">
+              <%= hidden_field_tag "publication[location_ids][]", "" %>
               <% for location in Location.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[location_ids][]", location.id, 
+                <%= check_box_tag "publication[location_ids][]", location.id,
                                   @publication.locations.include?(location) %>
                 <%= location.description %><br />
               <% end %>

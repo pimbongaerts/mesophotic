@@ -17,9 +17,9 @@
           <div class="col-xs-8">
             <br>
             <% if current_user.try(:admin?)  %>
-              <%# devise_mapping.confirmable? && 
+              <%# devise_mapping.confirmable? &&
                 resource.pending_reconfirmation?
-              Currently waiting confirmation for: 
+              Currently waiting confirmation for:
               <%= resource.unconfirmed_email %>
             <% else %>
               <div class="form-group">
@@ -76,8 +76,8 @@
             (primary organisation that you are affiliated with)
           </small>
           <br>
-          <%= f.collection_select :organisation_id, 
-                                  Organisation.find_each, 
+          <%= f.collection_select :organisation_id,
+                                  Organisation.find_each,
                                   :id, :name,
                                   class: "form-control",
                                   :prompt => "Organisation..." %>
@@ -96,7 +96,7 @@
         </div>
         <div class="form-group">
           <%= f.label :country %><br />
-          <%= f.country_select :country, class: "form-control", 
+          <%= f.country_select :country, class: "form-control",
                                :prompt => "Country..." %>
         </div>
       </div>
@@ -130,7 +130,7 @@
           <%= f.text_field :google_scholar, class: "form-control" %>
         </div>
         <div class="form-group">
-          <%= f.label :twitter %> 
+          <%= f.label :twitter %>
           <small>(e.g. @mesophotic)</small><br>
           <%= f.text_field :twitter, class: "form-control" %>
         </div>
@@ -140,7 +140,7 @@
           <%= f.text_field :website, class: "form-control" %>
         </div>
         <div class="form-group">
-          <%= f.label :alt_website %> 
+          <%= f.label :alt_website %>
           <small>(e.g. http://www.mesophotic.org)</small><br>
           <%= f.text_field :alt_website, class: "form-control" %>
         </div>
@@ -183,6 +183,7 @@
           <%= f.label :platforms %>
           <small>(that you have actively used in past research)</small>
           <br>
+          <%= hidden_field_tag "user[platform_ids][]", "" %>
           <% for platform in Platform.find_each %>
             <div class="field">
               <%= check_box_tag "user[platform_ids][]", platform.id, @user.platforms.include?(platform) %>
@@ -207,6 +208,7 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="form-group">
+          <%= hidden_field_tag "user[publication_ids][]", "" %>
           <% for publication in Publication.where("authors LIKE ?", "%#{@user.last_name}%") %>
             <div class="field">
               <%= check_box_tag "user[publication_ids][]", publication.id, @user.publications.include?(publication) %>
@@ -221,4 +223,3 @@
     </div>
   </div>
 </div>
-        
