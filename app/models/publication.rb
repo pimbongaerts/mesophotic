@@ -43,6 +43,7 @@ class Publication < ActiveRecord::Base
   PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
   PUBLICATION_SEARCH_FIELDS = ["title", "abstract", "contents", "authors"].freeze
   PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
+  PUBLICATION_LOCATIONS = Location.select(:description).map(&:description).uniq
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes
@@ -109,9 +110,16 @@ class Publication < ActiveRecord::Base
   }
 
   scope :base_search, -> (search_params = default_search_params) {
-    where("publication_type IN (?) OR publication_type IS NULL", search_params[:publication_types])
-    .where("publication_format IN (?) OR publication_format IS NULL", search_params[:publication_formats])
-    .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
+    if search_params[:locations].present?
+      joins("INNER JOIN locations_publications ON publications.id = locations_publications.publication_id")
+        .joins("INNER JOIN locations ON locations.id = locations_publications.location_id")
+        .where("locations.description IN (?)", search_params[:locations])
+    else
+      all
+    end
+      .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
+      .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
+      .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
   }
 
   scope :filter, -> (search_term, search_params = default_search_params) {
@@ -119,7 +127,7 @@ class Publication < ActiveRecord::Base
       clause = search_params[:fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(search_params[:fields].count, "%#{search_term}%")
       where(clause, *terms)
-      .base_search(search_params)
+        .base_search(search_params)
     end
   }
 
@@ -132,9 +140,9 @@ class Publication < ActiveRecord::Base
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-      .base_search(search_params)
-      .order("relevance DESC, filename ASC")
+        .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+        .base_search(search_params)
+        .order("relevance DESC, filename ASC")
     end
   }
 
@@ -185,9 +193,10 @@ class Publication < ActiveRecord::Base
   def self.default_search_params
     {
       fields: PUBLICATION_SEARCH_FIELDS,
-      publication_types: PUBLICATION_TYPES,
-      publication_formats: PUBLICATION_FORMATS,
-      characteristics: []
+      types: PUBLICATION_TYPES,
+      formats: PUBLICATION_FORMATS,
+      characteristics: [],
+      locations: [],
     }
   end
 

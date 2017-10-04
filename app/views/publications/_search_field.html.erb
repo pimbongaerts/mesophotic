@@ -34,13 +34,18 @@
             <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :fields, params %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Types", Publication::PUBLICATION_TYPES, :publication_types, params %>
+            <%= search_param "Types", Publication::PUBLICATION_TYPES, :types, params %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Formats", Publication::PUBLICATION_FORMATS, :publication_formats, params %>
+            <%= search_param "Formats", Publication::PUBLICATION_FORMATS, :formats, params %>
           </div>
           <div class="col-sm-3">
             <%= search_param "Characteristics", Publication::PUBLICATION_CHARACTERISTICS, :characteristics, params %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params %>
           </div>
         </div>
       </div>
