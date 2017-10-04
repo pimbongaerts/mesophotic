@@ -615,6 +615,10 @@ span.glyphicon-link {
 }
 
 .search {
+  h5 {
+    -webkit-padding-start: 40px;
+  }
+
   ul {
     font-weight: bold;
 
@@ -625,5 +629,21 @@ span.glyphicon-link {
 
   label {
     font-weight: normal;
+  }
+}
+
+.search.horizontal {
+  h5 {
+    display: inline-block;
+  }
+
+  ul {
+    display: inline-block;
+    -webkit-padding-start: 2em;
+
+    li {
+      display: inline-block;
+      margin-right: 1em;
+    }
   }
 }

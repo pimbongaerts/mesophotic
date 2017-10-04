@@ -26,13 +26,16 @@
           <a data-toggle="collapse" href="#collapse1">Advanced...</a>
         </div>
       </div>
+      <div class="row">
+        <div class="col-sm-12 search horizontal">
+          <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :search_fields, params %>
+        </div>
+      </div>
     </div>
     <div id="collapse1" class="panel-collapse collapse search">
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-3">
-            <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :search_fields, params %>
-          </div>
+          <hr>
           <div class="col-sm-3">
             <%= search_param "Types", Publication::PUBLICATION_TYPES, :types, params %>
           </div>
@@ -44,22 +47,18 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12">
-            <hr>
-          </div>
-        </div>
-        <div class="row">
+          <hr>
           <div class="col-sm-3">
-            <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params %>
+            <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params, true %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Focus Groups", Publication::PUBLICATION_FOCUSGROUPS, :focusgroups, params %>
+            <%= search_param "Focus Groups", Publication::PUBLICATION_FOCUSGROUPS, :focusgroups, params, true %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Platforms", Publication::PUBLICATION_PLATFORMS, :platforms, params %>
+            <%= search_param "Platforms", Publication::PUBLICATION_PLATFORMS, :platforms, params, true %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Academic Fields", Publication::PUBLICATION_FIELDS, :fields, params %>
+            <%= search_param "Academic Fields", Publication::PUBLICATION_FIELDS, :fields, params, true %>
           </div>
         </div>
       </div>

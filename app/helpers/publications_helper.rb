@@ -136,8 +136,8 @@ module PublicationsHelper
   end
 
   def search_param title, options, param_name, params, scrollable=false
-    return ("<h5 style=\"margin-left: 40px;\">#{title}</h5>" \
-      "<ul style=\"overflow: scroll; height: 120px;\">" + options.map do |option|
+    open_tag = scrollable ? "<ul style=\"overflow: scroll; height: 120px;\">" : "<ul>"
+    return ("<h5>#{title}</h5>" + open_tag + options.map do |option|
       identifier = "search_params[#{param_name}[#{option}]]"
       "<li>" \
       "  <label for=\"#{identifier}\">" \
