@@ -53,9 +53,10 @@
         <div class="form-group">
           <%= f.label "Organisations involved:" %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[organisation_ids][]", "" %>
             <% for organisation in Organisation.all.order("name ASC") %>
-              <%= check_box_tag "expedition[organisation_ids][]", 
-                                organisation.id, 
+              <%= check_box_tag "expedition[organisation_ids][]",
+                                organisation.id,
                                 @expedition.organisations.include?(organisation) %>
               <%= organisation.name %><br>
             <% end %>
@@ -66,8 +67,9 @@
         <div class="form-group">
           <%= f.label "Researchers involved:" %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[user_ids][]", "" %>
             <% for user in User.all.order("last_name ASC, first_name ASC") %>
-              <%= check_box_tag "expedition[user_ids][]", user.id, 
+              <%= check_box_tag "expedition[user_ids][]", user.id,
                                 @expedition.users.include?(user) %>
               <%= user.first_name %> <em><%= user.last_name %></em><br>
             <% end %>
@@ -90,8 +92,9 @@
         <div class="form-group">
           <%= f.label :platform %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[platform_ids][]", "" %>
             <% for platform in Platform.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[platform_ids][]", platform.id, 
+              <%= check_box_tag "expedition[platform_ids][]", platform.id,
                                 @expedition.platforms.include?(platform) %>
               <%= platform.description %>&nbsp;<br>
             <% end %>
@@ -100,8 +103,9 @@
         <div class="form-group">
           <%= f.label :field %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[field_ids][]", "" %>
             <% for field in Field.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[field_ids][]", field.id, 
+              <%= check_box_tag "expedition[field_ids][]", field.id,
                                 @expedition.fields.include?(field) %>
               <%= field.description %>&nbsp;<br>
             <% end %>
@@ -112,8 +116,9 @@
         <div class="form-group">
           <%= f.label :focusgroup %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[focusgroup_ids][]", "" %>
             <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[focusgroup_ids][]", focusgroup.id, 
+              <%= check_box_tag "expedition[focusgroup_ids][]", focusgroup.id,
                                 @expedition.focusgroups.include?(focusgroup) %>
               <%= focusgroup.description %>&nbsp;<br>
             <% end %>
@@ -122,8 +127,9 @@
         <div class="form-group">
           <%= f.label :location %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "expedition[location_ids][]", "" %>
             <% for location in Location.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[location_ids][]", location.id, 
+              <%= check_box_tag "expedition[location_ids][]", location.id,
                                 @expedition.locations.include?(location) %>
               <%= location.description %>&nbsp;<br>
             <% end %>

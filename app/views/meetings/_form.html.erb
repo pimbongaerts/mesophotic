@@ -61,9 +61,10 @@
         <div class="form-group">
           <%= f.label "Institutions involved in organisation:" %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "meeting[organisation_ids][]", "" %>
             <% for organisation in Organisation.all.order("name ASC") %>
-              <%= check_box_tag "meeting[organisation_ids][]", 
-                                organisation.id, 
+              <%= check_box_tag "meeting[organisation_ids][]",
+                                organisation.id,
                                 @meeting.organisations.include?(organisation) %>
               <%= organisation.name %><br>
             <% end %>
@@ -74,8 +75,9 @@
         <div class="form-group">
           <%= f.label "Session chairs / organising members:" %><br>
           <div class="scrollbox">
+            <%= hidden_field_tag "meeting[user_ids][]", "" %>
             <% for user in User.all.order("last_name ASC, first_name ASC") %>
-              <%= check_box_tag "meeting[user_ids][]", user.id, 
+              <%= check_box_tag "meeting[user_ids][]", user.id,
                                 @meeting.users.include?(user) %>
               <%= user.first_name %> <em><%= user.last_name %></em><br>
             <% end %>
@@ -94,10 +96,11 @@
   </div>
   <div class="panel-body">
     <div class="form-group">
+      <%= hidden_field_tag "meeting[presentation_ids][]", "" %>
       <% Presentation.all.each do |presentation| %>
         <div class="field">
-          <%= check_box_tag "meeting[presentation_ids][]", 
-                            presentation.id, 
+          <%= check_box_tag "meeting[presentation_ids][]",
+                            presentation.id,
                             @meeting.presentations.include?(presentation) %>
           <%= presentation.authors %>
           <%= presentation.title %>
