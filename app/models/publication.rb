@@ -43,7 +43,10 @@ class Publication < ActiveRecord::Base
   PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
   PUBLICATION_SEARCH_FIELDS = ["title", "abstract", "contents", "authors"].freeze
   PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
-  PUBLICATION_LOCATIONS = Location.select(:description).map(&:description).uniq
+  PUBLICATION_LOCATIONS = Location.select(:description).order(:description).map(&:description).uniq.freeze
+  PUBLICATION_FOCUSGROUPS = Focusgroup.select(:description).order(:description).map(&:description).uniq.freeze
+  PUBLICATION_PLATFORMS = Platform.select(:description).order(:description).map(&:description).uniq.freeze
+  PUBLICATION_FIELDS = Field.select(:description).order(:description).map(&:description).uniq.freeze
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes
@@ -110,39 +113,46 @@ class Publication < ActiveRecord::Base
   }
 
   scope :base_search, -> (search_params = default_search_params) {
-    if search_params[:locations].present?
-      joins("INNER JOIN locations_publications ON publications.id = locations_publications.publication_id")
-        .joins("INNER JOIN locations ON locations.id = locations_publications.location_id")
-        .where("locations.description IN (?)", search_params[:locations])
-    else
-      all
-    end
-      .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
-      .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
-      .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
+    locations(search_params[:locations])
+    .focusgroups(search_params[:focusgroups])
+    .platforms(search_params[:platforms])
+    .fields(search_params[:fields])
+    .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
+    .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
+    .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
   }
+
+  [:location, :focusgroup, :platform, :field].each do |name|
+    scope "#{name}s", -> (params) {
+      if params.present?
+        joins("INNER JOIN #{name}s_publications ON publications.id = #{name}s_publications.publication_id")
+        .joins("INNER JOIN #{name}s ON #{name}s.id = #{name}s_publications.#{name}_id")
+        .where("#{name}s.description IN (?)", params)
+      end
+    }
+  end
 
   scope :filter, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      clause = search_params[:fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
-      terms = Array.new(search_params[:fields].count, "%#{search_term}%")
+      clause = search_params[:search_fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
+      terms = Array.new(search_params[:search_fields].count, "%#{search_term}%")
       where(clause, *terms)
-        .base_search(search_params)
+      .base_search(search_params)
     end
   }
 
   scope :relevance, -> (search_term, search_params = default_search_params) {
     if search_term.present?
-      filter = search_params[:fields].map { |field|
+      filter = search_params[:search_fields].map { |field|
       "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
     }.join(" + ")
 
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-        .where("id IN (SELECT id FROM (#{limited.to_sql}))")
-        .base_search(search_params)
-        .order("relevance DESC, filename ASC")
+      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+      .base_search(search_params)
+      .order("relevance DESC, filename ASC")
     end
   }
 
@@ -192,11 +202,14 @@ class Publication < ActiveRecord::Base
 
   def self.default_search_params
     {
-      fields: PUBLICATION_SEARCH_FIELDS,
+      search_fields: PUBLICATION_SEARCH_FIELDS,
       types: PUBLICATION_TYPES,
       formats: PUBLICATION_FORMATS,
       characteristics: [],
       locations: [],
+      focusgroups: [],
+      platforms: [],
+      fields: [],
     }
   end
 

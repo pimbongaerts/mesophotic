@@ -31,7 +31,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-3">
-            <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :fields, params %>
+            <%= search_param "Fields", Publication::PUBLICATION_SEARCH_FIELDS, :search_fields, params %>
           </div>
           <div class="col-sm-3">
             <%= search_param "Types", Publication::PUBLICATION_TYPES, :types, params %>
@@ -44,8 +44,22 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-12">
+            <hr>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
             <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_param "Focus Groups", Publication::PUBLICATION_FOCUSGROUPS, :focusgroups, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_param "Platforms", Publication::PUBLICATION_PLATFORMS, :platforms, params %>
+          </div>
+          <div class="col-sm-3">
+            <%= search_param "Academic Fields", Publication::PUBLICATION_FIELDS, :fields, params %>
           </div>
         </div>
       </div>
