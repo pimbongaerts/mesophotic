@@ -1,0 +1,26 @@
+<% if post.photos.count < 6 %>
+  Coming soon...
+<% else %>
+  <table>
+    <tr height="75px">
+    <td>
+    	<%= link_to image_tag(post.photos[0].image(:compo)), 
+                  post_path(post) %>
+    </td>
+     <td>
+      <%= link_to image_tag(post.photos[1].image(:compo)), 
+                  post_path(post) %>
+    </td>
+   </tr>
+   <tr height="75px">
+    <td>
+    	<%= link_to image_tag(post.photos[3].image(:compo)), 
+                  post_path(post) %>
+    </td>
+     <td>
+    	<%= link_to image_tag(post.photos[4].image(:compo)), 
+                  post_path(post) %>
+    </td>
+   	</tr>
+   </table>
+<% end %>
