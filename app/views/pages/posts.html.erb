@@ -12,7 +12,12 @@
             <%= render partial: 'shared/behind_the_scenes',
                        locals: {post: post,
                                 style: 'overview'} %>
-          <% end %><br><br>
+          <% elsif post.post_type == "early_career" &&
+                   post.featured_user.present? %>
+            <%= render partial: 'shared/early_career',
+                     locals: {post: post } %>          
+          <% end %>
+          <br><br>
         </div>
         <div class="col-sm-7">
           <h4>
@@ -31,7 +36,7 @@
                   post.featured_user.present? %>
               An interview with
               <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
-              about
+              about their article 
               "<%= post.featured_publication.title %>".
             <% elsif post.post_type == "early_career" &&
                      post.featured_user.present? %>
