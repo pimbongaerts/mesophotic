@@ -635,11 +635,12 @@ span.glyphicon-link {
 .search.horizontal {
   h5 {
     display: inline-block;
+    -webkit-padding-start: 1em;
   }
 
   ul {
     display: inline-block;
-    -webkit-padding-start: 2em;
+    -webkit-padding-start: 1em;
 
     li {
       display: inline-block;
