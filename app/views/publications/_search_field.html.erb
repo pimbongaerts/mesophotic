@@ -48,16 +48,19 @@
         </div>
         <div class="row">
           <hr>
-          <div class="col-sm-3">
+          <div class="col-sm-6">
             <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params, true %>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-6">
             <%= search_param "Focus Groups", Publication::PUBLICATION_FOCUSGROUPS, :focusgroups, params, true %>
           </div>
-          <div class="col-sm-3">
+        </div>
+        <div class="row"><br></div>
+        <div class="row">
+          <div class="col-sm-6">
             <%= search_param "Platforms", Publication::PUBLICATION_PLATFORMS, :platforms, params, true %>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-6">
             <%= search_param "Academic Fields", Publication::PUBLICATION_FIELDS, :fields, params, true %>
           </div>
         </div>

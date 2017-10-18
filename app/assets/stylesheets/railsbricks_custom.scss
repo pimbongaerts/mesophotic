@@ -616,13 +616,22 @@ span.glyphicon-link {
 
 .search {
   h5 {
-    -webkit-padding-start: 40px;
+    -moz-padding-start: 1em;
+    -webkit-padding-start: 1em;
   }
 
   ul {
     font-weight: bold;
+    -moz-padding-start: 1em;
+    -webkit-padding-start: 1em;
+
+    &.scrollable {
+      overflow: scroll;
+      height: 120px
+    }
 
     li {
+      white-space: nowrap;
       list-style-type: none;
     }
   }
@@ -635,12 +644,10 @@ span.glyphicon-link {
 .search.horizontal {
   h5 {
     display: inline-block;
-    -webkit-padding-start: 1em;
   }
 
   ul {
     display: inline-block;
-    -webkit-padding-start: 1em;
 
     li {
       display: inline-block;
