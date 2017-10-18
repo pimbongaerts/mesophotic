@@ -2,4 +2,6 @@
 	<%= render 'post_behind' %>
 <% elsif @post.post_type == 'early_career' %>
 	<%= render 'post_ecr' %>
+<% elsif @post.post_type == 'announcement' %>
+	<%= render 'post_announcement' %>
 <% end %>
