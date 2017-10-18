@@ -20,7 +20,7 @@
 
 class Post < ActiveRecord::Base
   # constants
-  POST_TYPES = ['behind_the_science', 'early_career', 'method_feature'].freeze
+  POST_TYPES = ['behind_the_science', 'early_career', 'method_feature', 'announcement'].freeze
 
   # attributes
 
@@ -69,6 +69,8 @@ class Post < ActiveRecord::Base
       "Early Career Scientist"
     elsif post_type == 'method_feature'
       "Methods Exposed"
+    elsif post_type == 'announcement'
+      "Announcement"
     end
   end
 end

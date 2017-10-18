@@ -8,6 +8,9 @@
              post.featured_user.present? %>
       <%= render partial: 'shared/early_career',
                locals: {post: post } %>          
+    <% elsif post.post_type == "announcement" %>
+      <%= link_to image_tag(post.photos[0].image(:compo)), 
+                          post_path(post) %>
     <% end %>
     <br><br>
   </div>
