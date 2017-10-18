@@ -4,7 +4,7 @@
                       style: 'overview'} %>
 <% elsif post.post_type == "early_career" &&
          post.featured_user.present? %>
-  <%= render partial: 'shared/early_career',
+  <%= render partial: 'shared/behind_the_scenes',
            locals: {post: post } %>          
 <% end %>
 
