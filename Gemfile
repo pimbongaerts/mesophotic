@@ -17,6 +17,7 @@ gem 'kaminari', '0.16.3'
 gem 'friendly_id', '5.1.0'
 gem 'font-awesome-sass'
 gem 'bootstrap-sass', '3.3.3'
+gem 'bootstrap-slider-rails'
 gem 'devise', '3.4.1'
 gem 'redcarpet', '3.2.2'
 
