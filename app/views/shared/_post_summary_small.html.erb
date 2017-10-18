@@ -13,11 +13,3 @@
   <%= post.category %>: 
   <%= link_to "#{post.title}", post_path(post.slug) %>
 </h4>
-<small><i class="fa fa-calendar"></i>&nbsp;&nbsp;
-<%= post.created_at.strftime("%Y, %B %-d") %>
-<% if post.user.present? %>
-  - posted by
-  <%= link_to "#{post.user.first_name} #{post.user.last_name}",
-                      member_path(post.user) %></small>
-<% end %>
-<br>
