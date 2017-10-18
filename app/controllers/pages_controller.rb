@@ -10,6 +10,7 @@ class PagesController < ApplicationController
     @focusgroups = Focusgroup.all
     @twitter_feed = TwitterFeed.search("#mesophotic -filter:retweets").take(6)
     @latest_update = Publication.maximum(:updated_at)
+    @posts = Post.published.order('created_at ASC').limit(5)
   end
 
   def stats

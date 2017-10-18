@@ -85,7 +85,7 @@ class Publication < ActiveRecord::Base
     .joins(:validations)
     .where("validations.updated_at >= publications.updated_at")
     .group("publications.id")
-    .having("validations_count >= 3")
+    .having("validations_count >= 2")
   }
 
   scope :unvalidated, -> {
@@ -94,7 +94,7 @@ class Publication < ActiveRecord::Base
             ON validations.validatable_id = publications.id
             AND validations.updated_at >= publications.updated_at")
     .group("publications.id")
-    .having("validations_count < 3")
+    .having("validations_count < 2")
   }
 
   scope :expired, -> (user) {
@@ -277,5 +277,9 @@ class Publication < ActiveRecord::Base
 
   def behind_the_science?
     featured_post && featured_post.post_type == 'behind_the_science'
+  end
+
+  def validated?
+    Publication.validated.include?(self)
   end
 end
