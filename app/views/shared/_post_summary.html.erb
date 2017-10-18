@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-5">
+    <% if post.post_type == "behind_the_science" %> 
+      <%= render partial: 'shared/behind_the_scenes',
+                 locals: {post: post,
+                          style: 'overview'} %>
+    <% elsif post.post_type == "early_career" &&
+             post.featured_user.present? %>
+      <%= render partial: 'shared/early_career',
+               locals: {post: post } %>          
+    <% end %>
+    <br><br>
+  </div>
+  <div class="col-sm-7">
+    <h4>
+      <%= post.category %>: 
+      <%= link_to "#{post.title}", post_path(post.slug) %>
+    </h4>
+      <small><i class="fa fa-calendar"></i>&nbsp;&nbsp;
+      <%= post.created_at.strftime("%Y, %B %-d") %>
+      <% if post.user.present? %>
+        - posted by
+        <%= link_to "#{post.user.first_name} #{post.user.last_name}",
+                            member_path(post.user) %></small>
+      <% end %>
+      <br>
+      <% if post.post_type == "behind_the_science" &&
+            post.featured_user.present? %>
+        An interview with
+        <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
+        about their article 
+        "<%= post.featured_publication.title %>".
+      <% elsif post.post_type == "early_career" &&
+               post.featured_user.present? %>
+        An interview with
+        <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
+        about their research and experiences.            
+
+      <% end %>
+  </div>
+</div>
