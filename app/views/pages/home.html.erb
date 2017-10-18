@@ -19,11 +19,28 @@
   </div>
 </div>
 
-<!-- Latest news and publications -->
+
+<!-- Latest news -->
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Latest posts</strong></div>
+      <div class="panel-body">
+        <% @posts.each do |post| %>
+          <%= render partial: 'shared/post_summary',
+                     locals: {post: post } %>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Latest publications -->
 <div class="row">
   <div class="col-sm-7">
     <div class="panel panel-default">
-      <div class="panel-heading"><strong>Newsfeed</strong></div>
+      <div class="panel-heading"><strong>Latest publications</strong></div>
       <div class="panel-body">
         <%= render partial: 'newsfeed', 
                    locals: { publications: @publications.limit(10) } %>

@@ -108,7 +108,13 @@
     <% end %>
     
     <div class="panel panel-default">
-      <div class="panel-heading"><strong>Meta-data</strong></div>
+      <div class="panel-heading"><strong>Meta-data</strong>
+        <% if @publication.validated? %>
+          <span class="glyphicon glyphicon-ok-sign" info="At least two editors have validated these metadata."></span>
+        <% else %>
+          (pending validation)
+        <% end %>
+      </div>
       <div class="panel-body">
         <% if @publication.min_depth and @publication.max_depth %>
           <strong>Depth range</strong><br>
