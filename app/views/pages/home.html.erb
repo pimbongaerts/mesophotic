@@ -26,11 +26,16 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Latest posts</strong></div>
       <div class="panel-body">
-        <% @posts.each do |post| %>
-          <%= render partial: 'shared/post_summary',
-                     locals: {post: post } %>
-          <hr>
-        <% end %>
+        <div class="row">
+          <div class="col-sm-6">
+            <%= render partial: 'shared/post_summary_small',
+                       locals: {post: @posts[0] } %>
+          </div>
+          <div class="col-sm-6">
+            <%= render partial: 'shared/post_summary_small',
+                       locals: {post: @posts[1] } %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
