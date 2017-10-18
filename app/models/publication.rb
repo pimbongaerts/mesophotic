@@ -204,15 +204,15 @@ class Publication < ActiveRecord::Base
 
   def self.default_search_params
     {
-      search_fields: PUBLICATION_SEARCH_FIELDS,
-      depth_range: "0,500",
-      types: PUBLICATION_TYPES,
-      formats: PUBLICATION_FORMATS,
-      characteristics: [],
-      locations: [],
-      focusgroups: [],
-      platforms: [],
-      fields: [],
+      "search_fields" => PUBLICATION_SEARCH_FIELDS,
+      "depth_range" => "0,500",
+      "types" => PUBLICATION_TYPES,
+      "formats" => PUBLICATION_FORMATS,
+      # "characteristics" => [],
+      # "locations" => [],
+      # "focusgroups" => [],
+      # "platforms" => [],
+      # "fields" => [],
     }
   end
 

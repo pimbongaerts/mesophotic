@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div id="collapse1" class="panel-collapse collapse search">
+    <div id="collapse1" class="<%= params[:search_params] == Publication.default_search_params ? "panel-collapse collapse search" : "panel-collapse search"%>">
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-12">
@@ -43,6 +43,7 @@
               <input
                 type="text"
                 name="search_params[depth_range]"
+                values="[<%= params[:search_params][:depth_range] %>]"
                 data-provide="slider"
                 data-slider-min="0"
                 data-slider-max="500"
