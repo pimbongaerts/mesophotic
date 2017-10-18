@@ -639,6 +639,22 @@ span.glyphicon-link {
   label {
     font-weight: normal;
   }
+
+  .right { text-align: right; }
+
+  .slider {
+    &.slider-horizontal {
+      width: 100%;
+    }
+
+    .slider-handle {
+      background: rgb(124, 181, 236)
+    }
+
+    .slider-selection {
+      background: rgb(149, 206, 255)
+    }
+  }
 }
 
 .search.horizontal {

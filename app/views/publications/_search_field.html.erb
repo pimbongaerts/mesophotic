@@ -35,6 +35,28 @@
     <div id="collapse1" class="panel-collapse collapse search">
       <div class="panel-body">
         <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-1 right">
+              <b>0&nbsp;m</b>
+            </div>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="search_params[depth_range]"
+                data-provide="slider"
+                data-slider-min="0"
+                data-slider-max="500"
+                data-slider-step="5"
+                data-slider-value="[<%= params[:search_params][:depth_range] %>]"
+                data-slider-tooltip="Select the depth range"
+              >
+            </div>
+            <div class="col-sm-1">
+              <b>>&nbsp;500&nbsp;m</b>
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <hr>
           <div class="col-sm-3">
             <%= search_param "Types", Publication::PUBLICATION_TYPES, :types, params %>

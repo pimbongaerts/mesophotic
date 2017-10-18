@@ -113,6 +113,7 @@ class Publication < ActiveRecord::Base
   }
 
   scope :base_search, -> (search_params = default_search_params) {
+    min_depth, max_depth = *search_params[:depth_range].split(",").map(&:to_i)
     locations(search_params[:locations])
     .focusgroups(search_params[:focusgroups])
     .platforms(search_params[:platforms])
@@ -120,6 +121,7 @@ class Publication < ActiveRecord::Base
     .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
     .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
     .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
+    .where("min_depth <= ? AND max_depth >= ?", max_depth >= 500 ? Publication.max_depth : max_depth, min_depth)
   }
 
   [:location, :focusgroup, :platform, :field].each do |name|
@@ -203,6 +205,7 @@ class Publication < ActiveRecord::Base
   def self.default_search_params
     {
       search_fields: PUBLICATION_SEARCH_FIELDS,
+      depth_range: "0,500",
       types: PUBLICATION_TYPES,
       formats: PUBLICATION_FORMATS,
       characteristics: [],
@@ -211,6 +214,14 @@ class Publication < ActiveRecord::Base
       platforms: [],
       fields: [],
     }
+  end
+
+  def self.max_depth
+    order(max_depth: :desc).first.max_depth
+  end
+
+  def self.min_depth
+    order(min_depth: :asc).first.min_depth || 0
   end
 
   # instance methods

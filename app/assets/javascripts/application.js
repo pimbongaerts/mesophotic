@@ -13,7 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require bootstrap 
+//= require bootstrap
+//= require bootstrap-slider
 //= require analytics
 //= require common
 //= require jqcloud
