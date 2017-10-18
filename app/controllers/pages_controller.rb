@@ -78,7 +78,7 @@ class PagesController < ApplicationController
   end
 
   def posts
-    @posts = Post.published.order('created_at ASC').page(params[:page])
+    @posts = Post.published.page(params[:page])
   end
   
   def show_post

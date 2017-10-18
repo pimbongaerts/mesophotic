@@ -52,12 +52,12 @@ class Post < ActiveRecord::Base
   # scopes
   scope :published, lambda {
     where(draft: false)
-      .order('updated_at DESC')
+      .order('created_at DESC')
   }
 
   scope :drafted, lambda {
     where(draft: true)
-      .order('updated_at DESC')
+      .order('created_at DESC')
   }
 
   # class methods
