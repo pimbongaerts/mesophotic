@@ -28,7 +28,8 @@
       <% end %>
       <br>
       <% if post.post_type == "behind_the_science" &&
-            post.featured_user.present? %>
+            post.featured_user.present? &&
+            post.featured_publication.present? %>
         An interview with
         <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_path(post.featured_user) %>
         about their article 
