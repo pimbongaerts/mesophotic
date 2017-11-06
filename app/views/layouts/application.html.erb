@@ -2,60 +2,44 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
   <title><%= @title || "Mesophotic" %></title>
-  
-  <%= favicon_link_tag 'favicon.ico' %>
-  <%= favicon_link_tag 'apple-icon.png', rel: 'apple-touch-icon', 
-                                         type: 'image/png' %>
-  
-  <%= stylesheet_link_tag "application", media: "all", 
-                                         "data-turbolinks-track" => true %>
-  
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
 
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= favicon_link_tag 'apple-icon.png', rel: 'apple-touch-icon', type: 'image/png' %>
+
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js" %>
   <%= javascript_include_tag "https://code.highcharts.com/highcharts.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/highcharts-more.js" %>  
+  <%= javascript_include_tag "https://code.highcharts.com/highcharts-more.js" %>
   <%= javascript_include_tag "https://code.highcharts.com/maps/modules/map.js" %>
   <%= javascript_include_tag "https://code.highcharts.com/mapdata/custom/world-continents.js" %>
+  <%= render 'layouts/google_analytics' %>
 
   <%= csrf_meta_tags %>
-  
 </head>
 <body>
   <div id="wrap">
-    <header>
-      <%= render 'layouts/navigation' %>
-    </header>
-    
-    <div class="container">
-      <div class="row">
-        &nbsp;<br><br>
-      </div>
-    </div>
-    
-    <div class="container">
+    <%= render 'layouts/navigation' %>
 
+    <div class="container">
       <div class="row">
         <div class="col-sm-6 col-sm-offset-3 text-center">
           <%= render 'layouts/messages' %>
         </div>
       </div>
-    
 
       <div class="row">
         <div class="col-sm-12">
-          <br /><br />
           <%= yield %>
         </div>
       </div>
-
     </div>
+
   </div>
 
   <%= render 'layouts/footer' %>
 	<%= debug(params) if Rails.env.development? %>
-
 </body>
 </html>

@@ -15,8 +15,7 @@
 //= require turbolinks
 //= require bootstrap
 //= require bootstrap-slider
-//= require analytics
-//= require common
-//= require jqcloud
-//= require owl.carousel
-//= require wordcloud2
+// = require analytics
+// = require jqcloud
+// = require owl.carousel
+// = require wordcloud2
