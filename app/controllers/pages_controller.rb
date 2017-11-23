@@ -18,10 +18,9 @@ class PagesController < ApplicationController
     @latest_update = Publication.maximum(:updated_at)
     @publications = Publication.all.order('publication_year DESC, 
                                            created_at DESC')
-    # Search term
+    # Search term TO DO: NOT FUNCTIONAL
     @publications_refug_counts = Publication.select('publication_year, count(id) as publications_count')
-                                     .relevance('refug')
-                                     .group('publication_year')
+                                     .group('publication_year') # .relevance('refug')
     @publications_total_counts = Publication.select('*, count(id) as publications_count')
                                      .all
                                      .group('publication_year')
