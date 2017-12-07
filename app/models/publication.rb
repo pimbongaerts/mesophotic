@@ -121,7 +121,7 @@ class Publication < ActiveRecord::Base
     .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
     .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
     .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
-    .where("min_depth <= ? AND max_depth >= ?", max_depth >= 500 ? Publication.max_depth : max_depth, min_depth)
+    .where("(min_depth IS NULL OR min_depth <= ?) AND (max_depth IS NULL OR max_depth >= ?)", max_depth >= 500 ? Publication.max_depth : max_depth, min_depth)
   }
 
   [:location, :focusgroup, :platform, :field].each do |name|
