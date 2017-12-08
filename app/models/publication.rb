@@ -104,7 +104,7 @@ class Publication < ActiveRecord::Base
     .group("publications.id") if user.present?
   }
 
-  scope :search, -> (search_term, search_params = default_search_params, is_editor_or_admin = false) {
+  scope :search, -> (search_term, search_params = Publication.default_search_params, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then filter(search_term, search_params)
     when [true, false] then relevance(search_term, search_params)
@@ -112,8 +112,8 @@ class Publication < ActiveRecord::Base
     end
   }
 
-  scope :base_search, -> (search_params = default_search_params) {
-    min_depth, max_depth = *search_params[:depth_range].split(",").map(&:to_i)
+  scope :base_search, -> (search_params = Publication.default_search_params) {
+    min_depth, max_depth = *(search_params[:depth_range] || "0,500").split(",").map(&:to_i)
     locations(search_params[:locations])
     .focusgroups(search_params[:focusgroups])
     .platforms(search_params[:platforms])
@@ -134,18 +134,19 @@ class Publication < ActiveRecord::Base
     }
   end
 
-  scope :filter, -> (search_term, search_params = default_search_params) {
+  scope :filter, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
-      clause = search_params[:search_fields].map { |field| "#{field} LIKE ?"}.join(" OR ")
-      terms = Array.new(search_params[:search_fields].count, "%#{search_term}%")
+      fields = search_params[:search_fields] || []
+      clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
+      terms = Array.new(fields.count, "%#{search_term}%")
       where(clause, *terms)
       .base_search(search_params)
     end
   }
 
-  scope :relevance, -> (search_term, search_params = default_search_params) {
+  scope :relevance, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
-      filter = search_params[:search_fields].map { |field|
+      filter = (search_params[:search_fields] || ["0"]).map { |field|
       "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
     }.join(" + ")
 
@@ -204,24 +205,24 @@ class Publication < ActiveRecord::Base
 
   def self.default_search_params
     {
-      "search_fields" => PUBLICATION_SEARCH_FIELDS,
-      "depth_range" => "0,500",
-      "types" => PUBLICATION_TYPES,
-      "formats" => PUBLICATION_FORMATS,
-      # "characteristics" => [],
-      # "locations" => [],
-      # "focusgroups" => [],
-      # "platforms" => [],
-      # "fields" => [],
+      :search_fields => PUBLICATION_SEARCH_FIELDS,
+      :depth_range => "0,500",
+      :types => PUBLICATION_TYPES,
+      :formats => PUBLICATION_FORMATS,
+      # :characteristics => [],
+      # :locations => [],
+      # :focusgroups => [],
+      # :platforms => [],
+      # :fields => [],
     }
   end
 
   def self.max_depth
-    order(max_depth: :desc).first.max_depth
+    order(max_depth: :desc).first.try(:max_depth) || 500
   end
 
   def self.min_depth
-    order(min_depth: :asc).first.min_depth || 0
+    order(min_depth: :asc).first.try(:min_depth) || 0
   end
 
   # instance methods
