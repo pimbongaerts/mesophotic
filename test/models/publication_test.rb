@@ -27,7 +27,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "filter" do
-    assert_equal [publications(:two)], (Publication.filter "II").to_a
+    assert_equal [publications(:three), publications(:two)], (Publication.filter "II").to_a
   end
 
   test "filtered everything" do
@@ -39,7 +39,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "relevance" do
-    assert_equal [publications(:two)], (Publication.relevance "II").to_a
+    assert_equal [publications(:three), publications(:two)], (Publication.relevance "II").to_a
   end
 
   test "relevance scores" do
@@ -54,5 +54,9 @@ class PublicationTest < ActiveSupport::TestCase
 
   test "no relevance" do
     assert_equal Publication.all, (Publication.relevance "")
+  end
+
+  test "depth search, find something" do
+    assert_equal Publication.all.to_a, (Publication.search "", Publication.default_search_params).to_a
   end
 end
