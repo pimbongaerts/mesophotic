@@ -36,8 +36,8 @@ class Photo < ActiveRecord::Base
   belongs_to :location
   belongs_to :site
   belongs_to :expedition
-  belongs_to :photographer, 
-             :class_name => 'User', 
+  belongs_to :photographer,
+             :class_name => 'User',
              :foreign_key => 'photographer_id'
 
   has_attached_file :image, presence: true,
@@ -49,8 +49,10 @@ class Photo < ActiveRecord::Base
                             convert_options: {
                                       compo: " -gravity center -crop '340x227+0+0'" }
 
+  paginates_per 30
+
   # validations
-  validates_attachment :image, 
+  validates_attachment :image,
                        presence: true,
                        content_type: { content_type: 'image/jpeg' }
 
@@ -69,7 +71,7 @@ class Photo < ActiveRecord::Base
 
   def next
     if id == Photo.last.id
-      Photo.last  
+      Photo.last
     else
       Photo.where("id > ?", id).first
     end

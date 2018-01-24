@@ -4,11 +4,11 @@
 <hr/>
 
 <div class="col-sm-12">
-	<%= will_paginate @publications %>
+	<%= paginate @publications %>
 	<table class="table table-striped">
 	<% @publications.each do |publication| %>
   	<%= render publication %>
-	<% end %>	
+	<% end %>
 	</table>
-	<%= will_paginate @publications %>
+	<%= paginate @publications %>
 </div>

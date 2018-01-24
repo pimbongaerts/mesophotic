@@ -7,14 +7,9 @@ class Admin::PublicationsController < Admin::BaseController
   ]
 
   def dashboard
-	@publications = Publication.all.paginate(:page => params[:page], 
-											 :per_page => 20)
+	  @publications = Publication.all.page(params[:page])
   end
 
   def destroy
-
   end
-
-
-
 end
