@@ -13,7 +13,7 @@ gem 'jbuilder', '2.2.11'
 gem 'bcrypt', '3.1.10'
 
 # RailsBricks gems
-gem 'kaminari', '0.16.3'
+gem 'kaminari'
 gem 'friendly_id', '5.1.0'
 gem 'font-awesome-sass'
 gem 'bootstrap-sass', '3.3.3'
@@ -28,7 +28,6 @@ gem "nokogiri"
 gem "twitter"
 gem "jqcloud-rails"
 gem "owlcarousel-rails"
-gem 'will_paginate', '~> 3.1.0'
 gem 'histogram'
 gem 'paper_trail'
 gem 'cancancan'

@@ -4,7 +4,7 @@
 
 <div class="row">
   <div class="col-sm-8">
-	  <%= will_paginate @photos %>
+	  <%= paginate @photos %>
 
 	  <table class="table table-striped">
 	    <tr>
@@ -36,8 +36,8 @@
       <div class="panel-heading">
         <strong>Images metadata summary</strong> (top 5 / category)
       </div>
-      <div class="panel-body">        
-        <%= render partial: 'photo_keywords', 
+      <div class="panel-body">
+        <%= render partial: 'photo_keywords',
                    locals: { photos: @photos } %>
       </div>
     </div>

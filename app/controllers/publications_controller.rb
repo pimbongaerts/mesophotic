@@ -1,6 +1,4 @@
 class PublicationsController < ApplicationController
-  require 'will_paginate/array' # in order to paginate static array
-
   before_action :require_admin_or_editor!, :except => [:show, :index, :behind]
   before_action :set_publication, only: [:show, :edit, :edit_meta, :update,
                                          :behind, :destroy, :detach_field,
@@ -21,7 +19,7 @@ class PublicationsController < ApplicationController
 
     @publications = Publication.send(params[:validation_type] || :all, *args)
                                .search(params[:search], params[:search_params], is_editor_or_admin)
-    @publications = @publications.paginate(page: params[:page], per_page: is_editor_or_admin ? 95 : 20) if request.format.html?
+    @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 95 : 20) if request.format.html?
 
     unless current_user.try(:editor_or_admin?) || params[:search_term].present?
       # Provide access to top 10 values of linked models

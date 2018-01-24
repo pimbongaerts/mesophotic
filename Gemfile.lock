@@ -132,7 +132,7 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (2.1.0)
-    kaminari (0.16.3)
+    kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     loofah (2.1.1)
@@ -288,7 +288,6 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
-    will_paginate (3.1.6)
 
 PLATFORMS
   ruby
@@ -310,7 +309,7 @@ DEPENDENCIES
   jbuilder (= 2.2.11)
   jqcloud-rails
   jquery-rails (= 4.0.3)
-  kaminari (= 0.16.3)
+  kaminari
   nokogiri
   owlcarousel-rails
   paper_trail
@@ -328,7 +327,6 @@ DEPENDENCIES
   twitter
   uglifier (= 2.7.1)
   web-console (= 2.1.1)
-  will_paginate (~> 3.1.0)
 
 RUBY VERSION
    ruby 2.2.1p85

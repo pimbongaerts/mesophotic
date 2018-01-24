@@ -17,12 +17,12 @@
   <%# Search field and pagination %>
   <%= render 'search_field' %>
   <% if current_user.try(:editor_or_admin?) %>
-    <%= will_paginate @publications %> |
+    <%= paginate @publications %> |
     Reverse sorted by ID |
     <%= link_to "Download as CSV", publications_path(format: "csv") %>
     <br><br>
   <% else %>
-    <%= will_paginate @publications %>
+    <%= paginate @publications %>
   <% end %>
 
   <%# Render publications %>
@@ -37,7 +37,7 @@
     <% end %>
   </table>
 
-  <%= will_paginate @publications %>
+  <%= paginate @publications %>
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>

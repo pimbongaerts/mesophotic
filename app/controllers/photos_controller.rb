@@ -7,7 +7,7 @@ class PhotosController < ApplicationController
   end
 
   def index
-    @photos = Photo.all.order('photos.id DESC').paginate(:page => params[:page], :per_page => 30)
+    @photos = Photo.all.order('photos.id DESC').page(params[:page])
     @location_counts = Location.joins(:photos)
                                .group('locations.id')
                                .select('locations.*, count(locations.id) as item_count')
@@ -24,7 +24,7 @@ class PhotosController < ApplicationController
 
     respond_to do |format|
       if @photo.save
-        format.html { redirect_to edit_photo_path(@photo), 
+        format.html { redirect_to edit_photo_path(@photo),
                       notice: 'Photo was successfully created.' }
       else
         format.html { render :new }
@@ -35,7 +35,7 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to :back, 
+        format.html { redirect_to :back,
                       notice: 'Photo was successfully updated.' }
       else
         format.html { render :edit }
@@ -46,7 +46,7 @@ class PhotosController < ApplicationController
   def destroy
     @photo.destroy
     respond_to do |format|
-      format.html { redirect_to :back, 
+      format.html { redirect_to :back,
                     notice: 'Photo was successfully destroyed.' }
     end
   end
@@ -57,11 +57,11 @@ class PhotosController < ApplicationController
     end
 
     def photo_params
-      params.require(:photo).permit(:contains_species, 
-	                                :credit, 
-	                                :depth, 
-	                                :description, 
-	                                :expedition_id, 
+      params.require(:photo).permit(:contains_species,
+	                                :credit,
+	                                :depth,
+	                                :description,
+	                                :expedition_id,
 	                                :image,
 	                                :location_id,
                                   :meeting_id,

@@ -70,6 +70,8 @@ class Publication < ActiveRecord::Base
                               thumb: ['100x140>', :png] },
                     default_url: 'no_pdf.png'
 
+  paginates_per 20
+
   # validations
   validates :title, presence: true
   validates :authors, presence: true
