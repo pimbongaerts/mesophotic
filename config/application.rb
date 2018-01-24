@@ -4,7 +4,7 @@ require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 module Mesophotic
   class Application < Rails::Application
@@ -20,17 +20,18 @@ module Mesophotic
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # turn off warnings triggered by friendly_id
+    # Turn off warnings triggered by friendly_id
     I18n.enforce_available_locales = false
     config.encoding = "utf-8"
 
     # Test framework
     config.generators.test_framework false
 
-    # autoload lib path
+    # Autoload lib path
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
+    # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
   end
 end
