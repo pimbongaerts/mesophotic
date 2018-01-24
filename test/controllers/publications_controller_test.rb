@@ -6,7 +6,7 @@ class PublicationsControllerTest < ActionController::TestCase
     end
 
     test "search params, nil" do
-        assert_equal(nil, @controller.send(:search_params, nil))
+        assert_nil(@controller.send(:search_params, nil))
     end
 
     test "search params, hash" do
