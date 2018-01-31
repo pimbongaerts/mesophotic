@@ -10,10 +10,10 @@
 #  updated_at       :datetime
 #
 
-class Validation < ActiveRecord::Base
+class Validation < ApplicationRecord
   # constants
   VALIDATION_TYPES = ["all", "validated", "unvalidated", "expired"].freeze
-  
+
   # attributes
 
   # associations

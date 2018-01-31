@@ -9,10 +9,10 @@
 #  open_access :boolean
 #
 
-class Journal < ActiveRecord::Base
+class Journal < ApplicationRecord
   # constants
   # attributes
-  
+
   # associations
   has_many :publications
 
