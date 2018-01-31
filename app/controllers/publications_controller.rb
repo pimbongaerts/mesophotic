@@ -211,7 +211,7 @@ class PublicationsController < ApplicationController
 
       # Ensure params are in the format key => [option], as checklists are
       # posted with the format key => {option => option}
-      params.reduce({}) { |ps, p|
+      params.permit!.to_h.reduce({}) { |ps, p|
         ps.merge(p.first => p.last.try(:keys) || p.last)
       }
     end
