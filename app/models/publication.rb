@@ -35,7 +35,7 @@
 #  behind_contents    :text
 #
 
-class Publication < ActiveRecord::Base
+class Publication < ApplicationRecord
   #self.inheritance_column = :_type_disabled # TODO: TEMPORARY FIX
 
   # constants

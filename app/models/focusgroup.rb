@@ -8,7 +8,7 @@
 #  updated_at  :datetime         not null
 #
 
-class Focusgroup < ActiveRecord::Base
+class Focusgroup < ApplicationRecord
   # constants
   # attributes
   # associations

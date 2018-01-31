@@ -12,7 +12,7 @@
 #  updated_at        :datetime         not null
 #
 
-class Species < ActiveRecord::Base
+class Species < ApplicationRecord
   # constants
   # attributes
 

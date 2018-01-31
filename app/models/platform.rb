@@ -8,7 +8,7 @@
 #  updated_at  :datetime         not null
 #
 
-class Platform < ActiveRecord::Base
+class Platform < ApplicationRecord
   # constants
   # attributes
 
@@ -17,7 +17,7 @@ class Platform < ActiveRecord::Base
   has_and_belongs_to_many :publications, touch: true
   has_and_belongs_to_many :expeditions, touch: true
   has_and_belongs_to_many :photos
-  
+
   # validations
   validates :description, presence: true
 

@@ -15,7 +15,7 @@
 #  depth_estimate  :boolean
 #
 
-class Observation < ActiveRecord::Base
+class Observation < ApplicationRecord
   # constants
   # attributes
   # associations

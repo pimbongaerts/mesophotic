@@ -42,7 +42,7 @@
 #  editor                       :boolean          default(FALSE)
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # constants
   TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Prof.'].freeze
 
@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates_attachment :profile_picture,
-                       content_type: { content_type: ['image/png', 
+                       content_type: { content_type: ['image/png',
                                                      'image/jpeg'] }
 
   # callbacks

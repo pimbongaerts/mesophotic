@@ -18,7 +18,7 @@
 #  featured_image_credits      :string
 #
 
-class Expedition < ActiveRecord::Base
+class Expedition < ApplicationRecord
   # constants
   # attributes
 

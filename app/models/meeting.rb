@@ -20,7 +20,7 @@
 #  venue                       :string
 #
 
-class Meeting < ActiveRecord::Base
+class Meeting < ApplicationRecord
   # constants
   # attributes
 

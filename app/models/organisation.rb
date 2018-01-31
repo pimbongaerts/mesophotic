@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class Organisation < ActiveRecord::Base
+class Organisation < ApplicationRecord
   # constants
   # attributes
   # associations
