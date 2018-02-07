@@ -1,5 +1,5 @@
 class Admin::PostsController < Admin::BaseController
-  before_filter :require_admin!
+  before_action :require_admin!
   before_action :set_post, only: [
     :edit,
     :update,
