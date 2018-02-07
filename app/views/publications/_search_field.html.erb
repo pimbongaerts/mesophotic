@@ -37,19 +37,41 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="col-sm-1 right">
+              <b><%= Publication.min_year %></b>
+            </div>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="year_slider"
+                name="search_params[year_range]"
+                data-provide="slider"
+                data-slider-min="<%= Publication.min_year %>"
+                data-slider-max="<%= Publication.max_year %>"
+                data-slider-step="1"
+                data-slider-value="[<%= params[:search_params][:year_range] %>]">
+              <script>$('#year_slider').slider();</script>
+            </div>
+            <div class="col-sm-1">
+              <b><%= Publication.max_year %></b>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-1 right">
               <b>0&nbsp;m</b>
             </div>
             <div class="col-sm-9">
               <input
                 type="text"
-                id="slider"
+                id="depth_slider"
                 name="search_params[depth_range]"
                 data-provide="slider"
                 data-slider-min="0"
                 data-slider-max="500"
                 data-slider-step="5"
                 data-slider-value="[<%= params[:search_params][:depth_range] %>]">
-              <script>$('#slider').slider();</script>
+              <script>$('#depth_slider').slider();</script>
             </div>
             <div class="col-sm-1">
               <b>>&nbsp;500&nbsp;m</b>

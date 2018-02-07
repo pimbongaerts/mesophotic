@@ -116,6 +116,7 @@ class Publication < ApplicationRecord
 
   scope :base_search, -> (search_params = Publication.default_search_params) {
     min_depth, max_depth = *(search_params[:depth_range] || "0,500").split(",").map(&:to_i)
+    min_year, max_year = *(search_params[:year_range] || "#{Publication.min_year},#{Publication.max_year}").split(",").map(&:to_i)
     locations(search_params[:locations])
     .focusgroups(search_params[:focusgroups])
     .platforms(search_params[:platforms])
@@ -124,6 +125,7 @@ class Publication < ApplicationRecord
     .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
     .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
     .where("(min_depth IS NULL OR min_depth <= ?) AND (max_depth IS NULL OR max_depth >= ?)", max_depth >= 500 ? Publication.max_depth : max_depth, min_depth)
+    .where("(publication_year <= ?) AND (publication_year >= ?)", max_year, min_year)
   }
 
   [:location, :focusgroup, :platform, :field].each do |name|
@@ -209,6 +211,7 @@ class Publication < ApplicationRecord
     {
       "search_fields" => PUBLICATION_SEARCH_FIELDS,
       "depth_range" => "0,500",
+      "year_range" => "#{min_year},#{max_year}",
       "types" => PUBLICATION_TYPES,
       "formats" => PUBLICATION_FORMATS,
       # "characteristics" => [],
@@ -225,6 +228,14 @@ class Publication < ApplicationRecord
 
   def self.min_depth
     order(min_depth: :asc).first.try(:min_depth) || 0
+  end
+
+  def self.max_year
+    order(publication_year: :desc).first.publication_year
+  end
+
+  def self.min_year
+    order(publication_year: :asc).first.publication_year
   end
 
   # instance methods
