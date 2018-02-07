@@ -180,6 +180,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
     public_suffix (3.0.1)
+    puma (3.11.2)
     rack (2.0.4)
     rack-pjax (1.0.0)
       nokogiri (~> 1.5)
@@ -329,6 +330,7 @@ DEPENDENCIES
   owlcarousel-rails
   paper_trail
   paperclip
+  puma
   rails (~> 5.1.0)
   rails-erd
   rails_admin
