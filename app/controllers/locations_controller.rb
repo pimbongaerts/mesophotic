@@ -58,7 +58,8 @@ class LocationsController < ApplicationController
   def detach_publication
       @publication = Publication.find(params[:publication_id])
       @publication.locations.delete(params[:id])
-      redirect_to :back, notice: 'Category was successfully removed.'
+      redirect_back fallback_location: root_path, 
+                    notice: 'Category was successfully removed.'
   end
 
   private

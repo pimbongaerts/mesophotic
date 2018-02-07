@@ -30,15 +30,16 @@ class Photo < ApplicationRecord
   has_and_belongs_to_many :platforms
   has_and_belongs_to_many :organisations
   has_and_belongs_to_many :users
-  belongs_to :post
-  belongs_to :meeting
-  belongs_to :publication
-  belongs_to :location
-  belongs_to :site
-  belongs_to :expedition
+  belongs_to :post, optional: true
+  belongs_to :meeting, optional: true
+  belongs_to :publication, optional: true
+  belongs_to :location, optional: true
+  belongs_to :site, optional: true
+  belongs_to :expedition, optional: true
   belongs_to :photographer,
-             :class_name => 'User',
-             :foreign_key => 'photographer_id'
+             class_name: 'User',
+             foreign_key: 'photographer_id',
+             optional: true
 
   has_attached_file :image, presence: true,
                             default_url: 'no_image.png',

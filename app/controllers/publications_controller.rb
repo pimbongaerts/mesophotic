@@ -78,7 +78,7 @@ class PublicationsController < ApplicationController
   def update
     respond_to do |format|
       if @publication.update(publication_params)
-        format.html { redirect_to :back,
+        format.html { redirect_back fallback_location: root_path,
                       notice: 'Publication was successfully updated.' }
       else
         format.html { render :edit }
@@ -89,44 +89,51 @@ class PublicationsController < ApplicationController
   def destroy
     @publication.destroy
     respond_to do |format|
-      format.html { redirect_to :back,
+      format.html { redirect_back fallback_location: root_path,
                     notice: 'Publication was successfully destroyed.' }
     end
   end
 
   def detach_field
       @publication.fields.delete(params[:format])
-      redirect_to :back, notice: 'Field was successfully removed.'
+      redirect_back fallback_location: root_path, 
+                    notice: 'Field was successfully removed.'
   end
 
   def detach_focusgroup
       @publication.focusgroups.delete(params[:format])
-      redirect_to :back, notice: 'Focusgroup was successfully removed.'
+      redirect_back fallback_location: root_path,
+                    notice: 'Focusgroup was successfully removed.'
   end
 
   def detach_platform
       @publication.platforms.delete(params[:format])
-      redirect_to :back, notice: 'Platform was successfully removed.'
+      redirect_back fallback_location: root_path, 
+                    notice: 'Platform was successfully removed.'
   end
 
   def detach_location
       @publication.locations.delete(params[:format])
-      redirect_to :back, notice: 'Location was successfully removed.'
+      redirect_back fallback_location: root_path,
+                    notice: 'Location was successfully removed.'
   end
 
   def add_validation
       @publication.validations.build(user_id: params[:format]).save!
-      redirect_to :back, notice: 'Publication was successfully validated.'
+      redirect_back fallback_location: root_path,
+                    notice: 'Publication was successfully validated.'
   end
 
   def remove_validation
       @publication.validations.find_by_user_id(params[:format]).delete
-      redirect_to :back, notice: 'Validation was successfully removed.'
+      redirect_back fallback_location: root_path,
+                    notice: 'Validation was successfully removed.'
   end
 
   def touch_validation
       @publication.validations.find_by_user_id(params[:format]).touch
-      redirect_to :back, notice: 'Publication was successfully revalidated.'
+      redirect_back fallback_location: root_path,
+                    notice: 'Publication was successfully revalidated.'
   end
 
   private
