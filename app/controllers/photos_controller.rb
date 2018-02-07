@@ -35,7 +35,7 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to :back,
+        format.html { redirect_back fallback_location: root_path,
                       notice: 'Photo was successfully updated.' }
       else
         format.html { render :edit }
@@ -46,7 +46,7 @@ class PhotosController < ApplicationController
   def destroy
     @photo.destroy
     respond_to do |format|
-      format.html { redirect_to :back,
+      format.html { redirect_back fallback_location: root_path,
                     notice: 'Photo was successfully destroyed.' }
     end
   end
