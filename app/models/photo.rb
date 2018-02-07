@@ -59,6 +59,10 @@ class Photo < ApplicationRecord
 
   # callbacks
   # other
+  # scopes
+  scope :showcases_location, lambda { 
+    where(showcases_location: true).order('created_at DESC')
+  }
   # class methods
 
   # instance methods

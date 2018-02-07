@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207042955) do
+ActiveRecord::Schema.define(version: 20180207045935) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 20180207042955) do
     t.integer "meeting_id"
     t.integer "publication_id"
     t.boolean "creative_commons", default: false
+    t.boolean "showcases_location", default: true
   end
 
   create_table "photos_platforms", id: false, force: :cascade do |t|

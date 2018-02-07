@@ -8,8 +8,8 @@ class LocationsController < ApplicationController
   	# TODO: had to use `all` rather than `find_each` as offset
   	# for featured_publication did otherwise not work
     @locations = Location.joins(:publications).group('locations.id').order('description ASC')
-    @locations_with_photos = Location.joins(:photos).group('locations.id')
-    @featured_location = @locations_with_photos.offset(offset = rand(@locations_with_photos.count.count)).first
+    @featured_photo = Photo.showcases_location.offset(offset = rand(Photo.showcases_location.count)).first
+    @featured_location = @featured_photo.location
   end
 
   def show
