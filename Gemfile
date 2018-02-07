@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
-ruby '2.2.1'
+ruby '2.5'
 
 # Standard Rails gems
-gem 'rails', '~> 4.2.10'
+gem 'rails', '~> 5.1.0'
 gem 'sass'
 gem 'sass-rails'
 gem 'uglifier'
@@ -11,6 +11,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder'
 gem 'bcrypt'
+gem 'listen'
 
 # RailsBricks gems
 gem 'kaminari'

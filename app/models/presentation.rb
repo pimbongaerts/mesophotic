@@ -21,7 +21,7 @@
 #  pdf_updated_at   :datetime
 #
 
-class Presentation < ActiveRecord::Base
+class Presentation < ApplicationRecord
   # constants
   # attributes
 

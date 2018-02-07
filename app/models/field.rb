@@ -8,7 +8,7 @@
 #  updated_at  :datetime         not null
 #
 
-class Field < ActiveRecord::Base
+class Field < ApplicationRecord
   # constants
   # attributes
   # associations

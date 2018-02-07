@@ -10,7 +10,7 @@
 #  longitude   :decimal(15, 10)  default(0.0)
 #
 
-class Location < ActiveRecord::Base
+class Location < ApplicationRecord
   # constants
   # attributes
 

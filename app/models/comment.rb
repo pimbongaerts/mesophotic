@@ -13,10 +13,10 @@
 #  request_response :string
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   # constants
   # attributes
-  
+
   # associations
   belongs_to :commentable, polymorphic: true
 

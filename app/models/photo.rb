@@ -23,7 +23,7 @@
 #  publication_id     :integer
 #
 
-class Photo < ActiveRecord::Base
+class Photo < ApplicationRecord
   # constants
   # attributes
   # associations

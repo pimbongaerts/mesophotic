@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class WordExclusion < ActiveRecord::Base
+class WordExclusion < ApplicationRecord
   # constants
   # attributes
   # associations
