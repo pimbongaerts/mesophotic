@@ -263,7 +263,8 @@ class Publication < ApplicationRecord
 
   def short_citation
     author_list = authors.split(",")
-    first_author = author_list[0].split()[0]
+    first_author_full = author_list[0]
+    first_author = first_author_full.split()[0..first_author_full.split().length-2].join(" ")
     if authors.count(",") == 0
       "#{first_author} #{publication_year}"
     elsif authors.count(",") == 1
