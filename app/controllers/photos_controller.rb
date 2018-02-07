@@ -58,6 +58,7 @@ class PhotosController < ApplicationController
 
     def photo_params
       params.require(:photo).permit(:contains_species,
+                                  :creative_commons,
 	                                :credit,
 	                                :depth,
 	                                :description,

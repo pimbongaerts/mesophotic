@@ -64,6 +64,10 @@
           <%= f.label "Photo taken underwater" %>
         </div>
         <div class="form-group">
+          <%= f.check_box :creative_commons %>
+          <%= f.label "Creative Commons license applies" %>
+        </div>
+        <div class="form-group">
           <%= f.label :depth %> <small>(use `0` for surface shots and '-1' for unknown depth)</small><br>
           <%= f.text_field :depth,
               class: "form-control monospaced-control",
