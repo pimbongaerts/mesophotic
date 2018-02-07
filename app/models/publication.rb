@@ -163,6 +163,10 @@ class Publication < ApplicationRecord
     end
   }
 
+  scope :original, -> {
+    where(original_data: true)
+  }
+
   # class methods
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|

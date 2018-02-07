@@ -1,21 +1,19 @@
+<% title = "#{@object.class.name.pluralize}" %>
 <%= render partial: "layouts/page_title",
-       locals: {title: "Locations",
-       			subtitle: @location.description,
-                backlink: home_path } %>
+           locals: {
+             title: title,
+       	     subtitle: @object.description,
+             backlink: home_path
+           } %>
 
 <div class="row">
   <div class="col-sm-8">
 
     <div class="panel panel-default">
-      <div class="panel-body">
-	    	<% data = get_site_coordinates(@location.sites) %>
-				<%= render partial: 'shared/world_map_clickable', 
-				   				 locals: { title: 'Sites',
-				   			 	 data: data,
-				   			 	 height: 300 } %>
-			</div>
+      <%= render partial: "#{partial}/dropdown_body", locals: { object: @object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
       <div class="panel-footer">
-        <%= render 'location_dropdown' %>
+        <%= render partial: 'dropdown',
+                   locals: { objects: @objects, object: @object, model: title.downcase } %>
       </div>
 		</div>
 
@@ -23,9 +21,7 @@
     <div class="panel panel-default">
       <div class="panel-body">
 	      <table class="table table-striped">
-				  <% @location.publications.where(original_data: true)
-				              .order('publication_year DESC, created_at DESC')
-				              .each do |publication| %>
+				  <% @object.publications.original.order('publication_year DESC, created_at DESC').each do |publication| %>
 				    <%= render publication %>
 				  <% end %>
 				</table>
@@ -34,56 +30,54 @@
 	</div>
 
   <div class="col-sm-4">
-    
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Research keywords</strong>
       </div>
       <div class="panel-body">
-        <%= render partial: 'shared/wordcloud', 
+        <%= render partial: 'shared/wordcloud',
                    locals: { title: 'location_publication_contents',
-                   data: overall_publication_contents(@location.publications),
+                   data: overall_publication_contents(@object.publications),
                    cut_off: 40, width: 400, height: 200 } %>
 			</div>
 		</div>
 
-    <% if @location.publications.count > 0 %>
+    <% if @object.publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Researchers</strong> (that published on this location)
         </div>
-        <div class="panel-body">        
-          <%= render partial: 'shared/publication_authors', 
-                     locals: { publication_authors: @location.publications } %>
+        <div class="panel-body">
+          <%= render partial: 'shared/publication_authors',
+                     locals: { publication_authors: @object.publications } %>
         </div>
       </div>
     <% end %>
 
-    <% if @location.photos.showcases_location.count > 0 %>
+    <% if @object.try(:photos) && @object.photos.showcases_location.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Photographs</strong> (from the field)
         </div>
         <div class="panel-body">
-        <% @location.photos.showcases_location.each do |photo| %>
-          <%= link_to image_tag(photo.image(:compo)), 
+        <% @object.photos.showcases_location.each do |photo| %>
+          <%= link_to image_tag(photo.image(:compo)),
                       photo_path(photo) %><br>
         <% end %>
         </div>
       </div>
     <% end %>
 
-    <% if @location.publications.count > 0 %>
+    <% if @object.publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Publication summary</strong> (top 5 / category)
         </div>
-        <div class="panel-body">        
-          <%= render partial: 'location_keywords', 
-                     locals: { publications: @location.publications } %>
+        <div class="panel-body">
+          <%= render partial: 'keywords',
+                     locals: { publications: @object.publications } %>
         </div>
       </div>
     <% end %>
-
   </div>
 </div>
