@@ -10,7 +10,7 @@ Mesophotic::Application.routes.draw do
   resources :presentations
   resources :species
   resources :sites
-  resources :locations
+  resources :locations, { except: :show }
 
   resources :publications do
     member do
@@ -33,17 +33,16 @@ Mesophotic::Application.routes.draw do
   get "/about", to: "pages#about", as: "about"
   get "/stats", to: "pages#stats", as: "stats"
   post "/emailconfirmation", to: "pages#email", as: "email_confirmation"
-  
+
   get "posts", to: "pages#posts", as: "posts"
   get "posts/:id", to: "pages#show_post", as: "post"
   devise_for :users, controllers: { registrations: 'registrations' }
   get "members", to: "pages#members", as: "members"
   get "members/:id", to: "pages#show_member", as: "member"
 
-
   namespace :admin do
     root "base#index"
-    get "publications/dashboard", to: "publications#dashboard", 
+    get "publications/dashboard", to: "publications#dashboard",
                         as: "publications_dashboard"
     resources :publications do
       resources :fields, only: [:destroy]
@@ -56,4 +55,6 @@ Mesophotic::Application.routes.draw do
     get "posts/drafts", to: "posts#drafts", as: "posts_drafts"
     get "posts/dashboard", to: "posts#dashboard", as: "posts_dashboard"
   end
+
+  get ":model/:id", to: "summary#show", as: "summary", constraints: { model: /(platforms|locations|focusgroups|fields)/ }
 end

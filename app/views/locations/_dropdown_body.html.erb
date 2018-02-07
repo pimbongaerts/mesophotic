@@ -1,0 +1,7 @@
+<div class="panel-body">
+    <% data = get_site_coordinates(object.sites) %>
+    <%= render partial: 'shared/world_map_clickable',
+               locals: { title: 'Sites',
+               data: data,
+               height: 300 } %>
+</div>
