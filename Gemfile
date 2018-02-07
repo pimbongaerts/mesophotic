@@ -12,6 +12,7 @@ gem 'turbolinks'
 gem 'jbuilder'
 gem 'bcrypt'
 gem 'listen'
+gem 'puma'
 
 # RailsBricks gems
 gem 'kaminari'
@@ -23,17 +24,17 @@ gem 'devise'
 gem 'redcarpet'
 
 # Added Rails gems
-gem "paperclip"
-gem "country_select"
-gem "nokogiri"
-gem "twitter"
-gem "jqcloud-rails"
-gem "owlcarousel-rails"
+gem 'paperclip'
+gem 'country_select'
+gem 'nokogiri'
+gem 'twitter'
+gem 'jqcloud-rails'
+gem 'owlcarousel-rails'
 gem 'histogram'
 gem 'paper_trail'
 gem 'cancancan'
 gem 'rails_admin'
-gem "switch_user"
+gem 'switch_user'
 gem 'figaro'
 
 # RailsBricks development gems
