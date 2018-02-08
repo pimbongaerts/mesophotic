@@ -2,7 +2,7 @@
 	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 	  <span class="glyphicon glyphicon-cog"></span>
 		<strong class="hidden-sm hidden-md"><small>
-		
+
 			<% if user == 'admin' %>
 				Admin
 			<% elsif user == 'regular' %>
@@ -13,19 +13,19 @@
 		<span class="caret"></span>
 	</a>
 	<ul class="dropdown-menu">
-	 	
+
 	 	<% if user == 'admin' %>
-		  <li><%= link_to "My profile", member_path(current_user.id) %></li>
+		  <li><%= link_to "My profile", member_pages_path(current_user.id) %></li>
 		  <li><%= link_to "Edit profile", edit_user_registration_path %></li>
 		  <li><%= link_to "Admin page", admin_root_path %></li>
 		  <li><%= link_to "Database", rails_admin_path %></li>
-		  <li><%= link_to "Sign out", destroy_user_session_path, 
+		  <li><%= link_to "Sign out", destroy_user_session_path,
 		                              data:{method: :delete} %></li>
 
 		<% elsif user == 'regular' %>
-	    <li><%= link_to "My profile", member_path(current_user.id) %></li>
+	    <li><%= link_to "My profile", member_pages_path(current_user.id) %></li>
 	    <li><%= link_to "Edit profile", edit_user_registration_path %></li>
-	    <li><%= link_to "Sign out", destroy_user_session_path, 
+	    <li><%= link_to "Sign out", destroy_user_session_path,
 	                                data:{method: :delete} %></li>
 		<% end %>
 

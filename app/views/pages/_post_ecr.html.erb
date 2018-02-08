@@ -1,9 +1,9 @@
 <% @researcher = @post.featured_user %>
 
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Blog",
           subtitle: "An interview with #{@researcher.full_name_normal}",
-          backlink: posts_path } %>
+          backlink: posts_pages_path } %>
 
 <div class="row">
   <div class="col-sm-3">
@@ -13,9 +13,9 @@
     <small>
       Posted by
       <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
-                          member_path(@post.user) %>
+                          member_pages_path(@post.user) %>
       <% if current_user.try(:editor_or_admin?) %>
-        <br><%= link_to "Edit post", edit_admin_post_path(@post.slug) %>    
+        <br><%= link_to "Edit post", edit_admin_post_pages_path(@post.slug) %>
       <% end %>
     </small><br><br>
 
@@ -24,12 +24,12 @@
       <div class="panel-body" align="center">
         <% if @researcher.profile_picture.present? %>
           <%= link_to image_tag(@researcher.profile_picture.url(:medium)),
-                      member_path(@researcher) %>
+                      member_pages_path(@researcher) %>
         <% end %>
         <strong>
-          <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_path(@researcher) %>
+          <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_pages_path(@researcher) %>
         </strong><br>
-        <small>        
+        <small>
           <% if @researcher.organisation %>
             <%= @researcher.organisation.name %>&nbsp;
             (<%= ISO3166::Country[@researcher.organisation.country] %>)<br>
@@ -51,8 +51,8 @@
 
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Interview keywords</strong></div>
-      <div class="panel-body">    
-        <%= render partial: 'shared/wordcloud_width', 
+      <div class="panel-body">
+        <%= render partial: 'shared/wordcloud_width',
                    locals: { title: 'post_contents',
                    data: @post.content_md,
                    cut_off: 10, width: 220 } %>
@@ -96,7 +96,7 @@
           <%= markdown(behind_sections[2]) %>
           <%= markdown(behind_sections[3]) %>
           <div class="panel panel-default">
-            <div class="panel-body">  
+            <div class="panel-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -112,7 +112,7 @@
           <%= markdown(behind_sections[4]) %>
           <%= markdown(behind_sections[5]) %>
           <div class="panel panel-default">
-            <div class="panel-body">  
+            <div class="panel-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -128,7 +128,7 @@
           <%= markdown(behind_sections[6]) %>
           <%= markdown(behind_sections[7]) %>
           <div class="panel panel-default">
-            <div class="panel-body">  
+            <div class="panel-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -151,7 +151,7 @@
             <div class="panel-heading">
               <strong>Photos</strong>
             </div>
-            <div class="panel-body">    
+            <div class="panel-body">
               <%= render partial: 'shared/behind_the_scenes',
                          locals: {publication: @post,
                                   style: 'full'} %>

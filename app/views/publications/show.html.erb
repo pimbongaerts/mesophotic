@@ -1,4 +1,4 @@
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Publications",
           subtitle: @publication.short_citation,
           backlink: publications_path } %>
@@ -12,19 +12,19 @@
           <p>
             <strong>
               <%= @publication.publication_type %>
-              <%= @publication.publication_format %> | 
+              <%= @publication.publication_format %> |
               <%= @publication.journal.name if @publication.journal %>
               <% if @publication.open_access? %>
                 |
                 <font color="red">
                   open access
                 </font>
-                <%= image_tag('open_access_small.png', 
+                <%= image_tag('open_access_small.png',
                               style: 'float: right;') %>
               <% end %>
             </strong>
             <% if can? :update, @article %>
-              | <%= link_to "edit", 
+              | <%= link_to "edit",
                             edit_publication_path(@publication) %>
             <% end %>
           </p>
@@ -32,8 +32,8 @@
           <p><%= @publication.authors %></p>
         </div>
         <div class="col-sm-2" align="right">
-          <%= render partial: 'publication_links', 
-                       locals: { user: @user } %>          
+          <%= render partial: 'publication_links',
+                       locals: { user: @user } %>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
         <div class="panel-heading">
           <strong>Behind the science</strong>
         </div>
-        <div class="panel-body">    
+        <div class="panel-body">
           <%= render partial: 'shared/behind_the_scenes',
                      locals: {post: @publication.featured_post,
                               style: 'overview'} %>
@@ -61,15 +61,15 @@
     <% if @publication.sites.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Research sites</strong></div>
-        <div class="panel-body">    
+        <div class="panel-body">
           <% data = format_sites_and_coordinates(@publication.sites) %>
-          <%= render partial: 'shared/world_map_clickable', 
+          <%= render partial: 'shared/world_map_clickable',
                      locals: { title: 'Locations',
                                data: data,
                                height: 300 } %>
           <br>
         </div>
-        <div class="panel-footer"> 
+        <div class="panel-footer">
           <table width="100%">
             <% for site in @publication.sites %>
               <tr>
@@ -85,7 +85,7 @@
     <% end %>
   </div>
 
-  
+
   <div class="col-sm-4">
     <% if @publication.pdf.exists? %>
       <div class="panel panel-default">
@@ -98,15 +98,15 @@
     <% if not @publication.contents.blank? %>
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Keywords</strong></div>
-        <div class="panel-body">    
-          <%= render partial: 'shared/wordcloud', 
+        <div class="panel-body">
+          <%= render partial: 'shared/wordcloud',
                      locals: { title: 'publication_contents',
                      data: @publication.contents,
                      cut_off: 40, height: 230 } %>
         </div>
       </div>
     <% end %>
-    
+
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Meta-data</strong>
         <% if @publication.validated? %>
@@ -133,21 +133,21 @@
           <p class="bg-warning">&nbsp;Full text not (yet) indexed.</p>
         <% end %>
 
-        <%= render partial: 'shared/metadata', 
-                   locals: { entity: @publication } %>          
+        <%= render partial: 'shared/metadata',
+                   locals: { entity: @publication } %>
 
         <% if @publication.new_species %>
           <br>Reports new species<br>
         <% end %>
       </div>
     </div>
-    
+
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Author profiles</strong></div>
       <div class="panel-body">
         <% @publication.users.each do |user| %>
-          <%= link_to "#{user.first_name} #{user.last_name}", 
-                      member_path(user.id) %>
+          <%= link_to "#{user.first_name} #{user.last_name}",
+                      member_pages_path(user.id) %>
           ( <span class="badge"><%= user.publications.count %></span> pubs)
           <br>
         <% end %>

@@ -54,10 +54,10 @@
         <br>
         <strong>Members involved</strong><br>
         <% @expedition.users.each do |user| %>
-          <%= link_to "#{user.first_name} #{user.last_name}", 
-                      member_path(user.id) %>
+          <%= link_to "#{user.first_name} #{user.last_name}",
+                      member_pages_path(user.id) %>
           <br>
-        <% end %>    
+        <% end %>
       </div>
       <div class="panel-footer">Listed in alphabetical order</div>
     </div>
@@ -65,8 +65,8 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Expedition metadata</strong></div>
       <div class="panel-body">
-        <%= render partial: 'shared/metadata', 
-                   locals: { entity: @expedition } %>          
+        <%= render partial: 'shared/metadata',
+                   locals: { entity: @expedition } %>
       </div>
     </div>
 
@@ -74,7 +74,7 @@
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Expedition posts</strong></div>
         <div class="panel-body">
-          
+
         </div>
       </div>
     <% end %>
@@ -85,4 +85,4 @@
 
 <%= link_to 'Edit', edit_expedition_path(@expedition) %> |
 <%= link_to 'Back', expeditions_path %>
-        
+

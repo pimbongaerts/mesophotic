@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Sites",
        			subtitle: @site.site_name,
-                backlink: home_path } %>
+                backlink: root_path } %>
 
 <div class="row">
   <div class="col-sm-8">
@@ -25,7 +25,7 @@
         <strong>Research keywords</strong>
       </div>
       <div class="panel-body">
-        <%= render partial: 'shared/wordcloud', 
+        <%= render partial: 'shared/wordcloud',
                    locals: { title: 'location_publication_contents',
                    data: overall_publication_contents(@site.publications),
                    cut_off: 40, width: 400, height: 200 } %>
@@ -37,8 +37,8 @@
         <div class="panel-heading">
           <strong>Research details</strong> (top 5 / category)
         </div>
-        <div class="panel-body">        
-          <%= render partial: 'shared/location_keywords', 
+        <div class="panel-body">
+          <%= render partial: 'shared/location_keywords',
                      locals: { publications: @site.publications } %>
         </div>
       </div>

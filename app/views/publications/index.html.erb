@@ -3,7 +3,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Publications",
                 subtitle: subtitle,
-                backlink: home_path } %>
+                backlink: root_path } %>
 
 <%# Wide screen for search results or editor view %>
 <% sidebar = !(params[:search].present? || current_user.try(:editor_or_admin?)) %>

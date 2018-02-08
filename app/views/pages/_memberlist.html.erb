@@ -16,7 +16,7 @@
       <td>
         <strong>
         <% if user.publications.count > 0 or user.research_interests %>
-          <%= link_to user.last_name, member_path(user.id) %>
+          <%= link_to user.last_name, member_pages_path(user.id) %>
         <% else %>
           <%= user.last_name %>
         <% end %>

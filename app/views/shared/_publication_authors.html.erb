@@ -12,7 +12,7 @@
 
   <span class="badge"><%= author.count %></span>&nbsp;
   <% @user = User.find_by_id(author.user_id) %>
-  <%= link_to "#{@user.first_name} #{@user.last_name}", member_path(@user) %>
+  <%= link_to "#{@user.first_name} #{@user.last_name}", member_pages_path(@user) %>
   <br>
 <% end %>
 

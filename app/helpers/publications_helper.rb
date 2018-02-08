@@ -95,7 +95,7 @@ module PublicationsHelper
             # Check initials if multiple occurrence
             initials = author.split()[1]
             if initials[0] == user_initial # TODO: CHANGE ONCE ADDED TO MODEL
-              author_formatted = link_to author, member_path(user.id)
+              author_formatted = link_to author, member_pages_path(user.id)
               authors_formatted << author_formatted
               found_user = true
             end

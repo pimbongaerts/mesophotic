@@ -7,13 +7,13 @@
   <% offset = rand(potential_users.count) %>
   <% featured_member = potential_users.offset(offset).first %>
   <%= link_to image_tag(featured_member.profile_picture.url(:medium)),
-              member_path(featured_member) %>
+              member_pages_path(featured_member) %>
 
 </div>
 <div class="col-sm-6" align="left">
   <strong>
-    <%= link_to "#{featured_member.first_name} #{featured_member.last_name}", 
-                member_path(featured_member) %><br>
+    <%= link_to "#{featured_member.first_name} #{featured_member.last_name}",
+                member_pages_path(featured_member) %><br>
   </strong>
   <% if featured_member.organisation.present? %>
     <%= featured_member.organisation.name %><br>

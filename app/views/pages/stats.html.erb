@@ -1,7 +1,7 @@
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Stats",
                 subtitle: "Latest update: #{@latest_update.to_date}",
-                backlink: home_path } %>
+                backlink: root_path } %>
 <div class="row">
   <div class="col-sm-12">
     <div class="panel panel-default">
@@ -13,39 +13,39 @@
         <div class="row">
           <div class="col-sm-4">
             <% categories, occurrences = get_depth_range_data(@publications) %>
-            <%= render partial: 'shared/depth_graph', 
-                       locals: { title: 'Depth', categories: categories, 
+            <%= render partial: 'shared/depth_graph',
+                       locals: { title: 'Depth', categories: categories,
                                  occurrences: occurrences, unit: "Publications",
                                  height: 400 } %>
             <p>
               Fig. 1a: Number of publications over depth<br>
               <small>
-                Depth ranges for each paper are taken as the entire range between 
+                Depth ranges for each paper are taken as the entire range between
                 the minimum and maximum depth
-                (<%= link_to 'definitions', about_path %>).
+                (<%= link_to 'definitions', about_pages_path %>).
               </small>
             </p>
           </div>
           <div class="col-sm-4">
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Platform3060',
                                  data: format_for_pie_chart(
                                           @platform_by_depth_group["30-60 m"],
                                           @platforms),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Platform6090',
                                  data: format_for_pie_chart(
                                           @platform_by_depth_group["60-90 m"],
                                           @platforms),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Platform90120',
                                  data: format_for_pie_chart(
                                           @platform_by_depth_group["90-120 m"],
                                           @platforms),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Platform120150',
                                  data: format_for_pie_chart(
                                           @platform_by_depth_group["120-150 m"],
@@ -55,32 +55,32 @@
               Fig. 1b: Research platform use over depth<br>
               <small>
                 When a paper uses multiple platforms,
-                each platform is assumed to be used over the entire depth range 
+                each platform is assumed to be used over the entire depth range
                 (as no information is usually available on further partitioning)
-                (<%= link_to 'definitions', about_path %>).
+                (<%= link_to 'definitions', about_pages_path %>).
               </small>
             </p>
           </div>
           <div class="col-sm-4">
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Focusgroup3060',
                                  data: format_for_pie_chart(
                                           @focusgroup_by_depth_group["30-60 m"],
                                           @focusgroups),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Focusgroup6090',
                                  data: format_for_pie_chart(
                                           @focusgroup_by_depth_group["60-90 m"],
                                           @focusgroups),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Focusgroup90120',
                                  data: format_for_pie_chart(
                                           @focusgroup_by_depth_group["90-120 m"],
                                           @focusgroups),
                                  height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph', 
+            <%= render partial: 'shared/pie_graph',
                        locals: { title: 'Focusgroup120150',
                                  data: format_for_pie_chart(
                                           @focusgroup_by_depth_group["120-150 m"],
@@ -89,10 +89,10 @@
             <p>
               Fig. 1c: Focal taxa over depth<br>
               <small>
-                When a paper focuses on multiple taxa, each taxa is assumed to be 
-                studied over the entire depth range 
+                When a paper focuses on multiple taxa, each taxa is assumed to be
+                studied over the entire depth range
                 (as no information is usually available on further partitioning)
-                (<%= link_to 'definitions', about_path %>).
+                (<%= link_to 'definitions', about_pages_path %>).
               </small>
             </p>
           </div>
@@ -107,7 +107,7 @@
           <div class="col-sm-4">
             <% categories, occurrences = count_publications_over_time(@publications.group(:publication_year).count) %>
             <%= render partial: 'shared/area_graph', locals: { title: 'Publications',
-                                                               categories: categories, 
+                                                               categories: categories,
                                                                occurrences: occurrences,
                                                                height: 200,
                                                                unit: "Publications"  } %>
@@ -120,9 +120,9 @@
           </div>
           <div class="col-sm-4">
             <% cats, occurs = count_first_authors_over_time(@publications) %>
-            <%= render partial: 'shared/area_graph', 
+            <%= render partial: 'shared/area_graph',
                        locals: { title: 'authors',
-                                 categories: cats, 
+                                 categories: cats,
                                  occurrences: occurs,
                                  height: 200,
                                  unit: "Unique first-authors" } %>
@@ -165,7 +165,7 @@
             <p>
               Fig. 3a: Number of publications across regions in the world<br>
               <small>
-                
+
               </small>
             </p>
           </div>
@@ -173,7 +173,7 @@
             <p>
               Fig. 3b: Research platform used across regions in the world<br>
               <small>
-                When a paper uses multiple platforms, each platform is assumed to be 
+                When a paper uses multiple platforms, each platform is assumed to be
                 used at each of study locations
                 (as no information is usually available on further partitioning).
               </small>
@@ -197,7 +197,7 @@
             <p>
               Fig. 3d: Focal taxa in publications across regions in the world<br>
               <small>
-                When a paper focuses on multiple taxa, each taxa is assumed to be 
+                When a paper focuses on multiple taxa, each taxa is assumed to be
                 studied at each of study locations
                 (as no information is usually available on further partitioning).
               </small>
@@ -215,7 +215,7 @@
             <% occurrences = {} %>
             <% categories, occurrences["referring to refuge"], occurrences["not referring to refuge"] =
             format_for_time_search_chart(@publications_refug_counts, @publications_total_counts)  %>
-            <%= render partial: 'shared/column_graph_series', 
+            <%= render partial: 'shared/column_graph_series',
                        locals: { title: 'search_refug', unit: "Publications",
                                  categories: categories,
                                  occurrences: occurrences,

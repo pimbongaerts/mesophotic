@@ -1,7 +1,7 @@
 <% if not [4,9,69].include? presentation.id %>
   <% presentation.users.each do |user|  %>
     <% if presentation.authors.split(",")[0].include? user.last_name %>
-      <%= link_to "#{user.first_name} #{user.last_name}", member_path(user) %>&nbsp;
+      <%= link_to "#{user.first_name} #{user.last_name}", member_pages_path(user) %>&nbsp;
       <% if user.publications.count > 0 %>
         <span class="badge"><%= user.publications.count %></span>
       <% end %>

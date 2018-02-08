@@ -10,13 +10,13 @@
 <div class="row">
   <div class="col-sm-12">
     <h3>Menu</h3>
-    <h4><%= link_to "Users", admin_users_path %> 
+    <h4><%= link_to "Users", admin_users_path %>
       <small>- <%= "#{pluralize(@count, 'user')}" %></small>
     </h4>
-      <h4><%= link_to "Posts", admin_posts_path %> 
+      <h4><%= link_to "Posts", admin_posts_pages_path %>
         <small>- <%= "#{pluralize(@post_count, 'post')}" %></small>
       </h4>
-      <h4><%= link_to "Publications", admin_publications_dashboard_path %> 
+      <h4><%= link_to "Publications", dashboard_admin_publications_path %>
         <small>- <%= "#{pluralize(@publication_count, 'publication')}" %></small>
       </h4>
     <hr/>
