@@ -1,5 +1,5 @@
 <center>
-  <% if post.post_type == "behind_the_science" %> 
+  <% if post.post_type == "behind_the_science" %>
     <%= render partial: 'shared/behind_the_scenes',
                locals: {post: post,
                         style: 'overview'} %>
@@ -9,11 +9,11 @@
              locals: {post: post ,
                       style: 'overview'} %>
   <% elsif post.post_type == "announcement" %>
-    <%= link_to image_tag(post.photos[0].image(:compo)), 
-                          post_path(post) %>
+    <%= link_to image_tag(post.photos[0].image(:compo)),
+                          post_pages_path(post) %>
   <% end %>
   <h4>
-    <%= post.category %>: 
-    <%= link_to "#{post.title}", post_path(post.slug) %>
+    <%= post.category %>:
+    <%= link_to "#{post.title}", post_pages_path(post.slug) %>
   </h4>
 </center>

@@ -6,7 +6,7 @@
       <% tweet_user = @users.find_by(twitter: "@#{tweet.user.screen_name}")  %>
       <% if tweet_user %>
         <%= link_to image_tag(profile_pic_url.sub! 'normal', 'bigger'),
-                    member_path(tweet_user) %>
+                    member_pages_path(tweet_user) %>
       <% else %>
         <%= image_tag(profile_pic_url.sub! 'normal', 'bigger') %>
       <% end %>
@@ -16,7 +16,7 @@
       <%# Twitter name and handle %>
       <strong>
         <% if tweet_user %>
-          <%= link_to tweet.user.name, member_path(tweet_user) %>
+          <%= link_to tweet.user.name, member_pages_path(tweet_user) %>
         <% else %>
           <%= tweet.user.name %>
         <% end %>

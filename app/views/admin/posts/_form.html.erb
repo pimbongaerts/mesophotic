@@ -10,7 +10,7 @@
 
 <div class="form-group">
   <%= f.label :post_type, class: "required" %><br>
-  <%= f.select :post_type, Post::POST_TYPES, 
+  <%= f.select :post_type, Post::POST_TYPES,
                class: "form-control" %>
 </div>
 
@@ -42,7 +42,7 @@
 
 <div class="form-group">
   <%= f.label :featured_publication %><br>
-  <%= f.collection_select :featured_publication_id, 
+  <%= f.collection_select :featured_publication_id,
                           Publication.all.order("authors ASC, publication_year ASC"),
                           :id, :short_citation_with_title,
                           :include_blank => true,
@@ -51,7 +51,7 @@
 
 <div class="form-group">
   <%= f.label :featured_user %><br>
-  <%= f.collection_select :featured_user_id, 
+  <%= f.collection_select :featured_user_id,
                           User.all.order("last_name ASC, first_name ASC"),
                           :id, :full_name,
                           :include_blank => true,
@@ -71,7 +71,7 @@
   <div class="col-xs-12 padded">
     <button class='btn btn-primary'>
       <i class='fa fa-plus-square'></i> Publish
-    </button> - <%= link_to "Cancel", admin_posts_dashboard_path %>
+    </button> - <%= link_to "Cancel", dashboard_admin_posts_pages_path %>
   </div>
 </div>
 
