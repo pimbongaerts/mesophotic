@@ -1,19 +1,12 @@
-<strong>Focusgroups</strong><br>
-<% cats = publications.joins(:focusgroups)
-            .select("focusgroups.description, count(focusgroups.id) as count")
-            .group("focusgroups.id").order("count(focusgroups.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Fields</strong><br>
-<% cats = publications.joins(:fields)
-            .select("fields.description, count(fields.id) as count")
-            .group("fields.id").order("count(fields.id) DESC").limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Platforms</strong><br>
-<% cats = publications.joins(:platforms)
-            .select("platforms.description, count(platforms.id) as count")
-            .group("platforms.id").order("count(platforms.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+<% [Focusgroup, Field, Platform].each do |model| %>
+  <% table_name = model.table_name %>
+  <strong><%= model.name.pluralize %></strong><br>
+  <% cats = model.joins("#{table_name}_publications".to_sym)
+                 .where("#{table_name}_publications" => { publication_id: publications })
+                 .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) as count")
+                 .group("#{table_name}.id")
+                 .order("count DESC")
+                 .limit(5) %>
+  <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
+  <br>
+<% end %>
