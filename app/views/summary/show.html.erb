@@ -3,14 +3,14 @@
            locals: {
              title: title,
        	     subtitle: @object.description,
-             backlink: home_path
+             backlink: root_path
            } %>
 
 <div class="row">
   <div class="col-sm-8">
 
     <div class="panel panel-default">
-      <%= render partial: "#{partial}/dropdown_body", locals: { object: @object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
+      <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: @object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
       <div class="panel-footer">
         <%= render partial: 'dropdown',
                    locals: { objects: @objects, object: @object, model: title.downcase } %>
