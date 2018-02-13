@@ -1,6 +1,4 @@
-<% if not defined? exclusion or category.description != exclusion %>
-  <span class="badge">
-    <%= category.count %>
-  </span>&nbsp;<%= link_to category.description, summary_path(category.class.name.downcase.pluralize, category) %>
-  <br>
-<% end %>
+<span class="badge">
+  <%= category.count %>
+</span>&nbsp;<%= link_to category.description, summary_path(category.class.name.downcase.pluralize, category) %>
+<br>

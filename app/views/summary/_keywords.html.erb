@@ -1,12 +1,13 @@
 <% [Focusgroup, Field, Platform].each do |model| %>
-  <% table_name = model.table_name %>
-  <strong><%= model.name.pluralize %></strong><br>
-  <% cats = model.joins("#{table_name}_publications".to_sym)
-                 .where("#{table_name}_publications" => { publication_id: publications })
-                 .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) as count")
-                 .group("#{table_name}.id")
-                 .order("count DESC")
-                 .limit(5) %>
-  <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
-  <br>
+  <p>
+    <strong><%= model.name.pluralize %></strong><br>
+    <% table_name = model.table_name %>
+    <% cats = model.joins(:publications)
+                   .where("publications.id IN (?)", publications.map(&:id))
+                   .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) AS count")
+                   .group("#{table_name}.id")
+                   .order("count DESC")
+                   .limit(5) %>
+    <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
+  </p>
 <% end %>

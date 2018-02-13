@@ -1,33 +1,29 @@
-<strong>Fields</strong><br>
-<% cats = user.publications.joins(:fields)
-            .select("fields.description, count(fields.id) as count")
-            .group("fields.id").order("count(fields.id) DESC").limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+<% [Field, Focusgroup, Location, Platform].each do |model| %>
+  <p>
+    <strong><%= model.name.pluralize %></strong><br>
+    <% table_name = model.table_name %>
+    <% cats = model.joins(:publications)
+                   .where("publications.id IN (?)", publications.map(&:id))
+                   .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) AS count")
+                   .group("#{table_name}.id")
+                   .order("count DESC")
+                   .limit(5) %>
+    <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
+  </p>
+<% end %>
 
-<br><strong>Focusgroups</strong><br>
-<% cats = user.publications.joins(:focusgroups)
-            .select("focusgroups.description, count(focusgroups.id) as count")
-            .group("focusgroups.id").order("count(focusgroups.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-<br><strong>Locations</strong><br>
-<% cats = user.publications.joins(:locations)
-            .select("locations.description, count(locations.id) as count")
-            .group("locations.id").order("count(locations.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Platforms</strong><br>
-<% cats = user.publications.joins(:platforms)
-            .select("platforms.description, count(platforms.id) as count")
-            .group("platforms.id").order("count(platforms.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Co-authors</strong><br>
-<% cats = user.publications.joins(:users)
-            .select("users.last_name as description, count(users.id) as count")
-            .group("users.id").order("count(users.id) DESC").limit(6) %>
-<%= render partial: 'shared/category_counts', 
-           locals: { categories: cats,
-                     exclusion: user.last_name } %>
+<p>
+  <strong>Co-author</strong><br>
+  <% User.joins(:publications)
+         .where("publications.id IN (?)", publications.map(&:id))
+         .select("users.last_name, users.id, count(users.id) AS count")
+         .where("users.last_name IS NOT ?", user.last_name)
+         .group("users.id")
+         .order("count DESC")
+         .limit(5).each do |member| %>
+    <span class="badge">
+      <%= member.count %>
+    </span>&nbsp;<%= link_to member.last_name, member_pages_path(member) %>
+    <br>
+  <% end %>
+</p>

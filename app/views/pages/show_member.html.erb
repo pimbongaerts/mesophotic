@@ -122,7 +122,7 @@
         </div>
         <div class="panel-body">
           <%= render partial: 'member_keywords',
-                     locals: { user: @user } %>
+                     locals: { user: @user, publications: @user.publications } %>
         </div>
       </div>
     <% end %>
