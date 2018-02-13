@@ -13,7 +13,7 @@
       <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
                           member_pages_path(@post.user) %>
       <% if current_user.try(:editor_or_admin?) %>
-        <br><%= link_to "Edit post", edit_admin_post_pages_path(@post.slug) %>
+        <br><%= link_to "Edit post", edit_admin_post_path(@post.slug) %>
       <% end %>
     </small><br><br>
 
