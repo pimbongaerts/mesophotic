@@ -25,7 +25,7 @@ class Post < ApplicationRecord
   # attributes
 
   # associations
-  belongs_to :postable, polymorphic: true
+  belongs_to :postable, polymorphic: true, optional: true
   belongs_to :user, touch: true
   belongs_to :featured_user, class_name: 'User', foreign_key: 'featured_user_id'
   belongs_to :featured_publication, class_name: 'Publication', foreign_key: 'featured_publication_id'
@@ -42,7 +42,18 @@ class Post < ApplicationRecord
   validates :content_md, presence: true
 
   # callbacks
-  before_save { MarkdownWriter.update_html(self) }
+  before_save {
+    renderer = Redcarpet::Render::HTML.new(
+      filter_html: false,
+      no_styles: true,
+      no_images: false,
+      with_toc_data: false,
+      link_attributes: {:target => "_blank"}
+    )
+
+    converter = Redcarpet::Markdown.new(renderer)
+    self.content_html = converter.render(self.content_md)
+  }
 
   # other
   extend FriendlyId
