@@ -38,8 +38,11 @@
           <strong>Research details</strong> (top 5 / category)
         </div>
         <div class="panel-body">
-          <%= render partial: 'shared/location_keywords',
-                     locals: { publications: @site.publications } %>
+          <%= render partial: 'shared/keyword',
+                     locals: { objects: @site.publications },
+                     collection: [Field, Focusgroup, Location, Platform] %>
+          <%= render partial: 'shared/member_keyword',
+                     locals: { title: "Co-author", objects: @site.publications } %>
         </div>
       </div>
     <% end %>

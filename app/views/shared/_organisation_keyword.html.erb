@@ -1,0 +1,15 @@
+<p>
+  <strong>Organisations</strong><br>
+  <% objects_table_name = objects.first.class.table_name %>
+  <% Organisation.joins(objects_table_name.to_sym)
+                 .where("#{objects_table_name}.id IN (?)", objects.map(&:id))
+                 .select("organisations.name, organisations.id, count(organisations.id) AS count")
+                 .group("organisations.id")
+                 .order("count DESC")
+                 .limit(5).each do |organisation| %>
+    <span class="badge">
+      <%= organisation.count %>
+    </span>&nbsp;<%= organisation.name %>
+    <br>
+  <% end %>
+</p>

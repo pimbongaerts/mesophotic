@@ -1,0 +1,12 @@
+<p>
+  <strong><%= keyword.name.pluralize %></strong><br>
+  <% table_name = keyword.table_name %>
+  <% objects_table_name = objects.first.class.table_name %>
+  <% categories = keyword.joins(objects_table_name.to_sym)
+                         .where("#{objects_table_name}.id IN (?)", objects.map(&:id))
+                         .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) AS count")
+                         .group("#{table_name}.id")
+                         .order("count DESC")
+                         .limit(5) %>
+  <%= render partial: 'shared/category_counts', collection: categories, as: :category %>
+</p>

@@ -37,8 +37,13 @@
         <strong>Images metadata summary</strong> (top 5 / category)
       </div>
       <div class="panel-body">
-        <%= render partial: 'photo_keywords',
-                   locals: { photos: @photos } %>
+        <%= render partial: 'shared/keyword',
+                   locals: { objects: @photos },
+                   collection: [Location, Platform] %>
+        <%= render partial: 'shared/organisation_keyword',
+                   locals: { objects: @photos } %>
+        <%= render partial: 'shared/member_keyword',
+                   locals: { title: "Researchers", objects: @photos } %>
       </div>
     </div>
 
