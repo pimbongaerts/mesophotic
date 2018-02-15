@@ -1,0 +1,18 @@
+<p>
+  <strong><%= title %></strong><br>
+  <% objects_table_name = objects.first.class.table_name %>
+  <%
+    users = User.joins(objects_table_name.to_sym)
+                .where("#{objects_table_name}.id IN (?)", objects.map(&:id))
+                .select("users.last_name, users.id, count(users.id) AS count")
+                .group("users.id")
+                .order("count DESC")
+                .limit(5)
+    users = users.where("users.last_name IS NOT ?", user.last_name) if defined?(user)
+    users.each do |member| %>
+    <span class="badge">
+      <%= member.count %>
+    </span>&nbsp;<%= link_to member.last_name, member_pages_path(member) %>
+    <br>
+  <% end %>
+</p>

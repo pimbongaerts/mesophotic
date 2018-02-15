@@ -121,8 +121,11 @@
           <strong>Research summary</strong> (from publications)
         </div>
         <div class="panel-body">
-          <%= render partial: 'member_keywords',
-                     locals: { user: @user, publications: @user.publications } %>
+          <%= render partial: 'shared/keyword',
+                     locals: { objects: @user.publications },
+                     collection: [Field, Focusgroup, Location, Platform] %>
+          <%= render partial: 'shared/member_keyword',
+                     locals: { title: "Co-author", user: @user, objects: @user.publications } %>
         </div>
       </div>
     <% end %>

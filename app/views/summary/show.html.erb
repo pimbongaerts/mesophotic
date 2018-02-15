@@ -74,8 +74,9 @@
           <strong>Publication summary</strong> (top 5 / category)
         </div>
         <div class="panel-body">
-          <%= render partial: 'keywords',
-                     locals: { publications: @object.publications } %>
+          <%= render partial: 'shared/keyword',
+                     locals: { objects: @object.publications },
+                     collection: [Focusgroup, Field, Platform] %>
         </div>
       </div>
     <% end %>
