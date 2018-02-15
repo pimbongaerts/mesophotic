@@ -1,27 +1,54 @@
-<strong>Locations</strong><br>
-<% cats = Location.joins(:photos)
-				  .select("locations.description, count(locations.id) as count")
-				  .group("locations.id")
-				  .limit(5) %>
+<% [Location].each do |model| %>
+  <p>
+    <strong><%= model.name.pluralize %></strong><br>
+    <% table_name = model.table_name %>
+    <% cats = model.joins(:photos)
+                   .where("photos.id IN (?)", photos.map(&:id))
+                   .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) AS count")
+                   .group("#{table_name}.id")
+                   .order("count DESC")
+                   .limit(5) %>
+    <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
+  </p>
+<% end %>
 
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+<p>
+  <strong>Tagged Platforms</strong><br>
+  <% cats = Platform.joins(:photos)
+                    .where("photos.id IN (?)", photos.map(&:id))
+                    .select("platforms.description, platforms.id, count(platforms.id) AS count")
+                    .group("platforms.id")
+                    .order("count DESC")
+                    .limit(5) %>
+  <%= render partial: 'shared/category_counts', collection: cats, as: :category %>
+</p>
 
-<br><strong>Tagged platforms</strong><br>
-<% cats = photos.joins(:platforms)
-            .select("platforms.description, count(platforms.id) as count")
-            .group("platforms.id").order("count(platforms.id) DESC").limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
+<p>
+  <strong>Tagged Organisations</strong><br>
+  <% Organisation.joins(:photos)
+                 .where("photos.id IN (?)", photos.map(&:id))
+                 .select("organisations.name, organisations.id, count(organisations.id) AS count")
+                 .group("organisations.id")
+                 .order("count DESC")
+                 .limit(5).each do |organisation| %>
+    <span class="badge">
+      <%= organisation.count %>
+    </span>&nbsp;<%= organisation.name %>
+    <br>
+  <% end %>
+</p>
 
-<br><strong>Tagged organisations</strong><br>
-<% cats = photos.joins(:organisations)
-            .select("organisations.name as description, count(organisations.id) as count")
-            .group("organisations.id").order("count(organisations.id) DESC")
-            .limit(5) %>
-<%= render partial: 'shared/category_counts', locals: { categories: cats } %>
-
-<br><strong>Tagged researchers</strong><br>
-<% cats = photos.joins(:users)
-            .select("users.last_name as description, count(users.id) as count")
-            .group("users.id").order("count(users.id) DESC").limit(6) %>
-<%= render partial: 'shared/category_counts', 
-           locals: { categories: cats } %>
+<p>
+  <strong>Tagged Researchers</strong><br>
+  <% User.joins(:photos)
+         .where("photos.id IN (?)", photos.map(&:id))
+         .select("users.last_name, users.id, count(users.id) AS count")
+         .group("users.id")
+         .order("count DESC")
+         .limit(6).each do |member| %>
+    <span class="badge">
+      <%= member.count %>
+    </span>&nbsp;<%= link_to member.last_name, member_pages_path(member) %>
+    <br>
+  <% end %>
+</p>
