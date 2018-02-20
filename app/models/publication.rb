@@ -269,7 +269,7 @@ class Publication < ApplicationRecord
   end
 
   def doi_url
-    "http://dx.doi.org/#{self.DOI}"
+    "https://doi.org/#{self.DOI}"
   end
 
   def scholar_url
