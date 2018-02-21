@@ -23,7 +23,7 @@
                               style: 'float: right;') %>
               <% end %>
             </strong>
-            <% if can? :update, @article %>
+            <% if current_user.try(:editor_or_admin?) %>
               | <%= link_to "edit",
                             edit_publication_path(@publication) %>
             <% end %>
