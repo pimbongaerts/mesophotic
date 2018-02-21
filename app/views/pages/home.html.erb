@@ -54,7 +54,9 @@
 
       </div>
       <div class="panel-body">
-        <%= render partial: 'tweet', locals: { users: @users }, collection: @tweets, as: :tweet %>
+        <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6) %>
+        <% users = User.where(twitter: tweets.map(&:user).map(&:screen_name)) %>
+        <%= render partial: 'tweet', locals: { users: users }, collection: tweets, as: :tweet %>
       </div>
       <div class="panel-footer">
         To contribute posts simply use the <code>#mesophotic</code>

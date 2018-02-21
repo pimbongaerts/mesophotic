@@ -5,8 +5,6 @@ class PagesController < ApplicationController
     @locations = Location.map_data
     @posts = Post.latest(2)
     @publications = Publication.latest(10)
-    @tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6)
-    @users = User.where(twitter: @tweets.map(&:user).map(&:screen_name))
     @latest_update = Publication.maximum(:updated_at)
   end
 
