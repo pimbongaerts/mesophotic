@@ -35,7 +35,7 @@
       <% if user.publications.count > 0 %>
         <span class="badge"><%= user.publications.count %></span>
       <% end %>
-      <% if can? [:update, :destroy], user %>
+      <% if current_user.try(:editor_or_admin?) %>
         <td>
           <%= link_to "Edit",  edit_admin_user_path(user.id) %>
         </td>
