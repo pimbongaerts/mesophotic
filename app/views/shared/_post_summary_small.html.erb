@@ -1,19 +1,21 @@
-<center>
-  <% if post.post_type == "behind_the_science" %>
-    <%= render partial: 'shared/behind_the_scenes',
-               locals: {post: post,
+<div class="col-sm-6">
+  <center>
+    <% if post.post_type == "behind_the_science" %>
+      <%= render partial: 'shared/behind_the_scenes',
+                locals: {post: post,
+                          style: 'overview'} %>
+    <% elsif post.post_type == "early_career" &&
+            post.featured_user.present? %>
+      <%= render partial: 'shared/behind_the_scenes',
+              locals: {post: post ,
                         style: 'overview'} %>
-  <% elsif post.post_type == "early_career" &&
-           post.featured_user.present? %>
-    <%= render partial: 'shared/behind_the_scenes',
-             locals: {post: post ,
-                      style: 'overview'} %>
-  <% elsif post.post_type == "announcement" %>
-    <%= link_to image_tag(post.photos[0].image(:compo)),
-                          post_pages_path(post) %>
-  <% end %>
-  <h4>
-    <%= post.category %>:
-    <%= link_to "#{post.title}", post_pages_path(post.slug) %>
-  </h4>
-</center>
+    <% elsif post.post_type == "announcement" %>
+      <%= link_to image_tag(post.photos[0].image(:compo)),
+                            post_pages_path(post) %>
+    <% end %>
+    <h4>
+      <%= post.category %>:
+      <%= link_to "#{post.title}", post_pages_path(post.slug) %>
+    </h4>
+  </center>
+</div>

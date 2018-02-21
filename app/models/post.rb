@@ -61,12 +61,16 @@ class Post < ApplicationRecord
   paginates_per 30
 
   # scopes
-  scope :published, lambda {
+  scope :published, -> {
     where(draft: false)
       .order('created_at DESC')
   }
 
-  scope :drafted, lambda {
+  scope :latest, -> (count) {
+    published.limit(count)
+  }
+
+  scope :drafted, -> {
     where(draft: true)
       .order('created_at DESC')
   }

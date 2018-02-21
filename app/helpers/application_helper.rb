@@ -27,7 +27,7 @@ end
       words = value.force_encoding("UTF-8").split(/[^a-zA-Z]/)
       freqs = Hash.new(0)
       total_word_count = words.count
-      
+
       words.each do |word|
         unless exclusion_list.include? word.downcase or word.length < 2
           freqs[word] += 1
@@ -48,7 +48,7 @@ end
 
       return word_list
   end
-  
+
   # Determine a score for how relevant the publication is to deep reefs
   def mesophotic_score(value)
     word_count = value.scan(/\w+/).size
@@ -104,7 +104,7 @@ end
         values << 0
   	  end
   	end
-  	return categories, values  
+  	return categories, values
   end
 
   # Counts the number of occurrences for each location in the user model
@@ -123,7 +123,7 @@ end
     freqs.each do |country_code, freqs|
       if ISO3166::Country[country_code]
         country = ISO3166::Country[country_code]
-        data << {name: country.name, lat: country.latitude_dec, 
+        data << {name: country.name, lat: country.latitude_dec,
                  lon: country.longitude_dec, z: freqs }
       end
     end
@@ -131,24 +131,24 @@ end
   end
 
 
-  # Counts the number of occurrences for each location in the publication model 
+  # Counts the number of occurrences for each location in the publication model
   # and outputs corresponding coordinates
   def count_geographic_occurrences_of_publications(locations)
     data = []
     locations.each do |location|
-      data << {name: location.description, lat: location.latitude, 
+      data << {name: location.description, lat: location.latitude,
                lon: location.longitude, z: location.publications.count,
                ownURL: location_path(location) }
     end
     data
   end
 
-  # Counts the number of occurrences for each location in the photo model 
+  # Counts the number of occurrences for each location in the photo model
   # and outputs corresponding coordinates
   def count_geographic_occurrences_of_photos(locations)
     data = []
     locations.each do |location|
-      data << {name: location.description, lat: location.latitude, 
+      data << {name: location.description, lat: location.latitude,
                lon: location.longitude, z: location.photos.count,
                ownURL: location_path(location) }
     end
@@ -167,18 +167,18 @@ end
     # Summarise with coordinates
     data = []
     freqs.each do |location, freqs|
-      data << {name: location.description, lat: location.latitude, 
+      data << {name: location.description, lat: location.latitude,
                lon: location.longitude, z: freqs }
     end
     data
   end
 
-  # Counts the number of occurrences for each location in the publication model 
+  # Counts the number of occurrences for each location in the publication model
   # and outputs corresponding coordinates
   def get_site_coordinates(sites)
     data = []
     sites.each do |site|
-      data << {name: site.site_name, lat: site.latitude, 
+      data << {name: site.site_name, lat: site.latitude,
                lon: site.longitude, z: site.publications.count,
                ownURL: site_path(site) }
     end

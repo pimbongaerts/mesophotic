@@ -30,7 +30,25 @@ class Location < ApplicationRecord
                                         less_than_or_equal_to: 180 }
 
   # callbacks
+
   # other
+
+  scope :published, -> {
+    joins(:publications)
+    .group('locations.id')
+    .order('count(locations.id) DESC')
+  }
+
   # class methods
+
+  def self.map_data
+    locs = Location
+      .select('locations.id AS id, description AS name, latitude AS lat, longitude AS lon, count(publications.id) AS z')
+      .joins(:publications)
+      .published
+    paths = locs.map { |l| { url: Rails.application.routes.url_helpers.location_path(l) } }
+    locs.as_json.zip(paths).map { |l| l[0].merge l[1] }
+  end
+
   # instance methods
 end

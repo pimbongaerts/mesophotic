@@ -163,8 +163,13 @@ class Publication < ApplicationRecord
     end
   }
 
-  scope :original, -> {
+  scope :original, -> () {
     where(original_data: true)
+  }
+
+  scope :latest, -> (count) {
+    order('publication_year DESC, created_at DESC')
+    .limit(count)
   }
 
   # class methods

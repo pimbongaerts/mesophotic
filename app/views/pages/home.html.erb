@@ -6,12 +6,13 @@
     <div class="row">
       <div class="col-sm-1">&nbsp;</div>
       <div class="col-sm-7" style="border: 5px">
-        <% data = count_geographic_occurrences_of_publications(@locations) %>
-        <%= render partial: 'shared/world_map_clickable', 
-                   locals: { title: 'Locations',
-                             data: data,
-                             backgroundcolor: '#FCFFC5',
-                             height: 300 } %>
+        <%= render partial: 'shared/world_map_clickable',
+                   locals: {
+                     title: 'Locations',
+                     data: @locations,
+                     backgroundcolor: '#FCFFC5',
+                     height: 300
+                   } %>
       </div>
       <div class="col-sm-4">&nbsp;</div>
     </div>
@@ -27,14 +28,7 @@
       <div class="panel-heading"><strong>Latest posts</strong></div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-6">
-            <%= render partial: 'shared/post_summary_small',
-                       locals: {post: @posts[0] } %>
-          </div>
-          <div class="col-sm-6">
-            <%= render partial: 'shared/post_summary_small',
-                       locals: {post: @posts[1] } %>
-          </div>
+          <%= render partial: 'shared/post_summary_small', collection: @posts, as: :post %>
         </div>
       </div>
     </div>
@@ -47,8 +41,8 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Latest publications</strong></div>
       <div class="panel-body">
-        <%= render partial: 'newsfeed', 
-                   locals: { publications: @publications.limit(10) } %>
+        <%= render partial: 'newsfeed',
+                   locals: { publications: @publications } %>
       </div>
     </div>
   </div>
@@ -60,10 +54,10 @@
 
       </div>
       <div class="panel-body">
-        <%= render 'twitterfeed' %>
+        <%= render partial: 'tweet', locals: { users: @users }, collection: @tweets, as: :tweet %>
       </div>
       <div class="panel-footer">
-        To contribute posts simply use the <code>#mesophotic</code> 
+        To contribute posts simply use the <code>#mesophotic</code>
         handle in Twitter
       </div>
     </div>
