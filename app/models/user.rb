@@ -50,7 +50,7 @@ class User < ApplicationRecord
   attr_accessor :new_organisation_name
 
   # associations
-  belongs_to :organisation
+  belongs_to :organisation, optional: true
   has_and_belongs_to_many :platforms
   has_and_belongs_to_many :publications
   has_and_belongs_to_many :presentations
