@@ -16,6 +16,5 @@
 //= require bootstrap
 //= require bootstrap-slider
 // = require analytics
-// = require jqcloud
 // = require owl.carousel
 // = require wordcloud2
