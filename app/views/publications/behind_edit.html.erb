@@ -1,4 +1,4 @@
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Behind the science",
           subtitle: @publication.short_citation,
           backlink: publications_path } %>
@@ -13,8 +13,8 @@
         </div>
         <div class="col-sm-2" align="right">
             <% if @publication.pdf.exists? %>
-              <%= link_to image_tag(@publication.pdf.url(:thumb), 
-                                    :width => "100"), 
+              <%= link_to image_tag(@publication.pdf.url(:thumb),
+                                    :width => "100"),
                           publication_path %>
             <% end %>
         </div>
@@ -29,8 +29,8 @@
       <div class="panel-heading">
         <strong>Questions and answers</strong>
       </div>
-      <div class="panel-body">    
-      
+      <div class="panel-body">
+
       	<%= form_for(@publication) do |f| %>
 					<div class="form-group">
         		<%= f.label :behind_contents %><br>
@@ -48,7 +48,7 @@
       <div class="panel-heading">
         <strong>Photos</strong>
       </div>
-      <div class="panel-body">    
+      <div class="panel-body">
         <%# render partial: 'shared/behind_the_scenes',
                    locals: {publication: @publication,
                             style: 'full'} %>
@@ -64,11 +64,10 @@
 <% if not @publication.contents.blank? %>
   <div class="panel panel-default">
     <div class="panel-heading"><strong>Keywords</strong></div>
-    <div class="panel-body">    
-      <%= render partial: 'shared/wordcloud', 
-                 locals: { title: 'publication_contents',
-                 data: @publication.contents,
-                 cut_off: 40, height: 230 } %>
+    <div class="panel-body">
+      <%= render partial: 'shared/wordcloud',
+                  object: word_cloud(40, @publication.contents),
+                  locals: { title: 'publication_contents' } %>
     </div>
   </div>
 <% end %>

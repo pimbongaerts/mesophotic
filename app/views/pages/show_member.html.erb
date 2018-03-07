@@ -80,9 +80,8 @@
         </div>
         <div class="panel-body" align="center" valign="center">
           <%= render partial: 'shared/wordcloud',
-                     locals: { title: 'publication_contents',
-                     data: overall_publication_contents(@user.publications),
-                     cut_off: 40, width: 400, height: 200 } %>
+                     object: word_cloud(40, @user.publications.all_content),
+                     locals: { title: 'publication_contents' } %>
         </div>
       </div>
     <% end %>
