@@ -41,10 +41,9 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Announcement keywords</strong></div>
       <div class="panel-body">
-        <%= render partial: 'shared/wordcloud_width',
-                   locals: { title: 'post_contents',
-                   data: @post.content_md,
-                   cut_off: 20, width: 220 } %>
+        <%= render partial: 'shared/wordcloud',
+                   object: word_cloud(20, @post.content_md)
+                   locals: { title: 'post_contents' } %>
       </div>
     </div>
 

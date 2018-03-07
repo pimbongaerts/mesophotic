@@ -100,9 +100,8 @@
         <div class="panel-heading"><strong>Keywords</strong></div>
         <div class="panel-body">
           <%= render partial: 'shared/wordcloud',
-                     locals: { title: 'publication_contents',
-                     data: @publication.contents,
-                     cut_off: 40, height: 230 } %>
+                     object: word_cloud(40, @publication.contents),
+                     locals: { title: 'publication_contents' } %>
         </div>
       </div>
     <% end %>

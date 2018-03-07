@@ -12,41 +12,30 @@ module ApplicationHelper
     end
   end
 
-def url_exists?(url_string)
-  url = URI.parse(url_string)
-  req = Net::HTTP.new(url.host, url.port)
-  res = req.request_head(url.path)
-  res.code != "404" && res.code != "500" # false if returns 404 or 500
-rescue Errno::ENOENT
-  false # false if can't find the server
-end
+  def url_exists?(url_string)
+    url = URI.parse(url_string)
+    req = Net::HTTP.new(url.host, url.port)
+    res = req.request_head(url.path)
+    res.code != "404" && res.code != "500" # false if returns 404 or 500
+  rescue Errno::ENOENT
+    false # false if can't find the server
+  end
 
-  # Count frequency of words and return most frequent (cut_off)
-  def word_count(value, cut_off)
-      exclusion_list = WordExclusion.pluck(:word)
-      words = value.force_encoding("UTF-8").split(/[^a-zA-Z]/)
-      freqs = Hash.new(0)
-      total_word_count = words.count
+  def word_cloud size, content
+    exclusions = WordExclusion.pluck(:word)
 
-      words.each do |word|
-        unless exclusion_list.include? word.downcase or word.length < 2
-          freqs[word] += 1
-        end
-      end
-      freqs = freqs.sort_by {|x,y| y }
-      freqs.reverse!
-      conv_factor = Publication::WORDCLOUD_FREQLIMIT.to_f / freqs.first[1]
-      word_list = "["
-      counter = 0
-      freqs.each do |word, freq|
-        counter += 1
-        break if counter > cut_off
-        norm_freq = (freq * conv_factor).to_i
-        word_list += "['#{word}', #{norm_freq}],"
-      end
-      word_list += ']'
+    freqs = content
+      .force_encoding("UTF-8")
+      .scan(/[\w']+/)
+      .group_by(&:downcase)
+      .reject { |k, v| exclusions.include? k or k.length <= 2 }
+      .reduce({}) { |fs, w| fs.merge w.first => w.last.count }
+      .sort_by { |k, v| v }
+      .reverse
+      .take(size)
 
-      return word_list
+    max = freqs.first.last
+    freqs.map { |w| [w.first, w.last.to_f / max] }
   end
 
   # Determine a score for how relevant the publication is to deep reefs

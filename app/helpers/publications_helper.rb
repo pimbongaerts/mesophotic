@@ -63,17 +63,6 @@ module PublicationsHelper
     publications.offset(offset).first
   end
 
-  # Compile a variable with contents of all publications
-  def overall_publication_contents(publications)
-    contents = []
-    publications.each do |publication|
-      if publication.contents?
-        contents << publication.contents.force_encoding("UTF-8")
-      end
-    end
-    return contents.join(" ")
-  end
-
   def format_authors(publication)
     # Authors of publication (string)
     authors = publication.authors

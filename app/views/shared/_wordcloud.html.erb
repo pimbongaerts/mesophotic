@@ -1,10 +1,13 @@
-<canvas id="wordcloud_<%= title %>" height="<%= height %>">
+<canvas id="wordcloud_<%= title %>" width="320" height="220">
   <script type="text/javascript">
-    var list = <%= raw word_count(data, cut_off) %>;
-    WordCloud(document.getElementById('wordcloud_<%= title %>'), 
-                                     { list: list,
-                                       drawOutOfBound: true,
-                                       color: 'black',
-                                       weightFactor: 1   } );
+    WordCloud(
+      document.getElementById('wordcloud_<%= title %>'),
+      {
+        list: <%= raw wordcloud %>,
+        drawOutOfBound: true,
+        color: 'black',
+        weightFactor: 50
+      }
+    );
   </script>
 </canvas>

@@ -26,9 +26,8 @@
       </div>
       <div class="panel-body">
         <%= render partial: 'shared/wordcloud',
-                   locals: { title: 'location_publication_contents',
-                   data: overall_publication_contents(@site.publications),
-                   cut_off: 40, width: 400, height: 200 } %>
+                    object: word_cloud(40, @site.publications.all_content),
+                    locals: { title: 'location_publication_contents' } %>
 			</div>
 		</div>
 

@@ -231,6 +231,10 @@ class Publication < ApplicationRecord
     }
   end
 
+  def self.all_content
+    all.map(&:contents).join(" ").force_encoding("UTF-8")
+  end
+
   def self.max_depth
     order(max_depth: :desc).first.try(:max_depth) || 500
   end
