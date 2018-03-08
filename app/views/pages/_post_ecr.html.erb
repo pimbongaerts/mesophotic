@@ -1,7 +1,7 @@
 <% @researcher = @post.featured_user %>
 
 <%= render partial: "layouts/page_title",
-       locals: {title: "Blog",
+       locals: { title: "Blog",
           subtitle: "An interview with #{@researcher.full_name_normal}",
           backlink: posts_pages_path } %>
 
@@ -53,7 +53,7 @@
       <div class="panel-heading"><strong>Interview keywords</strong></div>
       <div class="panel-body">
         <%= render partial: 'shared/wordcloud',
-                   object: word_cloud(20, @post.content_md)
+                   object: word_cloud(20, @post.content_md),
                    locals: { title: 'post_contents' } %>
       </div>
     </div>
