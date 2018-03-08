@@ -28,7 +28,7 @@ class Post < ApplicationRecord
   belongs_to :postable, polymorphic: true, optional: true
   belongs_to :user, touch: true
   belongs_to :featured_user, class_name: 'User', foreign_key: 'featured_user_id'
-  belongs_to :featured_publication, class_name: 'Publication', foreign_key: 'featured_publication_id'
+  belongs_to :featured_publication, class_name: 'Publication', foreign_key: 'featured_publication_id', optional: true
   has_many :photos
 
   # validations
