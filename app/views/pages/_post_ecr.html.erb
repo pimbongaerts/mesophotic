@@ -1,7 +1,7 @@
 <% @researcher = @post.featured_user %>
 
 <%= render partial: "layouts/page_title",
-       locals: {title: "Blog",
+       locals: { title: "Blog",
           subtitle: "An interview with #{@researcher.full_name_normal}",
           backlink: posts_pages_path } %>
 
