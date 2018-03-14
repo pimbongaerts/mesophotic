@@ -1,4 +1,4 @@
-class ChangePhotosAssociations < ActiveRecord::Migration
+class ChangePhotosAssociations < ActiveRecord::Migration[4.2]
   def change
   	drop_table :focusgroups_photos
   	drop_table :fields_photos

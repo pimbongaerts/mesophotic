@@ -13,8 +13,8 @@
 ActiveRecord::Schema.define(version: 20180207045935) do
 
   create_table "comments", force: :cascade do |t|
-    t.integer "commentable_id"
     t.string "commentable_type"
+    t.integer "commentable_id"
     t.integer "user_id"
     t.string "content"
     t.boolean "internal"
@@ -82,44 +82,37 @@ ActiveRecord::Schema.define(version: 20180207045935) do
     t.index ["user_id"], name: "index_expeditions_users_on_user_id"
   end
 
-  create_table "expertises_users", id: false, force: :cascade do |t|
-    t.integer "user_id", limit: 4
-    t.integer "expertise_id", limit: 4
-    t.index ["expertise_id"], name: "index_expertises_users_on_expertise_id"
-    t.index ["user_id"], name: "index_expertises_users_on_user_id"
-  end
-
   create_table "fields", force: :cascade do |t|
-    t.string "description", limit: 255
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "fields_publications", id: false, force: :cascade do |t|
-    t.integer "field_id", limit: 4
-    t.integer "publication_id", limit: 4
+    t.integer "field_id"
+    t.integer "publication_id"
     t.index ["field_id"], name: "index_fields_publications_on_field_id"
     t.index ["publication_id"], name: "index_fields_publications_on_publication_id"
   end
 
   create_table "focusgroups", force: :cascade do |t|
-    t.string "description", limit: 255
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "focusgroups_publications", id: false, force: :cascade do |t|
-    t.integer "focusgroup_id", limit: 4
-    t.integer "publication_id", limit: 4
+    t.integer "focusgroup_id"
+    t.integer "publication_id"
     t.index ["focusgroup_id"], name: "index_focusgroups_publications_on_focusgroup_id"
     t.index ["publication_id"], name: "index_focusgroups_publications_on_publication_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string "slug", limit: 255, null: false
-    t.integer "sluggable_id", limit: 4, null: false
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
-    t.string "scope", limit: 255
+    t.string "scope"
     t.datetime "created_at"
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
@@ -128,14 +121,14 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "journals", force: :cascade do |t|
-    t.string "name", limit: 255
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "open_access"
   end
 
   create_table "locations", force: :cascade do |t|
-    t.string "description", limit: 255
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "latitude", precision: 15, scale: 10, default: "0.0"
@@ -143,8 +136,8 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "locations_publications", id: false, force: :cascade do |t|
-    t.integer "location_id", limit: 4
-    t.integer "publication_id", limit: 4
+    t.integer "location_id"
+    t.integer "publication_id"
     t.index ["location_id"], name: "index_locations_publications_on_location_id"
     t.index ["publication_id"], name: "index_locations_publications_on_publication_id"
   end
@@ -182,8 +175,8 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "observations", force: :cascade do |t|
-    t.integer "observable_id"
     t.string "observable_type"
+    t.integer "observable_id"
     t.integer "species_id"
     t.integer "location_id"
     t.integer "site_id"
@@ -196,8 +189,8 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "organisations", force: :cascade do |t|
-    t.string "name", limit: 255
-    t.string "country", limit: 255
+    t.string "name"
+    t.string "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -247,32 +240,32 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "platforms", force: :cascade do |t|
-    t.string "description", limit: 255
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "platforms_publications", id: false, force: :cascade do |t|
-    t.integer "platform_id", limit: 4
-    t.integer "publication_id", limit: 4
+    t.integer "platform_id"
+    t.integer "publication_id"
     t.index ["platform_id"], name: "index_platforms_publications_on_platform_id"
     t.index ["publication_id"], name: "index_platforms_publications_on_publication_id"
   end
 
   create_table "platforms_users", id: false, force: :cascade do |t|
-    t.integer "platform_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "platform_id"
+    t.integer "user_id"
     t.index ["platform_id"], name: "index_platforms_users_on_platform_id"
     t.index ["user_id"], name: "index_platforms_users_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
-    t.string "title", limit: 255
-    t.text "content_md", limit: 65535
-    t.text "content_html", limit: 65535
-    t.boolean "draft", limit: 1, default: false
-    t.integer "user_id", limit: 4
-    t.string "slug", limit: 255
+    t.string "title"
+    t.text "content_md"
+    t.text "content_html"
+    t.boolean "draft", default: false
+    t.integer "user_id"
+    t.string "slug"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "postable_id"
@@ -311,25 +304,25 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   create_table "publications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "authors", limit: 65535
-    t.integer "publication_year", limit: 4
-    t.string "title", limit: 255
-    t.integer "journal_id", limit: 4
-    t.string "issue", limit: 255
-    t.string "pages", limit: 255
-    t.string "DOI", limit: 255
-    t.string "url", limit: 255
-    t.string "book_title", limit: 255
-    t.string "book_publisher", limit: 255
-    t.text "abstract", limit: 65535
-    t.text "contents", limit: 65535
-    t.string "volume", limit: 255
-    t.integer "min_depth", limit: 4
-    t.integer "max_depth", limit: 4
-    t.boolean "new_species", limit: 1
-    t.string "filename", limit: 255
-    t.boolean "original_data", limit: 1
-    t.boolean "mesophotic", limit: 1
+    t.text "authors"
+    t.integer "publication_year"
+    t.string "title"
+    t.integer "journal_id"
+    t.string "issue"
+    t.string "pages"
+    t.string "DOI"
+    t.string "url"
+    t.string "book_title"
+    t.string "book_publisher"
+    t.text "abstract"
+    t.text "contents"
+    t.string "volume"
+    t.integer "min_depth"
+    t.integer "max_depth"
+    t.boolean "new_species"
+    t.string "filename"
+    t.boolean "original_data"
+    t.boolean "mesophotic"
     t.string "pdf_file_name"
     t.string "pdf_content_type"
     t.integer "pdf_file_size"
@@ -349,19 +342,19 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "publications_users", id: false, force: :cascade do |t|
-    t.integer "publication_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "publication_id"
+    t.integer "user_id"
     t.index ["publication_id"], name: "index_publications_users_on_publication_id"
     t.index ["user_id"], name: "index_publications_users_on_user_id"
   end
 
   create_table "sites", force: :cascade do |t|
-    t.string "site_name", limit: 255
+    t.string "site_name"
     t.decimal "latitude", precision: 15, scale: 10, default: "0.0"
     t.decimal "longitude", precision: 15, scale: 10, default: "0.0"
-    t.boolean "estimated", limit: 1
-    t.integer "location_id", limit: 4
-    t.string "siteable_type", limit: 255
+    t.boolean "estimated"
+    t.integer "location_id"
+    t.string "siteable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["siteable_type"], name: "index_sites_on_siteable_type_and_siteable_id"
@@ -378,42 +371,42 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", limit: 255, default: "", null: false
-    t.string "encrypted_password", limit: 255, default: "", null: false
-    t.boolean "admin", limit: 1, default: false, null: false
-    t.boolean "locked", limit: 1, default: false, null: false
-    t.string "reset_password_token", limit: 255
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.boolean "admin", default: false, null: false
+    t.boolean "locked", default: false, null: false
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "sign_in_count", limit: 4, default: 0, null: false
+    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip", limit: 255
-    t.string "last_sign_in_ip", limit: 255
-    t.string "confirmation_token", limit: 255
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email", limit: 255
+    t.string "unconfirmed_email"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "title", limit: 255
-    t.string "first_name", limit: 255
-    t.string "last_name", limit: 255
-    t.string "phone", limit: 255
-    t.string "website", limit: 255
-    t.string "alt_website", limit: 255
-    t.string "google_scholar", limit: 255
-    t.text "address", limit: 65535
-    t.string "department", limit: 255
-    t.text "other_organizations", limit: 65535
-    t.string "profile_picture_file_name", limit: 255
-    t.string "profile_picture_content_type", limit: 255
-    t.integer "profile_picture_file_size", limit: 4
+    t.string "title"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.string "website"
+    t.string "alt_website"
+    t.string "google_scholar"
+    t.text "address"
+    t.string "department"
+    t.text "other_organizations"
+    t.string "profile_picture_file_name"
+    t.string "profile_picture_content_type"
+    t.integer "profile_picture_file_size"
     t.datetime "profile_picture_updated_at"
-    t.string "country", limit: 255
-    t.text "research_interests", limit: 65535
-    t.integer "organisation_id", limit: 4
-    t.string "twitter", limit: 255
+    t.string "country"
+    t.text "research_interests"
+    t.integer "organisation_id"
+    t.string "twitter"
     t.boolean "editor", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -421,8 +414,8 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "validations", force: :cascade do |t|
-    t.integer "validatable_id"
     t.string "validatable_type"
+    t.integer "validatable_id"
     t.integer "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -440,7 +433,7 @@ ActiveRecord::Schema.define(version: 20180207045935) do
   end
 
   create_table "word_exclusions", force: :cascade do |t|
-    t.string "word", limit: 255
+    t.string "word"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

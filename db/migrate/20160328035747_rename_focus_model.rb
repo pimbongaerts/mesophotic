@@ -1,4 +1,4 @@
-class RenameFocusModel < ActiveRecord::Migration
+class RenameFocusModel < ActiveRecord::Migration[4.2]
   def self.up
       rename_table :focus, :focus_area
   end

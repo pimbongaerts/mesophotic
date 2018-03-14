@@ -1,4 +1,4 @@
-class CreateJoinTablePresentationUser < ActiveRecord::Migration
+class CreateJoinTablePresentationUser < ActiveRecord::Migration[4.2]
   def change
     create_join_table :presentations, :users do |t|
       # t.index [:presentation_id, :user_id]

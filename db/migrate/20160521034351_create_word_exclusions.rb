@@ -1,4 +1,4 @@
-class CreateWordExclusions < ActiveRecord::Migration
+class CreateWordExclusions < ActiveRecord::Migration[4.2]
   def change
     create_table :word_exclusions do |t|
       t.string :word

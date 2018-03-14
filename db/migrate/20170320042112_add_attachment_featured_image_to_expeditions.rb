@@ -1,4 +1,4 @@
-class AddAttachmentFeaturedImageToExpeditions < ActiveRecord::Migration
+class AddAttachmentFeaturedImageToExpeditions < ActiveRecord::Migration[4.2]
   def self.up
     change_table :expeditions do |t|
       t.attachment :featured_image

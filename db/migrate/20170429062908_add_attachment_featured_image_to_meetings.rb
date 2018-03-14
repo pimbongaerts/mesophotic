@@ -1,4 +1,4 @@
-class AddAttachmentFeaturedImageToMeetings < ActiveRecord::Migration
+class AddAttachmentFeaturedImageToMeetings < ActiveRecord::Migration[4.2]
   def self.up
     change_table :meetings do |t|
       t.attachment :featured_image

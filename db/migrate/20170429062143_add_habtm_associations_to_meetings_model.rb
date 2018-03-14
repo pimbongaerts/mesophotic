@@ -1,4 +1,4 @@
-class AddHabtmAssociationsToMeetingsModel < ActiveRecord::Migration
+class AddHabtmAssociationsToMeetingsModel < ActiveRecord::Migration[4.2]
   def change
   	create_table :meetings_users, id: false do |t|
       t.belongs_to :meeting, index: true
