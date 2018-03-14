@@ -1,12 +1,23 @@
-<canvas id="wordcloud_<%= title %>" class="word-cloud">
-  <script type="text/javascript">
+<div id="wordcloud_<%= title %>" class="word-cloud"></div>
+<script type="text/javascript">
+  $(function() {
     WordCloud(
-      document.getElementById('wordcloud_<%= title %>'),
+      $('#wordcloud_<%= title %>')[0],
       {
         list: <%= raw wordcloud %>,
         color: 'black',
-        weightFactor: 50
+        weightFactor: 50,
+        hover: function(item, dimension, event) {
+          if (document.body.style.cursor == "cursor-url") {
+            document.body.style.cursor = "default";
+          } else {
+            document.body.style.cursor = "pointer";
+          }
+        },
+        click: function(item, dimension, event) {
+          window.location.href="/publications?search=" + item[0]
+        }
       }
     );
-  </script>
-</canvas>
+  });
+</script>
