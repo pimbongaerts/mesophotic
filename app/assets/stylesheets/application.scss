@@ -11,4 +11,21 @@
 
 .word-cloud {
     width: 100%;
+    height: 200px;
+}
+
+.word-cloud span {
+    color: #000 !important;
+}
+
+.word-cloud span:hover {
+    color: #555 !important;
+}
+
+.word-cloud span.associated {
+    color: #428bca !important;
+}
+
+.word-cloud span.associated:hover {
+    color: #23527c !important;
 }

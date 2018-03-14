@@ -21,6 +21,12 @@ module ApplicationHelper
     false # false if can't find the server
   end
 
+  def word_association
+    [Platform, Field, Focusgroup, Location].reduce({}) { |result, model|
+      result.merge model.model_name.param_key => model.all.map { |m| m.short_description || m.description }
+    }
+  end
+
   def word_cloud size, content
     exclusions = WordExclusion.pluck(:word)
 
@@ -28,7 +34,7 @@ module ApplicationHelper
       .force_encoding("UTF-8")
       .scan(/[\w']+/)
       .group_by(&:downcase)
-      .reject { |k, v| exclusions.include? k or k.length <= 2 }
+      .reject { |k, v| exclusions.include? k or k.length <= 2 or k.numeric? }
       .reduce({}) { |fs, w| fs.merge w.first => w.last.count }
       .sort_by { |k, v| v }
       .reverse
@@ -174,4 +180,10 @@ module ApplicationHelper
     data
   end
 
+end
+
+class String
+  def numeric?
+    Float(self) != nil rescue false
+  end
 end
