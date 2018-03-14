@@ -1,4 +1,4 @@
-class CreateJournals < ActiveRecord::Migration
+class CreateJournals < ActiveRecord::Migration[4.2]
   def change
     create_table :journals do |t|
       t.string :name

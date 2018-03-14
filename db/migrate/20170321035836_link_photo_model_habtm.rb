@@ -1,4 +1,4 @@
-class LinkPhotoModelHabtm < ActiveRecord::Migration
+class LinkPhotoModelHabtm < ActiveRecord::Migration[4.2]
   def change
   	create_table :photos_posts, id: false do |t|
       t.belongs_to :photo, index: true

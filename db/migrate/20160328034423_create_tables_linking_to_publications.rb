@@ -1,4 +1,4 @@
-class CreateTablesLinkingToPublications < ActiveRecord::Migration
+class CreateTablesLinkingToPublications < ActiveRecord::Migration[4.2]
   def change
     create_table :platforms_publications, id: false do |t|
       t.belongs_to :platform, index: true

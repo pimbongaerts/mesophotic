@@ -1,4 +1,4 @@
-class CreateExpeditions < ActiveRecord::Migration
+class CreateExpeditions < ActiveRecord::Migration[4.2]
   def change
     create_table :expeditions do |t|
       t.string :title

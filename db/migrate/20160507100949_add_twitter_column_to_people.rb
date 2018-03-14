@@ -1,4 +1,4 @@
-class AddTwitterColumnToPeople < ActiveRecord::Migration
+class AddTwitterColumnToPeople < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :twitter, :string
 

@@ -1,4 +1,4 @@
-class CorrectPhotosPlatforms < ActiveRecord::Migration
+class CorrectPhotosPlatforms < ActiveRecord::Migration[4.2]
   def change
    	drop_table :platforms_photos
 

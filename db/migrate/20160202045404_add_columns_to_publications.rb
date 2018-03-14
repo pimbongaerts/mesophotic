@@ -1,4 +1,4 @@
-class AddColumnsToPublications < ActiveRecord::Migration
+class AddColumnsToPublications < ActiveRecord::Migration[4.2]
   def change
     add_column :publications, :upper_depth, :integer
     add_column :publications, :lower_depth, :integer

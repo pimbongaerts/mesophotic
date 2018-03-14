@@ -1,4 +1,4 @@
-class AddFieldsToPublications < ActiveRecord::Migration
+class AddFieldsToPublications < ActiveRecord::Migration[4.2]
   def change
     # Core fields
     add_column :publications, :authors, :text

@@ -1,4 +1,4 @@
-class LinkExpeditionCategories < ActiveRecord::Migration
+class LinkExpeditionCategories < ActiveRecord::Migration[4.2]
   def change
   	create_table :expeditions_platforms, id: false do |t|
       t.belongs_to :expedition, index: true
