@@ -22,8 +22,13 @@ module ApplicationHelper
   end
 
   def word_association
-    [Platform, Field, Focusgroup, Location].reduce({}) { |result, model|
-      result.merge model.model_name.param_key => model.all.map { |m| m.short_description || m.description }
+    [Platform, Field, Focusgroup, Location].reduce({}) { |r, model|
+      r.merge model.model_name.route_key => model.all.reduce({}) { |r, m|
+        words = m.short_description.split(';').map(&:strip) rescue []
+        r.merge words.reduce({}) { |r, w|
+          r.merge w.downcase => m.id
+        }
+      }
     }
   end
 

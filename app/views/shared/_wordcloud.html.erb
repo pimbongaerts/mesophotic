@@ -7,6 +7,14 @@
         list: <%= raw wordcloud %>,
         color: 'black',
         weightFactor: 50,
+        classes: function(word, weigth, fontSize, distance, theta) {
+          var associations = <%= raw word_association.to_json %>;
+          for (var key in associations) {
+            if (associations[key][word] != undefined) {
+              return "associated";
+            }
+          }
+        },
         hover: function(item, dimension, event) {
           if (document.body.style.cursor == "cursor-url") {
             document.body.style.cursor = "default";
@@ -15,7 +23,14 @@
           }
         },
         click: function(item, dimension, event) {
-          window.location.href="/publications?search=" + item[0]
+          var associations = <%= raw word_association.to_json %>;
+          for (var key in associations) {
+            if (associations[key][item[0]] != undefined) {
+              window.location.href="/" + key + "/" + associations[key][item[0]];
+              return;
+            }
+          }
+          window.location.href="/publications?search=" + item[0];
         }
       }
     );
