@@ -1,11 +1,13 @@
 <div id="wordcloud_<%= title %>" class="word-cloud"></div>
 <script type="text/javascript">
-  $(function() {
+  var f = function() {
+    console.log("here");
     WordCloud(
       $('#wordcloud_<%= title %>')[0],
       {
         list: <%= raw wordcloud %>,
         color: 'black',
+        drawOutOfBound: false,
         weightFactor: 50,
         classes: function(word, weigth, fontSize, distance, theta) {
           var associations = <%= raw word_association.to_json %>;
@@ -34,5 +36,10 @@
         }
       }
     );
+  };
+
+  $(function() {
+    f();
+    $('#wordcloud_<%= title %>').sizeChanged(f);
   });
 </script>
