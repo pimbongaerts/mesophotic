@@ -12,8 +12,8 @@
 
     <%= render partial: 'layouts/link',
                locals: { path: posts_pages_path,
-                         title: 'Blog',
-                         glyphicon: 'glyphicon-bullhorn'} %>
+                         title: 'News',
+                         glyphicon: 'glyphicon-th-list'} %>
 
     <%= render partial: 'layouts/link',
                locals: { path: members_pages_path,
@@ -25,17 +25,19 @@
                          title: 'Publications',
                          glyphicon: 'glyphicon-file'} %>
 
-    <%= render partial: 'layouts/link',
+    <%# render partial: 'layouts/link',
                locals: { path: locations_path,
                          title: 'Locations',
                          glyphicon: 'glyphicon-globe'} %>
+
+    <%= render partial: 'layouts/link_categories' %>
 
     <%= render partial: 'layouts/link',
                locals: { path: photos_path,
                          title: 'Images',
                          glyphicon: 'glyphicon-picture'} %>
 
-    <%= render partial: 'layouts/link',
+    <%# render partial: 'layouts/link',
                locals: { path: species_index_path,
                          title: 'Species',
                          glyphicon: 'glyphicon-tree-deciduous'} %>

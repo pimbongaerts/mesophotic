@@ -1,0 +1,21 @@
+<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+	  <span class="glyphicon glyphicon-screenshot"></span>
+		<strong class="hidden-sm hidden-md"><small>
+			Categories
+		</small></strong>
+		<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	   <li>&nbsp;&nbsp;Publications by ...</li>
+	   <li><%= link_to "Geographic location", 
+	   				   locations_path %></li>
+	   <li><%= link_to "Technology / platform", 
+	   				   Rails.root.join('platforms', '10').to_s %></li>
+	   <li><%= link_to "Research field", 
+	   				   Rails.root.join('fields', '10').to_s %></li>
+	   <li><%= link_to "Research focus", 
+	   				   Rails.root.join('focusgroups', '5').to_s %></li>
+	   <li><%= link_to "Species list", species_index_path %></li>
+	</ul>
+</li>
