@@ -46,4 +46,10 @@ end
 
 group :development do
   gem 'web-console'
+
+  # Profiling
+  gem 'rack-mini-profiler', require: false
+  gem 'memory_profiler'
+  gem 'flamegraph'
+  gem 'stackprof'
 end
