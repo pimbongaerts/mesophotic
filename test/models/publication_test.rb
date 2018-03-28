@@ -1,3 +1,41 @@
+# == Schema Information
+#
+# Table name: publications
+#
+#  id                 :integer          not null, primary key
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  authors            :text(65535)
+#  publication_year   :integer
+#  title              :string(255)
+#  journal_id         :integer
+#  issue              :string(255)
+#  pages              :string(255)
+#  DOI                :string(255)
+#  url                :string(255)
+#  book_title         :string(255)
+#  book_publisher     :string(255)
+#  abstract           :text(65535)
+#  contents           :text(65535)
+#  volume             :string(255)
+#  min_depth          :integer
+#  max_depth          :integer
+#  new_species        :boolean
+#  filename           :string(255)
+#  original_data      :boolean
+#  mesophotic         :boolean
+#  pdf_file_name      :string
+#  pdf_content_type   :string
+#  pdf_file_size      :integer
+#  pdf_updated_at     :datetime
+#  book_authors       :string
+#  publication_type   :string
+#  mce                :boolean          default(TRUE)
+#  publication_format :string           default("article")
+#  behind_contents    :text
+#  external_id        :text
+#
+
 require 'test_helper'
 
 class PublicationTest < ActiveSupport::TestCase

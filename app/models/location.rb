@@ -2,12 +2,13 @@
 #
 # Table name: locations
 #
-#  id          :integer          not null, primary key
-#  description :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  latitude    :decimal(15, 10)  default(0.0)
-#  longitude   :decimal(15, 10)  default(0.0)
+#  id                :integer          not null, primary key
+#  description       :string(255)
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  latitude          :decimal(15, 10)  default(0.0)
+#  longitude         :decimal(15, 10)  default(0.0)
+#  short_description :text
 #
 
 class Location < ApplicationRecord
