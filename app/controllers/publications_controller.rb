@@ -96,7 +96,7 @@ class PublicationsController < ApplicationController
 
   def detach_field
       @publication.fields.delete(params[:format])
-      redirect_back fallback_location: root_path, 
+      redirect_back fallback_location: root_path,
                     notice: 'Field was successfully removed.'
   end
 
@@ -108,7 +108,7 @@ class PublicationsController < ApplicationController
 
   def detach_platform
       @publication.platforms.delete(params[:format])
-      redirect_back fallback_location: root_path, 
+      redirect_back fallback_location: root_path,
                     notice: 'Platform was successfully removed.'
   end
 
