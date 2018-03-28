@@ -2,10 +2,11 @@
 #
 # Table name: focusgroups
 #
-#  id          :integer          not null, primary key
-#  description :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :integer          not null, primary key
+#  description       :string(255)
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  short_description :text
 #
 
 class Focusgroup < ApplicationRecord

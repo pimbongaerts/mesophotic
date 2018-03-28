@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180314084312) do
+ActiveRecord::Schema.define(version: 20180328081812) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -343,6 +343,7 @@ ActiveRecord::Schema.define(version: 20180314084312) do
     t.boolean "mce", default: true
     t.string "publication_format", default: "article"
     t.text "behind_contents"
+    t.text "external_id"
   end
 
   create_table "publications_sites", id: false, force: :cascade do |t|

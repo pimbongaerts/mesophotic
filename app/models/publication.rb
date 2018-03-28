@@ -33,6 +33,7 @@
 #  mce                :boolean          default(TRUE)
 #  publication_format :string           default("article")
 #  behind_contents    :text
+#  external_id        :text
 #
 
 class Publication < ApplicationRecord

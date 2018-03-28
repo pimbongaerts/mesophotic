@@ -21,6 +21,8 @@
 #  post_id            :integer
 #  meeting_id         :integer
 #  publication_id     :integer
+#  creative_commons   :boolean          default(FALSE)
+#  showcases_location :boolean          default(TRUE)
 #
 
 class Photo < ApplicationRecord
