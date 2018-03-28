@@ -7,6 +7,7 @@
         list: <%= raw wordcloud %>,
         color: 'black',
         drawOutOfBound: false,
+        shape: 'square',
         weightFactor: 50,
         classes: function(word, weigth, fontSize, distance, theta) {
           var associations = <%= raw word_association.to_json %>;
