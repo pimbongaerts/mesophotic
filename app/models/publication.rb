@@ -115,15 +115,15 @@ class Publication < ApplicationRecord
   }
 
   scope :base_search, -> (search_params = Publication.default_search_params) {
-    min_depth, max_depth = *(search_params[:depth_range] || "0,500").split(",").map(&:to_i)
-    min_year, max_year = *(search_params[:year_range] || "#{Publication.min_year},#{Publication.max_year}").split(",").map(&:to_i)
-    locations(search_params[:locations])
-    .focusgroups(search_params[:focusgroups])
-    .platforms(search_params[:platforms])
-    .fields(search_params[:fields])
-    .where("publication_type IN (?) OR publication_type IS NULL", search_params[:types])
-    .where("publication_format IN (?) OR publication_format IS NULL", search_params[:formats])
-    .where((search_params[:characteristics] || []).map { |c| "#{c} = 't'" }.join(" OR "))
+    min_depth, max_depth = *(search_params["depth_range"] || "0,500").split(",").map(&:to_i)
+    min_year, max_year = *(search_params["year_range"] || "#{Publication.min_year},#{Publication.max_year}").split(",").map(&:to_i)
+    locations(search_params["locations"])
+    .focusgroups(search_params["focusgroups"])
+    .platforms(search_params["platforms"])
+    .fields(search_params["fields"])
+    .where("publication_type IN (?) OR publication_type IS NULL", search_params["types"])
+    .where("publication_format IN (?) OR publication_format IS NULL", search_params["formats"])
+    .where((search_params["characteristics"] || []).map { |c| "#{c} = 't'" }.join(" OR "))
     .where("(min_depth IS NULL OR min_depth <= ?) AND (max_depth IS NULL OR max_depth >= ?)", max_depth >= 500 ? Publication.max_depth : max_depth, min_depth)
     .where("(publication_year <= ?) AND (publication_year >= ?)", max_year, min_year)
   }
@@ -140,7 +140,7 @@ class Publication < ApplicationRecord
 
   scope :filter, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
-      fields = search_params[:search_fields] || []
+      fields = search_params["search_fields"] || []
       clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term}%")
       where(clause, *terms)
@@ -150,7 +150,7 @@ class Publication < ApplicationRecord
 
   scope :relevance, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
-      filter = (search_params[:search_fields] || ["0"]).map { |field|
+      filter = (search_params["search_fields"] || ["title", "abstract", "contents", "authors"]).map { |field|
       "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
     }.join(" + ")
 

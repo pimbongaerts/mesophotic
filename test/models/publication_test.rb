@@ -61,10 +61,10 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "depth search, find three, one" do
-    assert_equal [publications(:three), publications(:one)], (Publication.search "", Publication.default_search_params.merge(:depth_range => "40, 200")).to_a
+    assert_equal [publications(:three), publications(:one)], (Publication.search "", Publication.default_search_params.merge("depth_range" => "40, 200")).to_a
   end
 
   test "depth search, find one" do
-    assert_equal [publications(:one)], (Publication.search "", Publication.default_search_params.merge(:depth_range => "200, 300")).to_a
+    assert_equal [publications(:one)], (Publication.search "", Publication.default_search_params.merge("depth_range" => "200, 300")).to_a
   end
 end
