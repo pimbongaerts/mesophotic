@@ -20,9 +20,11 @@
     <%= paginate @publications %> |
     Reverse sorted by ID |
     <%= link_to "Download as CSV", publications_path(format: "csv") %>
+    | [<%= @publications.total_count %> results]
     <br><br>
   <% else %>
-    <%= paginate @publications %>
+    <%= paginate @publications %>[<%= @publications.total_count %> results]
+    <br><br>
   <% end %>
 
   <%# Render publications %>
@@ -37,7 +39,7 @@
     <% end %>
   </table>
 
-  <%= paginate @publications %>
+  <%= paginate @publications %>[<%= @publications.total_count %> results]
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>
