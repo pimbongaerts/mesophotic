@@ -5,7 +5,11 @@ module PublicationsHelper
     categories = []
     occurrences = []
     category_model.each do |category|
-      categories << category.description
+      if category.short_description.include? ";"
+        categories << category.description.split()[0]
+      else
+        categories << category.short_description
+      end
       occurrences << category.publications.count
     end
     [categories, occurrences]
