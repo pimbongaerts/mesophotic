@@ -48,14 +48,23 @@
       <div class="col-xs-6">
         <div class="form-group">
           <%= f.check_box :mesophotic %>
-          <%= f.label "Mesophotic-focused" %>
-          <small>(publication is focused on the mesophotic)</small>
+          <%= f.label "Mesophotic" %>
+          <small>(indicates whether the publications presents data from, or presents a discussion on, the mesophotic depth range)</small>
         </div>
         <div class="form-group">
           <%= f.check_box :mce %>
-          <%= f.label "MCE-focused" %>
+          <%= f.label "Mesophotic Coral Ecosystem" %>
           <small>
-            (publication is focused on a `mesophotic coral ecosystem`)
+            (indicates whether the publications presents data from, or presents a discussion on, a mesophotic coral reef ecosystem; 
+            should always have the "mesophotic" tag too)
+          </small>
+        </div>
+        <div class="form-group">
+          <%= f.check_box :tme %>
+          <%= f.label "Temperate Mesophotic Ecosystem" %>
+          <small>
+            (indicates whether the publications presents data from, or presents a discussion on, a temperate mesophotic ecosystem; 
+            should always have the "mesophotic" tag too)
           </small>
         </div>
         <div class="form-group">

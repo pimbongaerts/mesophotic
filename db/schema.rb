@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180328081812) do
+ActiveRecord::Schema.define(version: 20180403041405) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(version: 20180328081812) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "open_access"
+    t.text "fullname"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -233,6 +234,7 @@ ActiveRecord::Schema.define(version: 20180328081812) do
     t.integer "publication_id"
     t.boolean "creative_commons", default: false
     t.boolean "showcases_location", default: true
+    t.boolean "media_gallery", default: false
   end
 
   create_table "photos_platforms", id: false, force: :cascade do |t|
@@ -344,6 +346,7 @@ ActiveRecord::Schema.define(version: 20180328081812) do
     t.string "publication_format", default: "article"
     t.text "behind_contents"
     t.text "external_id"
+    t.boolean "tme", default: false
   end
 
   create_table "publications_sites", id: false, force: :cascade do |t|

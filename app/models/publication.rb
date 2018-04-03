@@ -203,6 +203,7 @@ class Publication < ApplicationRecord
                     " ",
                     publication.mesophotic,
                     publication.mce,
+                    publication.tme,
                     publication.original_data,
                     publication.new_species,
                     publication.min_depth,

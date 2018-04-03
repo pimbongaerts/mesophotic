@@ -194,6 +194,7 @@ class PublicationsController < ApplicationController
         :min_depth,
         :max_depth,
         :mce,
+        :tme,
         :original_data,
         :mesophotic,
         :new_species,
