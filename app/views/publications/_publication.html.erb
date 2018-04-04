@@ -4,7 +4,7 @@
     <% if params[:search] %>
       <%= image_tag publication.pdf.url(:thumb), :width => "100" %>
     <% else %>
-      <%= image_tag publication.pdf.url(:thumb) %>    
+      <%= image_tag publication.pdf.url(:thumb) %>
     <% end %>
   </td>
 
@@ -17,11 +17,11 @@
   <td width="60px" align="center">
     <% if user_signed_in? || publication.open_access? %>
       <% if publication.pdf.file? %>
-        <%= link_to image_tag('adobe_pdf.png'), 
+        <%= link_to image_tag('adobe_pdf.png'),
                     publication.pdf.url(:original) %>
       <% end %>
       <% if publication.open_access? %>
-        <br><%= image_tag('open_access_small.png') %>
+        <br><%= image_tag('open_access.png') %>
       <% end %>
     <% else %>
       <% if publication.pdf.file? %>
