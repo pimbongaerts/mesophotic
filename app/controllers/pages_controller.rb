@@ -20,12 +20,32 @@ class PagesController < ApplicationController
                                      .all
                                      .group('publication_year')
 
-    @platforms = Platform.joins(:publications).group('platforms.id')
-              .order('count(platforms.id) DESC').limit(5)
-    @focusgroups = Focusgroup.joins(:publications).group('focusgroups.id')
-                    .order('count(focusgroups.id) DESC').limit(5)
-    @locations = Location.joins(:publications).group('locations.id').
-                 order('count(locations.id) DESC')
+    @platforms = Platform.joins(:publications)
+                         .select('*, count(publications.id) as publications_count')
+                         .group('platforms.id')
+                         .order('count(platforms.id) DESC')
+    @platforms_top = @platforms.limit(5)
+
+
+    @fields = Field.joins(:publications)
+                   .select('*, count(publications.id) as publications_count')
+                   .group('fields.id')
+                   .order('count(fields.id) DESC')
+    @fields_top = @fields.limit(5)
+
+    @focusgroups = Focusgroup.joins(:publications)
+                             .select('*, count(publications.id) as publications_count')
+                             .group('focusgroups.id')
+                             .order('count(focusgroups.id) DESC')
+    @focusgroups_top = @focusgroups.limit(5)
+    
+    @locations = Location.joins(:publications)
+                         .select('*, count(publications.id) as publications_count')
+                         .group('locations.id')
+                         .order('count(locations.id) DESC')
+    @locations_top = @locations.limit(5)
+    
+                 
 
     # Publications across depth categories
     depth_groups = {"30-60 m" => [30, 60], "60-90 m" => [60, 90],

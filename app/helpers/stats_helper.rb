@@ -1,11 +1,11 @@
 module StatsHelper
   def format_for_chart(category_model, category_model_ordered)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
+    category_model_counts = category_model.map{ |c| [c.short_description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:description)
+    categories = category_model_ordered.map(&:short_description)
     # Create list of occurrences
     occurrences = []
     categories.each do |category|
@@ -21,11 +21,11 @@ module StatsHelper
 
   def format_for_pie_chart(category_model, category_model_ordered)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
+    category_model_counts = category_model.map{ |c| [c.short_description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:description)
+    categories = category_model_ordered.map(&:short_description)
     # Create list of occurrences
     categories_occurrences = {}
     categories.each do |category|
@@ -43,7 +43,7 @@ module StatsHelper
   end
 
   def format_for_time_search_chart(found_counts, total_counts)
-    year_range = (2000..2016)
+    year_range = (2000..2018)
     categories = []
     found_occurrences = []
     not_found_occurrences = []

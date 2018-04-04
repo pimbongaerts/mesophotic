@@ -16,7 +16,7 @@
             <%= render partial: 'shared/depth_graph',
                        locals: { title: 'Depth', categories: categories,
                                  occurrences: occurrences, unit: "Publications",
-                                 height: 400 } %>
+                                 height: 600 } %>
             <p>
               Fig. 1a: Number of publications over depth<br>
               <small>
@@ -28,28 +28,10 @@
           </div>
           <div class="col-sm-4">
             <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Platform3060',
+                       locals: { title: 'Platforms',
                                  data: format_for_pie_chart(
-                                          @platform_by_depth_group["30-60 m"],
-                                          @platforms),
-                                 height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Platform6090',
-                                 data: format_for_pie_chart(
-                                          @platform_by_depth_group["60-90 m"],
-                                          @platforms),
-                                 height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Platform90120',
-                                 data: format_for_pie_chart(
-                                          @platform_by_depth_group["90-120 m"],
-                                          @platforms),
-                                 height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Platform120150',
-                                 data: format_for_pie_chart(
-                                          @platform_by_depth_group["120-150 m"],
-                                          @platforms),
+                                          @platforms,
+                                          @platforms_top),
                                  height: 100, unit: 'Publications' } %>
             <p>
               Fig. 1b: Research platform use over depth<br>
@@ -60,31 +42,43 @@
                 (<%= link_to 'definitions', about_pages_path %>).
               </small>
             </p>
+            <%= render partial: 'shared/pie_graph',
+                       locals: { title: 'Focusgroups',
+                                 data: format_for_pie_chart(
+                                          @focusgroups,
+                                          @focusgroups_top),
+                                 height: 100, unit: 'Publications' } %>
+            <p>
+              Fig. 1c: Focal taxa over depth<br>
+              <small>
+                When a paper uses multiple platforms,
+                each platform is assumed to be used over the entire depth range
+                (as no information is usually available on further partitioning)
+                (<%= link_to 'definitions', about_pages_path %>).
+              </small>
+            </p>
           </div>
           <div class="col-sm-4">
             <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Focusgroup3060',
+                       locals: { title: 'Fields',
                                  data: format_for_pie_chart(
-                                          @focusgroup_by_depth_group["30-60 m"],
-                                          @focusgroups),
+                                          @fields,
+                                          @fields_top),
                                  height: 100, unit: 'Publications' } %>
+            <p>
+              Fig. 1c: Focal taxa over depth<br>
+              <small>
+                When a paper focuses on multiple taxa, each taxa is assumed to be
+                studied over the entire depth range
+                (as no information is usually available on further partitioning)
+                (<%= link_to 'definitions', about_pages_path %>).
+              </small>
+            </p>
             <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Focusgroup6090',
+                       locals: { title: 'Locations',
                                  data: format_for_pie_chart(
-                                          @focusgroup_by_depth_group["60-90 m"],
-                                          @focusgroups),
-                                 height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Focusgroup90120',
-                                 data: format_for_pie_chart(
-                                          @focusgroup_by_depth_group["90-120 m"],
-                                          @focusgroups),
-                                 height: 100, unit: 'Publications' } %>
-            <%= render partial: 'shared/pie_graph',
-                       locals: { title: 'Focusgroup120150',
-                                 data: format_for_pie_chart(
-                                          @focusgroup_by_depth_group["120-150 m"],
-                                          @focusgroups),
+                                          @locations,
+                                          @locations_top),
                                  height: 100, unit: 'Publications' } %>
             <p>
               Fig. 1c: Focal taxa over depth<br>
