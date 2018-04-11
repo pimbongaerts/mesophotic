@@ -11,8 +11,9 @@ class PagesController < ApplicationController
   def stats
     @users = User.all
     @latest_update = Publication.maximum(:updated_at)
-    @publications = Publication.all.order('publication_year DESC,
-                                           created_at DESC')
+    @publications = Publication.include_in_stats
+                               .order('publication_year DESC,
+                                       created_at DESC')
     # Search term TO DO: NOT FUNCTIONAL
     @publications_refug_counts = Publication.select('publication_year, count(id) as publications_count')
                                      .group('publication_year') # .relevance('refug')
@@ -24,26 +25,26 @@ class PagesController < ApplicationController
                          .select('*, count(publications.id) as publications_count')
                          .group('platforms.id')
                          .order('count(platforms.id) DESC')
-    @platforms_top = @platforms.limit(5)
+    @platforms_top = @platforms.limit(10)
 
 
     @fields = Field.joins(:publications)
                    .select('*, count(publications.id) as publications_count')
                    .group('fields.id')
                    .order('count(fields.id) DESC')
-    @fields_top = @fields.limit(5)
+    @fields_top = @fields.limit(10)
 
     @focusgroups = Focusgroup.joins(:publications)
                              .select('*, count(publications.id) as publications_count')
                              .group('focusgroups.id')
                              .order('count(focusgroups.id) DESC')
-    @focusgroups_top = @focusgroups.limit(5)
+    @focusgroups_top = @focusgroups.limit(10)
     
     @locations = Location.joins(:publications)
                          .select('*, count(publications.id) as publications_count')
                          .group('locations.id')
                          .order('count(locations.id) DESC')
-    @locations_top = @locations.limit(5)
+    @locations_top = @locations.limit(10)
     
                  
 

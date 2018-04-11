@@ -1,21 +1,22 @@
 module StatsHelper
   def format_for_chart(category_model, category_model_ordered)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.short_description, c.publications_count] }.to_h
+    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:short_description)
+    categories = category_model_ordered.map(&:description)
     # Create list of occurrences
     occurrences = []
     categories.each do |category|
-      occurrences << category_model_counts[category]
+      cat_percentage = (category_model_counts[category].to_f / total_count.to_f) * 100
+      occurrences << cat_percentage.round(1)
     end
     # Add "other" category
-    total_count_of_included_categories = occurrences.inject(:+)
-    categories << "other"
-    occurrences << (total_count - total_count_of_included_categories)
-    
+    #total_count_of_included_categories = occurrences.inject(:+)
+    #categories << "other"
+    #other_percentage = 100.0 - total_count_of_included_categories.to_f
+    #occurrences << other_percentage.round(1)
     [categories, occurrences]
   end
 
@@ -183,6 +184,34 @@ module StatsHelper
                                                                             :bin_boundary => :avg)
     end
     return categories, histo_occurrences
+  end
+
+  # Counts the number of cumulative locations in publications over time (years)
+  def count_locations_over_time(publications)
+    # Get a list of locations for each year
+    year_location_list = Hash.new(0)
+    publications.each do |publication|
+      locations = publication.locations
+      year_key = publication.publication_year.to_s
+      if not year_location_list.key?(year_key)
+        year_location_list[year_key] = Set.new()
+      end
+      locations.each do |location|
+        year_location_list[year_key] <<  location
+      end
+    end
+    # Count number of cumulative locations over time
+    last_year = Time.new.year - 1
+    year_range = (1990..last_year)
+    categories = []
+    values = []
+    cumulative_locations = Set.new()
+    year_range.each do |year|
+      categories << year.to_s
+      cumulative_locations.merge(year_location_list[year.to_s])
+      values << cumulative_locations.count
+    end
+    return categories, values
   end
 
 end
