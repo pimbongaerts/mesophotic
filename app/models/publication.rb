@@ -168,6 +168,13 @@ class Publication < ApplicationRecord
     where(original_data: true)
   }
 
+  scope :include_in_stats, -> () {
+    where(mesophotic: true)
+    where(original_data: true)
+    where(publication_type: 'scientific')
+    where(publication_format: 'article')
+  }
+
   scope :latest, -> (count) {
     order('publication_year DESC, created_at DESC')
     .limit(count)
@@ -176,15 +183,17 @@ class Publication < ApplicationRecord
   # class methods
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << ["id", "publication_type", "publication_format",
+      csv << ["id", "validated", "included_in_stats", "publication_type", "publication_format",
               "publication_year", "authors", "title",
               "journal_name", "volume", "issue", "pages", "doi", "url",
               "book_title", "book_authors", "book_publisher", "pdf_present",
-              " ", "mesophotic", "coralreef", "original_data", "new_species",
-              "min_depth", "max_depth", " ", "fields", "focusgroups",
+              "mesophotic", "mce", "tme", "original_data", "new_species",
+              "min_depth", "max_depth", "fields", "focusgroups",
               "platforms", "locations"]
       all.each do |publication|
         csv_line = [publication.id,
+                    publication.validated?,
+                    publication.included_in_stats?,
                     publication.publication_type,
                     publication.publication_format,
                     publication.publication_year,
@@ -200,7 +209,6 @@ class Publication < ApplicationRecord
                     publication.book_authors,
                     publication.book_publisher,
                     publication.pdf.exists?,
-                    " ",
                     publication.mesophotic,
                     publication.mce,
                     publication.tme,
@@ -208,7 +216,6 @@ class Publication < ApplicationRecord
                     publication.new_species,
                     publication.min_depth,
                     publication.max_depth,
-                    " ",
                     publication.fields.map(&:description).join("; "),
                     publication.focusgroups.map(&:description).join("; "),
                     publication.platforms.map(&:description).join("; "),
@@ -311,5 +318,11 @@ class Publication < ApplicationRecord
 
   def validated?
     Publication.validated.include?(self)
+  end
+
+  def included_in_stats?
+    (validated? && original_data && 
+     mesophotic && publication_type == "scientific" &&
+     publication_format == "article")
   end
 end
