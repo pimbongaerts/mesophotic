@@ -20,6 +20,26 @@ module StatsHelper
     [categories, occurrences]
   end
 
+  def format_for_chart_abs(category_model, category_model_ordered)
+    # Create hash with category descriptions and counts
+    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
+    # Total count across all categories
+    total_count = category_model_counts.values.inject(:+)
+    # Create list of ordered categories (that should be included)
+    categories = category_model_ordered.map(&:description)
+    # Create list of occurrences
+    occurrences = []
+    categories.each do |category|
+      occurrences << category_model_counts[category]
+    end
+    # Add "other" category
+    #total_count_of_included_categories = occurrences.inject(:+)
+    #categories << "other"
+    #other_percentage = 100.0 - total_count_of_included_categories.to_f
+    #occurrences << other_percentage.round(1)
+    [categories, occurrences]
+  end
+
   def format_for_pie_chart(category_model, category_model_ordered)
     # Create hash with category descriptions and counts
     category_model_counts = category_model.map{ |c| [c.short_description, c.publications_count] }.to_h
@@ -44,7 +64,7 @@ module StatsHelper
   end
 
   def format_for_time_search_chart(found_counts, total_counts)
-    year_range = (2000..2018)
+    year_range = (1990..2017)
     categories = []
     found_occurrences = []
     not_found_occurrences = []
@@ -58,7 +78,6 @@ module StatsHelper
       else
         found_occurrence = 0
       end
-      found_occurrences << found_occurrence
       # Number of publications for which search term was not found
       total_counts_year = total_counts.find_by_publication_year(year)
       if total_counts_year
@@ -66,6 +85,8 @@ module StatsHelper
       else
         total_occurrence = 0
       end
+      # Add to hashes
+      found_occurrences << found_occurrence
       not_found_occurrences << total_occurrence - found_occurrence
     end
     return categories, found_occurrences, not_found_occurrences

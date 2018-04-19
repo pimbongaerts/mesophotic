@@ -4,8 +4,15 @@
                 backlink: root_path } %>
 <div class="row">
   <div class="col-sm-12">
-    (across <%= @publications.count %> scientific articles
-     presenting original data from mesophotic depths)
+    <p class="bg-danger">
+      Note: currently generating graphs across the whole database for testing purposes.
+    </p>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        The following graphs summarize the metadata across the <code><%= @publications.count %></code> scientific articles in this database that are validated and present original data from mesophotic depths.
+      </div>
+    </div>
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>
@@ -15,7 +22,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-6">
-            <center><h4>The deeper we go, the less we know</h4></center>
+            <center><h4>Decrease in knowledge over depth</h4></center>
             <% categories, occurrences = get_depth_range_data(@publications) %>
             <%= render partial: 'shared/depth_graph',
                        locals: { title: 'Depth', categories: categories,
@@ -32,7 +39,7 @@
           </div>
           <div class="col-sm-6">
             <center><h4>
-              Literature increased <code>3.4</code>x fold over past 10 years
+              Literature increased ><code>3</code>-fold over past 10 years
             </h4></center>
             <% cats, occurs = count_publications_over_time(@publications.group(:publication_year).count) %>
             <%= render partial: 'shared/area_graph', 
@@ -54,7 +61,7 @@
         <div class="row">
           <div class="col-sm-6">
             <center><h4>
-              Steady increase in geographic scope
+              Steady increase in geographic scope over time
             </h4></center>
             <% cats, occurs = count_locations_over_time(@publications) %>
             <%= render partial: 'shared/area_graph',
@@ -64,7 +71,7 @@
                                  height: 200,
                                  unit: "Studied locations" } %>
             <p>
-              Fig. 3a: <b>Number of studied locations over time</b><br>
+              Fig. 1c: <b>Number of studied locations over time</b><br>
               <small>
                 Cumulative number of locations studied for each year, to demonstrate the gradual geographic expansion of our knowledge
                 on mesophotic coral ecosystems.
@@ -73,7 +80,7 @@
           </div>
           <div class="col-sm-6">
             <center><h4>
-              Community increased <code>5.x</code> since 10 years ago
+              Community increased ><code>5</code>-fold since 10 years ago
             </h4></center>
             <% cats, occurs = count_first_authors_over_time(@publications) %>
             <%= render partial: 'shared/area_graph',
@@ -83,7 +90,7 @@
                                  height: 200,
                                  unit: "Unique first-authors" } %>
             <p>
-              Fig. 3b: <b>Number of unique first-authors in publications over time</b><br>
+              Fig. 1d: <b>Number of unique first-authors in publications over time</b><br>
               <small>
                 Number of unique first-authors for each year, to demonstrate the
                 change of the mesophotic research community over time.
@@ -107,41 +114,65 @@
         <div class="row">
           <div class="col-sm-6">
             <center><h4>
-              Biodiversity, community structure and ecology
+              Most studied <b>research fields</b>:
+              <code>biodiversity</code>, 
+              <code>community structure</code> and 
+              <code>ecology</code>
             </h4></center>
             <%= render partial: 'shared/stats_bar_graph',
                        locals: { title: 'Fields_bar_graph',
                                  data: format_for_chart(
                                           @fields,
                                           @fields_top),
-                                 height: 300, unit: 'Publications' } %>
+                                 height: 300, unit: 'Percentage' } %>
             <p>
               Fig. 2a: <b>Research fields (top 10)</b><br>
+            </p>
+            <br><br>
+            <center><h4>
+              Most used <b>scientific journal</b> outlets:
+              <code>Coral Reefs</code>, and
+              <code>PLoS ONe</code>.
+            </h4></center>
+            <%= render partial: 'shared/stats_bar_graph',
+                       locals: { title: 'Journals_bar_graph',
+                                 data: format_for_chart(
+                                          @journals,
+                                          @journals_top),
+                                 height: 300, unit: 'Percentage' } %>
+            <p>
+              Fig. 2c: <b>Journals</b> (top 10)<br>
             </p>
           </div>
           <div class="col-sm-6">
             <center><h4>
-              Scleractinian corals, fishes and benthos
+              Most studied <b>focal taxa</b>:
+              <code>scleractinian corals</code>, 
+              <code>fishes</code> and 
+              <code>benthos</code>
             </h4></center>
             <%= render partial: 'shared/stats_bar_graph',
                        locals: { title: 'Focusgroups_bar_graph',
                                  data: format_for_chart(
                                           @focusgroups,
                                           @focusgroups_top),
-                                 height: 300, unit: 'Publications' } %>
+                                 height: 300, unit: 'Percentage' } %>
             <p>
-              Fig. 2c: <b>Focal taxa (top 10)</b><br>
+              Fig. 2b: <b>Focal taxa (top 10)</b><br>
             </p>
             <br><br>
             <center><h4>
-              Diving, submersibles and ROVs
+              Most used <b>research platforms</b>:
+              <code>diving</code>, 
+              <code>submersibles</code> and 
+              <code>ROVs</code>
             </h4></center>
             <%= render partial: 'shared/stats_bar_graph',
                        locals: { title: 'Platforms_bar_graph',
                                  data: format_for_chart(
                                           @platforms,
                                           @platforms_top),
-                                 height: 300, unit: 'Publications' } %>
+                                 height: 300, unit: 'Percentage' } %>
             <p>
               Fig. 2d: <b>Research platform use (top 10)</b><br>
             </p>
@@ -158,52 +189,52 @@
         <div class="row">
           <div class="col-sm-6">
             <center><h4>
-              Hawai'i, Israel, USVI and Puerto Rico
+              Most studied <b>locations</b>:
+              <code>Hawai'i</code>, 
+              <code>Israel</code>,
+              <code>USVI</code> and 
+              <code>Puerto Rico</code>
             </h4></center>
-              <% data = count_geographic_occurrences_of_publications(@locations) %>
+              <% data = count_geographic_occurrences_of_publications(@locations_raw) %>
               <%= render partial: 'shared/world_map', locals: { title: 'Locations',
                                                             data: data,
-                                                            height: 300 } %>
+                                                            height: 200 } %>
             <p>
-              Fig. 3a: Number of publications across regions in the world<br>
+              Fig. 3a: <b>Number of publications across regions in the world</b><br>
               <small>
 
               </small>
             </p>
+            <br>
+            <center><h4>
+              Most researchers from <b>locations</b>:
+              <code>USA</code>, 
+              <code>Australia</code>,
+              <code>Israel</code> and 
+              <code>Puerto Rico</code>
+            </h4></center>
+            <% data = count_geographic_occurrences_of_users(@users) %>
+            <%= render partial: 'shared/stats_world_map', locals: { title: 'Members',
+                                                                    data: data,
+                                                                    unit: 'member(s)',
+                                                                    height: 200 } %>
+            <p>
+              Fig. 3b: <b>Number of mesophotic researchers across countries</b><br>
+              <small>
+                Based on the list of members on this website
+              </small>
+            </p>
           </div>
           <div class="col-sm-6">
-            <center><h4>
-              Most studied: Hawai'i, Israel, USVI and Puerto Rico
-            </h4></center>
             <%= render partial: 'shared/stats_bar_graph',
                        locals: { title: 'Locations_bar_graph',
                                  data: format_for_chart(
                                           @locations,
                                           @locations_top),
-                                 height: 300, unit: 'Publications' } %>
+                                 height: 600, unit: 'Percentage' } %>
             <p>
-              Fig. 2b: <b>Locations (top 10)</b><br>
+              Fig. 3c: <b>Locations (top 25)</b><br>
             </p>
-          </div>
-        </div>
-
-
-        <div class="row">
-          <div class="col-sm-6">
-            <% data = count_geographic_occurrences_of_users(@users) %>
-            <%= render partial: 'shared/world_map', locals: { title: 'Sites',
-                                                              data: data,
-                                                              height: 200 } %>
-            <p>
-              Fig. 3b: Number of mesophotic researchers across countries <br>
-              <small>
-                Based on researchers listed on this website that have
-                published in the past 10 years TODO.
-              </small>
-            </p>
-          </div>
-          <div class="col-sm-6">
-
           </div>
         </div>
       </div>
@@ -213,7 +244,10 @@
       <div class="panel-heading"><strong>Research interest over time</strong></div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-6">
+            <center><h4>
+              In the past couple of years, roughly half of publications refer to a potential refuge role
+            </h4></center>
             <% occurrences = {} %>
             <% categories, occurrences["referring to refuge"], occurrences["not referring to refuge"] =
             format_for_time_search_chart(@publications_refug_counts, @publications_total_counts)  %>
@@ -223,20 +257,33 @@
                                  occurrences: occurrences,
                                  height: 300 } %>
             <p>
-              Fig. 4a: References to refuge/refugium over time<br>
+              Fig. 4a: References to &quot;refuge/refugium&quot; over time<br>
               <small>
-                Number of publications at each time point, with and without at least one
+                Number of publications each year, with and without at least one
                 reference to <code>refug*</code> (so it includes 'refuge', 'refuges', 'refugium' and 'refugia') in the title, abstract or full-text (but excluding references).
               </small>
             </p>
           </div>
-          <div class="col-sm-4">
-
-
-          </div>
-          <div class="col-sm-4">
-
-
+          <div class="col-sm-6">
+            <center><h4>
+              Use of the term mesophotic has become established in the literature since its 
+              introduction in 2007/2008
+            </h4></center>
+            <% occurrences = {} %>
+            <% categories, occurrences["referring to mesophotic"], occurrences["not referring to mesophotic"] =
+            format_for_time_search_chart(@publications_mesophotic_counts, @publications_total_counts)  %>
+            <%= render partial: 'shared/column_graph_series',
+                       locals: { title: 'search_mesophotic', unit: "Publications",
+                                 categories: categories,
+                                 occurrences: occurrences,
+                                 height: 300 } %>
+            <p>
+              Fig. 4b: Use of the term &quot;mesophotic&quot; over time<br>
+              <small>
+                Number of publications each year, with and without at least one
+                reference to <code>mesophotic</code> in the title, abstract or full-text (but excluding references).
+              </small>
+            </p>
           </div>
         </div>
       </div>
