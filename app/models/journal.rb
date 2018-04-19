@@ -23,4 +23,7 @@ class Journal < ApplicationRecord
   # other
   # class methods
   # instance methods
+  def description
+    name
+  end
 end

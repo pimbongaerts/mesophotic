@@ -14,12 +14,18 @@ class PagesController < ApplicationController
     @publications = Publication.include_in_stats
                                .order('publication_year DESC,
                                        created_at DESC')
-    # Search term TO DO: NOT FUNCTIONAL
-    @publications_refug_counts = Publication.select('publication_year, count(id) as publications_count')
-                                     .group('publication_year') # .relevance('refug')
+    # Search terms
     @publications_total_counts = Publication.select('*, count(id) as publications_count')
-                                     .all
-                                     .group('publication_year')
+                                            .all
+                                            .group('publication_year')
+    @publications_refug_counts = Publication.relevance('refug')
+                                            .select('publication_year, count(id) as publications_count')
+                                            .group('publication_year')
+    @publications_mesophotic_counts = Publication.relevance('mesophotic')
+                                                 .select('publication_year, count(id) as publications_count')
+                                                 .group('publication_year')
+
+
 
     @platforms = Platform.joins(:publications)
                          .select('*, count(publications.id) as publications_count')
@@ -39,36 +45,20 @@ class PagesController < ApplicationController
                              .group('focusgroups.id')
                              .order('count(focusgroups.id) DESC')
     @focusgroups_top = @focusgroups.limit(10)
-    
+
+    @journals = Journal.joins(:publications)
+                         .select('*, count(publications.id) as publications_count')
+                         .group('journals.id')
+                         .order('count(journals.id) DESC')
+    @journals_top = @journals.limit(10)
+
     @locations = Location.joins(:publications)
                          .select('*, count(publications.id) as publications_count')
                          .group('locations.id')
                          .order('count(locations.id) DESC')
-    @locations_top = @locations.limit(10)
-    
+    @locations_top = @locations.limit(25)
+    @locations_raw = Location.all
                  
-
-    # Publications across depth categories
-    depth_groups = {"30-60 m" => [30, 60], "60-90 m" => [60, 90],
-                    "90-120 m" => [90, 120], "120-150 m" => [120, 150]}
-
-    @platform_by_depth_group = {}
-    @focusgroup_by_depth_group = {}
-    depth_groups.keys.each do |depth_group|
-      @platform_by_depth_group[depth_group] =
-        Platform.joins(:publications)
-                .select('*, count(publications.id) as publications_count')
-                .where('publications.max_depth > ? AND publications.min_depth < ?',
-                       depth_groups[depth_group][0], depth_groups[depth_group][1])
-                .group('platforms.id')
-      @focusgroup_by_depth_group[depth_group] =
-        Focusgroup.joins(:publications)
-                .select('*, count(publications.id) as publications_count')
-                .where('publications.max_depth > ? AND publications.min_depth < ?',
-                       depth_groups[depth_group][0], depth_groups[depth_group][1])
-                .group('focusgroups.id')
-    end
-
   end
 
   def inside

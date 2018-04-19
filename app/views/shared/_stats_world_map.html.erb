@@ -1,0 +1,37 @@
+<div id="graph_<%= title %>" style="height:<%= height %>px;">
+  <script type="text/javascript" charset="utf-8">
+    var <%= title %>_data = <%= raw data.to_json %>
+    $(function () {
+
+      $('#graph_<%= title %>').highcharts('Map', {
+          title: {
+              text: ''
+          },
+          legend: {
+              enabled: false
+          },
+          mapNavigation: {
+              enabled: false,
+              buttonOptions: {
+                  verticalAlign: 'top'
+              }
+          },
+          credits: { enabled: false },
+          series : [{
+              name: 'Countries',
+              mapData: Highcharts.maps['custom/world-continents'],
+              color: '#E0E0E0',
+              enableMouseTracking: false
+          },     {
+              	type: 'mapbubble',
+              	name: 'Study locations',
+              	data: <%= title %>_data,
+              	tooltip: {
+                    pointFormat: '{point.name}: {point.z} <%= unit %>'
+                },
+                maxSize: '12%'
+          }]
+      });
+    });
+  </script>
+</div>
