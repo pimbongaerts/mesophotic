@@ -45,7 +45,7 @@ module ApplicationHelper
       .reverse
       .take(size)
 
-    max = freqs.first.last
+    max = freqs.first.try(:last)
     freqs.map { |w| [w.first, w.last.to_f / max] }
   end
 
