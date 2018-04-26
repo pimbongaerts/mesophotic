@@ -6,7 +6,7 @@
 <%= link_to "#{author.first_name} #{author.last_name}", member_pages_path(author.id) %>
 <br>
 
-<% if author_iteration.last? %>
+<% if author_iteration.last? && author_iteration.size > 10 %>
   </div>
   <a href="#hidden_authors" data-toggle="collapse">
     Show all
