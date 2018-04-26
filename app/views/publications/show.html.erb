@@ -32,8 +32,7 @@
           <p><%= @publication.authors %></p>
         </div>
         <div class="col-sm-2" align="right">
-          <%= render partial: 'publication_links',
-                       locals: { user: @user } %>
+          <%= render partial: 'publication_links', locals: { user: @user } %>
         </div>
       </div>
     </div>
@@ -52,8 +51,8 @@
         </div>
         <div class="panel-body">
           <%= render partial: 'shared/behind_the_scenes',
-                     locals: {post: @publication.featured_post,
-                              style: 'overview'} %>
+                     locals: { post: @publication.featured_post,
+                               style: 'overview' } %>
         </div>
       </div>
     <% end %>

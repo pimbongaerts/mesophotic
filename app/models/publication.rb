@@ -260,6 +260,13 @@ class Publication < ApplicationRecord
     order(publication_year: :asc).first.publication_year
   end
 
+  def self.authors
+    joins(:users)
+    .select("users.id as id, users.first_name as first_name, users.last_name as last_name, count(users.id) as count")
+    .group("users.id")
+    .order("count DESC")
+  end
+
   # instance methods
   def create_journal_from_name
     create_journal(name: new_journal_name) unless new_journal_name.blank?
@@ -321,7 +328,7 @@ class Publication < ApplicationRecord
   end
 
   def included_in_stats?
-    (validated? && original_data && 
+    (validated? && original_data &&
      mesophotic && publication_type == "scientific" &&
      publication_format == "article")
   end

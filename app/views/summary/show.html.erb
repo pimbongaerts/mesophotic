@@ -17,38 +17,41 @@
       </div>
 		</div>
 
-
     <div class="panel panel-default">
       <div class="panel-body">
+        <%= paginate @publications %>[<%= @publications.total_count %> results]
+        <br><br>
+
 	      <table class="table table-striped">
-				  <% @object.publications.original.order('publication_year DESC, created_at DESC').each do |publication| %>
+				  <% @publications.includes(:users, :journal).original.order('publication_year DESC, created_at DESC').each do |publication| %>
 				    <%= render publication %>
 				  <% end %>
 				</table>
+        <%= paginate @publications %>[<%= @publications.total_count %> results]
 			</div>
 		</div>
 	</div>
 
   <div class="col-sm-4">
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Research keywords</strong>
       </div>
       <div class="panel-body">
         <%= render partial: 'shared/wordcloud',
-                    object: word_cloud(40, @object.publications.all_content),
+                    object: word_cloud(40, @publications.all_content),
                     locals: { title: 'location_publication_contents' } %>
-			</div>
-		</div>
+      </div>
+    </div>
 
-    <% if @object.publications.count > 0 %>
+    <% if @publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Researchers</strong> (that published on this location)
         </div>
         <div class="panel-body">
-          <%= render partial: 'shared/publication_authors',
-                     locals: { publication_authors: @object.publications } %>
+          <%= render partial: 'author', collection: @publications.authors, as: :author %>
         </div>
       </div>
     <% end %>
@@ -67,14 +70,14 @@
       </div>
     <% end %>
 
-    <% if @object.publications.count > 0 %>
+    <% if @publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Publication summary</strong> (top 5 / category)
         </div>
         <div class="panel-body">
           <%= render partial: 'shared/keyword',
-                     locals: { objects: @object.publications },
+                     locals: { objects: @publications },
                      collection: [Focusgroup, Field, Platform] %>
         </div>
       </div>
