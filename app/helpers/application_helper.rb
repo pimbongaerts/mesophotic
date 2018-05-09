@@ -38,9 +38,10 @@ module ApplicationHelper
     freqs = content
       .force_encoding("UTF-8")
       .scan(/[\w']+/)
-      .group_by { |w| w.singularize.downcase }
-      .reject { |k, v| exclusions.include? k or k.length <= 2 or k.numeric? }
-      .reduce({}) { |fs, w| fs.merge w.first => w.last.count }
+      .reduce(Hash.new(0)) { |fs, w|
+        fs[w] += 1 unless exclusions.include? w or w.length <= 2 or w.numeric?
+        fs
+      }
       .sort_by { |k, v| v }
       .reverse
       .take(size)
