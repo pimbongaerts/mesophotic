@@ -52,17 +52,13 @@ module ApplicationHelper
   end
 
   def linkify content
-    linkified_content = content
     word_association.each { |m, ws|
       ws.each { |w, id|
-        linkified_content = linkified_content.gsub(/\b(#{w}|#{w.pluralize})\b/i) { |match| link_to $1, summary_path(m, id) }
-      }
-      ws.each { |w, id|
-        linkified_content = linkified_content.gsub(/\b(#{w}[\w]*)\b/i) { |match| link_to $1, summary_path(m, id) }
+        content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match| link_to $1, summary_path(m, id) }
       }
     }
 
-    raw linkified_content
+    raw content
   end
 
   # Determine a score for how relevant the publication is to deep reefs
