@@ -51,6 +51,17 @@ module ApplicationHelper
     freqs.map { |w| [w.first, w.last.to_f / max] }
   end
 
+  def linkify content
+    linkified_content
+    word_association.each { |m, ws|
+      ws.each { |w, id|
+        content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match| link_to $1, summary_path(m, id) }
+      }
+    }
+
+    raw content
+  end
+
   # Determine a score for how relevant the publication is to deep reefs
   def mesophotic_score(value)
     word_count = value.scan(/\w+/).size
