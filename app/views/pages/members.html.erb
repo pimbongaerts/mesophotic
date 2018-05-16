@@ -28,6 +28,13 @@
     </div>
 
     <div class="panel panel-default">
+      <div class="panel-heading"><strong>Recently updated profiles</strong></div>
+      <div class="panel-body" align="center">
+        <%= render partial: 'latest_members' %>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
       <div class="panel-heading"><strong>People locations</strong></div>
       <div class="panel-body" align="center">
         <% data = count_geographic_occurrences_of_users(@users) %>

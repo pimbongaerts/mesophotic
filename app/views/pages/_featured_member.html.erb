@@ -1,22 +1,31 @@
-<div class="col-sm-6">
-  <% potential_users = @users.joins(:publications)
-                             .where("publications.id is not null")
-                             .where("profile_picture_file_name is not null")
-                             .where("admin = ?", false)
-                             .all %>
-  <% offset = rand(potential_users.count) %>
-  <% featured_member = potential_users.offset(offset).first %>
-  <%= link_to image_tag(featured_member.profile_picture.url(:medium)),
-              member_pages_path(featured_member) %>
+<div class="row">
+  <div class="col-sm-6">
+    <% potential_users = @users.joins(:publications)
+                               .where("publications.id is not null")
+                               .where("profile_picture_file_name is not null")
+                               .where("admin = ?", false)
+                               .all %>
+    <% offset = rand(potential_users.count) %>
+    <% featured_member = potential_users.offset(offset).first %>
+    <%= link_to image_tag(featured_member.profile_picture.url(:medium)),
+                member_pages_path(featured_member) %>
 
+  </div>
+  <div class="col-sm-6" align="left">
+    <strong>
+      <%= link_to "#{featured_member.first_name} #{featured_member.last_name}",
+                  member_pages_path(featured_member) %><br>
+    </strong>
+    <% if featured_member.organisation.present? %>
+      <%= featured_member.organisation.name %><br>
+      <%= ISO3166::Country[featured_member.country] %>
+    <% end %>
+  </div>
 </div>
-<div class="col-sm-6" align="left">
-  <strong>
-    <%= link_to "#{featured_member.first_name} #{featured_member.last_name}",
-                member_pages_path(featured_member) %><br>
-  </strong>
-  <% if featured_member.organisation.present? %>
-    <%= featured_member.organisation.name %><br>
-    <%= ISO3166::Country[featured_member.country] %>
-  <% end %>
-</div>
+<% if !featured_member.research_interests.nil? %>
+  <div class="row">
+    <div class="col-sm-12" align="left">
+      <%= featured_member.research_interests[0..200] %>...
+    </div>
+  </div>
+<% end %>
