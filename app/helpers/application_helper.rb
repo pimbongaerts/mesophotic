@@ -39,7 +39,8 @@ module ApplicationHelper
       .force_encoding("UTF-8")
       .scan(/[\w']+/)
       .reduce(Hash.new(0)) { |fs, w|
-        fs[w] += 1 unless exclusions.include? w or w.length <= 2 or w.numeric?
+        word = w.singularize.downcase
+        fs[word] += 1 unless exclusions.include? w or exclusions.include? word or word.length <= 2 or word.numeric?
         fs
       }
       .sort_by { |k, v| v }
