@@ -8,7 +8,7 @@
         color: 'black',
         drawOutOfBound: false,
         shape: 'square',
-        weightFactor: 50,
+        weightFactor: function(size) { return Math.pow(size, 0.67) * 50; },
         classes: function(word, weigth, fontSize, distance, theta) {
           var associations = <%= raw word_association.to_json %>;
           for (var key in associations) {
