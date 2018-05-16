@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-sm-12" align="left">
+    <% User.order('updated_at DESC').limit(15).each do |user| %>
+      <strong>
+        <% if user.publications.count > 0 or user.research_interests %>
+          <%= link_to user.full_name_normal, member_pages_path(user.id) %>
+        <% else %>
+          <%= user.full_name_normal %>
+        <% end %>
+      </strong>
+      <% if user.updated_at.to_date == user.created_at.to_date %>
+        (<strong>new member</strong>)
+      <% end %>
+      <small>on <%= user.updated_at.to_date %></small>
+      <br>
+    <% end %>
+  </div>
+</div>
