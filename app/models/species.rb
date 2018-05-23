@@ -23,6 +23,10 @@ class Species < ApplicationRecord
 
   # validations
   # callbacks
+  after_create :speciate
+  after_update :speciate
+  after_destroy :speciate
+
   # other
   # class methods
   # instance methods
@@ -49,5 +53,9 @@ class Species < ApplicationRecord
   def abbreviation
     parts = name.split(/\s+/)
     "#{parts[0][1]} #{parts[1]}"
+  end
+
+  def speciate species
+    SpeciationJob.perform_later species
   end
 end
