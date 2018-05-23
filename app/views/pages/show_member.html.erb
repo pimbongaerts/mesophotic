@@ -103,7 +103,7 @@
     <% if @user.photos.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Photographs</strong>
+          <strong>Photographs</strong> (of <%=@user.full_name_normal %>)
         </div>
         <div class="panel-body">
         <% @user.photos.each do |photo| %>

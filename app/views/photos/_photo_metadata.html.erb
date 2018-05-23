@@ -41,6 +41,13 @@
   <br>
 <% end %>
 
+<% if @photo.post %>
+  <br><strong>Coupled post</strong><br>
+  <%= link_to @photo.post.title,
+              post_pages_path(@photo.post.slug) %>
+  <br>
+<% end %>
+
 <% if @photo.publication %>
   <br><strong>Coupled publication</strong><br>
   <%= link_to @photo.publication.short_citation_with_title,

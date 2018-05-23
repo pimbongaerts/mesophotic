@@ -1,4 +1,11 @@
 <%= link_to image_tag(photo.image(:large)), 
     photo_path(photo) %>
 <%= photo.description %>
-<small>(C) <%= photo.credit %></small>
+<small>
+	(C) <%= photo.credit %>
+	 <% if photo.creative_commons %>
+      <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+      	[CC BY-NC 4.0]
+      </a>
+  <% end %>
+</small>

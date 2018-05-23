@@ -65,6 +65,10 @@ class Photo < ApplicationRecord
   scope :showcases_location, lambda { 
     where(showcases_location: true).order('created_at DESC')
   }
+  scope :media_gallery, lambda {
+    #where(media_gallery: true).
+    where(creative_commons: true).order('created_at DESC')
+  }
   # class methods
 
   # instance methods

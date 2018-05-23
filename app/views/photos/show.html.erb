@@ -29,7 +29,14 @@
   </div>
 
 	<%= image_tag @photo.image(:large) %><br>
-	<small>(C) <%= @photo.credit %> </small>
+	(C) <%= @photo.credit %>
+  <% if @photo.creative_commons %>
+    - Creative Commons License 
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+      (CC BY-NC 4.0)
+    </a>
+  <% end %>
+
   <% if current_user.try(:editor_or_admin?) %>
   	<br><br>
   	<%= link_to "Edit photo", edit_photo_path(@photo) %><br>

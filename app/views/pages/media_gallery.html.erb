@@ -1,0 +1,25 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Media Gallery",
+                backlink: root_path } %>
+
+<div class="row">
+  <div class="col-sm-12">
+
+    These images are available for free use by news media, educators and scientists to communicate about mesophotic coral ecosystems (under a Creative Commons license 
+    (<a href="https://creativecommons.org/licenses/by-nc/4.0/">
+      CC BY-CE 4.0
+    </a>). Please credit the photographer when using any of these photographs.
+    <br><br>
+
+	  <%= paginate @photos %>[<%= @photos.total_count %> results]
+    <br><br>
+	  <table class="table table-striped">
+	    <tr>
+		    <% @photos.each_with_index do |photo, i| %>
+	        <%= new_table_row_on_iteration(i, 3) %>
+	        <td><%= render photo %></td>
+		    <% end %>
+		   </tr>
+	  </table>
+	</div>
+</div>

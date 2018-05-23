@@ -21,11 +21,13 @@ Mesophotic::Application.routes.draw do
   resources :pages, only: [], path: "" do
     collection do
       get :about
+      get :download
       get :contact
       get :inside
       get :members
       get :posts
       get :stats
+      get :media_gallery
       get "members/:id", action: :show_member, as: :member
       get "posts/:id", action: :show_post, as: :post
       post :emailconfirmation, action: :email, as: :email_confirmation
@@ -33,9 +35,9 @@ Mesophotic::Application.routes.draw do
   end
 
   resources :expeditions
+  resources :photos
   resources :locations, except: :show
   resources :meetings
-  resources :photos
   resources :presentations
   resources :sites
   resources :species

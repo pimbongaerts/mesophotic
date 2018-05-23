@@ -48,7 +48,7 @@
     <% if @publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Researchers</strong> (that published on this location)
+          <strong>Researchers (top 10)</strong> (working with/on <%= @object.description %>)
         </div>
         <div class="panel-body">
           <%= render partial: 'author', collection: @publications.authors, as: :author %>
@@ -59,7 +59,7 @@
     <% if @object.try(:photos) && @object.photos.showcases_location.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Photographs</strong> (from the field)
+          <strong>Photographs</strong> (of <%= @object.description %>)
         </div>
         <div class="panel-body">
         <% @object.photos.showcases_location.each do |photo| %>
