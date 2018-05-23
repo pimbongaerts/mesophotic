@@ -6,11 +6,6 @@ class SpeciesController < ApplicationController
   	@species = Species.all.order('focusgroup_id ASC')
   end
 
-  def show
-    params[:search] = @species.name
-    @publications = Publication.relevance(@species.name)
-  end
-
   def edit
   end
 

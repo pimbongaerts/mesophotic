@@ -32,4 +32,21 @@ class Species < ApplicationRecord
       "http://www.fishbase.org/summary/#{fishbase_webid}"
     end
   end
+
+  def publications
+    Publication.relevance(name)
+  end
+
+  def description
+    name
+  end
+
+  def short_description
+    "#{name};#{abbreviation}"
+  end
+
+  def abbreviation
+    parts = name.split(/\s+/)
+    "#{parts[0][1]} #{parts[1]}"
+  end
 end
