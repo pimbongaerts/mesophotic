@@ -54,7 +54,10 @@ module ApplicationHelper
   def linkify content
     word_association.each { |m, ws|
       ws.each { |w, id|
-        content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match| link_to $1, summary_path(m, id) }
+        content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match|
+          text = m == "species" ? "<em>#{$1}</em>" : $1
+          link_to (raw text), summary_path(m, id)
+        }
       }
     }
 
