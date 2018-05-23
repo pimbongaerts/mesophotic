@@ -30,6 +30,9 @@ module ApplicationHelper
         }
       }
     }
+
+    # TODO Special Species matching that only selects abbreviations if there is
+    # a match for the full name.
   end
 
   def word_cloud size, content

@@ -35,6 +35,8 @@ gem 'paper_trail'
 gem 'rails_admin'
 gem 'switch_user'
 gem 'figaro'
+gem 'delayed_job_active_record'
+gem 'daemons'
 
 # RailsBricks development gems
 group :development, :test do

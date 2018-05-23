@@ -81,6 +81,12 @@ GEM
       countries (~> 2.0)
       sort_alphabetical (~> 1.0)
     crass (1.0.4)
+    daemons (1.2.6)
+    delayed_job (4.1.5)
+      activesupport (>= 3.0, < 5.3)
+    delayed_job_active_record (4.1.3)
+      activerecord (>= 3.0, < 5.3)
+      delayed_job (>= 3.0, < 5)
     devise (4.5.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -330,6 +336,8 @@ DEPENDENCIES
   byebug
   coffee-rails
   country_select
+  daemons
+  delayed_job_active_record
   devise
   figaro
   flamegraph
