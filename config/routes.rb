@@ -38,9 +38,9 @@ Mesophotic::Application.routes.draw do
   resources :photos
   resources :presentations
   resources :sites
-  resources :species
+  resources :species, except: :show
 
-  get ":model/:id", to: "summary#show", as: :summary, constraints: { model: /(platforms|locations|focusgroups|fields)/ }
+  get ":model/:id", to: "summary#show", as: :summary, constraints: { model: /(platforms|locations|focusgroups|fields|species)/ }
 
   devise_for :users, controllers: { registrations: 'registrations' }
 

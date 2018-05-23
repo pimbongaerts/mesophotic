@@ -1,22 +1,23 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Species",
-       			subtitle: @species.name,
-                backlink: species_path } %>
+           locals: {
+             title: title,
+       	     subtitle: subtitle,
+             backlink: species_index_path
+           } %>
 
 <div class="row">
   <div class="col-sm-7">
 
     <div class="panel panel-default">
       <div class="panel-body">
-	    	<h2><%= @species.name %></h2>
-
+	    	<h2><%= object.name %></h2>
 			</div>
 		</div>
 
     <div class="panel panel-default">
       <div class="panel-body">
 	      <table class="table table-striped">
-          <%= render partial: 'species/publication', collection: @publications %>
+          <%= render partial: 'species/publication', collection: publications %>
 				</table>
 			</div>
 		</div>
@@ -25,14 +26,14 @@
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" align="center">
-        <% if !@species.fishbase_webid.nil? && url_exists?(@species.img_url) %>
-          <% species_img = get_fishbase_image(@species.img_url) %>
+        <% if !object.fishbase_webid.nil? && url_exists?(object.img_url) %>
+          <% species_img = get_fishbase_image(object.img_url) %>
           <%= image_tag species_img %>
         <% end %>
-        <% if !@species.aims_webid.nil? %>
-          <% species_img = get_aims_image(@species.img_url) %>
-          <%= link_to image_tag(species_img[0]), @species.img_url %>
-          <%= link_to "AIMS Coral Factsheet Photo:", @species_img_url %>
+        <% if !object.aims_webid.nil? %>
+          <% species_img = get_aims_image(object.img_url) %>
+          <%= link_to image_tag(species_img[0]), object.img_url %>
+          <%= link_to "AIMS Coral Factsheet Photo:", object.img_url %>
           <%= species_img[1] %>
         <% end %>
 			</div>
@@ -42,7 +43,7 @@
       <div class="panel-heading">
 
       </div>
-      <div class="panel-body">        
+      <div class="panel-body">
 
       </div>
     </div>

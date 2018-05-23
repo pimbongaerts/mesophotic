@@ -1,0 +1,85 @@
+<%= render partial: "layouts/page_title",
+           locals: {
+             title: title,
+       	     subtitle: subtitle,
+             backlink: root_path
+           } %>
+
+<div class="row">
+  <div class="col-sm-8">
+
+    <div class="panel panel-default">
+      <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
+      <div class="panel-footer">
+        <%= render partial: 'dropdown',
+                   locals: { objects: objects, object: object, model: title.downcase } %>
+      </div>
+		</div>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= paginate publications %>[<%= publications.total_count %> results]
+        <br><br>
+
+	      <table class="table table-striped">
+				  <% publications.includes(:users, :journal).original.order('publication_year DESC, created_at DESC').each do |publication| %>
+				    <%= render publication %>
+				  <% end %>
+				</table>
+        <%= paginate publications %>[<%= publications.total_count %> results]
+			</div>
+		</div>
+	</div>
+
+  <div class="col-sm-4">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Research keywords</strong>
+      </div>
+      <div class="panel-body">
+        <%= render partial: 'shared/wordcloud',
+                    object: word_cloud(40, publications.all_content),
+                    locals: { title: 'location_publication_contents' } %>
+      </div>
+    </div>
+
+    <% if publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Researchers</strong> (that published on this location)
+        </div>
+        <div class="panel-body">
+          <%= render partial: 'author', collection: publications.authors, as: :author %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if object.try(:photos) && object.photos.showcases_location.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Photographs</strong> (from the field)
+        </div>
+        <div class="panel-body">
+        <% object.photos.showcases_location.each do |photo| %>
+          <%= link_to image_tag(photo.image(:compo)),
+                      photo_path(photo) %><br>
+        <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if publications.count > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Publication summary</strong> (top 5 / category)
+        </div>
+        <div class="panel-body">
+          <%= render partial: 'shared/keyword',
+                     locals: { objects: publications },
+                     collection: [Focusgroup, Field, Platform] %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
