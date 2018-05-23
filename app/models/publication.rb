@@ -61,6 +61,7 @@ class Publication < ApplicationRecord
   has_and_belongs_to_many :focusgroups
   has_and_belongs_to_many :locations
   has_and_belongs_to_many :sites
+  has_and_belongs_to_many :species
   has_many :validations, as: :validatable
   has_many :user_validations, through: :validations, source: :user
   has_many :observations, as: :observable

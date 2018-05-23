@@ -19,6 +19,7 @@ class Species < ApplicationRecord
   # associations
   belongs_to :focusgroup
   has_many :observations
+  has_and_belongs_to_many :publications
 
   # validations
   # callbacks
