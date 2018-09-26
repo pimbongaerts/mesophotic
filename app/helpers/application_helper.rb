@@ -22,7 +22,7 @@ module ApplicationHelper
   end
 
   def word_association
-    [Platform, Field, Focusgroup, Location, Species].reduce({}) { |r, model|
+    [Platform, Field, Focusgroup, Location].reduce({}) { |r, model|
       r.merge model.model_name.plural => model.all.reduce({}) { |r, m|
         words = m.short_description.split(';').map(&:strip) rescue []
         r.merge words.reduce({}) { |r, w|
@@ -30,9 +30,15 @@ module ApplicationHelper
         }
       }
     }
+  end
 
-    # TODO Special Species matching that only selects abbreviations if there is
-    # a match for the full name.
+  def species_association
+    Species.all.reduce([]) { |r, s|
+      words = s.short_description.split(';').map(&:strip) rescue []
+      r << words.reduce({}) { |r, w|
+        r.merge w.downcase => s.id
+      }
+    }
   end
 
   def word_cloud size, content
@@ -58,10 +64,22 @@ module ApplicationHelper
     word_association.each { |m, ws|
       ws.each { |w, id|
         content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match|
-          text = m == "species" ? "<em>#{$1}</em>" : $1
-          link_to (raw text), summary_path(m, id)
+          link_to (raw $1), summary_path(m, id)
         }
       }
+    }
+
+    species_association.each { |s|
+      original = content
+      content = content.gsub(/\b(#{s.keys.first}[\w]*)\b/i) { |match|
+        link_to (raw "<em>#{$1}</em>"), summary_path('species', s.values.first)
+      }
+
+      if original != content
+        content = content.gsub(/\b(#{s.keys.last}[\w]*)\b/i) { |match|
+          link_to (raw "<em>#{$1}</em>"), summary_path('species', s.values.last)
+        }
+      end
     }
 
     raw content
