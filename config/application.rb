@@ -21,5 +21,8 @@ module Mesophotic
 
     # Test framework
     config.generators.test_framework false
+
+    # Enforce 1/0 bools in sqlite
+    config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end
