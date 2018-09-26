@@ -1,6 +1,7 @@
 *.swp
 *.csv
 *~
+.byebug_history
 .DS_Store
 .idea
 .project
@@ -20,4 +21,4 @@ doc/
 emails.txt
 public.old
 public/.htaccess_off
-public/assets
+public/assets.byebug_history
