@@ -48,6 +48,6 @@ class Species < ApplicationRecord
 
   def abbreviation
     parts = name.split(/\s+/)
-    "#{parts[0][1]} #{parts[1]}"
+    "#{parts[0][0]}\.? #{parts[1]}"
   end
 end
