@@ -24,21 +24,6 @@ ActiveRecord::Schema.define(version: 2018_09_26_052926) do
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-  end
-
   create_table "expeditions", force: :cascade do |t|
     t.string "title"
     t.integer "year"
@@ -370,13 +355,6 @@ ActiveRecord::Schema.define(version: 2018_09_26_052926) do
     t.integer "site_id"
     t.index ["publication_id"], name: "index_publications_sites_on_publication_id"
     t.index ["site_id"], name: "index_publications_sites_on_site_id"
-  end
-
-  create_table "publications_species", id: false, force: :cascade do |t|
-    t.integer "publication_id", null: false
-    t.integer "species_id", null: false
-    t.index ["publication_id"], name: "index_publications_species_on_publication_id"
-    t.index ["species_id"], name: "index_publications_species_on_species_id"
   end
 
   create_table "publications_users", id: false, force: :cascade do |t|
