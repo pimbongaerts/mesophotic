@@ -5,7 +5,6 @@
 .DS_Store
 .idea
 .project
-.secret
 /.bundle
 /.vscode
 /config/application.yml
@@ -22,3 +21,7 @@ emails.txt
 public.old
 public/.htaccess_off
 public/assets
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+.secret
