@@ -58,7 +58,7 @@ class PagesController < ApplicationController
                          .order('count(locations.id) DESC')
     @locations_top = @locations.limit(25)
     @locations_raw = Location.all
-                 
+
   end
 
   def inside
@@ -90,7 +90,7 @@ class PagesController < ApplicationController
   end
 
   def posts
-    @posts = Post.published.page(params[:page])
+    @posts = Post.published.page(params[:page]).per(20)
   end
 
   def show_post
