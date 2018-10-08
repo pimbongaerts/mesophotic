@@ -41,7 +41,7 @@
     <% if tweet.media.count > 0 %>
       <p>
         <%= link_to "#{tweet.media[0].media_url}" do %>
-          <%= image_tag tweet.media[0].media_url %>
+          <%= image_tag tweet.media[0].media_url.to_s %>
         <% end %>
       </p>
     <% end %>
