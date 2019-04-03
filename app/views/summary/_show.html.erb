@@ -69,14 +69,14 @@
       </div>
     <% end %>
 
-    <% if publications.count > 0 %>
+    <% if all.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Publication summary</strong> (top 5 / category)
         </div>
         <div class="panel-body">
           <%= render partial: 'shared/keyword',
-                     locals: { objects: publications },
+                     locals: { objects: all },
                      collection: [Focusgroup, Field, Platform] %>
         </div>
       </div>
