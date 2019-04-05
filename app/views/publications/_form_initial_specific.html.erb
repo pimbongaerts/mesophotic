@@ -16,6 +16,7 @@
                                   Journal.all.order("LOWER(name) ASC"), 
                                   :id, 
                                   :name, 
+                                  include_blank: true,
                                   class: "form-control" %>
           / not yet listed:
           <%= f.text_field :new_journal_name, 

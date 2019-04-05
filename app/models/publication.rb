@@ -54,7 +54,7 @@ class Publication < ApplicationRecord
   attr_accessor :new_journal_name
 
   # associations
-  belongs_to :journal
+  belongs_to :journal, optional: true
   has_and_belongs_to_many :users
   has_and_belongs_to_many :platforms
   has_and_belongs_to_many :fields
