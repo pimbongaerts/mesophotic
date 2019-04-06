@@ -2,7 +2,7 @@
 
 *Mesophotic.org* is a curated repository for information on mesophotic coral ecosystems, with the aim to provide an independent, open-source platform for and by the ever-growing mesophotic research community.  
 
-The web application is written in Ruby (2.2.1) on Rails (4.2.0).
+The web application is written in Ruby (2.5.0) on Rails (5.2.0) - see the [Gemfile](Gemfile) for a full list of gems.
 
 ## Goals
 * Collate available research focusing on the mesophotic depth zone, and make it accessible through a single webportal.
@@ -15,27 +15,14 @@ The web application is written in Ruby (2.2.1) on Rails (4.2.0).
 
 The primary entities in the database are scientific publications, for which standard citation data and the full-text contents are indexed. [Click here](erd.pdf) for the entity relation diagram (ERD; generated with the `rails-erd` [gem](https://github.com/voormedia/rails-erd)).
 
-
-## Built With
-
-* [Ruby on Rails](http://rubyonrails.org/) - The web framework used
-* [RailsBricks](https://github.com/athalas/railsbricks) - Original set-up (retired project)
-* [Devise](https://github.com/plataformatec/devise) - User authentication
-* [HighCharts](http://mesophotic.org/www.highcharts.com) - Interactive Javascript charts and maps
-
-## Contributing
-
-
 ## Authors (code)
 
-* **Pim Bongaerts**
-* **Ryan Booker**
+* [Pim Bongaerts](https://github.com/pimbongaerts)
+* [Ryan Booker](https://github.com/ryanbooker)
 
-See the list of [content editors](http://mesophotic.org/about) on the website
+Please contact us if you are interested in contributing. See the list of [content editors](http://mesophotic.org/about) on the website
 
 ## License
 
 
-## Acknowledgments
-
-
+## Citation
