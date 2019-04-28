@@ -26,7 +26,6 @@ class PagesController < ApplicationController
                                                  .group('publication_year')
 
 
-
     @platforms = Platform.joins(:publications)
                          .select('*, count(publications.id) as publications_count')
                          .group('platforms.id')

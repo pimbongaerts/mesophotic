@@ -4,6 +4,7 @@
     $(function () {
       $('#graph_<%= title %>').highcharts('Map', {
         title: { text: '' },
+        exporting: { enabled: false },
         chart: { backgroundColor:'rgba(255, 255, 255, 0)' },
         xAxis: { minRange: 1 },
         yAxis: { minRange: 1 },
