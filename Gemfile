@@ -19,9 +19,9 @@ gem 'puma'
 gem 'kaminari'
 gem 'friendly_id'
 gem 'font-awesome-sass'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', ">= 3.4.1"
 gem 'bootstrap-slider-rails'
-gem 'devise'
+gem 'devise', ">= 4.6.0"
 gem 'redcarpet'
 
 # Added Rails gems
