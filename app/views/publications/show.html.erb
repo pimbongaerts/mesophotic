@@ -131,11 +131,35 @@
           <p class="bg-warning">&nbsp;Full text not (yet) indexed.</p>
         <% end %>
 
+        <b>Classification</b><br>
+        <% if @publication.original_data %>
+          * Presents original data<br>
+        <% end %>
+        <% if @publication.new_species %>
+          * Reports new species<br>
+        <% end %>
+        <% if @publication.mesophotic %>
+          * Focused on `mesophotic` depth range<br>
+        <% end %>
+        <% if @publication.mce %>
+          * Focused on `mesophotic coral ecosystem`<br>
+        <% end %>
+        <% if @publication.tme %>
+          * Focused on 'temperate mesophotic ecosystem'<br>
+        <% end %>
+        <br>
+
         <%= render partial: 'shared/metadata',
                    locals: { entity: @publication } %>
 
-        <% if @publication.new_species %>
-          <br>Reports new species<br>
+      </div>
+      <div class="panel-footer">
+        <% if @publication.validations.count > 0 %>
+          Validated by: 
+          <% for validation in @publication.validations %>
+            | <%= link_to "#{validation.user.first_name} #{validation.user.last_name}",
+                         member_pages_path(validation.user.id) %>
+          <% end %>
         <% end %>
       </div>
     </div>
