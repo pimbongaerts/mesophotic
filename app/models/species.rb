@@ -19,6 +19,7 @@ class Species < ApplicationRecord
   # associations
   belongs_to :focusgroup
   has_many :observations
+  has_and_belongs_to_many :publications
 
   # validations
   # callbacks
@@ -47,6 +48,6 @@ class Species < ApplicationRecord
 
   def abbreviation
     parts = name.split(/\s+/)
-    "#{parts[0][1]} #{parts[1]}"
+    "#{parts[0][0]}\.? #{parts[1]}"
   end
 end

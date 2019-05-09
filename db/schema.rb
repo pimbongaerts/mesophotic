@@ -357,6 +357,13 @@ ActiveRecord::Schema.define(version: 2019_04_03_073938) do
     t.index ["site_id"], name: "index_publications_sites_on_site_id"
   end
 
+  create_table "publications_species", id: false, force: :cascade do |t|
+    t.integer "publication_id", null: false
+    t.integer "species_id", null: false
+    t.index ["publication_id"], name: "index_publications_species_on_publication_id"
+    t.index ["species_id"], name: "index_publications_species_on_species_id"
+  end
+
   create_table "publications_users", id: false, force: :cascade do |t|
     t.integer "publication_id", limit: 4
     t.integer "user_id", limit: 4
