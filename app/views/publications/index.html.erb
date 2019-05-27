@@ -23,7 +23,7 @@
     | [<%= @publications.total_count %> results]
     <br><br>
   <% else %>
-    <%= paginate @publications %>[<%= @publications.total_count %> results]
+    <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv) %>
     <br><br>
   <% end %>
 
@@ -32,14 +32,14 @@
     <% @publications.each do |publication| %>
       <% if current_user.try(:editor_or_admin?) %>
         <%= render partial: "publication_validation",
-                   locals: {publication: publication } %>
+                   locals: { publication: publication } %>
       <% else %>
         <%= render publication %>
       <% end %>
     <% end %>
   </table>
 
-  <%= paginate @publications %>[<%= @publications.total_count %> results]
+  <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv) %>
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>
