@@ -1,3 +1,6 @@
+require 'net/http'
+require 'net/https'
+
 module ApplicationHelper
   # Page title
   def title(value)

@@ -159,7 +159,7 @@ class Publication < ApplicationRecord
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
       .order("relevance DESC, filename ASC")
     end
