@@ -16,23 +16,27 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
+        <br><br>
+
 	      <table class="table table-striped">
           <%= render partial: 'species/publication', collection: publications %>
 				</table>
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
 	</div>
 
   <div class="col-sm-5">
     <div class="panel panel-default">
-      <div class="panel-heading" align="center">
+      <div class="panel-heading center">
         <% if !object.fishbase_webid.nil? && url_exists?(object.img_url) %>
           <% species_img = get_fishbase_image(object.img_url) %>
-          <%= image_tag species_img %>
+          <%= image_tag species_img if species_img%>
         <% end %>
         <% if !object.aims_webid.nil? %>
           <% species_img = get_aims_image(object.img_url) %>
-          <%= link_to image_tag(species_img[0]), object.img_url %>
+          <%= link_to image_tag(species_img[0]), object.img_url if species_img[0] %>
           <%= link_to "AIMS Coral Factsheet Photo:", object.img_url %>
           <%= species_img[1] %>
         <% end %>

@@ -13,33 +13,37 @@ class PublicationsController < ApplicationController
 
 
   def index
-    params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
-    args = params[:validation_type] == 'expired' ? [current_user] : []
-    is_editor_or_admin = current_user.try(:editor_or_admin?) || false
-
-    @publications = Publication.send(params[:validation_type] || :all, *args)
-                               .search(params[:search], params[:search_params], is_editor_or_admin)
-    @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20) if request.format.html?
-
-    unless current_user.try(:editor_or_admin?) || params[:search_term].present?
-      # Provide access to top 10 values of linked models
-      @locations = Location.joins(:publications)
-                           .group('locations.id')
-                           .order('count(locations.id) DESC')
-      @platforms = Platform.joins(:publications)
-                           .group('platforms.id')
-                           .order('count(platforms.id) DESC')
-      @focusgroups = Focusgroup.joins(:publications)
-                               .group('focusgroups.id')
-                               .order('count(focusgroups.id) DESC')
-      @fields = Field.joins(:publications)
-                     .group('fields.id')
-                     .order('count(fields.id) DESC')
-    end
-
     respond_to do |format|
-      format.html { }
-      format.csv { send_data @publications.to_csv }
+      format.html {
+        params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
+        args = params[:validation_type] == 'expired' ? [current_user] : []
+        is_editor_or_admin = current_user.try(:editor_or_admin?) || false
+    
+        @publications = Publication.send(params[:validation_type] || :all, *args)
+                                   .search(params[:search], params[:search_params], is_editor_or_admin)
+        @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20) if request.format.html?
+    
+        unless current_user.try(:editor_or_admin?) || params[:search_term].present?
+          # Provide access to top 10 values of linked models
+          @locations = Location.joins(:publications)
+                               .group('locations.id')
+                               .order('count(locations.id) DESC')
+          @platforms = Platform.joins(:publications)
+                               .group('platforms.id')
+                               .order('count(platforms.id) DESC')
+          @focusgroups = Focusgroup.joins(:publications)
+                                   .group('focusgroups.id')
+                                   .order('count(focusgroups.id) DESC')
+          @fields = Field.joins(:publications)
+                         .group('fields.id')
+                         .order('count(fields.id) DESC')
+        end
+    
+      }
+
+      format.csv { 
+        send_data (publications_param(params) || Publication.all).csv
+      }
     end
   end
 
@@ -222,5 +226,9 @@ class PublicationsController < ApplicationController
       params.permit!.to_h.reduce({}) { |ps, p|
         ps.merge(p.first => p.last.try(:keys) || p.last)
       }
+    end
+
+    def publications_param params
+      Publication.where(id: params.permit(:publication_ids)[:publication_ids].split(','))
     end
   end

@@ -7,7 +7,7 @@
   </tr>
   <% species.each do |species| %>
     <tr>
-      <td><%= species.focusgroup.description %> </td>
+      <td><%= species.focusgroup.try(:description) %> </td>
       <td><%= link_to species.name, species_path(species.id) %> </td>
       <td>
         <% if species.observations.count > 0 %>

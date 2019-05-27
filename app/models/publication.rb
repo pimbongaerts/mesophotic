@@ -159,7 +159,7 @@ class Publication < ApplicationRecord
       relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = relevance.where("relevance > 0")
       relevance
-      .where("id IN (SELECT id FROM (#{limited.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
       .order("relevance DESC, filename ASC")
     end
@@ -182,7 +182,7 @@ class Publication < ApplicationRecord
   }
 
   # class methods
-  def self.to_csv(options = {})
+  scope :csv, -> (options = {}) {
     CSV.generate(options) do |csv|
       csv << ["id", "validated", "included_in_stats", "publication_type", "publication_format",
               "publication_year", "authors", "title",
@@ -224,7 +224,7 @@ class Publication < ApplicationRecord
         csv << csv_line
       end
     end
-  end
+  }
 
   def self.default_search_params
     {
