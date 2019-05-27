@@ -23,7 +23,7 @@
     | [<%= @publications.total_count %> results]
     <br><br>
   <% else %>
-    <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv) %>
+    <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv, publication_ids: @publications.map(&:id).join(',')) %>
     <br><br>
   <% end %>
 
@@ -39,7 +39,7 @@
     <% end %>
   </table>
 
-  <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv) %>
+  <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as csv", publications_path(format: :csv, publications: @publications) %>
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>

@@ -182,7 +182,7 @@ class Publication < ApplicationRecord
   }
 
   # class methods
-  def self.to_csv(options = {})
+  scope :csv, -> (options = {}) {
     CSV.generate(options) do |csv|
       csv << ["id", "validated", "included_in_stats", "publication_type", "publication_format",
               "publication_year", "authors", "title",
@@ -224,7 +224,7 @@ class Publication < ApplicationRecord
         csv << csv_line
       end
     end
-  end
+  }
 
   def self.default_search_params
     {
