@@ -124,4 +124,14 @@ class PagesController < ApplicationController
       redirect_to root_path, notice: 'Your message was sent. Thank you.'
     end
   end
+
+  def member_keywords
+    render partial: 'shared/wordcloud',
+           object: WordCloud.generate(40, User.find(params[:id]).publications.all_content),
+           locals: { title: 'publication_contents' }
+  end
+
+  def member_research_summary
+    render partial: 'research_summary', locals: { user: User.find(params[:id]) }
+  end
 end

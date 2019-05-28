@@ -1,16 +1,15 @@
 class PublicationsController < ApplicationController
-  before_action :require_admin_or_editor!, :except => [:show, :index, :behind]
+  before_action :require_admin_or_editor!, :except => [:show, :index, :behind, :publication_authors, :publication_keywords]
   before_action :set_publication, only: [:show, :edit, :edit_meta, :update,
                                          :behind, :destroy, :detach_field,
                                          :detach_focusgroup, :detach_platform,
                                          :detach_location, :add_validation,
                                          :remove_validation, :touch_validation,
-                                         :behind_edit]
+                                         :behind_edit, :publication_authors, :publication_keywords]
   before_action :touch_publication, only: [:detach_field, :detach_focusgroup,
                                            :detach_platform, :detach_location]
   before_action :contents_convert_utf8, only: [:edit]
   before_action :empty_unused_fields, only: [:edit, :edit_meta, :update]
-
 
   def index
     respond_to do |format|
@@ -138,6 +137,16 @@ class PublicationsController < ApplicationController
       @publication.validations.find_by_user_id(params[:format]).touch
       redirect_back fallback_location: root_path,
                     notice: 'Publication was successfully revalidated.'
+  end
+
+  def publication_authors
+    render partial: "authors", object: @publication.users
+  end
+
+  def publication_keywords
+    render partial: 'shared/wordcloud',
+           object: WordCloud.generate(40, @publication.contents),
+           locals: { title: 'publication_contents' }
   end
 
   private

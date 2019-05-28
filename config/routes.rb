@@ -18,6 +18,9 @@ Mesophotic::Application.routes.draw do
     end
   end
 
+  get :publication_authors, controller: :publications
+  get :publication_keywords, controller: :publications
+
   resources :pages, only: [], path: "" do
     collection do
       get :about
@@ -34,15 +37,24 @@ Mesophotic::Application.routes.draw do
     end
   end
 
+  get :member_keywords, controller: :pages
+  get :member_research_summary, controller: :pages
+
   resources :expeditions
   resources :photos
   resources :locations, except: :show
   resources :meetings
-  resources :presentations
-  resources :sites
+  resources :presentations  
   resources :species, except: :show
 
+  resources :sites
+  get :site_keywords, controller: :sites
+  get :site_research_details, controller: :sites
+
   get ":model/:id", to: "summary#show", as: :summary, constraints: { model: /(platforms|locations|focusgroups|fields|species)/ }
+  get :summary_keywords, controller: :summary
+  get :summary_researchers, controller: :summary
+  get :summary_publications, controller: :summary
 
   devise_for :users, controllers: { registrations: 'registrations' }
 

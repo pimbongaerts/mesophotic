@@ -32,25 +32,22 @@
 	</div>
 
   <div class="col-sm-4">
-
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Research keywords</strong>
       </div>
       <div class="panel-body">
-        <%= render partial: 'shared/wordcloud',
-                    object: word_cloud(40, publications.all_content),
-                    locals: { title: 'location_publication_contents' } %>
+         <%= render_async summary_keywords_path(model: title.downcase, id: object.id) %>
       </div>
     </div>
 
-    <% if publications.count > 0 %>
+    <% if @publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Researchers</strong> (that published on this location)
         </div>
         <div class="panel-body">
-          <%= render partial: 'author', collection: publications.authors, as: :author %>
+          <%= render_async summary_researchers_path(model: title.downcase, id: object.id) %>
         </div>
       </div>
     <% end %>
@@ -75,9 +72,7 @@
           <strong>Publication summary</strong> (top 5 / category)
         </div>
         <div class="panel-body">
-          <%= render partial: 'shared/keyword',
-                     locals: { objects: all },
-                     collection: [Focusgroup, Field, Platform] %>
+          <%= render_async summary_publications_path(model: title.downcase, id: object.id) %>
         </div>
       </div>
     <% end %>

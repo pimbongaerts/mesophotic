@@ -35,6 +35,7 @@ gem 'paper_trail'
 gem 'rails_admin'
 gem 'switch_user'
 gem 'figaro'
+gem 'render_async'
 
 # RailsBricks development gems
 group :development, :test do
