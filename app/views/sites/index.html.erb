@@ -21,7 +21,7 @@
         </td>
         <td><%= site.latitude %></td>
         <td><%= site.longitude %></td>
-        <td><%= site.location.description %></td>
+        <td><%= site.location.try(:description) %></td>
         <td><%= site.estimated %></td>
         <td>
           <%= link_to edit_site_path(site) do %>

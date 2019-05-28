@@ -1,0 +1,5 @@
+<%= render partial: 'shared/keyword',
+           locals: { objects: research_details },
+           collection: [Field, Focusgroup, Location, Platform] %>
+<%= render partial: 'shared/member_keyword',
+           locals: { title: "Co-author", objects: research_details } %>

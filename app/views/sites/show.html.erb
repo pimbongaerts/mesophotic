@@ -25,9 +25,7 @@
         <strong>Research keywords</strong>
       </div>
       <div class="panel-body">
-        <%= render partial: 'shared/wordcloud',
-                    object: word_cloud(40, @site.publications.all_content),
-                    locals: { title: 'location_publication_contents' } %>
+        <%= render_async site_keywords_path(id: @site.id) %>
 			</div>
 		</div>
 
@@ -37,11 +35,7 @@
           <strong>Research details</strong> (top 5 / category)
         </div>
         <div class="panel-body">
-          <%= render partial: 'shared/keyword',
-                     locals: { objects: @site.publications },
-                     collection: [Field, Focusgroup, Location, Platform] %>
-          <%= render partial: 'shared/member_keyword',
-                     locals: { title: "Co-author", objects: @site.publications } %>
+          <%= render_async site_research_details_path(id: @site.id) %>
         </div>
       </div>
     <% end %>

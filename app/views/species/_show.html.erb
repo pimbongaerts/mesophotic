@@ -29,7 +29,7 @@
 
   <div class="col-sm-5">
     <div class="panel panel-default">
-      <div class="panel-heading center">
+      <div class="panel-heading" align=center">
         <% if !object.fishbase_webid.nil? && url_exists?(object.img_url) %>
           <% species_img = get_fishbase_image(object.img_url) %>
           <%= image_tag species_img if species_img%>

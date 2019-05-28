@@ -1,6 +1,6 @@
 class SitesController < ApplicationController
-  before_action :require_admin_or_editor!, :except => [:show, :index]
-  before_action :set_site, only: [:show, :edit, :update, :destroy]
+  before_action :require_admin_or_editor!, :except => [:show, :index, :site_keywords, :site_research_details]
+  before_action :set_site, only: [:show, :edit, :update, :destroy, :site_keywords, :site_research_details]
 
   def index
     @sites = Site.all.order('site_name ASC')
@@ -46,6 +46,16 @@ class SitesController < ApplicationController
       format.html { redirect_to sites_url, 
                     notice: 'Site was successfully destroyed.' }
     end
+  end
+
+  def site_keywords
+    render partial: 'shared/wordcloud',
+           object: WordCloud.generate(40, @site.publications.all_content),
+           locals: { title: 'location_publication_contents' }
+  end
+
+  def site_research_details
+    render partial: 'research_details', object: @site.publications
   end
 
   private
