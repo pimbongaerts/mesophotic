@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+  <strong>
+    Our knowledge on mesophotic coral ecosystems summarized
+    <small>
+      (across <%= @publications.count %> scientific articles presenting original data from mesophotic depths)
+    </small>
+  </strong></div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <%= render_async summarized_fields_path %>
+      </div>
+      <div class="col-sm-6">
+        <%= render_async summarized_journals_path %>
+      </div>
+    </div>
+    
+    <div class="row"><br><br></div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <%= render_async summarized_focusgroups_path %>
+      </div>
+      <div class="col-sm-6">
+        <%= render_async summarized_platforms_path %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<center><h4>
+  In the past couple of years, roughly half of publications refer to a potential refuge role
+</h4></center>
+<% occurrences = {} %>
+<% categories, occurrences["referring to refuge"], occurrences["not referring to refuge"] =
+format_for_time_search_chart(@publications_refuge_counts, @publications_total_counts)  %>
+<%= render partial: 'shared/column_graph_series',
+            locals: { title: 'search_refug', 
+                      unit: 'Publications',
+                      categories: categories,
+                      occurrences: occurrences,
+                      height: 300 } %>
+<p>
+  Fig. 4a: References to &quot;refuge/refugium&quot; over time<br>
+  <small>
+    Number of publications each year, with and without at least one
+    reference to <code>refug*</code> (so it includes 'refuge', 'refuges', 'refugium' and 'refugia') in the title, abstract or full-text (but excluding references).
+  </small>
+</p>

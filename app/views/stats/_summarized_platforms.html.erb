@@ -1,0 +1,14 @@
+<center><h4>
+  Most used <b>research platforms</b>:
+  <code>diving</code>, 
+  <code>submersibles</code> and 
+  <code>ROVs</code>
+</h4></center>
+<%= render partial: 'shared/stats_bar_graph',
+           locals: { title: 'Platforms_bar_graph',
+                     data: format_for_chart(@platforms, @platforms_top),
+                     height: 300, 
+                     unit: 'Percentage' } %>
+<p>
+  Fig. 2d: <b>Research platform use (top 10)</b><br>
+</p>

@@ -1,0 +1,15 @@
+<center><h4>Community increased ><code>5</code>-fold since 10 years ago</h4></center>
+<% cats, occurs = count_first_authors_over_time(@publications) %>
+<%= render partial: 'shared/area_graph',
+           locals: { title: 'authors_time',
+                     categories: cats,
+                     occurrences: occurs,
+                     height: 200,
+                     unit: 'Unique first-authors' } %>
+<p>
+  Fig. 1d: <b>Number of unique first-authors in publications over time</b><br>
+  <small>
+    Number of unique first-authors for each year, to demonstrate the
+    change of the mesophotic research community over time.
+  </small>
+</p>

@@ -1,0 +1,13 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Stats",
+                subtitle: "Latest update: #{@latest_update.to_date}",
+                backlink: root_path } %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= render partial: "notes" %>
+    <%= render partial: "growing" %>
+    <%= render partial: "summarized" %>
+    <%= render partial: "world" %>
+    <%= render partial: "time" %>
+  </div>
+</div>
