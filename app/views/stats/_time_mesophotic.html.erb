@@ -1,0 +1,20 @@
+<center><h4>
+  Use of the term mesophotic has become established in the literature since its 
+  introduction in 2007/2008
+</h4></center>
+<% occurrences = {} %>
+<% categories, occurrences["referring to mesophotic"], occurrences["not referring to mesophotic"] =
+format_for_time_search_chart(@publications_mesophotic_counts, @publications_total_counts)  %>
+<%= render partial: 'shared/column_graph_series',
+            locals: { title: 'search_mesophotic', 
+                      unit: 'Publications',
+                      categories: categories,
+                      occurrences: occurrences,
+                      height: 300 } %>
+<p>
+  Fig. 4b: Use of the term &quot;mesophotic&quot; over time<br>
+  <small>
+    Number of publications each year, with and without at least one
+    reference to <code>mesophotic</code> in the title, abstract or full-text (but excluding references).
+  </small>
+</p>

@@ -1,0 +1,18 @@
+<center><h4>
+  Most researchers from <b>locations</b>:
+  <code>USA</code>, 
+  <code>Australia</code>,
+  <code>Israel</code> and 
+  <code>Puerto Rico</code>
+</h4></center>
+<% data = count_geographic_occurrences_of_users(@users) %>
+<%= render partial: 'shared/stats_world_map', locals: { title: 'Members',
+                                                        data: data,
+                                                        unit: 'member(s)',
+                                                        height: 200 } %>
+<p>
+  Fig. 3b: <b>Number of mesophotic researchers across countries</b><br>
+  <small>
+    Based on the list of members on this website
+  </small>
+</p>

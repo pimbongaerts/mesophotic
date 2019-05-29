@@ -1,0 +1,15 @@
+<center><h4>Steady increase in geographic scope over time</h4></center>
+<% cats, occurs = count_locations_over_time(@publications) %>
+<%= render partial: 'shared/area_graph',
+           locals: { title: 'locations_time',
+                     categories: cats,
+                     occurrences: occurs,
+                     height: 200,
+                     unit: 'Studied locations' } %>
+<p>
+  Fig. 1c: <b>Number of studied locations over time</b><br>
+  <small>
+    Cumulative number of locations studied for each year, to demonstrate the gradual geographic expansion of our knowledge
+    on mesophotic coral ecosystems.
+  </small>
+</p>

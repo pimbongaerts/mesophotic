@@ -1,0 +1,14 @@
+<center><h4>Decrease in knowledge over depth</h4></center>
+<% categories, occurrences = get_depth_range_data(@publications) %>
+<%= render partial: 'shared/depth_graph',
+           locals: { title: 'Depth', categories: categories,
+                     occurrences: occurrences, 
+                     unit: 'Publications',
+                     height: 300 } %>
+<p>
+    Fig. 1a: <b>Number of publications over depth</b><br>
+    <small>
+        Depth ranges for each paper are taken as the entire range between the minimum and maximum depth 
+        (<%= link_to 'definitions', about_pages_path %>).
+    </small>
+</p>

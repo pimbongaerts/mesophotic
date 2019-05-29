@@ -29,7 +29,6 @@ Mesophotic::Application.routes.draw do
       get :inside
       get :members
       get :posts
-      get :stats
       get :media_gallery
       get "members/:id", action: :show_member, as: :member
       get "posts/:id", action: :show_post, as: :post
@@ -39,6 +38,21 @@ Mesophotic::Application.routes.draw do
 
   get :member_keywords, controller: :pages
   get :member_research_summary, controller: :pages
+
+  resources :stats, only: [:index]
+  get :growing_depth_range, controller: :stats
+  get :growing_publications_over_time, controller: :stats
+  get :growing_locations_over_time, controller: :stats
+  get :growing_authors_over_time, controller: :stats
+  get :summarized_fields, controller: :stats
+  get :summarized_journals, controller: :stats
+  get :summarized_focusgroups, controller: :stats
+  get :summarized_platforms, controller: :stats
+  get :world_publications, controller: :stats
+  get :world_users, controller: :stats
+  get :world_locations, controller: :stats
+  get :time_refuge, controller: :stats
+  get :time_mesophotic, controller: :stats
 
   resources :expeditions
   resources :photos

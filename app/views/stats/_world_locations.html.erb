@@ -1,0 +1,8 @@
+<%= render partial: 'shared/stats_bar_graph',
+           locals: { title: 'Locations_bar_graph',
+                     data: format_for_chart(@locations, @locations_top),
+                     height: 600, 
+                     unit: 'Percentage' } %>
+<p>
+  Fig. 3c: <b>Locations (top 25)</b><br>
+</p>

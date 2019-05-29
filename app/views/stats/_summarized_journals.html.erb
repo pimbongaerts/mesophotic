@@ -1,0 +1,13 @@
+<center><h4>
+  Most used <b>scientific journal</b> outlets:
+  <code>Coral Reefs</code>, and
+  <code>PLoS ONe</code>.
+</h4></center>
+<%= render partial: 'shared/stats_bar_graph',
+           locals: { title: 'Journals_bar_graph',
+                     data: format_for_chart(@journals, @journals_top),
+                     height: 300, 
+                     unit: 'Percentage' } %>
+<p>
+  Fig. 2c: <b>Journals</b> (top 10)<br>
+</p>

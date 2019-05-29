@@ -8,58 +8,6 @@ class PagesController < ApplicationController
     @latest_update = Publication.maximum(:updated_at)
   end
 
-  def stats
-    @users = User.all
-    @latest_update = Publication.maximum(:updated_at)
-    @publications = Publication.include_in_stats
-                               .order('publication_year DESC,
-                                       created_at DESC')
-    # Search terms
-    @publications_total_counts = Publication.select('*, count(id) as publications_count')
-                                            .all
-                                            .group('publication_year')
-    @publications_refug_counts = Publication.relevance('refug')
-                                            .select('publication_year, count(id) as publications_count')
-                                            .group('publication_year')
-    @publications_mesophotic_counts = Publication.relevance('mesophotic')
-                                                 .select('publication_year, count(id) as publications_count')
-                                                 .group('publication_year')
-
-
-    @platforms = Platform.joins(:publications)
-                         .select('*, count(publications.id) as publications_count')
-                         .group('platforms.id')
-                         .order('count(platforms.id) DESC')
-    @platforms_top = @platforms.limit(10)
-
-
-    @fields = Field.joins(:publications)
-                   .select('*, count(publications.id) as publications_count')
-                   .group('fields.id')
-                   .order('count(fields.id) DESC')
-    @fields_top = @fields.limit(10)
-
-    @focusgroups = Focusgroup.joins(:publications)
-                             .select('*, count(publications.id) as publications_count')
-                             .group('focusgroups.id')
-                             .order('count(focusgroups.id) DESC')
-    @focusgroups_top = @focusgroups.limit(10)
-
-    @journals = Journal.joins(:publications)
-                         .select('*, count(publications.id) as publications_count')
-                         .group('journals.id')
-                         .order('count(journals.id) DESC')
-    @journals_top = @journals.limit(10)
-
-    @locations = Location.joins(:publications)
-                         .select('*, count(publications.id) as publications_count')
-                         .group('locations.id')
-                         .order('count(locations.id) DESC')
-    @locations_top = @locations.limit(25)
-    @locations_raw = Location.all
-
-  end
-
   def inside
   end
 
