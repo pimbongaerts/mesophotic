@@ -1,3 +1,5 @@
 <div class="panel-body">
-  <%= render_async world_map_path(model: Site, ids: object.sites.map(&:id).join(','), height: 300) %>
+  <% model = object.sites.count > 0 ? Site : Location %>
+  <% places = object.sites.count > 0 ? object.sites : [object] %>
+  <%= render_async world_map_path(model: model, ids: places.map(&:id).join(','), height: 300) %>
 </div>
