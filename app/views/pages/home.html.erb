@@ -5,14 +5,8 @@
     <div class="row">&nbsp;</div>
     <div class="row">
       <div class="col-sm-1">&nbsp;</div>
-      <div class="col-sm-7" style="border: 5px">
-        <%= render partial: 'shared/world_map_clickable',
-                   locals: {
-                     title: 'Locations',
-                     data: @locations,
-                     backgroundcolor: '#FCFFC5',
-                     height: 300
-                   } %>
+      <div class="col-sm-7" style="height: 300px; border: 5px">
+        <%= render_async world_map_path(model: Location, ids: @locations.map(&:id).join(','), height: 300, backgroundcolor: '#FCFFC5') %>
       </div>
       <div class="col-sm-4">&nbsp;</div>
     </div>

@@ -33,4 +33,19 @@ class Site < ApplicationRecord
   # other
   # class methods
   # instance methods
+  def place_name
+    "#{site_name} (#{location.place_name})"
+  end
+
+  def place_id
+    id
+  end
+
+  def place_path
+    :site_path
+  end
+
+  def z
+    publications.count
+  end
 end

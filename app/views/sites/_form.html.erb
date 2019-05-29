@@ -26,15 +26,7 @@
         </div>
       </div>
       <div class="col-xs-5">
-        <% data = [] %>
-        <% data << {name: site.site_name, 
-                   lat: site.latitude, 
-                   lon: site.longitude, 
-                   z: 10 } %>
-        <%= render partial: 'shared/world_map_clickable', 
-                   locals: { title: 'Locations',
-                             data: data,
-                             height: 230 } %>
+        <%= render_async world_map_path(model: Site, ids: site.id, height: 230, z: 10) %>
       </div>
     </div>
   </div>

@@ -15,30 +15,6 @@ module PublicationsHelper
     [categories, occurrences]
   end
 
-  # Counts the number of occurrences for each location in the publication model
-  # and outputs corresponding coordinates
-  def format_sites_and_coordinates(sites)
-    data = []
-    sites.each do |site|
-      data << {name: "#{site.site_name} (#{site.location.description})",
-               lat: site.latitude,
-               lon: site.longitude, z: 1 }
-    end
-    data
-  end
-
-  # Counts the number of occurrences for each location in the publication model
-  # and outputs corresponding coordinates
-  def format_locations_and_coordinates(locations)
-    data = []
-    locations.each do |location|
-      data << {name: "#{location.description})",
-               lat: location.latitude,
-               lon: location.longitude, z: 1 }
-    end
-    data
-  end
-
   # Obtain search result snippet for a particular publication
   def obtain_snippet(contents, search_term)
     return "…" if contents.blank?

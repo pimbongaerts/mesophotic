@@ -1,7 +1,3 @@
 <div class="panel-body">
-    <% data = get_site_coordinates(object.sites) %>
-    <%= render partial: 'shared/world_map_clickable',
-               locals: { title: 'Sites',
-               data: data,
-               height: 300 } %>
+  <%= render_async world_map_path(model: Site, ids: object.sites.map(&:id).join(','), height: 300) %>
 </div>

@@ -95,9 +95,13 @@ module StatsHelper
   def format_counts_for_world_map(location_counts)
     data = []
     location_counts.each do |location|
-      data << {name: location.description, lat: location.latitude, 
-               lon: location.longitude, z: location.item_count,
-               ownURL: location_path(location) }
+      data << {
+        name: location.description, 
+        lat: location.latitude, 
+        lon: location.longitude, 
+        z: location.item_count,
+        ownURL: location_path(location) 
+      }
     end
     data    
   end

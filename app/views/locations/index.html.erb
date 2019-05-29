@@ -5,11 +5,7 @@
 
 <div class="col-sm-8">
   	<%= render 'location_dropdown' %>
-	<% data = count_geographic_occurrences_of_publications(@locations) %>
-	<%= render partial: 'shared/world_map_clickable', 
-			   locals: { title: 'Locations',
-			   			 data: data,
-			   			 height: 300 } %>
+	<%= render_async world_map_path(model: Location, ids: @locations.map(&:id).join(','), height: 300) %>
 </div>
 <div class="col-sm-4">
     <%= render partial: 'featured_location' %>

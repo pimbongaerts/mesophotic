@@ -61,12 +61,7 @@
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Research sites</strong></div>
         <div class="panel-body">
-          <% data = format_sites_and_coordinates(@publication.sites) %>
-          <%= render partial: 'shared/world_map_clickable',
-                     locals: { title: 'Locations',
-                               data: data,
-                               height: 300 } %>
-          <br>
+          <%= render_async world_map_path(model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
         </div>
         <div class="panel-footer">
           <table width="100%">

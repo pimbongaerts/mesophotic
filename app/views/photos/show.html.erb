@@ -49,10 +49,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Image location/site</strong></div>
       <div class="panel-body" align="center">
-        <% data = format_photo_for_world_map(@photo) %>
-        <%= render partial: 'shared/world_map_clickable', locals: { title: 'Locations',
-                                                          data: data,
-                                                          height: 150 } %>
+        <%= render_async world_map_path(model: Photo, ids: @photo.id, height: 150, z: 1) %>
       </div>
     </div>
 

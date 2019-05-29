@@ -152,27 +152,18 @@ module ApplicationHelper
     data
   end
 
-
-  # Counts the number of occurrences for each location in the publication model
-  # and outputs corresponding coordinates
-  def count_geographic_occurrences_of_publications(locations)
-    data = []
-    locations.each do |location|
-      data << {name: location.description, lat: location.latitude,
-               lon: location.longitude, z: location.publications.count,
-               ownURL: location_path(location) }
-    end
-    data
-  end
-
   # Counts the number of occurrences for each location in the photo model
   # and outputs corresponding coordinates
   def count_geographic_occurrences_of_photos(locations)
     data = []
     locations.each do |location|
-      data << {name: location.description, lat: location.latitude,
-               lon: location.longitude, z: location.photos.count,
-               ownURL: location_path(location) }
+      data << {
+        name: location.description, 
+        lat: location.latitude,
+        lon: location.longitude, 
+        z: location.photos.count,
+        ownURL: location_path(location) 
+      }
     end
     data
   end
@@ -194,19 +185,6 @@ module ApplicationHelper
     end
     data
   end
-
-  # Counts the number of occurrences for each location in the publication model
-  # and outputs corresponding coordinates
-  def get_site_coordinates(sites)
-    data = []
-    sites.each do |site|
-      data << {name: site.site_name, lat: site.latitude,
-               lon: site.longitude, z: site.publications.count,
-               ownURL: site_path(site) }
-    end
-    data
-  end
-
 end
 
 class String

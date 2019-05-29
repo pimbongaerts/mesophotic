@@ -91,4 +91,32 @@ class Photo < ApplicationRecord
   def description_truncated
     description.truncate(70)
   end
+
+  def latitude
+    location.try(:latitude) || site.try(:latitude)
+  end
+
+  def longitude
+    location.try(:longitude) || site.try(:longitude)
+  end
+
+  def publications
+    location.try(:publications) || site.try(:publications)
+  end
+
+  def place_name
+    location.try(:place_name) || site.try(:place_name)
+  end
+
+  def place_id
+    location.try(:id) || site.try(:id)
+  end
+
+  def place_path
+    location.try(:place_path) || site.try(:place_path)
+  end
+
+  def z
+    location.try(:z) || site.try(:z)
+  end
 end

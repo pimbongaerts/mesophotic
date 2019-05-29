@@ -41,14 +41,20 @@ class Location < ApplicationRecord
   }
 
   # class methods
-
-  def self.map_data
-    locs = Location
-      .select('locations.id AS id, description AS name, latitude AS lat, longitude AS lon, count(publications.id) AS z')
-      .published
-    paths = locs.map { |l| { url: Rails.application.routes.url_helpers.location_path(l) } }
-    locs.as_json.zip(paths).map { |l| l[0].merge l[1] }
+  # instance methods
+  def place_name
+    description
   end
 
-  # instance methods
+  def place_id
+    id
+  end
+
+  def place_path
+    :location_path
+  end
+
+  def z
+    publications.count
+  end
 end

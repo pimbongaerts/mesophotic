@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   before_action :require_admin_or_editor!, :only => [:inside]
 
   def home
-    @locations = Location.map_data
+    @locations = Location.published
     @posts = Post.latest(2)
     @publications = Publication.latest(10)
     @latest_update = Publication.maximum(:updated_at)
