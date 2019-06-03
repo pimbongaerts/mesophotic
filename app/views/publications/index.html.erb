@@ -51,10 +51,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Locations</strong></div>
       <div class="panel-body" align="center">
-        <% data = count_geographic_occurrences_of_publications(@locations) %>
-        <%= render partial: 'shared/world_map', locals: { title: 'Locations',
-                                                          data: data,
-                                                          height: 150 } %>
+        <%= render_async world_map_path(model: Location, ids: @locations.map(&:id).join(','), height: 150) %>
       </div>
     </div>
     <div class="panel panel-default">
