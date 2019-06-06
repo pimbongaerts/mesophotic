@@ -13,7 +13,7 @@ The web application is written in Ruby (2.5.0) on Rails (5.2.0) - see the [Gemfi
 
 ## Metadata
 
-The primary entities in the database are scientific publications, for which standard citation data and the full-text contents are indexed. [Click here](erd.pdf) for the entity relation diagram (ERD; generated with the `rails-erd` [gem](https://github.com/voormedia/rails-erd)).
+The primary entities in the database are scientific publications, for which standard citation data and associated metadata are indexed. [Click here](erd.pdf) for the entity relation diagram (ERD; generated with the `rails-erd` [gem](https://github.com/voormedia/rails-erd)).
 
 ## Authors (code)
 
@@ -22,7 +22,5 @@ The primary entities in the database are scientific publications, for which stan
 
 Please contact us if you are interested in contributing. See the list of [content editors](http://mesophotic.org/about) on the website
 
-## License
-
-
 ## Citation
+TBD
