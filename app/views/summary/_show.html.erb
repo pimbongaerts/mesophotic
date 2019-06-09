@@ -18,15 +18,15 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <%= paginate publications %>[<%= publications.original.count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
 	      <table class="table table-striped">
-				  <% publications.includes(:users, :journal).original.order('publication_year DESC, created_at DESC').each do |publication| %>
+				  <% publications.includes(:users, :journal).order('publication_year DESC, created_at DESC').each do |publication| %>
 				    <%= render publication %>
 				  <% end %>
 				</table>
-        <%= paginate publications %>[<%= publications.original.count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
 	</div>
@@ -66,7 +66,7 @@
       </div>
     <% end %>
 
-    <% if all.count > 0 %>
+    <% if publications.count > 0 %>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Publication summary</strong> (top 5 / category)

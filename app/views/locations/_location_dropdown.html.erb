@@ -22,8 +22,8 @@
   </select>
   </div>
   <div class="col-sm-6">
-    <% if @publications.present? %>
-      <p class="bg-primary">&nbsp;Showing <%= @publications.count %> publications</p>
+    <% if @publications.original.present? %>
+      <p class="bg-primary">&nbsp;Showing <%= @publications.original.count %> publications</p>
     <% else %>
       <p class="bg-warning">No location selected</p>
     <% end %>

@@ -41,7 +41,7 @@ class PublicationsController < ApplicationController
       }
 
       format.csv { 
-        send_data (publications_param(params) || Publication.all).csv
+        send_data publications(params).order(:id).csv
       }
     end
   end
@@ -237,7 +237,11 @@ class PublicationsController < ApplicationController
       }
     end
 
-    def publications_param params
-      Publication.where(id: params.permit(:publication_ids)[:publication_ids].split(','))
+    def publications params
+      if ids = params.permit(:publication_ids)[:publication_ids].try(:split, ',')
+        Publication.where(id: ids) 
+      else
+        Publication.all
+      end
     end
   end

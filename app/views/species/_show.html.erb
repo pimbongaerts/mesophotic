@@ -16,13 +16,13 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
 	      <table class="table table-striped">
           <%= render partial: 'species/publication', collection: publications %>
 				</table>
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as csv", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
 	</div>

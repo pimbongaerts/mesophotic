@@ -8,8 +8,8 @@
   </select>
   </div>
   <div class="col-sm-6">
-    <% if object.publications.present? %>
-      <p class="bg-primary">&nbsp;Showing <%= object.publications.count %> publications</p>
+    <% if object.publications.original.present? %>
+      <p class="bg-primary">&nbsp;Showing <%= object.publications.original.count %> publications</p>
     <% else %>
       <p class="bg-warning">No location selected</p>
     <% end %>

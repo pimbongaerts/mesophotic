@@ -1,15 +1,13 @@
 class SummaryController < ApplicationController
   def show
-    @model = params[:model].singularize.classify.constantize
-    @objects = @model.joins(:publications).group("#{params[:model]}.id").order('description ASC')
-    @object = @model.find(params[:id])
-    @all_publications = @object.publications
-    @publications = @all_publications.page(params[:page]).per(10)
-
     respond_to do |format|
-      format.html {}
+      format.html {
+        @publications = publications(params).page(params[:page]).per(10)
+        @objects = @model.joins(:publications).group("#{params[:model]}.id").order('description ASC')   
+      }
+
       format.csv { 
-        send_data @publications.csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv" 
+        send_data publications(params).order(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv" 
       }
     end
   end
@@ -38,8 +36,8 @@ class SummaryController < ApplicationController
   private
 
   def publications params
-    model = params[:model].singularize.classify.constantize
-    object = model.find(params[:id])
-    object.publications
+    @model = params[:model].singularize.classify.constantize
+    @object = @model.find(params[:id])
+    @object.publications.original
   end
 end
