@@ -15,25 +15,18 @@
 
   <%# Publication links %>
   <td width="60px" align="center">
-    <% if user_signed_in? || publication.open_access? %>
-      <% if publication.pdf.file? %>
-        <%= link_to image_tag('adobe_pdf.png'),
-                    publication.pdf.url(:original) %>
-      <% end %>
-      <% if publication.open_access? %>
-        <br><%= image_tag('open_access.png') %>
-      <% end %>
-    <% else %>
-      <% if publication.pdf.file? %>
-        <%= image_tag "adobe_pdf_disabled.png",
-                    :title => 'PDFs only available when logged in' %>
-      <% end %>
+    <% if user_signed_in? && publication.pdf.file? %>
+      <% link_to image_tag('adobe_pdf.png'), publication.pdf.url(:original) %>
     <% end %>
     <% if not publication.DOI.blank? %>
-      <br>
-      <%= link_to publication.doi_url do %>
+      <% if publication.open_access? %>
+        <%= link_to image_tag('open_access.png'), publication.doi_url %>
+      <% else %>
+        <%= link_to publication.doi_url do %>
           <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-      <% end %><br>
+        <% end %>
+      <% end %>
+      <br>
     <% end %>
   </td>
 </tr>

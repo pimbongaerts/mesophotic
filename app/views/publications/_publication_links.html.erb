@@ -1,18 +1,13 @@
-<% if user_signed_in? || @publication.open_access? %>
-  <% if @publication.pdf.file? %>
-    <%= link_to image_tag('adobe_pdf.png'), 
-                @publication.pdf.url(:original) %>
-  <% end %>
-<% else %>
-  <%= image_tag 'adobe_pdf_disabled.png', 
-                title: 'PDF only accesible to members' %>
-<% end %><br>
+<% if user_signed_in? && @publication.pdf.file? %>
+	<%= link_to image_tag('adobe_pdf.png'), @publication.pdf.url(:original) %>
+	<br>
+<% end %>
 <% if !@publication.DOI.blank? %>
   <%= link_to image_tag("www.png"), @publication.doi_url %><br>
 <% end %>
 <% if !@publication.DOI.blank? %>
   <%= link_to image_tag("gscholar.png"), @publication.scholar_url %>
 <% end %>
-<% if @publication.users %>
+<%# if @publication.users %>
 	<%# mail_to @publication.users.first.email, image_tag("email.png") %>
-<% end %>
+<%# end %>
