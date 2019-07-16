@@ -25,6 +25,7 @@ Mesophotic::Application.routes.draw do
     collection do
       get :about
       get :download
+      get :metadata, to: redirect('/about')
       get :contact
       get :inside
       get :members
