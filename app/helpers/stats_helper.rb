@@ -64,7 +64,8 @@ module StatsHelper
   end
 
   def format_for_time_search_chart(found_counts, total_counts)
-    year_range = (1990..2017)
+    last_year = Time.now.year - 1
+    year_range = (1990..last_year)
     categories = []
     found_occurrences = []
     not_found_occurrences = []
