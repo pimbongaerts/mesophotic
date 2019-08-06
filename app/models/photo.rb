@@ -63,7 +63,7 @@ class Photo < ApplicationRecord
   # other
   # scopes
   scope :showcases_location, lambda { 
-    where(showcases_location: true).order('created_at DESC')
+    where(showcases_location: true).where(underwater: true).order('created_at DESC')
   }
   scope :media_gallery, lambda {
     #where(media_gallery: true).
