@@ -10,7 +10,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-	    	<h2><%= object.name %></h2>
+	    	<h2><i><%= object.name %></i></h2>
 			</div>
 		</div>
 
@@ -30,27 +30,19 @@
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" align=center">
-        <% if !object.fishbase_webid.nil? && url_exists?(object.img_url) %>
+        <% if object.focusgroup_id == 1 && url_exists?(object.img_url)    # Fish %>
           <% species_img = get_fishbase_image(object.img_url) %>
-          <%= image_tag species_img if species_img%>
-        <% end %>
-        <% if !object.aims_webid.nil? %>
-          <% species_img = get_aims_image(object.img_url) %>
-          <%= link_to image_tag(species_img[0]), object.img_url if species_img[0] %>
-          <%= link_to "AIMS Coral Factsheet Photo:", object.img_url %>
-          <%= species_img[1] %>
+          <%= link_to image_tag(species_img), object.img_url if species_img %>
+          Photograph from "fishbase.se" - 
+          <%= link_to "Fishbase Factsheet", object.img_url %>
+        <% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) # Coral %>
+          <% species_img = get_cotw_image(object.img_url) %>
+          <%= link_to image_tag(species_img), object.img_url if species_img %>
+          Photograph from "coralsoftheworld.org" - 
+          <%= link_to "Corals of the World Factsheet", object.img_url %>
         <% end %>
 			</div>
 		</div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-
-      </div>
-      <div class="panel-body">
-
-      </div>
-    </div>
 
   </div>
 </div>

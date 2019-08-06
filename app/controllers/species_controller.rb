@@ -3,7 +3,9 @@ class SpeciesController < ApplicationController
   before_action :set_species, only: [:show, :edit]
 
   def index
-  	@species = Species.all.order('focusgroup_id ASC')
+    # Currently set to only show species lists with at least 10 species
+    @focusgroups = Focusgroup.joins(:species).group('focusgroups.id').having('count(focusgroup_id) > 10')
+    @species = Species.all
   end
 
   def edit

@@ -26,11 +26,15 @@ class Species < ApplicationRecord
   # other
   # class methods
   # instance methods
+  def species_code
+    name.parameterize(separator: '-')
+  end
+
   def img_url
-    if aims_webid
-      "http://coral.aims.gov.au/factsheet.jsp?speciesCode=#{aims_webid}"
-    elsif fishbase_webid
-      "http://www.fishbase.org/summary/#{fishbase_webid}"
+    if focusgroup_id == 1 # Fish
+      "http://www.fishbase.org/summary/#{species_code}"
+    elsif focusgroup_id == 2 # Coral
+      "http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/#{species_code}/"
     end
   end
 

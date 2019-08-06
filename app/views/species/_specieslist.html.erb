@@ -1,20 +1,20 @@
-<table class="table table-condensed table-striped">
-  <tr>
-    <th>Taxon group</th>
-    <th>Species</th>
-    <th>Observations</th>
-    <th>Novel</th>
-  </tr>
-  <% species.each do |species| %>
-    <tr>
-      <td><%= species.focusgroup.try(:description) %> </td>
-      <td><%= link_to species.name, species_path(species.id) %> </td>
-      <td>
-        <% if species.observations.count > 0 %>
-          <span class="badge"><%= species.observations.count %></span>
-        <% end %>
-      </td>
-      <td><%# TODO: new species observation? %></td>
-    </tr>
-  <% end %>
-</table>
+<% focusgroup_description = focusgroup.try(:description)
+   focusgroup_name = focusgroup_description.parameterize.underscore %>
+<div class="panel panel-default">
+  <div class="panel-heading" id="heading_<%= focusgroup_name %>">
+    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse_<%= focusgroup_name %>" aria-expanded="true" aria-controls="collapse_<%= focusgroup_name %>">
+      <%= focusgroup_description %>
+      <% if focusgroup.species.count > 0 %>
+        <span class="badge"><%= focusgroup.species.count %></span>
+      <% end %>
+    </button>
+  </div>
+
+  <div class="panel-body collapse" id="collapse_<%= focusgroup_name %>" aria-labelledby="heading_<%= focusgroup_name %>" data-parent="#species_accordion">
+    <% species_list.order("name ASC").each do |species| %>
+      <%= link_to species.name, species_path(species.id) %>
+      <span class="badge"><%# species.publications.count TODO %></span>
+      <br>
+    <% end %>
+  </div>
+</div>
