@@ -13,7 +13,9 @@
   <div class="panel-body collapse" id="collapse_<%= focusgroup_name %>" aria-labelledby="heading_<%= focusgroup_name %>" data-parent="#species_accordion">
     <% species_list.order("name ASC").each do |species| %>
       <%= link_to species.name, species_path(species.id) %>
-      <span class="badge"><%# species.publications.count TODO %></span>
+      <% if species.publications.count > 0 %>
+        <span class="badge"><%= species.publications.count %></span>
+      <% end %>
       <br>
     <% end %>
   </div>
