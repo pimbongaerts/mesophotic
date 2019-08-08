@@ -61,7 +61,8 @@ Mesophotic::Application.routes.draw do
   resources :meetings
   resources :presentations  
   resources :species, except: :show
-  
+  get :species_image, controller: :species
+
   get :world_map, controller: :maps
 
   resources :sites

@@ -3,7 +3,7 @@
   <td>
     <%= format_publication_citation(publication).html_safe %><br>
     <small><font color="red">
-      <%= publication.relevance %> x mention(s)
+      <%= publication.species_relevance(object) %> occurrence(s)
     </font></small>
   </td>
 </tr>

@@ -156,9 +156,9 @@ class Publication < ApplicationRecord
       "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
     }.join(" + ")
 
-      relevance = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
-      limited = relevance.where("relevance > 0")
-      relevance
+      records = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
+      limited = records.where("relevance > 0")
+      records
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
       .order("relevance DESC, filename ASC")
@@ -332,5 +332,11 @@ class Publication < ApplicationRecord
     (validated? && original_data &&
      mesophotic && publication_type == "scientific" &&
      publication_format == "article")
+  end
+
+  def species_relevance object
+    desc = Publication.where(id: id).relevance(object.description).first.try(:relevance) || 0
+    sdesc = Publication.where(id: id).relevance(object.short_description).first.try(:relevance) || 0
+    desc + sdesc
   end
 end

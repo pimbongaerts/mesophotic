@@ -20,7 +20,7 @@
         <br><br>
 
 	      <table class="table table-striped">
-          <%= render partial: 'species/publication', collection: publications %>
+          <%= render partial: 'species/publication', collection: publications, locals: { object: object } %>
 				</table>
         <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
@@ -30,17 +30,7 @@
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" align=center">
-        <% if object.focusgroup_id == 1 && url_exists?(object.img_url)    # Fish %>
-          <% species_img = get_fishbase_image(object.img_url) %>
-          <%= link_to image_tag(species_img), object.img_url if species_img %>
-          Photograph from "fishbase.se" - 
-          <%= link_to "Fishbase Factsheet", object.img_url %>
-        <% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) # Coral %>
-          <% species_img = get_cotw_image(object.img_url) %>
-          <%= link_to image_tag(species_img), object.img_url if species_img %>
-          Photograph from "coralsoftheworld.org" - 
-          <%= link_to "Corals of the World Factsheet", object.img_url %>
-        <% end %>
+        <%= render_async species_image_path(id: object.id) %>
 			</div>
 		</div>
 
