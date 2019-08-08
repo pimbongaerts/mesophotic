@@ -23,7 +23,9 @@ class Species < ApplicationRecord
 
   # validations
   # callbacks
-  # other
+  after_create :speciate
+  after_update :speciate
+  
   # class methods
   # instance methods
   def species_code
@@ -38,10 +40,6 @@ class Species < ApplicationRecord
     end
   end
 
-  def publications
-    Publication.relevance(name)
-  end
-
   def description
     name
   end
@@ -53,5 +51,9 @@ class Species < ApplicationRecord
   def abbreviation
     parts = name.split(/\s+/)
     "#{parts[0][0]}\.? #{parts[1]}"
+  end
+
+  def speciate
+    SpeciationJob.perform_now(Species.where(id: id), Publication.all)
   end
 end
