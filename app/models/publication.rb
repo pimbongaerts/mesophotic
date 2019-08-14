@@ -335,8 +335,8 @@ class Publication < ApplicationRecord
   end
 
   def species_relevance object
-    desc = Publication.where(id: id).relevance(object.description).first.try(:relevance) || 0
-    sdesc = Publication.where(id: id).relevance(object.short_description).first.try(:relevance) || 0
+    desc = Publication.where(id: id).relevance(object.name).first.try(:relevance) || 0
+    sdesc = Publication.where(id: id).relevance(object.abreviation).first.try(:relevance) || 0
     desc + sdesc
   end
 end
