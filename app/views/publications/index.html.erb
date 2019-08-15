@@ -17,15 +17,15 @@
   <%# Search field and pagination %>
   <%= render 'search_field' %>
   <% if current_user.try(:editor_or_admin?) %>
-    <%= paginate @publications %> |
-    Reverse sorted by ID |
-    <%= link_to "Download as CSV", publications_path(format: "csv", publication_ids: @publications.map(&:id).join(',')) %>
-    | [<%= @publications.total_count %> results]
-    <br><br>
+    <%= paginate @publications %> 
+    Reverse sorted by ID
   <% else %>
-    <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as CSV", publications_path(format: :csv, publication_ids: @publications.map(&:id).join(',')) %>
-    <br><br>
+    <%= paginate @publications %>
   <% end %>
+  [<%= @publications.total_count %> results] 
+  &bullet;
+  <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %>
+  <br><br>
 
   <%# Render publications %>
   <table class="table table-striped">
