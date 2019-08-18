@@ -6,6 +6,7 @@ module RedcarpetHelper
 									   	   no_links: true,
 									   	   safe_links_only: true,
 									   	   hard_wrap: true,
+                         fenced_code_blocks: true,
 									   	   space_after_headers: false)
     render = @@markdown.render(content)
     # remove the <p> tags that markdown wraps by default

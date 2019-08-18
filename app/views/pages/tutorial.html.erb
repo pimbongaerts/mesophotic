@@ -1,0 +1,5 @@
+<%= render partial: "layouts/page_title",
+       locals: {title: "Data tutorial",
+                backlink: root_path } %>
+
+<%= markdown(File.read(Rails.root.join("public", "tutorial.md"))) %>

@@ -2,11 +2,13 @@
 class MarkdownWriter
 
   def self.to_html(markdown)
-    renderer = Redcarpet::Render::HTML.new(filter_html: false,
-    no_styles: true,
-    no_images: false,
-    with_toc_data: false,
-    link_attributes: {:target => "_blank"}
+    renderer = Redcarpet::Render::HTML.new(
+      filter_html: false,
+      no_styles: true,
+      no_images: false,
+      with_toc_data: false,
+      fenced_code_blocks: true,
+      link_attributes: {:target => "_blank"}
     )
     converter = Redcarpet::Markdown.new(renderer)
     output = converter.render(markdown)

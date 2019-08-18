@@ -170,6 +170,9 @@ class Publication < ApplicationRecord
   }
 
   scope :include_in_stats, -> () {
+    validated   ## this scope needs to only include validated publications
+                 ## however when adding validated scope, the count method
+                 ## is no longer unavailable
     where(mesophotic: true)
     where(original_data: true)
     where(publication_type: 'scientific')

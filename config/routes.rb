@@ -24,7 +24,7 @@ Mesophotic::Application.routes.draw do
   resources :pages, only: [], path: "" do
     collection do
       get :about
-      get :download
+      get :tutorial
       get :metadata, to: redirect('/about')
       get :contact
       get :inside
