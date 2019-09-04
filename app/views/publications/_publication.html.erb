@@ -2,9 +2,9 @@
   <%# Publication thumbnail %>
   <td width="100px">
     <% if params[:search] %>
-      <%= image_tag publication.pdf.url(:thumb), :width => "100" %>
+      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s, :width => "100" %>
     <% else %>
-      <%= image_tag publication.pdf.url(:thumb) %>
+      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s %>
     <% end %>
   </td>
 
@@ -16,7 +16,7 @@
   <%# Publication links %>
   <td width="60px" align="center">
     <% if user_signed_in? && publication.pdf.file? %>
-      <% link_to image_tag('adobe_pdf.png'), publication.pdf.url(:original) %>
+      <% link_to image_tag('adobe_pdf.png'), URI.join(request.base_url, publication.pdf.url(:original)).to_s %>
     <% end %>
     <% if not publication.DOI.blank? %>
       <% if publication.open_access? %>

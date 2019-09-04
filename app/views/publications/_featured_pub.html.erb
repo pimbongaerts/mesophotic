@@ -2,7 +2,7 @@
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Featured publication</strong></div>
   <div class="panel-body" align="center">
-    <%= image_tag featured_publication.pdf.url(:medium) %>
+    <%= image_tag featured_URI.join(request.base_url, publication.pdf.url(:medium)).to_s %>
   </div>
   <div class="panel-footer" align="center">
     <%= link_to "#{featured_publication.title_truncated}" \

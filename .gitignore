@@ -14,6 +14,7 @@
 /log
 /lib/tasks
 /public/system
+/publications
 /tmp
 /vendor/bundle
 doc/

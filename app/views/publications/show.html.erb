@@ -84,7 +84,7 @@
     <% if @publication.pdf.exists? %>
       <div class="panel panel-default">
         <div class="panel-body" align="center">
-          <%= image_tag @publication.pdf.url(:medium) %>
+          <%= image_tag URI.join(request.base_url, @publication.pdf.url(:medium)).to_s %>
         </div>
       </div>
     <% end %>
@@ -148,7 +148,7 @@
       </div>
       <div class="panel-footer">
         <% if @publication.validations.count > 0 %>
-          Validated by: 
+          Validated by:
           <% for validation in @publication.validations %>
             | <%= link_to "#{validation.user.first_name} #{validation.user.last_name}",
                          member_pages_path(validation.user.id) %>

@@ -1,5 +1,5 @@
 class PublicationsController < ApplicationController
-  before_action :require_admin_or_editor!, :except => [:show, :index, :behind, :publication_authors, :publication_keywords]
+  before_action :require_admin_or_editor!, :except => [:pdfs, :show, :index, :behind, :publication_authors, :publication_keywords]
   before_action :set_publication, only: [:show, :edit, :edit_meta, :update,
                                          :behind, :destroy, :detach_field,
                                          :detach_focusgroup, :detach_platform,
@@ -15,13 +15,12 @@ class PublicationsController < ApplicationController
     respond_to do |format|
         params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
         args = params[:validation_type] == 'expired' ? [current_user] : []
-        is_editor_or_admin = current_user.try(:editor_or_admin?) || false
-    
+
         @publications = Publication.send(params[:validation_type] || :all, *args)
                                    .search(params[:search], params[:search_params], is_editor_or_admin)
         format.html {
           @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20)
-    
+
           unless current_user.try(:editor_or_admin?) || params[:search_term].present?
             # Provide access to top 10 values of linked models
             @locations = Location.joins(:publications)
@@ -39,13 +38,30 @@ class PublicationsController < ApplicationController
           end
       }
 
-      format.csv { 
+      format.csv {
         send_data @publications.reorder(:id).csv
       }
     end
   end
 
   def show
+  end
+
+  def pdfs
+    respond_to do |format|
+      format.png { send_non_public_file params }
+      format.pdf {
+        if is_editor_or_admin
+          send_non_public_file params
+        else
+          redirect_to new_user_session_path
+        end
+      }
+    end
+  end
+
+  def send_non_public_file params
+    send_file "#{Rails.root}/publications/pdfs/#{params[:path]}/#{params[:filename]}", disposition: 'inline'
   end
 
   def behind
@@ -234,5 +250,9 @@ class PublicationsController < ApplicationController
       params.permit!.to_h.reduce({}) { |ps, p|
         ps.merge(p.first => p.last.try(:keys) || p.last)
       }
+    end
+
+    def is_editor_or_admin
+      current_user.try(:editor_or_admin?) || false
     end
   end
