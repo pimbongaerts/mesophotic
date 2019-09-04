@@ -1,13 +1,12 @@
+<% data = format_for_chart(@focusgroups, @focusgroups_top) %>
 <center><h4>
   Most studied <b>focal taxa</b>:
-  <code>scleractinian corals</code>, 
-  <code>fishes</code> and 
-  <code>benthos</code>
+  <%= raw data.first.take(3).map { |a| "<code>#{ a.downcase }</code>" }.to_sentence %>
 </h4></center>
 <%= render partial: 'shared/stats_bar_graph',
            locals: { title: 'Focusgroups_bar_graph',
-                     data: format_for_chart(@focusgroups, @focusgroups_top),
-                     height: 300, 
+                     data: data,
+                     height: 300,
                      unit: 'Percentage' } %>
 <p>
   Fig. 2b: <b>Focal taxa (top 10)</b><br>

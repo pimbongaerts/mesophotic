@@ -1,9 +1,10 @@
 class StatsController < ApplicationController
-  before_action :set_publications, only: [:index, 
-                                          :growing_depth_range, 
+  before_action :set_publications, only: [:index,
+                                          :growing_depth_range,
                                           :growing_publications_over_time,
                                           :growing_locations_over_time,
-                                          :growing_authors_over_time]
+                                          :growing_authors_over_time,
+                                          :world_publications]
   before_action :set_publications_total_counts, only: [:time_refuge, :time_mesophotic]
 
   def index
@@ -67,8 +68,6 @@ class StatsController < ApplicationController
   end
 
   def world_publications
-    @locations_raw = Location.all
-
     render partial: "world_publications"
   end
 
@@ -106,7 +105,7 @@ class StatsController < ApplicationController
   private
 
   def set_publications
-    @publications = Publication.include_in_stats.order('publication_year DESC, created_at DESC')
+    @publications = Publication.statistics
   end
 
   def set_publications_total_counts

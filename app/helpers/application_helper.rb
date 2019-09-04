@@ -81,7 +81,8 @@ module ApplicationHelper
   end
 
   # Counts the number of total number of publications over time (years)
-  def count_publications_over_time(annual_counts)
+  def count_publications_over_time(publications)
+    annual_counts = publications.reduce({}) { |accum, p| accum[p.publication_year] = (accum[p.publication_year] || 0) + 1; accum }
     last_year = Time.new.year - 1
     year_range = (1970..last_year)
     categories = []
@@ -158,21 +159,22 @@ module ApplicationHelper
     data = []
     locations.each do |location|
       data << {
-        name: location.description, 
+        name: location.description,
         lat: location.latitude,
-        lon: location.longitude, 
+        lon: location.longitude,
         z: location.photos.count,
-        ownURL: location_path(location) 
+        ownURL: location_path(location)
       }
     end
     data
   end
 
-  # Counts the number of occurrences for each location for a particular user
-  def count_geographic_occurrences_of_publications_from_user(user)
+  # Counts the number of occurrences for each location
+  def count_geographic_occurrences_of_publications(publications)
     freqs = Hash.new(0)
+
     # Count occurrences
-    user.publications.each do |publication|
+    publications.each do |publication|
       publication.locations.each do |location|
         freqs[location] += 1
       end
@@ -184,6 +186,11 @@ module ApplicationHelper
                lon: location.longitude, z: freqs }
     end
     data
+  end
+
+  # Counts the number of occurrences for each location for a particular user
+  def count_geographic_occurrences_of_publications_from_user(user)
+    count_geographic_occurrences_of_publications(user.publications)
   end
 end
 

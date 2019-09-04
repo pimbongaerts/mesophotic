@@ -3,7 +3,7 @@
   <strong>
     Our knowledge on mesophotic coral ecosystems summarized
     <small>
-      (across <%= @publications.count %> scientific articles presenting original data from mesophotic depths)
+      (across <%= @publications.length %> scientific articles presenting original data from mesophotic depths)
     </small>
   </strong></div>
   <div class="panel-body">
@@ -15,7 +15,7 @@
         <%= render_async summarized_journals_path %>
       </div>
     </div>
-    
+
     <div class="row"><br><br></div>
 
     <div class="row">

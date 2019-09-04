@@ -86,8 +86,9 @@ class Publication < ApplicationRecord
   # other
   scope :validated, -> {
     select("publications.*, COUNT(validations.id) AS validations_count")
-    .joins(:validations)
-    .where("validations.updated_at >= publications.updated_at")
+    .joins("LEFT JOIN validations
+            ON validations.validatable_id = publications.id
+            AND validations.updated_at >= publications.updated_at")
     .group("publications.id")
     .having("validations_count >= 2")
   }
@@ -169,14 +170,13 @@ class Publication < ApplicationRecord
     where(original_data: true)
   }
 
-  scope :include_in_stats, -> () {
-    validated   ## this scope needs to only include validated publications
-                 ## however when adding validated scope, the count method
-                 ## is no longer unavailable
-    where(mesophotic: true)
-    where(original_data: true)
-    where(publication_type: 'scientific')
-    where(publication_format: 'article')
+  scope :statistics, -> () {
+    validated
+    .original
+    .where(mesophotic: true)
+    .where(publication_format: 'article')
+    .where(publication_type: 'scientific')
+    .order('publication_year DESC, created_at DESC')
   }
 
   scope :latest, -> (count) {
