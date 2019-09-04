@@ -154,8 +154,8 @@ class Publication < ApplicationRecord
   scope :relevance, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
       filter = (search_params["search_fields"] || ["title", "abstract", "contents", "authors"]).map { |field|
-      "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
-    }.join(" + ")
+        "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
+      }.join(" + ")
 
       records = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
       limited = records.where("relevance > 0")
@@ -182,6 +182,17 @@ class Publication < ApplicationRecord
   scope :latest, -> (count) {
     order('publication_year DESC, created_at DESC')
     .limit(count)
+  }
+
+  scope :annual_counts, -> () {
+    # all.reduce({}) { |accum, p| accum[p.publication_year] = (accum[p.publication_year] || 0) + 1; accum }
+    find_by_sql("
+      SELECT publication_year AS year, COUNT(id) AS count
+      FROM (#{self.to_sql})
+      GROUP BY year
+      ORDER BY year
+    ")
+    .reduce({}) { |a, r| a[r.year] = r.count; a }
   }
 
   # class methods
@@ -249,19 +260,19 @@ class Publication < ApplicationRecord
   end
 
   def self.max_depth
-    order(max_depth: :desc).first.try(:max_depth) || 500
+    reorder(max_depth: :desc).first.try(:max_depth) || 500
   end
 
   def self.min_depth
-    order(min_depth: :asc).first.try(:min_depth) || 0
+    reorder(min_depth: :asc).first.try(:min_depth) || 0
   end
 
   def self.max_year
-    order(publication_year: :desc).first.publication_year
+    reorder(publication_year: :desc).first.publication_year
   end
 
   def self.min_year
-    order(publication_year: :asc).first.publication_year
+    reorder(publication_year: :asc).first.publication_year
   end
 
   def self.authors

@@ -1,12 +1,12 @@
 <center><h4>
-  Use of the term mesophotic has become established in the literature since its 
+  Use of the term mesophotic has become established in the literature since its
   introduction in 2007/2008
 </h4></center>
 <% occurrences = {} %>
 <% categories, occurrences["referring to mesophotic"], occurrences["not referring to mesophotic"] =
-format_for_time_search_chart(@publications_mesophotic_counts, @publications_total_counts)  %>
+format_for_time_search_chart(@annual_mesophotic_counts, @annual_counts)  %>
 <%= render partial: 'shared/column_graph_series',
-            locals: { title: 'search_mesophotic', 
+            locals: { title: 'search_mesophotic',
                       unit: 'Publications',
                       categories: categories,
                       occurrences: occurrences,

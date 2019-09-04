@@ -5,7 +5,7 @@ class StatsController < ApplicationController
                                           :growing_locations_over_time,
                                           :growing_authors_over_time,
                                           :world_publications]
-  before_action :set_publications_total_counts, only: [:time_refuge, :time_mesophotic]
+  before_action :set_annual_counts, only: [:time_refuge, :time_mesophotic]
 
   def index
     @latest_update = Publication.maximum(:updated_at)
@@ -28,41 +28,49 @@ class StatsController < ApplicationController
   end
 
   def summarized_fields
-    @fields = Field.joins(:publications)
-                    .select('*, count(publications.id) as publications_count')
-                    .group('fields.id')
-                    .order('count(fields.id) DESC')
-    @fields_top = @fields.limit(10)
+    @fields =
+      Field
+      .joins(:publications)
+      .select('*, count(publications.id) as publications_count')
+      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .group('fields.id')
+      .order('count(fields.id) DESC')
 
     render partial: "summarized_fields"
   end
 
   def summarized_journals
-    @journals = Journal.joins(:publications)
-                            .select('*, count(publications.id) as publications_count')
-                            .group('journals.id')
-                            .order('count(journals.id) DESC')
-    @journals_top = @journals.limit(10)
+    @journals =
+      Journal
+      .joins(:publications)
+      .select('*, count(publications.id) as publications_count')
+      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .group('journals.id')
+      .order('count(journals.id) DESC')
 
     render partial: "summarized_journals"
   end
 
   def summarized_focusgroups
-    @focusgroups = Focusgroup.joins(:publications)
-                                .select('*, count(publications.id) as publications_count')
-                                .group('focusgroups.id')
-                                .order('count(focusgroups.id) DESC')
-    @focusgroups_top = @focusgroups.limit(10)
+    @focusgroups =
+      Focusgroup
+      .joins(:publications)
+      .select('*, count(publications.id) as publications_count')
+      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .group('focusgroups.id')
+      .order('count(focusgroups.id) DESC')
 
     render partial: "summarized_focusgroups"
   end
 
   def summarized_platforms
-    @platforms = Platform.joins(:publications)
-                            .select('*, count(publications.id) as publications_count')
-                            .group('platforms.id')
-                            .order('count(platforms.id) DESC')
-    @platforms_top = @platforms.limit(10)
+    @platforms =
+      Platform
+      .joins(:publications)
+      .select('*, count(publications.id) as publications_count')
+      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .group('platforms.id')
+      .order('count(platforms.id) DESC')
 
     render partial: "summarized_platforms"
   end
@@ -78,27 +86,26 @@ class StatsController < ApplicationController
   end
 
   def world_locations
-    @locations = Location.joins(:publications)
-                            .select('*, count(publications.id) as publications_count')
-                            .group('locations.id')
-                            .order('count(locations.id) DESC')
-    @locations_top = @locations.limit(25)
+    @locations =
+      Location
+      .joins(:publications)
+      .select('*, count(publications.id) as publications_count')
+      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .group('locations.id')
+      .order('count(locations.id) DESC')
 
     render partial: "world_locations"
   end
 
   def time_refuge
-    @publications_refuge_counts = Publication.relevance('refug')
-                                            .select('publication_year, count(id) as publications_count')
-                                            .group('publication_year')
+    @annual_refuge_counts = Publication.statistics.relevance('refug').annual_counts
 
     render partial: "time_refuge"
   end
 
   def time_mesophotic
-    @publications_mesophotic_counts = Publication.relevance('mesophotic')
-                                                 .select('publication_year, count(id) as publications_count')
-                                                 .group('publication_year')
+    @annual_mesophotic_counts = Publication.statistics.relevance('mesophotic').annual_counts
+
     render partial: "time_mesophotic"
   end
 
@@ -108,9 +115,7 @@ class StatsController < ApplicationController
     @publications = Publication.statistics
   end
 
-  def set_publications_total_counts
-    @publications_total_counts = Publication.select('*, count(id) as publications_count')
-                                            .all
-                                            .group('publication_year')
+  def set_annual_counts
+    @annual_counts = Publication.statistics.annual_counts
   end
 end

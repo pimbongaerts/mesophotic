@@ -82,7 +82,7 @@ module ApplicationHelper
 
   # Counts the number of total number of publications over time (years)
   def count_publications_over_time(publications)
-    annual_counts = publications.reduce({}) { |accum, p| accum[p.publication_year] = (accum[p.publication_year] || 0) + 1; accum }
+    annual_counts = publications.annual_counts
     last_year = Time.new.year - 1
     year_range = (1970..last_year)
     categories = []

@@ -1,15 +1,15 @@
 module StatsHelper
-  def format_for_chart(category_model, category_model_ordered)
+  def format_for_chart(category_model, limit)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
+    category_model_counts = category_model.map { |c| [c.description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:description)
+    categories = category_model.limit(limit).map { |c| { description: c.description, chart_description: c.chart_description } }
     # Create list of occurrences
     occurrences = []
     categories.each do |category|
-      cat_percentage = (category_model_counts[category].to_f / total_count.to_f) * 100
+      cat_percentage = (category_model_counts[category[:description]].to_f / total_count.to_f) * 100
       occurrences << cat_percentage.round(1)
     end
     # Add "other" category
@@ -20,13 +20,13 @@ module StatsHelper
     [categories, occurrences]
   end
 
-  def format_for_chart_abs(category_model, category_model_ordered)
+  def format_for_chart_abs(category_model, limit)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.description, c.publications_count] }.to_h
+    category_model_counts = category_model.map { |c| [c.description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:description)
+    categories = category_model.limit(limit).map(&:description)
     # Create list of occurrences
     occurrences = []
     categories.each do |category|
@@ -40,13 +40,13 @@ module StatsHelper
     [categories, occurrences]
   end
 
-  def format_for_pie_chart(category_model, category_model_ordered)
+  def format_for_pie_chart(category_model, limit)
     # Create hash with category descriptions and counts
-    category_model_counts = category_model.map{ |c| [c.short_description, c.publications_count] }.to_h
+    category_model_counts = category_model.map { |c| [c.short_description, c.publications_count] }.to_h
     # Total count across all categories
     total_count = category_model_counts.values.inject(:+)
     # Create list of ordered categories (that should be included)
-    categories = category_model_ordered.map(&:short_description)
+    categories = category_model.limit(limit).map(&:short_description)
     # Create list of occurrences
     categories_occurrences = {}
     categories.each do |category|
@@ -59,11 +59,11 @@ module StatsHelper
     # Add "other" category
     total_count_of_included_categories = categories_occurrences.values.inject(:+)
     categories_occurrences["other"] = (total_count - total_count_of_included_categories)
-    
+
     categories_occurrences.to_a
   end
 
-  def format_for_time_search_chart(found_counts, total_counts)
+  def format_for_time_search_chart(found_annual_counts, annual_counts)
     last_year = Time.now.year - 1
     year_range = (1990..last_year)
     categories = []
@@ -72,24 +72,13 @@ module StatsHelper
 
     year_range.each do |year|
       categories << year.to_s
-      # Number of publications for which search term was found
-      found_counts_year = found_counts.find_by_publication_year(year)
-      if found_counts_year
-        found_occurrence = found_counts_year.publications_count
-      else
-        found_occurrence = 0
-      end
-      # Number of publications for which search term was not found
-      total_counts_year = total_counts.find_by_publication_year(year)
-      if total_counts_year
-        total_occurrence = total_counts_year.publications_count
-      else
-        total_occurrence = 0
-      end
-      # Add to hashes
-      found_occurrences << found_occurrence
-      not_found_occurrences << total_occurrence - found_occurrence
+      found_annual_count = found_annual_counts[year] || 0
+      annual_count = annual_counts[year] || 0
+
+      found_occurrences << found_annual_count
+      not_found_occurrences << annual_count - found_annual_count
     end
+
     return categories, found_occurrences, not_found_occurrences
   end
 
@@ -97,19 +86,19 @@ module StatsHelper
     data = []
     location_counts.each do |location|
       data << {
-        name: location.description, 
-        lat: location.latitude, 
-        lon: location.longitude, 
+        name: location.description,
+        lat: location.latitude,
+        lon: location.longitude,
         z: location.item_count,
-        ownURL: location_path(location) 
+        ownURL: location_path(location)
       }
     end
-    data    
+    data
   end
 
   # Publications over depth
   def get_depth_range_data(publications)
-    require 'histogram/array'  
+    require 'histogram/array'
     depths = []
     # Obtain min and max depth for each publication and transform into range
     publications.each do |publication|
@@ -131,14 +120,14 @@ module StatsHelper
     end
     # Define depth bins for histogram
     depth_bins = (30..150).step(1).map(&:to_i)
-    categories, occurrences = depths.histogram(depth_bins, 
+    categories, occurrences = depths.histogram(depth_bins,
                                                :bin_boundary => :avg)
     return categories, occurrences
   end
 
   # Platform use over depth
   def get_platform_use_over_depth(platforms, publications)
-    require 'histogram/array'  
+    require 'histogram/array'
     # Initialize series for raw data and histogram
     raw_platform_depths = {}
     histo_occurrences = {}
@@ -168,7 +157,7 @@ module StatsHelper
     depth_bins = (30..150).step(1).map(&:to_i)
     categories = []
     raw_platform_depths.keys.each do |platform|
-      categories, histo_occurrences[platform] = raw_platform_depths[platform].histogram(depth_bins, 
+      categories, histo_occurrences[platform] = raw_platform_depths[platform].histogram(depth_bins,
                                                                             :bin_boundary => :avg)
     end
     return categories, histo_occurrences
@@ -176,7 +165,7 @@ module StatsHelper
 
   # Focusgroup use over depth
   def get_focusgroup_over_depth(focusgroups, publications)
-    require 'histogram/array'  
+    require 'histogram/array'
     # Initialize series for raw data and histogram
     raw_focusgroup_depths = {}
     histo_occurrences = {}
@@ -206,7 +195,7 @@ module StatsHelper
     depth_bins = (30..150).step(1).map(&:to_i)
     categories = []
     raw_focusgroup_depths.keys.each do |focusgroup|
-      categories, histo_occurrences[focusgroup] = raw_focusgroup_depths[focusgroup].histogram(depth_bins, 
+      categories, histo_occurrences[focusgroup] = raw_focusgroup_depths[focusgroup].histogram(depth_bins,
                                                                             :bin_boundary => :avg)
     end
     return categories, histo_occurrences

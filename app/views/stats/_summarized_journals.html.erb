@@ -1,7 +1,7 @@
-<% format_for_chart(@journals, @journals_top) %>
+<% data = format_for_chart(@journals, 10) %>
 <center><h4>
   Most used <b>scientific journal</b> outlets:
-  <%= raw data.first.take(2).map { |a| "<code>#{ a.downcase }</code>" }.to_sentence %>
+  <%= raw data.first.take(2).map { |a| "<code>#{ a[:chart_description] }</code>" }.to_sentence %>
 </h4></center>
 <%= render partial: 'shared/stats_bar_graph',
            locals: { title: 'Journals_bar_graph',

@@ -26,4 +26,8 @@ class Journal < ApplicationRecord
   def description
     name
   end
+
+  def chart_description
+    name
+  end
 end

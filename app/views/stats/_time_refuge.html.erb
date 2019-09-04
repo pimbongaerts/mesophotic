@@ -3,9 +3,9 @@
 </h4></center>
 <% occurrences = {} %>
 <% categories, occurrences["referring to refuge"], occurrences["not referring to refuge"] =
-format_for_time_search_chart(@publications_refuge_counts, @publications_total_counts)  %>
+format_for_time_search_chart(@annual_refuge_counts, @annual_counts)  %>
 <%= render partial: 'shared/column_graph_series',
-            locals: { title: 'search_refug', 
+            locals: { title: 'search_refug',
                       unit: 'Publications',
                       categories: categories,
                       occurrences: occurrences,

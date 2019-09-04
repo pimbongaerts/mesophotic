@@ -55,6 +55,10 @@ class Location < ApplicationRecord
   end
 
   def z
-    publications.count
+  publications.validated.count
+  end
+
+  def chart_description
+    short_description.present? && short_description.include?(";") ? description : short_description
   end
 end

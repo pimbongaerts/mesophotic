@@ -26,4 +26,8 @@ class Platform < ApplicationRecord
   # other
   # class methods
   # instance methods
+
+  def chart_description
+    short_description.present? && short_description.include?(";") ? description : short_description
+  end
 end
