@@ -1,66 +1,11 @@
 module StatsHelper
-  def format_for_chart(category_model, limit)
-    # Create hash with category descriptions and counts
-    category_model_counts = category_model.map { |c| [c.description, c.publications_count] }.to_h
-    # Total count across all categories
-    total_count = category_model_counts.values.inject(:+)
-    # Create list of ordered categories (that should be included)
-    categories = category_model.limit(limit).map { |c| { description: c.description, chart_description: c.chart_description } }
-    # Create list of occurrences
-    occurrences = []
-    categories.each do |category|
-      cat_percentage = (category_model_counts[category[:description]].to_f / total_count.to_f) * 100
-      occurrences << cat_percentage.round(1)
-    end
-    # Add "other" category
-    #total_count_of_included_categories = occurrences.inject(:+)
-    #categories << "other"
-    #other_percentage = 100.0 - total_count_of_included_categories.to_f
-    #occurrences << other_percentage.round(1)
-    [categories, occurrences]
-  end
+  def format_for_chart(categories, limit)
+    counts = categories.map { |c| [c.description, c.publications_count] }.to_h
+    total = counts.values.inject(:+)
+    categories = categories.limit(limit).map { |c| { description: c.description, chart_description: c.chart_description } }
+    percentages = categories.map { |c| (counts[c[:description]].to_f / total.to_f * 100).round(1) }
 
-  def format_for_chart_abs(category_model, limit)
-    # Create hash with category descriptions and counts
-    category_model_counts = category_model.map { |c| [c.description, c.publications_count] }.to_h
-    # Total count across all categories
-    total_count = category_model_counts.values.inject(:+)
-    # Create list of ordered categories (that should be included)
-    categories = category_model.limit(limit).map(&:description)
-    # Create list of occurrences
-    occurrences = []
-    categories.each do |category|
-      occurrences << category_model_counts[category]
-    end
-    # Add "other" category
-    #total_count_of_included_categories = occurrences.inject(:+)
-    #categories << "other"
-    #other_percentage = 100.0 - total_count_of_included_categories.to_f
-    #occurrences << other_percentage.round(1)
-    [categories, occurrences]
-  end
-
-  def format_for_pie_chart(category_model, limit)
-    # Create hash with category descriptions and counts
-    category_model_counts = category_model.map { |c| [c.short_description, c.publications_count] }.to_h
-    # Total count across all categories
-    total_count = category_model_counts.values.inject(:+)
-    # Create list of ordered categories (that should be included)
-    categories = category_model.limit(limit).map(&:short_description)
-    # Create list of occurrences
-    categories_occurrences = {}
-    categories.each do |category|
-      if category_model_counts[category].nil?
-        categories_occurrences[category] = 0
-      else
-        categories_occurrences[category] = category_model_counts[category]
-      end
-    end
-    # Add "other" category
-    total_count_of_included_categories = categories_occurrences.values.inject(:+)
-    categories_occurrences["other"] = (total_count - total_count_of_included_categories)
-
-    categories_occurrences.to_a
+    [categories, percentages]
   end
 
   def format_for_time_search_chart(found_annual_counts, annual_counts)
