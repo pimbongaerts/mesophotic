@@ -1,7 +1,7 @@
 module StatsHelper
   def format_for_chart(categories, limit)
     counts = categories.map { |c| [c.description, c.publications_count] }.to_h
-    total = counts.values.inject(:+)
+    total = counts.values.sum
     categories = categories.limit(limit).map { |c| { description: c.description, chart_description: c.chart_description } }
     percentages = categories.map { |c| (counts[c[:description]].to_f / total.to_f * 100).round(1) }
 
