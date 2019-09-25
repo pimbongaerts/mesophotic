@@ -51,7 +51,7 @@ class PublicationsController < ApplicationController
     respond_to do |format|
       format.png { send_non_public_file params }
       format.pdf {
-        if is_editor_or_admin
+        if current_user
           send_non_public_file params
         else
           redirect_to new_user_session_path
