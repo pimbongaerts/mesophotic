@@ -1,4 +1,4 @@
-<%= render partial: "layouts/page_title", 
+<%= render partial: "layouts/page_title",
        locals: {title: "Behind the science",
           subtitle: @publication.short_citation,
           backlink: publications_path } %>
@@ -13,8 +13,8 @@
         </div>
         <div class="col-sm-2" align="right">
             <% if @publication.pdf.exists? %>
-              <%= link_to image_tag(@publication.pdf.url(:thumb), 
-                                    :width => "100"), 
+              <%= link_to image_tag(URI.join(request.base_url, @publication.pdf.url(:thumb)).to_s,
+                                    :width => "100"),
                           publication_path %>
             <% end %>
         </div>
@@ -30,7 +30,7 @@
         <div class="panel-heading">
           <strong>Q & A</strong>
         </div>
-        <div class="panel-body">    
+        <div class="panel-body">
           <%= markdown(@publication.behind_contents) %>
         </div>
       </div>
@@ -44,7 +44,7 @@
       <div class="panel-heading">
         <strong>Photos</strong>
       </div>
-      <div class="panel-body">    
+      <div class="panel-body">
         <%= render partial: 'shared/behind_the_scenes',
                    locals: {publication: @publication,
                             style: 'full'} %>

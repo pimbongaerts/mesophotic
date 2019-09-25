@@ -1,7 +1,9 @@
 Mesophotic::Application.routes.draw do
-  mount RailsAdmin::Engine => '/admin/db', as: 'rails_admin'
+  mount RailsAdmin::Engine => "/admin/db", as: "rails_admin"
 
   root "pages#home"
+
+  get "/publications/pdfs/*path/:filename", to: "publications#pdfs", filename: /[^\/]*/
 
   resources :publications do
     member do
@@ -59,7 +61,7 @@ Mesophotic::Application.routes.draw do
   resources :photos
   resources :locations, except: :show
   resources :meetings
-  resources :presentations  
+  resources :presentations
   resources :species, except: :show
   get :species_image, controller: :species
 

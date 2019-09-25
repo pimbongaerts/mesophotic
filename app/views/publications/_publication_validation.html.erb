@@ -2,33 +2,33 @@
   <td align="center">
     [<%= publication.id %>]
     <% if publication.pdf.file? %>
-      <%= link_to image_tag('adobe_pdf.png'), 
-                  publication.pdf.url(:original) %>
+      <%= link_to image_tag('adobe_pdf.png'),
+                  URI.join(request.base_url, publication.pdf.url(:original)).to_s %>
     <% elsif !publication.DOI.blank? %>
       <%= link_to publication.doi_url do %>
         <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
       <% end %>
-    <% end %>   
+    <% end %>
   </td>
 
   <%# Publication links %>
   <td align="center">
-    <% if !publication.user_validations.include? current_user %>      
-      <%= button_to "Validate", 
-                    add_validation_publication_path(publication, 
+    <% if !publication.user_validations.include? current_user %>
+      <%= button_to "Validate",
+                    add_validation_publication_path(publication,
                                                     current_user),
                     method: "get", class: "btn btn-success" %>
     <% else %>
       <% if publication.updated_at > publication.validations
                                     .find_by_user_id(current_user.id)
                                     .updated_at %>
-        <%= button_to "Revalidate", 
-                      touch_validation_publication_path(publication, 
+        <%= button_to "Revalidate",
+                      touch_validation_publication_path(publication,
                                                         current_user),
                       method: "get", class: "btn btn-success" %>
       <% else %>
-        <%= button_to "Unvalidate", 
-                      remove_validation_publication_path(publication, 
+        <%= button_to "Unvalidate",
+                      remove_validation_publication_path(publication,
                                                          current_user),
                       method: "get", class: "btn" %>
       <% end %>
@@ -43,7 +43,7 @@
   <%# Formatted publication %>
   <td>
     <%# format_publication_citation(publication).html_safe %>
-    <%= link_to publication.short_citation, publication_path(publication), 
+    <%= link_to publication.short_citation, publication_path(publication),
                 target: :_blank, title: publication.title %><br>
     <small>
       <%= publication.DOI %><br>
@@ -77,7 +77,7 @@
   <td>
     <% for field in publication.fields %>
       <span class="label label-info"><%= field.description %>
-      <%= link_to "x", 
+      <%= link_to "x",
             detach_field_publication_path(publication, field),
             data: {:confirm => 'Are you sure?'} %>
      </span><br>
@@ -86,7 +86,7 @@
   <td>
     <% for focusgroup in publication.focusgroups %>
       <span class="label label-primary"><%= focusgroup.description %>
-      <%= link_to "x", 
+      <%= link_to "x",
             detach_focusgroup_publication_path(publication, focusgroup),
             data: {:confirm => 'Are you sure?'} %>
      </span><br>
@@ -95,7 +95,7 @@
   <td>
     <% for platform in publication.platforms %>
       <span class="label label-info"><%= platform.description %>
-      <%= link_to "x", 
+      <%= link_to "x",
             detach_platform_publication_path(publication, platform),
             data: {:confirm => 'Are you sure?'} %>
       </span><br>
@@ -104,7 +104,7 @@
   <td>
     <% for location in publication.locations %>
       <span class="label label-primary"><%= location.description %>
-      <%= link_to "x", 
+      <%= link_to "x",
             detach_location_publication_path(publication, location),
             data: {:confirm => 'Are you sure?'} %>
       </span><br>
@@ -124,10 +124,10 @@
           <%= validation.user.first_name %> <%= validation.user.last_name  %>
           <% if publication.updated_at > validation.updated_at %>
             EXPIRED
-          <% end %>     
+          <% end %>
           <% if validation.user == current_user %>
-            <%= link_to "x", 
-                  remove_validation_publication_path(publication, 
+            <%= link_to "x",
+                  remove_validation_publication_path(publication,
                                      current_user),
                   data: {:confirm => 'Are you sure?'} %>
           <% end %>

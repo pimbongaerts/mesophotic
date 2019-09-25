@@ -1,13 +1,13 @@
 <% publications.each do |publication| %>
   <div class="row">
     <div class="col-sm-3">
-      <%= image_tag publication.pdf.url(:thumb) %>
+      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s %>
       <br /><br />
     </div>
     <div class="col-sm-9">
       <p>
         <strong>
-        <%= link_to truncate(publication.title, length: 90), 
+        <%= link_to truncate(publication.title, length: 90),
                     publication %>
         </strong><br />
         <%= format_authors(publication) %>

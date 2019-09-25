@@ -68,8 +68,12 @@ class Publication < ApplicationRecord
   has_many :photos
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
   has_attached_file :pdf,
-                    styles: { medium: ['450x640>', :png],
-                              thumb: ['100x140>', :png] },
+                    styles: {
+                      medium: ['450x640>', :png],
+                      thumb: ['100x140>', :png] ,
+                    },
+                    path: ':rails_root/:url',
+                    url: ':class/:attachment/:id_partition/:style/:filename',
                     default_url: 'no_pdf.png'
 
   paginates_per 20
