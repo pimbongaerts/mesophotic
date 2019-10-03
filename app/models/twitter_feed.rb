@@ -1,6 +1,8 @@
 class TwitterFeed
     def self.search string
-        return @@client.search string
+        @@client.search string
+    rescue
+        []
     end
 
     protected

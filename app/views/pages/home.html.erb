@@ -45,12 +45,13 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <strong>Latest mentions</strong>
-
       </div>
       <div class="panel-body">
-        <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6) %>
-        <% users = User.where(twitter: tweets.map(&:user).map(&:screen_name)) %>
-        <%= render partial: 'tweet', locals: { users: users }, collection: tweets, as: :tweet %>
+        <% cache "twitter_feed", expires_in: 1.hour do %>
+          <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6) %>
+          <% users = User.where(twitter: tweets.map(&:user).map(&:screen_name)) %>
+          <%= render partial: 'tweet', locals: { users: users }, collection: tweets, as: :tweet %>
+        <% end %>
       </div>
       <div class="panel-footer">
         To contribute posts simply use the <code>#mesophotic</code>
@@ -59,4 +60,3 @@
     </div>
   </div>
 </div>
-
