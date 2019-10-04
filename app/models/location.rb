@@ -55,7 +55,7 @@ class Location < ApplicationRecord
   end
 
   def z
-  publications.validated.count
+    publications.validated.length
   end
 
   def chart_description
