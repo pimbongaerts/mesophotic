@@ -180,7 +180,6 @@ class Publication < ApplicationRecord
     .where(mesophotic: true)
     .where(publication_format: 'article')
     .where(publication_type: 'scientific')
-    .where("publication_year < ?", Date.current.year)
     .order('publication_year DESC, created_at DESC')
   }
 
