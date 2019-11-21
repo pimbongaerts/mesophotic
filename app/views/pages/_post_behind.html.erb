@@ -67,60 +67,32 @@
 
   <div class="col-sm-9">
     <% if @post.content_md? and @post.photos.count > 0 %>
-      <% behind_sections = @post.content_md.split("\r\n\r\n") %>
       <div class="row">
         <div class="col-sm-12">
           <font color="#2b82bc">
             <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
           </font><br>
-          <%= markdown(behind_sections[0]) %>
-          <%= markdown(behind_sections[1]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[0]} %>
-                </div>
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[1]} %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <%= markdown(behind_sections[2]) %>
-          <%= markdown(behind_sections[3]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[2]} %>
-                </div>
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[3]} %>
+
+          <% @post.content_md.split(/\s*?\r\n\s*?\r\n\s*?/).zip(@post.photos).in_groups_of(2).each do |bs| %>
+            <% byebug %>
+            <%= markdown(bs[0][0]) %>
+            <%= markdown(bs[1][0]) %>
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <%= render partial: 'photo_with_subtitle',
+                              locals: {photo: bs[0][1]} %>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= render partial: 'photo_with_subtitle',
+                              locals: {photo: bs[1][1]} %>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <%= markdown(behind_sections[4]) %>
-          <%= markdown(behind_sections[5]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[4]} %>
-                </div>
-                <div class="col-sm-6">
-                  <%= render partial: 'photo_with_subtitle',
-                             locals: {photo: @post.photos[5]} %>
-                </div>
-              </div>
-            </div>
-          </div>
+          <% end %>
+
           <h4>Featured article:</h4>
           <table class="table table-striped">
             <%= render partial: 'publications/publication',
