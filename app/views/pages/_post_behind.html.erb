@@ -74,7 +74,6 @@
           </font><br>
 
           <% @post.content_md.split(/\s*?\r\n\s*?\r\n\s*?/).zip(@post.photos).in_groups_of(2).each do |bs| %>
-            <% byebug %>
             <%= markdown(bs[0][0]) %>
             <%= markdown(bs[1][0]) %>
             <div class="panel panel-default">
