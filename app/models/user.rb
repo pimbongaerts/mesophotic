@@ -43,6 +43,8 @@
 #
 
 class User < ApplicationRecord
+  acts_as_textcaptcha api_key: 'mesophotic.org'
+
   # constants
   TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Prof.'].freeze
 

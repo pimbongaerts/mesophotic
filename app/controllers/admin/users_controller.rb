@@ -7,7 +7,6 @@ class Admin::UsersController < Admin::BaseController
     :destroy
   ]
 
-  
   def index
     @users = User.search_and_order(params[:search], params[:page])
   end
@@ -42,7 +41,6 @@ class Admin::UsersController < Admin::BaseController
       render :edit
     end
   end
-
 
   private
 
@@ -80,5 +78,4 @@ class Admin::UsersController < Admin::BaseController
     {:publication_ids => []}
     )
   end
-
 end

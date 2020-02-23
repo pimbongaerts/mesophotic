@@ -3,10 +3,10 @@
  *
  *= require_self
  *= require owl.carousel
- *= require owl.theme
  *= require bootstrap-slider
  */
 
+@import "owl.theme.default";
 @import "railsbricks_custom";
 
 /* Custom CSS */
@@ -135,4 +135,14 @@ header { margin-bottom: 90px; }
   span:hover {
     color: #23527c !important;
   }
+}
+
+.robot {
+  background-color: #eeffff;
+  border-color: #ddeeee;
+  border-radius: 0.5em;
+  border-width: 1px;
+  border-style: solid;
+  margin: 2em 0;
+  padding: 1em 2em;
 }
