@@ -3,55 +3,55 @@ ruby '~> 2.5.0'
 
 # Standard Rails gems
 gem 'rails', '~> 5.2.0'
-gem 'bootsnap'
-gem 'sass'
-gem 'sass-rails'
-gem 'uglifier'
-gem 'coffee-rails'
-gem 'jquery-rails'
-gem 'turbolinks'
-gem 'jbuilder'
 gem 'bcrypt'
+gem 'bootsnap'
+gem 'coffee-rails'
+gem 'jbuilder'
+gem 'jquery-rails'
 gem 'listen'
 gem 'puma'
+gem 'sass-rails'
+gem 'sass'
+gem 'turbolinks'
+gem 'uglifier'
 
 # RailsBricks gems
-gem 'kaminari'
-gem 'friendly_id'
-gem 'font-awesome-sass'
 gem 'bootstrap-sass', ">= 3.4.1"
 gem 'bootstrap-slider-rails'
 gem 'devise', ">= 4.6.0"
+gem 'font-awesome-sass'
+gem 'friendly_id'
+gem 'kaminari'
 gem 'redcarpet'
 
 # Added Rails gems
-gem 'paperclip'
 gem 'country_select'
-gem 'nokogiri'
-gem 'twitter'
-gem 'owlcarousel-rails'
-gem 'histogram'
-gem 'paper_trail'
-gem 'rails_admin'
-gem 'switch_user'
 gem 'figaro'
+gem 'histogram'
+gem 'nokogiri'
+gem 'owlcarousel-rails'
+gem 'paper_trail'
+gem 'paperclip'
+gem 'rails_admin'
 gem 'render_async'
+gem 'switch_user'
+gem 'twitter'
 
 # RailsBricks development gems
 group :development, :test do
-  gem 'byebug'
   gem 'annotate'
+  gem 'byebug'
+  gem 'rails-erd'
   gem 'spring'
   gem 'sqlite3'
-  gem 'rails-erd'
 end
 
 group :development do
   gem 'web-console'
 
   # Profiling
-  gem 'rack-mini-profiler', require: false
-  gem 'memory_profiler'
   gem 'flamegraph'
+  gem 'memory_profiler'
+  gem 'rack-mini-profiler', require: false
   gem 'stackprof'
 end
