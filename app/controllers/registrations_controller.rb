@@ -1,4 +1,6 @@
 class RegistrationsController < Devise::RegistrationsController
+  before_action :permit_params, only: [:create]
+
   def new
     super do
       resource.textcaptcha
@@ -12,6 +14,18 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def permit_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+      :first_name,
+      :last_name,
+      :email,
+      :password,
+      :password_confirmation,
+      :textcaptcha_key,
+      :textcaptcha_answer,
+    ])
+  end
 
   def user_params
     params.require(:user).permit(
@@ -37,7 +51,7 @@ class RegistrationsController < Devise::RegistrationsController
     :country,
     :research_interests,
     {:platform_ids => []},
-    {:publication_ids => []}
+    {:publication_ids => []},
     )
   end
 end
