@@ -188,12 +188,50 @@
                    locals: { first_name: "Ryan",
                              last_name: "Booker",
                              role: "Website development" } %>
-        <% User.where(editor: true).each do |editor| %>
-          <%= render partial: 'contributor',
-                     locals: { first_name: editor.first_name,
-                               last_name: editor.last_name,
-                               role: "Content Editor" } %>
-        <% end %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Veronica",
+                             last_name: "Radice",
+                             role: "Behind the Science content" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Gonzalo",
+                             last_name: "Perez-Rosales",
+                             role: "Coordinator - Publications" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Ryan",
+                             last_name: "Eckert",
+                             role: "Data curation - Publications" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Gal",
+                             last_name: "Eyal",
+                             role: "Data curation - Publications" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Erika",
+                             last_name: "Gress",
+                             role: "Data curation - Publications" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Alejandra",
+                             last_name: "Hernandez-Agreda",
+                             role: "Coordinator - Book chapters" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Jaaziel",
+                             last_name: "García-Hernández",
+                             role: "Data curation - Book chapters" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Nick",
+                             last_name: "Hammerman",
+                             role: "Data curation - Book chapters" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Jack",
+                             last_name: "Laverick",
+                             role: "Data curation - Book chapters" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Michael Studivan",
+                             last_name: "Laverick",
+                             role: "Coordinator - Social Media " } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Luiz",
+                             last_name: "Rocha",
+                             role: "Social Media contributor" } %>
 
         <p class="bg-info">&nbsp;
           <em>Are you interested in helping out?</em> Let us know!
@@ -203,13 +241,30 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Past contributors</strong></div>
       <div class="panel-body">
-        <%= render partial: 'contributor',
-                   locals: { first_name: "Felix",
-                   last_name: "Martinez",
-                   role: "Editorial board" } %>
+
         <%= render partial: 'contributor',
                    locals: { first_name: "Norbert",
                              last_name: "Englebert",
+                             role: "Data curation" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Andrea",
+                             last_name: "Gori",
+                             role: "Data Curation" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Felix",
+                             last_name: "Martinez",
+                             role: "Advisory Member" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Hudson",
+                             last_name: "Pinheiro",
+                             role: "Data curation" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Rich",
+                             last_name: "Pyle",
+                             role: "Advisory Member" } %>
+        <%= render partial: 'contributor',
+                   locals: { first_name: "Joe",
+                             last_name: "Turner",
                              role: "Data curation" } %>
       </div>
     </div>
