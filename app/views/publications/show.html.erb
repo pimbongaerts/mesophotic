@@ -149,11 +149,11 @@
       <div class="panel-footer">
         <%
         credits = []
-        credits << if @publication.contributor.present?
-          "Contributed by: #{link_to @publication.contributor.full_name_normal, member_pages_path(@publication.contributor.id)}"
+        if @publication.contributor.present?
+          credits << "Contributed by: #{link_to @publication.contributor.full_name_normal, member_pages_path(@publication.contributor.id)}"
         end
-        credits << if @publication.validations.count > 0
-          "Validated by: #{@publication.validations.map { |validation|
+        if @publication.validations.count > 0
+          credits << "Validated by: #{@publication.validations.map { |validation|
               link_to validation.user.full_name_normal, member_pages_path(validation.user.id)
           }.join(" | ")}"
         end
