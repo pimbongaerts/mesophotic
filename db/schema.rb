@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_06_212044) do
+ActiveRecord::Schema.define(version: 2020_11_09_112923) do
 
   create_table "comments", force: :cascade do |t|
     t.integer "commentable_id"
@@ -348,6 +348,7 @@ ActiveRecord::Schema.define(version: 2019_08_06_212044) do
     t.text "behind_contents"
     t.text "external_id"
     t.boolean "tme", default: false
+    t.integer "contributor_id"
   end
 
   create_table "publications_sites", id: false, force: :cascade do |t|

@@ -34,6 +34,7 @@
 #  publication_format :string           default("article")
 #  behind_contents    :text
 #  external_id        :text
+#  contributor_id     :integer
 #
 
 class Publication < ApplicationRecord
@@ -67,6 +68,7 @@ class Publication < ApplicationRecord
   has_many :observations, as: :observable
   has_many :photos
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
+  belongs_to :contributor, class_name: 'User'
   has_attached_file :pdf,
                     styles: {
                       medium: ['450x640>', :png],

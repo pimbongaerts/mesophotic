@@ -82,6 +82,7 @@ class PublicationsController < ApplicationController
 
   def create
     @publication = Publication.new(publication_params)
+    @publication.contributor = current_user
 
     respond_to do |format|
       if @publication.save
