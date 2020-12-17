@@ -63,14 +63,15 @@ class User < ApplicationRecord
   has_many :validations
   has_many :posts
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_user_id'
+  
   has_one_attached :profile_picture
-  has_attached_file :profile_picture,
+  has_attached_file :profile_picture
                     default_url: '/images/:style/missing.png',
                     styles: {
                       medium: '200x200>',
                       thumb: '100x100>'
                     }
-
+  
   # validations
   validates :email, format:
                     { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
