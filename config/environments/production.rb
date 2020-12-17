@@ -115,5 +115,5 @@ Rails.application.configure do
   }
 
   # Directory in which ImageMagick is installed see https://github.com/thoughtbot/paperclip
-  Paperclip.options[:command_path] = "/usr/bin/convert"
+  Paperclip.options[:command_path] = "/usr/bin/"
 end
