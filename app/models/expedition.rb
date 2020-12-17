@@ -31,6 +31,7 @@ class Expedition < ApplicationRecord
   has_and_belongs_to_many :locations
   has_many :posts, as: :postable
   has_many :photos
+  has_one_attached :featured_image
   has_attached_file :featured_image,
                     styles: { large: '1024x768>',
                               medium: '640x480>',
@@ -39,8 +40,8 @@ class Expedition < ApplicationRecord
 
   # validations
   validates :title, presence: true
-  validates_attachment :featured_image,
-                       content_type: { content_type: 'image/jpeg' }
+  validates :featured_image, content_type: ['image/jpeg', 'imge/jpg']
+  
   # callbacks
   # other
   # class methods

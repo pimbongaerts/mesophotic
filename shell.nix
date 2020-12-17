@@ -6,5 +6,5 @@ let
     gemdir = ./.;
   };
 in mkShell {
-  buildInputs = [ env env.wrappedRuby nodejs imagemagick ghostscript ];
+  buildInputs = [ env env.wrappedRuby nodejs imagemagick ghostscript mupdf ];
 }

@@ -69,6 +69,7 @@ class Publication < ApplicationRecord
   has_many :photos
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
   belongs_to :contributor, class_name: 'User'
+  has_one_attached :pdf
   has_attached_file :pdf,
                     styles: {
                       medium: ['450x640>', :png],
@@ -84,7 +85,7 @@ class Publication < ApplicationRecord
   validates :title, presence: true
   validates :authors, presence: true
   validates :publication_year, presence: true
-  validates_attachment :pdf, content_type: { content_type: 'application/pdf' }
+  validates :pdf, content_type: 'application/pdf'
 
   # callbacks
   before_save :create_journal_from_name
@@ -229,7 +230,7 @@ class Publication < ApplicationRecord
                     publication.book_title,
                     publication.book_authors,
                     publication.book_publisher,
-                    publication.pdf.exists?,
+                    publication.pdf.attached?,
                     publication.mesophotic,
                     publication.mce,
                     publication.tme,

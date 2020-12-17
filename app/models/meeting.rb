@@ -29,6 +29,7 @@ class Meeting < ApplicationRecord
   has_many :photos
   has_and_belongs_to_many :users
   has_and_belongs_to_many :organisations
+  has_one_attached :featured_image
   has_attached_file :featured_image,
                     styles: { large: '1024x768>',
                               medium: '640x480>',
@@ -37,9 +38,8 @@ class Meeting < ApplicationRecord
 
   # validations
   validates :title, presence: true
-  validates :country, presence: true, length: {minimum: 2, maximum: 2}
-  validates_attachment :featured_image,
-                       content_type: { content_type: 'image/jpeg' }
+  validates :country, presence: true, length: { minimum: 2, maximum: 2 }
+  validates :featured_image, content_type: ['image/jpeg', 'image/jpg']
 
   # callbacks
   # other
