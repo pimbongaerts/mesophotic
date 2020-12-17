@@ -22,8 +22,8 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>An interview with:</strong></div>
       <div class="panel-body" align="center">
-        <% if @researcher.profile_picture.present? %>
-          <%= link_to image_tag(@researcher.profile_picture.url(:medium)),
+        <% if @researcher.profile_picture.attached? %>
+          <%= link_to image_tag(@researcher.profile_picture.variant(resize: "200x200>")),
                       member_pages_path(@researcher) %>
         <% end %>
         <strong>

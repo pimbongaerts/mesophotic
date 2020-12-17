@@ -12,8 +12,8 @@
           <p><%= @publication.authors %></p>
         </div>
         <div class="col-sm-2" align="right">
-            <% if @publication.pdf.exists? %>
-              <%= link_to image_tag(URI.join(request.base_url, @publication.pdf.url(:thumb)).to_s,
+            <% if @publication.pdf.attached? %>
+              <%= link_to image_tag(@publication.pdf.preview(resize: "100x140>"),
                                     :width => "100"),
                           publication_path %>
             <% end %>

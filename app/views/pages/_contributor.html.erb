@@ -2,7 +2,7 @@
 <% if contributor %>
 	<div class="row">
 	  <div class="col-sm-4">
-	    <%= image_tag contributor.profile_picture.url(:thumb) %>
+	    <%= image_tag contributor.profile_picture.variance(resize: "100x100>") %>
 	  </div>
 	  <div class="col-sm-8">
 	    <strong><%= link_to "#{first_name} #{last_name}", member_pages_path(contributor.id) %></strong><br>

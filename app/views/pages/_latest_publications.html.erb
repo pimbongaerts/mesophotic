@@ -1,7 +1,7 @@
 <% publications.each do |publication| %>
   <div class="row">
     <div class="col-sm-3">
-      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s %>
+      <%= image_tag publication.pdf.preview(resize: "100x140>") %>
       <br /><br />
     </div>
     <div class="col-sm-9">

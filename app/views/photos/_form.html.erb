@@ -3,10 +3,10 @@
     <h4 class="panel-title">Photo metadata</h4>
   </div>
   <div class="panel-body">
-    <% if @photo.image.exists? %>
+    <% if @photo.image.attached? %>
       <div class="row">
         <div class="col-xs-12">
-          <%= image_tag @photo.image.url(:medium) %>
+          <%= image_tag @photo.image.variant(resize: "640x480>") %>
           <hr>
         </div>
       </div>

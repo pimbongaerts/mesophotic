@@ -4,11 +4,11 @@
   <table>
     <tr>
     <td>
-    	<%= link_to image_tag(post.photos[3].image(:compo)),
+    	<%= link_to image_tag(post.photos[3].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                   post_pages_path(post) %>
     </td>
      <td>
-      <%= link_to image_tag(post.photos[2].image(:compo)),
+      <%= link_to image_tag(post.photos[2].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                   post_pages_path(post) %>
     </td>
    </tr>

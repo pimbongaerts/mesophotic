@@ -1,9 +1,9 @@
 <tr>
   <td width="100px">
     <% if params[:search] %>
-      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s, :width => "100" %>
+      <%= image_tag publication.pdf.preview(resize: "100x140>"), :width => "100" %>
     <% else %>
-      <%= image_tag URI.join(request.base_url, publication.pdf.url(:thumb)).to_s %>
+      <%= image_tag publication.pdf.preview(resize: "100x140>") %>
     <% end %>
   </td>
   <td width="300px">
@@ -65,8 +65,8 @@
   </td>
   <td width="60px" align="center">
     <% if user_signed_in? %>
-      <% if publication.pdf.exists? %>
-        <%= link_to image_tag("adobe_pdf.png"), URI.join(request.base_url, publication.pdf.url(:original)).to_s %>
+      <% if publication.pdf.attached? %>
+        <%= link_to image_tag("adobe_pdf.png"), url_for(publication.pdf) %>
       <% end %>
     <% else %>
       <%= image_tag "adobe_pdf_disabled.png",:title => 'PDFs only available when logged in' %>

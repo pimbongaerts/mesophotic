@@ -1,9 +1,8 @@
 <tr>
   <td align="center">
     [<%= publication.id %>]
-    <% if publication.pdf.file? %>
-      <%= link_to image_tag('adobe_pdf.png'),
-                  URI.join(request.base_url, publication.pdf.url(:original)).to_s %>
+    <% if publication.pdf.attached? %>
+      <%= link_to image_tag('adobe_pdf.png'), url_for(publication.pdf) %>
     <% elsif !publication.DOI.blank? %>
       <%= link_to publication.doi_url do %>
         <span class="glyphicon glyphicon-link" aria-hidden="true"></span>

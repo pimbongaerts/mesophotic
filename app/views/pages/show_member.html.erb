@@ -9,8 +9,10 @@
     <div class="panel panel-default">
       <div class="panel-body" style="background: #CCCCCC;">
         <div class="col-sm-4">
-          <% if not @user.profile_picture.url(:medium).include? "missing" %>
-            <%= image_tag @user.profile_picture.url(:medium) %>
+          <% if @user.profile_picture.attached? %>
+            <%= image_tag @user.profile_picture.variant(resize: "200x200>") %>
+          <% else %>
+            <%= image_tag "images/medium/missing.png" %>
           <% end %>
         </div>
         <div class="col-sm-6">
@@ -105,7 +107,7 @@
         </div>
         <div class="panel-body">
         <% @user.photos.each do |photo| %>
-          <%= link_to image_tag(photo.image(:compo)),
+          <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0")),
                       photo_path(photo) %><br>
         <% end %>
         </div>

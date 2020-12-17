@@ -59,7 +59,7 @@
         </div>
         <div class="panel-body">
         <% object.photos.showcases_location.each do |photo| %>
-          <%= link_to image_tag(photo.image(:compo)),
+          <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0")),
                       photo_path(photo) %><br>
         <% end %>
         </div>
