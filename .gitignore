@@ -22,6 +22,7 @@ emails.txt
 public.old
 public/.htaccess_off
 public/assets
+storage/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

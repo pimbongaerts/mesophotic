@@ -84,9 +84,4 @@ Rails.application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
-
-  # Directory in which ImageMagick is installed see https://github.com/thoughtbot/paperclip
-  Paperclip.options[:command_path] = "/usr/local/bin/"
-  Paperclip.options[:log] = true
-  Paperclip.options[:log_command] = true
 end
