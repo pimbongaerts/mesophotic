@@ -86,7 +86,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Directory in which ImageMagick is installed see https://github.com/thoughtbot/paperclip
-  # Paperclip.options[:command_path] = "/usr/local/bin/convert"
+  Paperclip.options[:command_path] = "/usr/local/bin/convert"
   Paperclip.options[:log] = true
   Paperclip.options[:log_command] = true
 end
