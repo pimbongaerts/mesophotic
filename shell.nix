@@ -7,5 +7,5 @@ let
   };
 in stdenv.mkDerivation {
   name = "mesophotic";
-  buildInputs = [ env env.wrappedRuby nodejs ];
+  buildInputs = [ env env.wrappedRuby nodejs imagemagick ghostscript ];
 }
