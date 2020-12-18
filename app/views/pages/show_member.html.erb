@@ -12,7 +12,7 @@
           <% if @user.profile_picture.attached? %>
             <%= image_tag @user.profile_picture.variant(resize: "200x200>") %>
           <% else %>
-            <%= image_tag "images/medium/missing.png" %>
+            <%= image_tag "/images/medium/missing.png" %>
           <% end %>
         </div>
         <div class="col-sm-6">
