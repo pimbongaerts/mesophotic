@@ -1,10 +1,14 @@
 <tr>
   <%# Publication thumbnail %>
   <td width="100px">
-    <% if params[:search] %>
-      <%= image_tag publication.pdf.preview(resize: "100x140>"), :width => "100" %>
+    <% if publication.pdf.attached? %>
+      <% if params[:search] %>
+        <%= image_tag publication.pdf.preview(resize: "100x140>"), :width => "100" %>
+      <% else %>
+        <%= image_tag publication.pdf.preview(resize: "100x140>") %>
+      <% end %>
     <% else %>
-      <%= image_tag publication.pdf.preview(resize: "100x140>") %>
+      <%= image_tag "no_pdf.png" %>
     <% end %>
   </td>
 
