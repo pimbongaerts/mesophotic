@@ -28,6 +28,7 @@ class Presentation < ApplicationRecord
   # associations
   belongs_to :meeting
   has_and_belongs_to_many :users
+  has_one_attached :pdf
   has_attached_file :pdf,
                     styles: { medium: ['450x640>', :png],
                               thumb: ['100x140>', :png] },
@@ -39,7 +40,7 @@ class Presentation < ApplicationRecord
   validates :authors, presence: true
   validates :date, presence: true
   validates :meeting_id, presence: true
-  validates_attachment :pdf, content_type: { content_type: 'application/pdf' }
+  validates :pdf, content_type: 'application/pdf'
 
   # callbacks
   # other

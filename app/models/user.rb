@@ -63,10 +63,13 @@ class User < ApplicationRecord
   has_many :validations
   has_many :posts
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_user_id'
+  has_one_attached :profile_picture
   has_attached_file :profile_picture,
                     default_url: '/images/:style/missing.png',
-                    styles: { medium: '200x200>',
-                              thumb: '100x100>' }
+                    styles: {
+                      medium: '200x200>',
+                      thumb: '100x100>'
+                    }
 
   # validations
   validates :email, format:
@@ -79,9 +82,7 @@ class User < ApplicationRecord
                              format: { with: URI.regexp(%w(http https)) }
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates_attachment :profile_picture,
-                       content_type: { content_type: ['image/png',
-                                                     'image/jpeg'] }
+  validates :profile_picture, content_type: ['image/png', 'image/jpg', 'image/jpeg']
 
   # callbacks
   before_save :create_organisation_from_name

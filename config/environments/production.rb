@@ -113,7 +113,4 @@ Rails.application.configure do
     user_name: ENV["SMTP_USER"],
     password: ENV["SMTP_PWD"]
   }
-
-  # Directory in which ImageMagick is installed see https://github.com/thoughtbot/paperclip
-  Paperclip.options[:command_path] = "/usr/bin/"
 end

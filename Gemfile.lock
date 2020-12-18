@@ -24,6 +24,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_storage_validations (0.9.0)
+      rails (>= 5.2.0)
     activejob (5.2.4.4)
       activesupport (= 5.2.4.4)
       globalid (>= 0.3.6)
@@ -165,6 +167,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.1104)
     mimemagic (0.3.5)
+    mini_magick (4.11.0)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.2)
@@ -326,6 +329,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_storage_validations
   acts_as_textcaptcha
   annotate
   bcrypt
@@ -346,6 +350,7 @@ DEPENDENCIES
   kaminari
   listen
   memory_profiler
+  mini_magick
   nokogiri
   owlcarousel-rails
   paper_trail
@@ -368,8 +373,5 @@ DEPENDENCIES
   uglifier
   web-console
 
-RUBY VERSION
-   ruby 2.5.0p0
-
 BUNDLED WITH
-   1.17.3
+   2.1.4
