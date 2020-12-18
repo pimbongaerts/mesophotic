@@ -8,8 +8,8 @@
     <div class="panel panel-default">
       <div class="panel-body" style="background: #CCCCCC;">
         <div class="col-sm-6">
-          <% if @expedition.featured_image? %>
-            <%= image_tag @expedition.featured_image.url(:medium) %>
+          <% if @expedition.featured_image.attached? %>
+            <%= image_tag @expedition.featured_image.variant(resize: "640x480>") %>
             <% if @expedition.featured_image_credits? %>
               <small>
                 (C) <%= @expedition.featured_image_credits %>

@@ -81,10 +81,10 @@
 
 
   <div class="col-sm-4">
-    <% if @publication.pdf.exists? %>
+    <% if @publication.pdf.attached? %>
       <div class="panel panel-default">
         <div class="panel-body" align="center">
-          <%= image_tag URI.join(request.base_url, @publication.pdf.url(:medium)).to_s %>
+          <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         </div>
       </div>
     <% end %>

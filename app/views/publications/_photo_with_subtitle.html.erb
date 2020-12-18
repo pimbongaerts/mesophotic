@@ -1,4 +1,4 @@
-<%= link_to image_tag(photo.image(:large)), 
+<%= link_to image_tag(photo.image.variant(resize: "1024x768>")), 
     photo_path(photo) %>
 <%= photo.description %>
 <small>(C) <%= photo.credit %></small>

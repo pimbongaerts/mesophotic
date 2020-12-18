@@ -17,7 +17,7 @@
   <tbody>
     <% @expeditions.each do |expedition| %>
       <tr>
-        <td><%= image_tag expedition.featured_image %></td>
+        <td><%= image_tag url_for(expedition.featured_image) %></td>
         <td><%= expedition.title %></td>
         <td><%= expedition.description %></td>
         <td><%= expedition.year %></td>

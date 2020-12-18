@@ -5,36 +5,36 @@
     <table>
       <tr>
       <td>
-      	<%= link_to image_tag(post.photos[0].image(:compo)),
+      	<%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
        <td>
-        <%= link_to image_tag(post.photos[1].image(:compo)),
+        <%= link_to image_tag(post.photos[1].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[2].image(:compo)),
+      	<%= link_to image_tag(post.photos[2].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
      </tr>
      <tr>
       <td>
-      	<%= link_to image_tag(post.photos[3].image(:compo)),
+      	<%= link_to image_tag(post.photos[3].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[4].image(:compo)),
+      	<%= link_to image_tag(post.photos[4].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[5].image(:compo)),
+      	<%= link_to image_tag(post.photos[5].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                     post_pages_path(post) %>
       </td>
      	</tr>
      </table>
   <% elsif style == "full" %>
     <% post.photos.each do |photo| %>
-      <%= link_to image_tag(photo.image(:large)),
+      <%= link_to image_tag(photo.image.variant(resize: "1024x768>")),
                             photo_path(photo) %>
       <h4>
         <%= photo.description %><br>

@@ -28,7 +28,7 @@
 	  </div>
   </div>
 
-	<%= image_tag @photo.image(:large) %><br>
+	<%= image_tag @photo.image.variant(resize: "1024x768>") %><br>
 	(C) <%= @photo.credit %>
   <% if @photo.creative_commons %>
     - Creative Commons License 

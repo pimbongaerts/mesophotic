@@ -32,11 +32,11 @@ class Expedition < ApplicationRecord
   has_many :posts, as: :postable
   has_many :photos
   has_one_attached :featured_image
-  has_attached_file :featured_image,
-                    styles: { large: '1024x768>',
-                              medium: '640x480>',
-                              thumb: '160x120>' },
-                    default_url: 'no_featured_image.png'
+  # has_attached_file :featured_image,
+  #                   styles: { large: '1024x768>',
+  #                             medium: '640x480>',
+  #                             thumb: '160x120>' },
+  #                   default_url: 'no_featured_image.png'
 
   # validations
   validates :title, presence: true

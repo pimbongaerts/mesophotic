@@ -43,14 +43,14 @@ class Photo < ApplicationRecord
              foreign_key: 'photographer_id',
              optional: true
   has_one_attached :image
-  has_attached_file :image, presence: true,
-                            default_url: 'no_image.png',
-                            styles: { large: '1024x768>',
-                                      medium: '640x480>',
-                                      thumb: '160x120>',
-                                      compo: '340x227^' },
-                            convert_options: {
-                                      compo: " -gravity center -crop '340x227+0+0'" }
+  # has_attached_file :image, presence: true,
+  #                           default_url: 'no_image.png',
+  #                           styles: { large: '1024x768>',
+  #                                     medium: '640x480>',
+  #                                     thumb: '160x120>',
+  #                                     compo: '340x227^' },
+  #                           convert_options: {
+  #                                     compo: " -gravity center -crop '340x227+0+0'" }
 
   paginates_per 30
 

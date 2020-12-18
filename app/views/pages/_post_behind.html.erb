@@ -23,8 +23,8 @@
       <div class="panel panel-default">
         <div class="panel-heading"><strong>An interview with:</strong></div>
         <div class="panel-body" align="center">
-          <% if @post.featured_user.profile_picture.present? %>
-            <%= link_to image_tag(@post.featured_user.profile_picture.url(:medium)),
+          <% if @post.featured_user.profile_picture.attached? %>
+            <%= link_to image_tag(@post.featured_user.profile_picture.variant(resize: "200x200>")),
                         member_pages_path(@post.featured_user) %>
           <% end %>
           <strong>

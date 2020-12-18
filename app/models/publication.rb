@@ -70,14 +70,14 @@ class Publication < ApplicationRecord
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
   belongs_to :contributor, class_name: 'User'
   has_one_attached :pdf
-  has_attached_file :pdf,
-                    styles: {
-                      medium: ['450x640>', :png],
-                      thumb: ['100x140>', :png] ,
-                    },
-                    path: ':rails_root/:url',
-                    url: ':class/:attachment/:id_partition/:style/:filename',
-                    default_url: 'no_pdf.png'
+  # has_attached_file :pdf,
+  #                   styles: {
+  #                     medium: ['450x640>', :png],
+  #                     thumb: ['100x140>', :png] ,
+  #                   },
+  #                   path: ':rails_root/:url',
+  #                   url: ':class/:attachment/:id_partition/:style/:filename',
+  #                   default_url: 'no_pdf.png'
 
   paginates_per 20
 

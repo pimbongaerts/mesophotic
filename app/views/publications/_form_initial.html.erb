@@ -60,7 +60,7 @@
       <%# Right column %>
       <div class="col-xs-3">
         <% if defined?(@publication.pdf) %>
-          <%= image_tag URI.join(request.base_url, @publication.pdf.url(:medium)).to_s %>
+          <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         <% end %>
         <%= f.label 'Full-text PDF' %><br>
         <%= f.file_field :pdf %>
