@@ -29,10 +29,6 @@ class Presentation < ApplicationRecord
   belongs_to :meeting
   has_and_belongs_to_many :users
   has_one_attached :pdf
-  # has_attached_file :pdf,
-  #                   styles: { medium: ['450x640>', :png],
-  #                             thumb: ['100x140>', :png] },
-  #                   default_url: 'no_pdf.png'
 
   # validations
   validates :title, presence: true
