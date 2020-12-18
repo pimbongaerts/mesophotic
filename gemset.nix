@@ -266,16 +266,6 @@
     };
     version = "0.2.0";
   };
-  climate_control = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0q11v0iabvr6rif0d025xh078ili5frrihlj0m04zfg7lgvagxji";
-      type = "gem";
-    };
-    version = "0.2.0";
-  };
   coffee-rails = {
     dependencies = ["coffee-script" "railties"];
     groups = ["default"];
@@ -723,27 +713,6 @@
     };
     version = "1.0.0";
   };
-  mime-types = {
-    dependencies = ["mime-types-data"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1zj12l9qk62anvk9bjvandpa6vy4xslil15wl6wlivyf51z773vh";
-      type = "gem";
-    };
-    version = "3.3.1";
-  };
-  mime-types-data = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0ipjyfwn9nlvpcl8knq3jk4g5f12cflwdbaiqxcq1s7vwfwfxcag";
-      type = "gem";
-    };
-    version = "3.2020.1104";
-  };
   mimemagic = {
     groups = ["default"];
     platforms = [];
@@ -885,17 +854,6 @@
       type = "gem";
     };
     version = "11.0.0";
-  };
-  paperclip = {
-    dependencies = ["activemodel" "activesupport" "mime-types" "mimemagic" "terrapin"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1xk64cdcisj3ny2bsy0cqawkkxbzscrp4a8h3j84iafvfx1rg9zm";
-      type = "gem";
-    };
-    version = "6.1.0";
   };
   public_suffix = {
     groups = ["default"];
@@ -1288,17 +1246,6 @@
       type = "gem";
     };
     version = "0.8.2";
-  };
-  terrapin = {
-    dependencies = ["climate_control"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0p18f05r0c5s70571gqig3z2ym74wx79s6rd45sprp207bqskzn9";
-      type = "gem";
-    };
-    version = "0.6.0";
   };
   thor = {
     groups = ["default" "development"];
