@@ -22,7 +22,7 @@
         <div class="panel-heading"><strong>Posted by:</strong></div>
         <div class="panel-body" align="center">
           <% if @post.user.profile_picture.attached? %>
-            <%= link_to image_tag(@post.user.profile_picture.variance(resize: "200x200>")),
+            <%= link_to image_tag(@post.user.profile_picture.variant(resize: "200x200>")),
                         member_pages_path(@post.user) %>
           <% end %>
           <strong>

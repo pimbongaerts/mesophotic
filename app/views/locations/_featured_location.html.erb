@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading"><strong>Featured location</strong></div>
   <div class="panel-body" align="center">
-    <%= link_to image_tag(@featured_photo.image.variant(resize: "340x227^", crop: "340x227+0+0"), 
-                    	  location_path(@featured_location) %>
+    <%= link_to image_tag(@featured_photo.image.variant(resize: "340x227^", crop: "340x227+0+0")), 
+                location_path(@featured_location) %>
     
   </div>
   <div class="panel-footer" align="center">
