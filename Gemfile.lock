@@ -171,6 +171,7 @@ GEM
     multipart-post (2.1.1)
     naught (1.1.0)
     nested_form (0.3.2)
+    newrelic_rpm (6.15.0)
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
@@ -339,6 +340,7 @@ DEPENDENCIES
   listen
   memory_profiler
   mini_magick
+  newrelic_rpm
   nokogiri
   owlcarousel-rails
   paper_trail

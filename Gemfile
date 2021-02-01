@@ -36,6 +36,9 @@ gem 'render_async'
 gem 'switch_user'
 gem 'twitter'
 
+# Monitoring
+gem 'newrelic_rpm'
+
 # ActiveStorage, wont be required after we migrate to Rails 6+
 gem 'active_storage_validations'
 gem 'mini_magick'

@@ -803,6 +803,16 @@
     };
     version = "0.3.2";
   };
+  newrelic_rpm = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "04i7m4ii7r01fdqnvij1ff0d9f82lqc891v7l8fj5lqw9758wawd";
+      type = "gem";
+    };
+    version = "6.15.0";
+  };
   nio4r = {
     groups = ["default"];
     platforms = [];
