@@ -30,7 +30,9 @@
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading" align=center">
-        <%= render_async species_image_path(id: object.id) %>
+        <% cache object.img_url do %>
+          <%= render_async species_image_path(id: object.id) %>
+        <% end %>
 			</div>
 		</div>
 
