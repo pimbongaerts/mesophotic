@@ -1,11 +1,13 @@
-<% if object.focusgroup_id == 1 && url_exists?(object.img_url)    # Fish %>
-  <% species_img = get_fishbase_image(object.img_url) %>
-  <%= link_to image_tag(species_img), object.img_url if species_img %>
-  Photograph from "fishbase.se" - 
-  <%= link_to "Fishbase Factsheet", object.img_url %>
-<% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) # Coral %>
-  <% species_img = get_cotw_image(object.img_url) %>
-  <%= link_to image_tag(species_img), object.img_url if species_img %>
-  Photograph from "coralsoftheworld.org" - 
-  <%= link_to "Corals of the World Factsheet", object.img_url %>
+<% cache object.img_url do %>
+  <% if object.focusgroup_id == 1 && url_exists?(object.img_url)    # Fish %>
+    <% species_img = get_fishbase_image(object.img_url) %>
+    <%= link_to image_tag(species_img), object.img_url if species_img %>
+    Photograph from "fishbase.se" - 
+    <%= link_to "Fishbase Factsheet", object.img_url %>
+  <% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) # Coral %>
+    <% species_img = get_cotw_image(object.img_url) %>
+    <%= link_to image_tag(species_img), object.img_url if species_img %>
+    Photograph from "coralsoftheworld.org" - 
+    <%= link_to "Corals of the World Factsheet", object.img_url %>
+  <% end %>
 <% end %>
