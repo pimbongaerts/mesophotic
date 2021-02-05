@@ -52,7 +52,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Study location</strong></div>
       <div class="panel-body">
-        <%= render_async world_map_path(key: "pages_post_behind",model: Location, ids: @publication.locations.map(&:id).join(','), height: 150, z: 1) %>
+        <%= render_async world_map_path(key: "pages_post_behind", model: Location, ids: @publication.locations.map(&:id).join(','), height: 150, z: 1) %>
       </div>
     </div>
     <div class="panel panel-default">
