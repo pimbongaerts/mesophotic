@@ -28,4 +28,8 @@ class Focusgroup < ApplicationRecord
   def chart_description
     short_description.present? && short_description.include?(";") ? description.split(" (").first : short_description
   end
+
+  def short_chart_description
+    short_description.present? && short_description.include?(";") ? description.split()[0] : short_description
+  end
 end

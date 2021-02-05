@@ -51,18 +51,16 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Locations</strong></div>
       <div class="panel-body" align="center">
-        <%= render_async world_map_path(model: Location, ids: @locations.map(&:id).join(','), height: 150) %>
+        <%= render_async world_map_path(model: Location, ids: @locations, height: 150) %>
       </div>
     </div>
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Research focus</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences =
-            count_category_in_publications(@focusgroups.limit("8")) %>
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Focus',
-                             categories: categories,
-                             occurrences: occurrences,
+                             categories: @focusgroups.map(&:short_chart_description),
+                             occurrences: @focusgroups.map(&:count),
                              height: 200,
                              unit: "Publications" } %>
       </div>
@@ -70,12 +68,10 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Fields</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences =
-            count_category_in_publications(@fields.limit("8")) %>
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Fields',
-                             categories: categories,
-                             occurrences: occurrences,
+                             categories: @fields.map(&:short_chart_description),
+                             occurrences: @fields.map(&:count),
                              height: 200,
                              unit: "Publications" } %>
       </div>
@@ -83,14 +79,12 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Research platforms</strong></div>
       <div class="panel-body" align="center">
-        <% categories, occurrences =
-            count_category_in_publications(@platforms.limit("8")) %>
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Platforms',
-                   categories: categories,
-                   occurrences: occurrences,
-                   height: 200,
-                   unit: "Publications" } %>
+                             categories: @platforms.map(&:short_chart_description),
+                             occurrences: @platforms.map(&:count),
+                             height: 200,
+                             unit: "Publications" } %>
       </div>
     </div>
   </div>

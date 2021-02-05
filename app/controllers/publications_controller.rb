@@ -13,29 +13,41 @@ class PublicationsController < ApplicationController
 
   def index
     respond_to do |format|
-        params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
-        args = params[:validation_type] == 'expired' ? [current_user] : []
+      params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
+      args = params[:validation_type] == 'expired' ? [current_user] : []
 
-        @publications = Publication.send(params[:validation_type] || :all, *args)
-                                   .search(params[:search], params[:search_params], is_editor_or_admin)
-        format.html {
-          @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20)
+      @publications = Publication.send(params[:validation_type] || :all, *args)
+                                  .search(params[:search], params[:search_params], is_editor_or_admin)
+      format.html {
+        @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20)
 
-          unless current_user.try(:editor_or_admin?) || params[:search_term].present?
-            # Provide access to top 10 values of linked models
-            @locations = Location.joins(:publications)
-                                .group('locations.id')
-                                .order('count(locations.id) DESC')
-            @platforms = Platform.joins(:publications)
-                                .group('platforms.id')
-                                .order('count(platforms.id) DESC')
-            @focusgroups = Focusgroup.joins(:publications)
-                                    .group('focusgroups.id')
-                                    .order('count(focusgroups.id) DESC')
-            @fields = Field.joins(:publications)
-                          .group('fields.id')
-                          .order('count(fields.id) DESC')
-          end
+        unless current_user.try(:editor_or_admin?) || params[:search_term].present?
+          @locations = Location
+            .select('locations.id')
+            .joins(:publications)
+            .group('locations.id')
+            .order('count(locations.id) DESC')
+            .map(&:id)
+            .join(',')
+          @platforms = Platform
+            .select('platforms.description, platforms.short_description, count(platforms.id) AS count')
+            .joins(:publications)
+            .group('platforms.id')
+            .order('count(platforms.id) DESC')
+            .limit(8)
+          @focusgroups = Focusgroup
+            .select('focusgroups.description, focusgroups.short_description, count(focusgroups.id) AS count')
+            .joins(:publications)
+            .group('focusgroups.id')
+            .order('count(focusgroups.id) DESC')
+            .limit(8)
+          @fields = Field
+            .select('fields.description, fields.short_description, count(fields.id) AS count')
+            .joins(:publications)
+            .group('fields.id')
+            .order('count(fields.id) DESC')
+            .limit(8)
+        end
       }
 
       format.csv {

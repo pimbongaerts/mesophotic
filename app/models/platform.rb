@@ -30,4 +30,8 @@ class Platform < ApplicationRecord
   def chart_description
     short_description.present? && short_description.include?(";") ? description : short_description
   end
+
+  def short_chart_description
+    short_description.present? && short_description.include?(";") ? description.split()[0] : short_description
+  end
 end

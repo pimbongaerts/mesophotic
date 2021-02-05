@@ -1,20 +1,4 @@
 module PublicationsHelper
-  # Counts the number of occurrences for each value of a particular category
-  # (e.g. location, platform) in the publication model
-  def count_category_in_publications(category_model)
-    categories = []
-    occurrences = []
-    category_model.each do |category|
-      if category.short_description.include? ";"
-        categories << category.description.split()[0]
-      else
-        categories << category.short_description
-      end
-      occurrences << category.publications.count
-    end
-    [categories, occurrences]
-  end
-
   # Obtain search result snippet for a particular publication
   def obtain_snippet(contents, search_term)
     return "…" if contents.blank?
