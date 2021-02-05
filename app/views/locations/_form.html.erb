@@ -25,7 +25,7 @@
         <% end %>
       </div>
       <div class="col-xs-5">
-        <%= render_async world_map_path(model: Location, ids: location.id, height: 230) %>
+        <%= render_async world_map_path(key: "locations_form", model: Location, ids: location.id, height: 230) %>
       </div>
     </div>
   </div>

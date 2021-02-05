@@ -4,8 +4,8 @@
 <br>
 
 <div class="col-sm-8">
-  	<%= render 'location_dropdown' %>
-	<%= render_async world_map_path(model: Location, ids: @locations.map(&:id).join(','), height: 300) %>
+	<%= render 'location_dropdown' %>
+	<%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 300) %>
 </div>
 <div class="col-sm-4">
     <%= render partial: 'featured_location' %>

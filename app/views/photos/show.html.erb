@@ -49,7 +49,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Image location/site</strong></div>
       <div class="panel-body" align="center">
-        <%= render_async world_map_path(model: Photo, ids: @photo.id, height: 150, z: 1) %>
+        <%= render_async world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1) %>
       </div>
     </div>
 

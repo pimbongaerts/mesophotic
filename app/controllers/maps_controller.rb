@@ -3,7 +3,8 @@ class MapsController < ApplicationController
     data = params[:model].singularize.classify.constantize.where(id: params[:ids].split(','))
 
     render partial: 'shared/world_map_clickable',
-           locals: { title: params[:model].pluralize.titleize,
+           locals: { key: params[:key],
+                     title: params[:model].pluralize.titleize,
                      data: get_coordinates(data, params[:z]),
                      backgroundcolor: params[:backgroundcolor],
                      height: params[:height] }

@@ -61,7 +61,7 @@
       <div class="panel panel-default">
         <div class="panel-heading"><strong>Research sites</strong></div>
         <div class="panel-body">
-          <%= render_async world_map_path(model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
+          <%= render_async world_map_path(key: "publications_show", model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
         </div>
         <div class="panel-footer">
           <table width="100%">

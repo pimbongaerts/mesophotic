@@ -61,4 +61,8 @@ class Location < ApplicationRecord
   def chart_description
     short_description.present? && short_description.include?(";") ? description : short_description
   end
+
+  def chart_data
+    
+  end
 end

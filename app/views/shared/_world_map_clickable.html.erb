@@ -1,4 +1,4 @@
-<% cache "world_map_clickable", expires_in: 1.day do %>
+<% cache "world_map_clickable_#{key}", expires_in: 1.day do %>
   <div id="graph_<%= title %>" style="height:<%= height %>px; position: relative;">
     <script type="text/javascript" charset="utf-8">
       var <%= title %>_data = <%= raw data.to_json %>
