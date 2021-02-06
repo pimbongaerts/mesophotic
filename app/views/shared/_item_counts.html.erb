@@ -1,0 +1,9 @@
+<p>
+  <strong><%= item_counts.first %></strong><br>
+  <% for item in item_counts.last %>
+    <span class="badge">
+      <%= item.count %>
+    </span>&nbsp;<%= link_to item.description, summary_path(item_counts.first.downcase, item) %>
+    <br>
+  <% end %>
+</p>

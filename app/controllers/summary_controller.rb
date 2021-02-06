@@ -1,8 +1,10 @@
 class SummaryController < ApplicationController
+  before_action :model, :object
+
   def show
     respond_to do |format|
       format.html {
-        @publications = publications(params).page(params[:page]).per(10)
+        @publications = publications.page(params[:page]).per(10)
         @objects = @model.joins(:publications).group("#{params[:model]}.id").order('description ASC')   
       }
 
@@ -13,31 +15,62 @@ class SummaryController < ApplicationController
   end
 
   def summary_keywords
-    publications = publications params.permit(:model, :id)
     render partial: 'shared/wordcloud',  
            object: WordCloud.generate(40, publications.all_content),
            locals: { title: "#{params[:model]}_publication_contents" }
   end
 
   def summary_researchers
-    publications = publications params.permit(:model, :id)
-    render partial: 'author', 
-           collection: publications.authors, 
-           as: :author
+    render partial: 'author', collection: publications.authors
   end
 
   def summary_publications
-    publications = publications params.permit(:model, :id)
-    render partial: 'shared/keyword',
-           locals: { objects: publications },
-           collection: [Focusgroup, Field, Platform]
+    render partial: 'shared/item_counts', 
+           collection: { 
+             "Focusgroups": focusgroups, 
+             "Fields": fields, 
+             "Platforms": platforms 
+           }
   end
 
   private
 
-  def publications params
+  def model
     @model = params[:model].singularize.classify.constantize
+  end
+
+  def object
     @object = @model.find(params[:id])
+  end
+
+  def publications
     @object.publications.original
+  end
+
+  def focusgroups
+    publications
+      .select('focusgroups.id, focusgroups.description, count(focusgroups.id) AS count')
+      .joins(:focusgroups)
+      .group('focusgroups.id')
+      .order('count DESC')
+      .limit(5)
+  end
+
+  def fields
+    publications
+      .select('fields.id, fields.description, count(fields.id) AS count')
+      .joins(:fields)
+      .group('fields.id')
+      .order('count DESC')
+      .limit(5)
+  end
+
+  def platforms
+    publications
+      .select('platforms.id, platforms.description, count(platforms.id) AS count')
+      .joins(:platforms)
+      .group('platforms.id')
+      .order('count DESC')
+      .limit(5)
   end
 end

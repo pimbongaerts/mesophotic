@@ -26,26 +26,26 @@ class PublicationsController < ApplicationController
             .select('locations.id')
             .joins(:publications)
             .group('locations.id')
-            .order('count(locations.id) DESC')
+            .order('count DESC')
             .map(&:id)
             .join(',')
           @platforms = Platform
             .select('platforms.description, platforms.short_description, count(platforms.id) AS count')
             .joins(:publications)
             .group('platforms.id')
-            .order('count(platforms.id) DESC')
+            .order('count DESC')
             .limit(8)
           @focusgroups = Focusgroup
             .select('focusgroups.description, focusgroups.short_description, count(focusgroups.id) AS count')
             .joins(:publications)
             .group('focusgroups.id')
-            .order('count(focusgroups.id) DESC')
+            .order('count DESC')
             .limit(8)
           @fields = Field
             .select('fields.description, fields.short_description, count(fields.id) AS count')
             .joins(:publications)
             .group('fields.id')
-            .order('count(fields.id) DESC')
+            .order('count DESC')
             .limit(8)
         end
       }

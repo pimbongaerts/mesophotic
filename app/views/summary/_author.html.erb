@@ -2,8 +2,9 @@
   <div id="hidden_authors" class="collapse">
 <% end %>
 
-<span class="badge"><%= author.count %></span>&nbsp;
-<%= link_to "#{author.first_name} #{author.last_name}", member_pages_path(author.id) %>
+<span class="badge">
+  <%= author.count %>
+</span>&nbsp;<%= link_to "#{author.first_name} #{author.last_name}", member_pages_path(author.id) %>
 <br>
 
 <% if author_iteration.last? && author_iteration.size > 10 %>
