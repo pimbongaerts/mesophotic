@@ -26,7 +26,7 @@ class PublicationsController < ApplicationController
             .select('locations.id')
             .joins(:publications)
             .group('locations.id')
-            .order('count DESC')
+            .order('count(locations.id) DESC')
             .map(&:id)
             .join(',')
           @platforms = Platform
