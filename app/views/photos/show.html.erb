@@ -46,13 +46,14 @@
 	</div>
 
   <div class="col-sm-4">
+		<% if @photo.has_place? %>
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Image location/site</strong></div>
       <div class="panel-body" align="center">
         <%= render_async world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1) %>
       </div>
     </div>
-
+		<% end %>
 
     <div class="panel panel-default">
       <div class="panel-heading">

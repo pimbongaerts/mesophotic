@@ -109,4 +109,8 @@ class Photo < ApplicationRecord
   def z
     location.try(:z) || site.try(:z)
   end
+
+  def has_place?
+    location_id.present? || site_id.present?
+  end
 end
