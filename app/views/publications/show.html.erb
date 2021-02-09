@@ -37,12 +37,14 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Abstract</strong></div>
-      <div class="panel-body">
-        <p><%= linkify(@publication.abstract) %></p>
+    <% if @publication.abstract.present? %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Abstract</strong></div>
+        <div class="panel-body">
+          <p><%= linkify(@publication.abstract) %></p>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <% if @publication.behind_the_science? %>
       <div class="panel panel-default">
