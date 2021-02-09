@@ -9,7 +9,7 @@ class SummaryController < ApplicationController
       }
 
       format.csv { 
-        send_data publications(params).reorder(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv" 
+        send_data publications.reorder(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv" 
       }
     end
   end
