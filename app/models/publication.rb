@@ -240,7 +240,7 @@ class Publication < ApplicationRecord
             publications.max_depth
             """
           )
-          .left_joins(:journal, :pdf_attachment, :fields, :focusgroups, :platforms, :locations)
+          .left_joins(:journal, :pdf_attachment)
         }
         
         def self.csv_header
