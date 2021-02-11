@@ -5,7 +5,7 @@ class PublicationsController < ApplicationController
                                          :detach_focusgroup, :detach_platform,
                                          :detach_location, :add_validation,
                                          :remove_validation, :touch_validation,
-                                         :behind_edit, :publication_authors, :publication_keywords]
+                                         :behind_edit, :publication_authors]
   before_action :touch_publication, only: [:detach_field, :detach_focusgroup,
                                            :detach_platform, :detach_location]
   before_action :contents_convert_utf8, only: [:edit]
@@ -174,7 +174,7 @@ class PublicationsController < ApplicationController
 
   def publication_keywords
     render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, @publication.contents),
+           object: WordCloud.generate(40, Publication.select(:contents).where(id: params[:id]).all_content),
            locals: { title: 'publication_contents' }
   end
 

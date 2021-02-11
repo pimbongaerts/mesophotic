@@ -1,6 +1,6 @@
 class SitesController < ApplicationController
   before_action :require_admin_or_editor!, :except => [:show, :index, :site_keywords, :site_research_details]
-  before_action :set_site, only: [:show, :edit, :update, :destroy, :site_keywords, :site_research_details]
+  before_action :set_site, only: [:show, :edit, :update, :destroy, :site_research_details]
 
   def index
     @sites = Site.all.order('site_name ASC')
@@ -50,7 +50,7 @@ class SitesController < ApplicationController
 
   def site_keywords
     render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, @site.publications.all_content),
+           object: WordCloud.generate(40, Publication.select(:contents).joins(:sites).where("sites.id == ?", params[:id]).all_content),
            locals: { title: 'location_publication_contents' }
   end
 
