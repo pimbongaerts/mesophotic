@@ -75,7 +75,7 @@ class PagesController < ApplicationController
 
   def member_keywords
     render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, User.find(params[:id]).publications.all_content),
+           object: WordCloud.generate(40, Publication.joins(:users).where("users.id == #{params[:id]}").all_content,
            locals: { title: 'publication_contents' }
   end
 
