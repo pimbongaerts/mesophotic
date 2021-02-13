@@ -3,8 +3,6 @@ Mesophotic::Application.routes.draw do
 
   root "pages#home"
 
-  get "/publications/pdfs/*path/:filename", to: "publications#pdfs", filename: /[^\/]*/
-
   resources :publications do
     member do
       get :add_validation

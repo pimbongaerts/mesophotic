@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :reject_locked!, if: :devise_controller?
@@ -95,6 +94,6 @@ class ApplicationController < ActionController::Base
       redirect_to root_path
     end
   end
-  helper_method :require_admin_or_editor!
 
+  helper_method :require_admin_or_editor!
 end

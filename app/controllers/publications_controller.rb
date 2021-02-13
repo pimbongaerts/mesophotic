@@ -59,23 +59,6 @@ class PublicationsController < ApplicationController
   def show
   end
 
-  def pdfs
-    respond_to do |format|
-      format.png { send_non_public_file params }
-      format.pdf {
-        if current_user
-          send_non_public_file params
-        else
-          redirect_to new_user_session_path
-        end
-      }
-    end
-  end
-
-  def send_non_public_file params
-    send_file "#{Rails.root}/publications/pdfs/#{params[:path]}/#{params[:filename]}", disposition: 'inline'
-  end
-
   def behind
     @post = Post.friendly.find_by_featured_publication_id(params[:id])
     redirect_to root_path unless @post.present?
