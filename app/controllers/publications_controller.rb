@@ -164,6 +164,8 @@ class PublicationsController < ApplicationController
   private
     def set_publication
       @publication = Publication.find(params[:id])
+    rescue
+      redirect_back fallback_location: publications_path
     end
 
     def touch_publication
