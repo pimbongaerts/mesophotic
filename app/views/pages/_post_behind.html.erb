@@ -74,19 +74,23 @@
           </font><br>
 
           <% @post.content_md.split(/\s*?\r\n\s*?\r\n\s*?/).zip(@post.photos).in_groups_of(2).each do |bs| %>
-            <%= markdown(bs[0][0]) %>
-            <%= markdown(bs[1][0]) %>
+            <%= markdown(bs[0][0]) if bs[0].present? %>
+            <%= markdown(bs[1][0]) if bs[1].present? %>
             <div class="panel panel-default">
               <div class="panel-body">
                 <div class="row">
+                  <% if bs[0].present? && bs[0][1].present? %>
                   <div class="col-sm-6">
                     <%= render partial: 'photo_with_subtitle',
-                              locals: {photo: bs[0][1]} %>
+                               locals: { photo: bs[0][1] } %>
                   </div>
+                  <% end %>
+                  <% if bs[1].present? && bs[1][1].present? %>
                   <div class="col-sm-6">
                     <%= render partial: 'photo_with_subtitle',
-                              locals: {photo: bs[1][1]} %>
+                               locals: { photo: bs[1][1] } %>
                   </div>
+                  <% end %>
                 </div>
               </div>
             </div>
