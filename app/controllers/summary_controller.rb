@@ -15,9 +15,12 @@ class SummaryController < ApplicationController
   end
 
   def summary_keywords
-    render partial: 'shared/wordcloud',  
-           object: WordCloud.generate(40, publications.select(:contents).all_content),
-           locals: { title: "#{params[:model]}_publication_contents" }
+    content = publications.select(:contents).all_content
+    if content.present?
+      render partial: 'shared/wordcloud',  
+            object: WordCloud.generate(40, content),
+            locals: { title: "#{params[:model]}_publication_contents" }
+    end
   end
 
   def summary_researchers
