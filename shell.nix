@@ -2,7 +2,7 @@ with (import <nixpkgs> {});
 let
   env = bundlerEnv {
     name = "mesophotic-bundler-env";
-    ruby = ruby_2_5;
+    ruby = ruby_2_7;
     gemdir = ./.;
   };
 in mkShell {

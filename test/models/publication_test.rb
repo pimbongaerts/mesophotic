@@ -40,7 +40,7 @@ require 'test_helper'
 
 class PublicationTest < ActiveSupport::TestCase
   test "search, find something" do
-    assert_equal (Publication.filter "II"), (Publication.search "II", Publication.default_search_params, true)
+    assert_equal (Publication.sift "II"), (Publication.search "II", Publication.default_search_params, true)
     assert_equal (Publication.relevance "II"), (Publication.search "II", Publication.default_search_params, false)
     assert_equal (Publication.relevance "II"), (Publication.search "II", Publication.default_search_params)
     assert_equal (Publication.relevance "II"), (Publication.search "II")
@@ -64,16 +64,16 @@ class PublicationTest < ActiveSupport::TestCase
     assert_equal Publication.all.order(:id).to_a, (Publication.search "").to_a
   end
 
-  test "filter" do
-    assert_equal [publications(:three), publications(:two)], (Publication.filter "II").to_a
+  test "sift" do
+    assert_equal [publications(:three), publications(:two)], (Publication.sift "II").to_a
   end
 
-  test "filtered everything" do
-    assert_equal [], (Publication.filter "Fred Astaire")
+  test "sifted everything" do
+    assert_equal [], (Publication.sift "Fred Astaire")
   end
 
-  test "no filter" do
-    assert_equal Publication.all, (Publication.filter "")
+  test "no sift" do
+    assert_equal Publication.all, (Publication.sift "")
   end
 
   test "relevance" do

@@ -110,7 +110,7 @@ class Publication < ApplicationRecord
   
   scope :search, -> (search_term, search_params = Publication.default_search_params, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
-    when [true, true] then filter(search_term, search_params)
+    when [true, true] then sift(search_term, search_params)
     when [true, false] then relevance(search_term, search_params)
     else base_search(search_params).order(id: :asc)
     end
@@ -140,7 +140,7 @@ class Publication < ApplicationRecord
     }
   end
   
-  scope :filter, -> (search_term, search_params = Publication.default_search_params) {
+  scope :sift, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
       fields = search_params["search_fields"] || []
       clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
