@@ -74,9 +74,14 @@ class PagesController < ApplicationController
   end
 
   def member_keywords
-    render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, Publication.select(:contents).joins(:users).where("users.id == ?", params[:id]).all_content),
-           locals: { title: 'publication_contents' }
+    publications = Publication.select(:id, :contents).joins(:users).where("users.id == ?", params[:id])
+    content = publications.all_content
+
+    if content.present?
+      render partial: 'shared/wordcloud',
+             object: WordCloud.generate(40, content),
+             locals: { key: publications.key, title: 'publication_contents' }
+    end
   end
 
   def member_research_summary

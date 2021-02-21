@@ -156,9 +156,14 @@ class PublicationsController < ApplicationController
   end
 
   def publication_keywords
-    render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, Publication.select(:contents).where(id: params[:id]).all_content),
-           locals: { title: 'publication_contents' }
+    publications = Publication.select(:id, :contents).where(id: params[:id])
+    content = publications.all_content
+
+    if content.present?
+      render partial: 'shared/wordcloud',
+             object: WordCloud.generate(40, content),
+             locals: { key: publications.key, title: 'publication_contents' }
+    end
   end
 
   private

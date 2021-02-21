@@ -49,9 +49,14 @@ class SitesController < ApplicationController
   end
 
   def site_keywords
-    render partial: 'shared/wordcloud',
-           object: WordCloud.generate(40, Publication.select(:contents).joins(:sites).where("sites.id == ?", params[:id]).all_content),
-           locals: { title: 'location_publication_contents' }
+    publications = Publication.select(:contents).joins(:sites).where("sites.id == ?", params[:id])
+    content = publications.all_content
+
+    if content.present?
+      render partial: 'shared/wordcloud',
+             object: WordCloud.generate(40, content),
+             locals: { key: publications.key, title: 'location_publication_contents' }
+    end
   end
 
   def site_research_details

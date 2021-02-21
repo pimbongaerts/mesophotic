@@ -1,45 +1,47 @@
-<div id="wordcloud_<%= title %>" class="word-cloud"></div>
-<script type="text/javascript">
-  var f = function() {
-    WordCloud(
-      $('#wordcloud_<%= title %>')[0],
-      {
-        list: <%= raw wordcloud %>,
-        color: 'black',
-        drawOutOfBound: false,
-        shape: 'square',
-        weightFactor: function(size) { return Math.pow(size, 0.67) * 50; },
-        classes: function(word, weigth, fontSize, distance, theta) {
-          var associations = <%= raw word_association.to_json %>;
-          for (var key in associations) {
-            if (associations[key][word] != undefined) {
-              return "associated";
+<% cache key do %>
+  <div id="wordcloud_<%= title %>" class="word-cloud"></div>
+  <script type="text/javascript">
+    var f = function() {
+      WordCloud(
+        $('#wordcloud_<%= title %>')[0],
+        {
+          list: <%= raw wordcloud %>,
+          color: 'black',
+          drawOutOfBound: false,
+          shape: 'square',
+          weightFactor: function(size) { return Math.pow(size, 0.67) * 50; },
+          classes: function(word, weigth, fontSize, distance, theta) {
+            var associations = <%= raw word_association.to_json %>;
+            for (var key in associations) {
+              if (associations[key][word] != undefined) {
+                return "associated";
+              }
             }
-          }
-        },
-        hover: function(item, dimension, event) {
-          if (document.body.style.cursor == "cursor-url") {
-            document.body.style.cursor = "default";
-          } else {
-            document.body.style.cursor = "pointer";
-          }
-        },
-        click: function(item, dimension, event) {
-          var associations = <%= raw word_association.to_json %>;
-          for (var key in associations) {
-            if (associations[key][item[0]] != undefined) {
-              window.location.href="/" + key + "/" + associations[key][item[0]];
-              return;
+          },
+          hover: function(item, dimension, event) {
+            if (document.body.style.cursor == "cursor-url") {
+              document.body.style.cursor = "default";
+            } else {
+              document.body.style.cursor = "pointer";
             }
+          },
+          click: function(item, dimension, event) {
+            var associations = <%= raw word_association.to_json %>;
+            for (var key in associations) {
+              if (associations[key][item[0]] != undefined) {
+                window.location.href="/" + key + "/" + associations[key][item[0]];
+                return;
+              }
+            }
+            window.location.href="/publications?search=" + item[0];
           }
-          window.location.href="/publications?search=" + item[0];
         }
-      }
-    );
-  };
+      );
+    };
 
-  $(function() {
-    f();
-    $('#wordcloud_<%= title %>').sizeChanged(f);
-  });
-</script>
+    $(function() {
+      f();
+      $('#wordcloud_<%= title %>').sizeChanged(f);
+    });
+  </script>
+<% end %>

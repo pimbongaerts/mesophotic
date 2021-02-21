@@ -54,7 +54,7 @@
       <div class="panel-body">
         <%= render partial: 'shared/wordcloud',
                    object: WordCloud.generate(20, @post.content_md),
-                   locals: { title: 'post_contents' } %>
+                   locals: { key: @post, title: 'post_contents' } %>
       </div>
     </div>
 

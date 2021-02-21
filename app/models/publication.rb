@@ -193,6 +193,8 @@ class Publication < ApplicationRecord
       ")
     .reduce({}) { |a, r| a[r.year] = r.count; a }
   }
+
+  scope :key, -> () { map(&:id).join(",") }
   
   # class methods
   scope :csv, -> (options = {}) {
