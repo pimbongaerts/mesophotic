@@ -16,5 +16,14 @@ class WordExclusion < ApplicationRecord
   # callbacks
   # other
   # class methods
+
+  scope :list, -> () {
+    select("LOWER(word) AS word")
+    .flat_map { |w| ["'#{w.word.singularize}'", "'#{w.word.pluralize}'"] }
+    .to_set
+    .to_a
+    .join(", ")
+  }
+
   # instance methods
 end

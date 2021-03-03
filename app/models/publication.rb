@@ -194,8 +194,19 @@ class Publication < ApplicationRecord
     .reduce({}) { |a, r| a[r.year] = r.count; a }
   }
 
-  scope :key, -> () { map(&:id).join(",") }
-  
+  scope :key, -> () { 
+    select("GROUP_CONCAT(id, ',')") 
+  }
+ 
+  scope :word_cloud, -> (size) {
+    everything = select("GROUP_CONCAT(contents, ' ') AS everything").first.everything
+    WordCloud.generate size, everything
+  }
+
+  def word_cloud size
+    WordCloud.generate size, contents
+  end
+
   # class methods
   scope :csv, -> (options = {}) {
     CSV.generate(options) do |csv|
@@ -345,12 +356,6 @@ class Publication < ApplicationRecord
       # "fields" => [],
     }
   end
-  
-  scope :all_content, -> () {
-    select("GROUP_CONCAT(contents, '; ') AS everything")
-    .first
-    .everything
-  }
   
   def self.max_depth
     reorder(max_depth: :desc).first.try(:max_depth) || 500

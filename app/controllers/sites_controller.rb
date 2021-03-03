@@ -50,11 +50,11 @@ class SitesController < ApplicationController
 
   def site_keywords
     publications = Publication.select(:contents).joins(:sites).where("sites.id == ?", params[:id])
-    content = publications.all_content
+    word_cloud = publications.word_cloud(40)
 
-    if content.present?
+    if word_cloud.present?
       render partial: 'shared/wordcloud',
-             object: WordCloud.generate(40, content),
+             object: word_cloud,
              locals: { key: publications.key, title: 'location_publication_contents' }
     end
   end

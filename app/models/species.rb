@@ -27,6 +27,37 @@ class Species < ApplicationRecord
   after_update :speciate
   
   # class methods
+
+  scope :names, -> () {
+    names = select("GROUP_CONCAT(LOWER(TRIM(name)), ' ') AS names").first.names
+    
+    ActiveRecord::Base.connection.execute("
+      WITH RECURSIVE split(content, last, rest) AS (
+        VALUES('', '', \"#{names}\")
+        UNION ALL
+        SELECT 
+          CASE 
+          WHEN last = ' ' 
+            THEN substr(rest, 1, 1)
+          ELSE content || substr(rest, 1, 1)
+          END,
+          substr(rest, 1, 1),
+          substr(rest, 2)
+        FROM split
+        WHERE rest IS NOT ''
+      )
+
+      SELECT DISTINCT REPLACE(content, ' ', '') AS name
+      FROM split
+      WHERE (last = ' ' OR rest = '')
+      AND LENGTH(name) > 0
+      ORDER BY name ASC
+    ")
+    .each_with_object(Set.new) { |n, memo|
+      memo << n["name"]
+    }
+  }
+
   # instance methods
   def species_code
     name.parameterize(separator: '-')

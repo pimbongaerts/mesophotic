@@ -156,12 +156,12 @@ class PublicationsController < ApplicationController
   end
 
   def publication_keywords
-    publications = Publication.select(:id, :contents).where(id: params[:id])
-    content = publications.all_content
+    publications = Publication.select(:contents).where(id: params[:id])
+    word_cloud = publications.word_cloud(40)
 
-    if content.present?
+    if word_cloud.present?
       render partial: 'shared/wordcloud',
-             object: WordCloud.generate(40, content),
+             object: word_cloud,
              locals: { key: publications.key, title: 'publication_contents' }
     end
   end

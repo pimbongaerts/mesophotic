@@ -15,12 +15,12 @@ class SummaryController < ApplicationController
   end
 
   def summary_keywords
-    content = publications.select(:id, :contents).all_content
-
-    if content.present?
+    word_cloud = publications.word_cloud(40)
+    
+    if word_cloud.present?
       render partial: 'shared/wordcloud',  
-             object: WordCloud.generate(40, content),
-             locals: { key: publications.map(&:id).join(","), title: "#{params[:model]}_publication_contents" }
+             object: word_cloud,
+             locals: { key: publications.key, title: "#{params[:model]}_publication_contents" }
     end
   end
 

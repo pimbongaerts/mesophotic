@@ -75,6 +75,10 @@ class Post < ApplicationRecord
       .order('created_at DESC')
   }
 
+  def word_cloud size
+    WordCloud.generate size, content_md
+  end
+
   # class methods
   # instance methods
   def category

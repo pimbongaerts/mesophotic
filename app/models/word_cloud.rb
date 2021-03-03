@@ -5,10 +5,14 @@ class WordCloud
     
     frequencies = content
       .force_encoding("UTF-8")
+      .downcase
       .scan(/[\w']+/)
+      .tally
       .each_with_object(Hash.new(0)) { |word, memo|
-        norm = normalize(species, word)
-        memo[word] += 1 unless invalid(exclusions, word, norm)
+        memo[normalize(species, word[0])] += word[1]
+      }
+      .delete_if { |word, v| 
+        invalid(exclusions, word) 
       }
       .sort_by { |k, v| -v }
       .take(size)
@@ -18,13 +22,14 @@ class WordCloud
   end
 
   def self.normalize species, word
-    species.include?(word) ? word.downcase : word.singularize.downcase
+    species.include?(word) ? word : word.singularize
   end
 
-  def self.invalid exclusions, word, norm
+  def self.invalid exclusions, word
     exclusions.include?(word) || 
-    exclusions.include?(norm) || 
-    norm.length <= 2 || 
-    norm.numeric?
+    word.length <= 2 || 
+    Float(word) != nil
+  rescue
+    false
   end
 end
