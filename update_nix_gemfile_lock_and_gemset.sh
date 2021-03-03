@@ -1,1 +1,1 @@
-nix-shell -p ruby_2_5 bundler bundix --run 'bundle update && bundix --ruby=ruby_2_5'
+nix-shell -p ruby_2_7 bundler sqlite bundix --run 'bundle update && bundix --ruby=ruby_2_7'

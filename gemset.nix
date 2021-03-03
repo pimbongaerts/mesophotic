@@ -758,10 +758,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0ipjhdw8ds6q9h7bs3iw28bjrwkwp215hr4l3xf6215fsl80ky5j";
+      sha256 = "19z7wkhg59y8abginfrm2wzplz7py3va8fyngiigngqvsws6cwgl";
       type = "gem";
     };
-    version = "5.14.3";
+    version = "5.14.4";
   };
   msgpack = {
     groups = ["default"];
@@ -881,10 +881,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "10kj484ppkjdg1j8jac4bxdv1082bd6g6xhrj70chlp7lkgl8ggh";
+      sha256 = "0wiprd0v4mjqv5p1vqaidr9ci2xm08lcxdz1k50mb1b6nrw6r74k";
       type = "gem";
     };
-    version = "5.2.1";
+    version = "5.2.2";
   };
   racc = {
     groups = ["default" "development"];
@@ -967,10 +967,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1s9kp4mg33ba9v14gj24kbh2vj4s3aq6jn02m4f04xa551bqw08i";
+      sha256 = "0dnj1vasfh3349sbxq6279ky377fqmf5pfnjfnl9wxrf6idygbpa";
       type = "gem";
     };
-    version = "1.6.0";
+    version = "1.6.1";
   };
   rails-html-sanitizer = {
     dependencies = ["loofah"];
@@ -989,10 +989,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "14irdjwgplm91r4jns28jrbmngi5bja7slwsj4h2xdlg0irhx3mi";
+      sha256 = "1mwj23pzbnzblvl0ka7ww2bggqikxpbin8zdqiay7sycs96q1xl4";
       type = "gem";
     };
-    version = "2.0.2";
+    version = "2.1.0";
   };
   railties = {
     dependencies = ["actionpack" "activesupport" "method_source" "rake" "thor"];
@@ -1061,10 +1061,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1b1d9k9gmywrhl5wgqch1f6gl8k6cghldhr42qfp1b1qqrd55c0q";
+      sha256 = "0sjr2yfg002apl4iw1nvgm4pr4jv2i4wwv0xxi675mm2fgpy678r";
       type = "gem";
     };
-    version = "2.1.8";
+    version = "2.1.9";
   };
   request_store = {
     dependencies = ["rack"];
