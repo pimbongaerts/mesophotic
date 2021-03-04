@@ -195,7 +195,7 @@ class Publication < ApplicationRecord
   }
 
   scope :key, -> () { 
-    select("GROUP_CONCAT(id, ',')") 
+    select("GROUP_CONCAT(publications.id, ',')") 
   }
  
   scope :word_cloud, -> (size) {
