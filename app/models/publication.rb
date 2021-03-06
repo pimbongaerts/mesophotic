@@ -152,11 +152,13 @@ class Publication < ApplicationRecord
   
   scope :relevance, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
+      st = ActiveRecord::Base.sanitize_sql_for_conditions ["?", search_term]
+
       filter = (search_params["search_fields"] || ["title", "abstract", "contents", "authors"]).map { |field|
-        "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER('#{search_term}'), '')), 0))"
+        "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
       
-      records = select("*, (#{filter}) / LENGTH('#{search_term}') AS relevance")
+      records = select("*, (#{filter}) / LENGTH(#{st}) AS relevance")
       limited = records.where("relevance > 0")
       records
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
