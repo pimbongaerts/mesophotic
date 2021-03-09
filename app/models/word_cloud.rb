@@ -1,5 +1,7 @@
 class WordCloud
   def self.generate size, content
+    return [] unless content.present?
+
     exclusions = WordExclusion.select("LOWER(word) AS word").distinct.order(word: :asc).map(&:word)
     species = Species.select("LOWER(name) AS name").distinct.order(name: :asc).flat_map { |s| s.name.split(/\s/) }
     
