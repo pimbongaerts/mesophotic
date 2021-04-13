@@ -20,7 +20,7 @@ class SummaryController < ApplicationController
     if word_cloud.present?
       render partial: 'shared/wordcloud',  
              object: word_cloud,
-             locals: { key: publications.key, title: "#{params[:model]}_publication_contents" }
+             locals: { title: "#{params[:model]}_publication_contents" }
     end
   end
 

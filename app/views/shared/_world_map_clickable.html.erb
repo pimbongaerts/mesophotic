@@ -1,54 +1,52 @@
-<%# cache "world_map_clickable_#{key}", expires_in: 1.day do %>
-  <div id="graph_<%= title %>" style="height:<%= height %>px; position: relative;">
-    <script type="text/javascript" charset="utf-8">
-      var <%= title %>_data = <%= raw data.to_json %>
-      $(function () {
-        $('#graph_<%= title %>').highcharts('Map', {
-          title: { text: '' },
-          exporting: { enabled: false },
-          chart: { backgroundColor:'rgba(255, 255, 255, 0)' },
-          xAxis: { minRange: 1 },
-          yAxis: { minRange: 1 },
-          legend: { enabled: false },
-          mapNavigation: {
-              enabled: true,
-              buttonOptions: {
-                  verticalAlign: 'top'
-              }
-          },
-          credits: { enabled: false },
-          plotOptions: {
-            series: {
-              cursor: 'pointer',
-              point: {
-                events: {
-                  click: function() {
-                      window.location = this.options.url
-                  }
+<div id="graph_<%= title %>" style="height:<%= height %>px; position: relative;">
+  <script type="text/javascript" charset="utf-8">
+    var <%= title %>_data = <%= raw data.to_json %>
+    $(function () {
+      $('#graph_<%= title %>').highcharts('Map', {
+        title: { text: '' },
+        exporting: { enabled: false },
+        chart: { backgroundColor:'rgba(255, 255, 255, 0)' },
+        xAxis: { minRange: 1 },
+        yAxis: { minRange: 1 },
+        legend: { enabled: false },
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'top'
+            }
+        },
+        credits: { enabled: false },
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            point: {
+              events: {
+                click: function() {
+                    window.location = this.options.url
                 }
               }
             }
+          }
+        },
+        series : [{
+          name: 'Countries',
+          mapData: Highcharts.maps['custom/world-continents'],
+          color: '#E0E0E0',
+          enableMouseTracking: false
+        }, {
+          type: 'mapbubble',
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}'
           },
-          series : [{
-            name: 'Countries',
-            mapData: Highcharts.maps['custom/world-continents'],
-            color: '#E0E0E0',
-            enableMouseTracking: false
-          }, {
-            type: 'mapbubble',
-            dataLabels: {
-              enabled: true,
-              format: '{point.name}'
-            },
-            name: 'Locations',
-            data: <%= title %>_data,
-            tooltip: {
-                pointFormat: '{point.name}'
-            },
-            maxSize: '12%'
-          }]
-        });
+          name: 'Locations',
+          data: <%= title %>_data,
+          tooltip: {
+              pointFormat: '{point.name}'
+          },
+          maxSize: '12%'
+        }]
       });
-    </script>
-  </div>
-<%# end %>
+    });
+  </script>
+</div>

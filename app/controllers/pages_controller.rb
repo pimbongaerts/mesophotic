@@ -80,7 +80,7 @@ class PagesController < ApplicationController
     if word_cloud.present?
       render partial: 'shared/wordcloud',
              object: word_cloud,
-             locals: { key: publications.key, title: 'publication_contents' }
+             locals: { title: 'publication_contents' }
     end
   end
 

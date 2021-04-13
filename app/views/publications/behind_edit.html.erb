@@ -67,7 +67,7 @@
     <div class="panel-body">
       <%= render partial: 'shared/wordcloud',
                   object: @publication.word_cloud(40),
-                  locals: { key: @publication, title: 'publication_contents' } %>
+                  locals: { title: 'publication_contents' } %>
     </div>
   </div>
 <% end %>
