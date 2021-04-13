@@ -1,4 +1,4 @@
-<% cache key do %>
+<%# cache key do %>
   <div id="wordcloud_<%= title %>" class="word-cloud"></div>
   <script type="text/javascript">
     var f = function() {
@@ -44,4 +44,4 @@
       $('#wordcloud_<%= title %>').sizeChanged(f);
     });
   </script>
-<% end %>
+<%# end %>
