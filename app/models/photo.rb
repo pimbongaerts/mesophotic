@@ -94,20 +94,8 @@ class Photo < ApplicationRecord
     location.try(:publications) || site.try(:publications)
   end
 
-  def place_name
-    location.try(:place_name) || site.try(:place_name)
-  end
-
-  def place_id
-    location.try(:id) || site.try(:id)
-  end
-
-  def place_path
-    location.try(:place_path) || site.try(:place_path)
-  end
-
-  def z
-    location.try(:z) || site.try(:z)
+  def place_data z
+    location.try(:place_data, z) || site.try(:place_data, z)
   end
 
   def has_place?

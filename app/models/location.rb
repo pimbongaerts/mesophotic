@@ -42,20 +42,16 @@ class Location < ApplicationRecord
 
   # class methods
   # instance methods
-  def place_name
-    description
-  end
+  include Rails.application.routes.url_helpers
 
-  def place_id
-    id
-  end
-
-  def place_path
-    :location_path
-  end
-
-  def z
-    publications.validated.length
+  def place_data z
+    { 
+      name: description, 
+      lat: latitude,
+      lon: longitude, 
+      z: z.try(:to_i) || publications.validated.length,
+      url: location_path(id)
+    }
   end
 
   def chart_description
@@ -63,6 +59,5 @@ class Location < ApplicationRecord
   end
 
   def chart_data
-    
   end
 end

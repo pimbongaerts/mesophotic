@@ -12,14 +12,6 @@ class MapsController < ApplicationController
   private
 
   def get_coordinates(places, z)
-    places.map do |p|
-      { 
-        name: p.place_name, 
-        lat: p.latitude,
-        lon: p.longitude, 
-        z: z.try(:to_i) || p.z,
-        url: send(p.place_path, p.place_id)
-      }
-    end
+    places.filter_map { |p| p.place_data(z) }
   end
 end

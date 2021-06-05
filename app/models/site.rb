@@ -33,19 +33,15 @@ class Site < ApplicationRecord
   # other
   # class methods
   # instance methods
-  def place_name
-    "#{site_name} (#{location.place_name})"
-  end
+  include Rails.application.routes.url_helpers
 
-  def place_id
-    id
-  end
-
-  def place_path
-    :site_path
-  end
-
-  def z
-    publications.count
+  def place_data z
+    { 
+      name: "#{site_name} (#{location.description})", 
+      lat: latitude,
+      lon: longitude, 
+      z: z.try(:to_i) || publications.count,
+      url: site_path(id)
+    }
   end
 end
