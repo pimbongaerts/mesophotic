@@ -1,11 +1,8 @@
 with (import <nixpkgs> { 
   overlays = [ 
     (self: super:
-      let talyz = import (builtins.fetchTarball {
-        url = https://github.com/talyz/nixpkgs/archive/360abc8e2a66392c016fd1e60db2095cc8a7907e.tar.gz;
-      }) {};
-    
-      in { v8 = talyz.v8; }
+      let x86_64 = import <nixpkgs> { system = "x86_64-darwin"; };
+      in { v8 = x86_64.v8; }
     )
   ]; 
 });
@@ -18,5 +15,12 @@ let
   };
 
 in mkShell {
-  buildInputs = [ env env.wrappedRuby v8 imagemagick ghostscript mupdf ];
+  buildInputs = [ 
+    env 
+    env.wrappedRuby 
+    imagemagick 
+    ghostscript 
+    mupdf 
+    v8 
+  ];
 }
