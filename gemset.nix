@@ -199,10 +199,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0nva64jm3v6q6zcdmv5w23f2bh71p187g8226ipb21f4a3snfg82";
+      sha256 = "0yq0iaaya4d02slqyqyhjbb8ksar105wl7fcdf53c7xwhnf3cy42";
       type = "gem";
     };
-    version = "1.8.1";
+    version = "1.9.0";
   };
   bootstrap-sass = {
     dependencies = ["autoprefixer-rails" "sassc"];
@@ -1356,10 +1356,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0wc47r23h063l8ysws8sy24gzh74mks81cak3lkzlrw4qkqb3sg4";
+      sha256 = "0jmbimpnpjdzz8hlrppgl9spm99qh3qzbx0b81k3gkgwba8nk3yd";
       type = "gem";
     };
-    version = "0.0.7.7";
+    version = "0.0.8";
   };
   unicode_utils = {
     groups = ["default"];

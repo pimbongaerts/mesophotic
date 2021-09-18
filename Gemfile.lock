@@ -59,7 +59,7 @@ GEM
       execjs (~> 2)
     bcrypt (3.1.16)
     bindex (0.8.1)
-    bootsnap (1.8.1)
+    bootsnap (1.9.0)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
@@ -300,7 +300,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8)
     unicode_utils (1.4.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -362,4 +362,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   2.2.20
+   2.2.24
