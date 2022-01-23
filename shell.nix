@@ -1,10 +1,13 @@
-with (import <nixpkgs> { 
-  overlays = [ 
+with (import <nixpkgs> {
+  overlays = [
     (self: super:
-      let x86_64 = import <nixpkgs> { system = "x86_64-darwin"; };
-      in { v8 = x86_64.v8; }
+    # let pkgs = import <nixpkgs> { system = "x86_64-darwin"; };
+    let pkgs = import <nixpkgs> {};
+      in {
+        v8 = pkgs.v8_8_x;
+      }
     )
-  ]; 
+  ];
 });
 
 let
@@ -15,12 +18,12 @@ let
   };
 
 in mkShell {
-  buildInputs = [ 
-    env 
-    env.wrappedRuby 
-    imagemagick 
-    ghostscript 
-    mupdf 
-    v8 
+  buildInputs = [
+    env
+    env.wrappedRuby
+    imagemagick
+    ghostscript
+    mupdf
+    v8
   ];
 }
