@@ -1,7 +1,6 @@
 with (import <nixpkgs> {
   overlays = [
     (self: super:
-    # let pkgs = import <nixpkgs> { system = "x86_64-darwin"; };
     let pkgs = import <nixpkgs> {};
       in {
         v8 = pkgs.v8_8_x;
