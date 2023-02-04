@@ -146,8 +146,8 @@ module ApplicationHelper
     freqs.each do |country_code, freqs|
       if ISO3166::Country[country_code]
         country = ISO3166::Country[country_code]
-        data << {name: country.name, lat: country.latitude_dec,
-                 lon: country.longitude_dec, z: freqs }
+        data << {name: country.iso_short_name, lat: country.geo["latitude"],
+                 lon: country.geo["longitude"], z: freqs }
       end
     end
     data
