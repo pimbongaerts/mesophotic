@@ -34,7 +34,6 @@ gem 'paper_trail'
 gem 'rails_admin'
 gem 'render_async'
 gem 'switch_user'
-gem 'twitter'
 
 # ActiveStorage, wont be required after we migrate to Rails 6+
 gem 'active_storage_validations'
