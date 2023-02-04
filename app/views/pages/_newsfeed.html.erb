@@ -1,6 +1,6 @@
 <% publications.each do |publication| %>
-  <table class="table table-striped">
-    <%= render partial: "publications/publication", 
+  <table class="feed">
+    <%= render partial: "publications/publication",
                locals: { publication: publication } %>
   </table>
 <% end %>
