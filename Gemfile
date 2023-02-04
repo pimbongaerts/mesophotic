@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Standard Rails gems
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.8'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'coffee-rails'
@@ -15,10 +15,10 @@ gem 'turbolinks'
 gem 'uglifier'
 
 # RailsBricks gems
-gem 'bootstrap-sass', ">= 3.4.1"
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap-slider-rails'
-gem 'devise', ">= 4.6.0"
-gem 'font-awesome-sass'
+gem 'devise', '>= 4.6.0'
+gem 'font-awesome-rails'
 gem 'friendly_id'
 gem 'kaminari'
 gem 'redcarpet'
