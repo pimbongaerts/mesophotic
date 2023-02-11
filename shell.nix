@@ -1,13 +1,4 @@
-with (import <nixpkgs> {
-  overlays = [
-    (self: super:
-    let pkgs = import <nixpkgs> {};
-      in {
-        v8 = pkgs.v8_8_x;
-      }
-    )
-  ];
-});
+with (import <nixpkgs> {});
 
 let
   env = bundlerEnv {
