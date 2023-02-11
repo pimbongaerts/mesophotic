@@ -43,7 +43,7 @@ gem 'mini_magick'
 # Backup
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
-# gem 'whenever', require: false
+gem 'whenever', require: false
 
 group :production do
   # Monitoring

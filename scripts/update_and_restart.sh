@@ -9,6 +9,6 @@ pushd "$SCRIPT_DIR"/.. \
 git pull \
 bin/bundle install \
 bin/rails assets:precompile --trace \
-# update crontasks????
+bin/bindle exec whenever --update-crontab
 touch tmp/restart.txt \
 popd

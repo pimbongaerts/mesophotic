@@ -407,6 +407,16 @@
     };
     version = "0.2.0";
   };
+  chronic = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1hrdkn4g8x7dlzxwb1rfgr8kw3bp4ywg5l4y4i9c2g5cwv62yvvn";
+      type = "gem";
+    };
+    version = "0.10.2";
+  };
   coffee-rails = {
     dependencies = ["coffee-script" "railties"];
     groups = ["default"];
@@ -1598,5 +1608,16 @@
       type = "gem";
     };
     version = "0.1.5";
+  };
+  whenever = {
+    dependencies = ["chronic"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0im2x9rgr752hb9f1nnfj486k96bfiqj0xsv2bmzaq1rqhbi9dyr";
+      type = "gem";
+    };
+    version = "1.0.0";
   };
 }

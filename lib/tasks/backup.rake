@@ -1,7 +1,7 @@
 ACCESS_KEY_ID = Rails.application.credentials.dig(:aws, :access_key_id)
 SECRET_ACCESS_KEY = Rails.application.credentials.dig(:aws, :secret_access_key)
+BUCKET = Rails.application.credentials.dig(:aws, :bucket)
 
-BUCKET_NAME = "mesophotic.org"
 DATABASE_NAME = "production.sqlite3"
 DATABASE_DIR = Rails.root.join("db")
 DATABASE_PATH = "#{DATABASE_DIR}/#{DATABASE_NAME}"
@@ -12,6 +12,12 @@ COMPRESSED_DATABASE_NAME = `TZ=Australia/Brisbane date "+%Y%m%d-#{DATABASE_NAME}
 COMPRESSED_DATABASE_PATH = "#{DATABASE_DIR}/#{COMPRESSED_DATABASE_NAME}"
 
 namespace :backup do
+  desc "Backup database and storage to AWS S3"
+  task all: :environment do
+    Rake::Task["backup:db"].execute
+    Rake::Task["backup:storage"].execute
+  end
+
   desc "Backup database to AWS S3"
   task db: :environment do
     puts `TZ=Australia/Brisbane date "+%Y%m%d: Database backup to AWS S3"`
@@ -25,6 +31,7 @@ namespace :backup do
   task storage: :environment do
     puts `TZ=Australia/Brisbane date "+%Y%m%d: Storage sync to AWS S3"`
 
+    sanitize_storage
     sync_storage_to_s3
   end
 
@@ -41,13 +48,11 @@ namespace :backup do
   def upload_compressed_database_to_s3
     puts "-- Uploading compressed database..."
 
-    system(
+    system """
+      export AWS_ACCESS_KEY_ID=#{ACCESS_KEY_ID}
+      export AWS_SECRET_ACCESS_KEY=#{SECRET_ACCESS_KEY}
+      aws s3 cp #{COMPRESSED_DATABASE_PATH} s3://#{BUCKET}/Backups/db/#{COMPRESSED_DATABASE_NAME}
       """
-      AWS_ACCESS_KEY_ID=#{ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY=#{SECRET_ACCESS_KEY}
-      aws s3 cp #{COMPRESSED_DATABASE_PATH} s3://#{BUCKET_NAME}/Backups/db/#{COMPRESSED_DATABASE_NAME}
-      """
-    )
   end
 
   def cleanup_compressed_database
@@ -56,15 +61,16 @@ namespace :backup do
     system "rm #{COMPRESSED_DATABASE_PATH}"
   end
 
+  def sanitize_storage
+  end
+
   def sync_storage_to_s3
     puts "-- Synchronizing storage..."
 
-    system(
+    system """
+      export AWS_ACCESS_KEY_ID=#{ACCESS_KEY_ID}
+      export AWS_SECRET_ACCESS_KEY=#{SECRET_ACCESS_KEY}
+      aws s3 sync #{STORAGE_DIR} s3://#{BUCKET}/Backups/storage --exclude \".DS_Store\" --exclude \"**/.DS_Store\"
       """
-      AWS_ACCESS_KEY_ID=#{ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY=#{SECRET_ACCESS_KEY}
-      aws s3 sync #{STORAGE_DIR} s3://#{BUCKET_NAME}/Backups/storage
-      """
-    )
   end
 end
