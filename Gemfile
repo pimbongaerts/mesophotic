@@ -40,6 +40,11 @@ gem 'twitter'
 gem 'active_storage_validations'
 gem 'mini_magick'
 
+# Backup
+gem 'aws-sdk-rails'
+gem 'aws-sdk-s3'
+# gem 'whenever', require: false
+
 group :production do
   # Monitoring
   gem 'newrelic_rpm'
