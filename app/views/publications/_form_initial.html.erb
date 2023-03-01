@@ -63,7 +63,7 @@
           <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         <% end %>
         <%= f.label 'Full-text PDF' %><br>
-        <%= f.file_field :pdf %>
+        <%= f.file_field :pdf, accept: 'application/pdf' %>
         <small>Note: image only updates after saving.</small>
       </div>
     </div> <%# div: row %>
