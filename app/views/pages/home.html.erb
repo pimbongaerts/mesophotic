@@ -31,11 +31,31 @@
 
 <!-- Latest publications -->
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-7">
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Latest publications</strong></div>
-      <div class="panel-body" style="columns: 375px 2;">
-        <%= render partial: 'newsfeed', locals: { publications: @publications } %>
+      <div class="panel-body">
+        <%= render partial: 'newsfeed',
+                   locals: { publications: @publications } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-5">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>Latest mentions</strong>
+      </div>
+      <div class="panel-body">
+        <% cache "twitter_feed", expires_in: 1.hour do %>
+          <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6) %>
+          <% users = User.where(twitter: tweets.map(&:user).map(&:screen_name)) %>
+          <%= render partial: 'tweet', locals: { users: users }, collection: tweets, as: :tweet %>
+        <% end %>
+      </div>
+      <div class="panel-footer">
+        To contribute posts simply use the <code>#mesophotic</code>
+        handle in Twitter
       </div>
     </div>
   </div>
