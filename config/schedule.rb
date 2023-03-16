@@ -22,10 +22,10 @@
 set :chronic_options, hours24: true
 set :output, "#{Whenever.path}/log/cron.log"
 
-every 1.day, at: "04:30" do
+every 1.day, at: "04:00" do
   rake "backup:db"
 end
 
-every 1.day, at: "04:40" do
+every 1.day, at: "04:05" do
   rake "backup:storage"
 end
