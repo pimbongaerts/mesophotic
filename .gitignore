@@ -29,10 +29,6 @@ storage/
 /config/master.key
 .secret
 
-# Yarn
-node_modules/
-yarn.lock
-
 # direnv
 .direnv/
 backup/
