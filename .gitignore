@@ -22,10 +22,15 @@ public.old
 public/.htaccess_off
 public/assets
 storage/
+/lib/tasks/import.rake
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 .secret
+
+# Yarn
+node_modules/
+yarn.lock
 
 # direnv
 .direnv/
