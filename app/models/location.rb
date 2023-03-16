@@ -45,10 +45,10 @@ class Location < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   def place_data z
-    { 
-      name: description, 
-      lat: latitude,
-      lon: longitude, 
+    {
+      name: description,
+      lat: latitude.to_f,
+      lon: longitude.to_f,
       z: z.try(:to_i) || publications.validated.length,
       url: location_path(id)
     }

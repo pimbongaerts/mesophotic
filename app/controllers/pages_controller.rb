@@ -13,9 +13,6 @@ class PagesController < ApplicationController
 
   def media_gallery
     @photos = Photo.media_gallery.order('photos.id DESC').page(params[:page])
-    @location_counts = Location.joins(:photos)
-                               .group('locations.id')
-                               .select('locations.*, count(locations.id) as item_count')
   end
 
   def members

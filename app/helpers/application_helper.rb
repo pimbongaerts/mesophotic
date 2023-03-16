@@ -132,60 +132,26 @@ module ApplicationHelper
 
   # Counts the number of occurrences for each location in the user model
   def count_geographic_occurrences_of_users(users)
-    freqs = Hash.new(0)
-    # Count occurrences
-    users.each do |user|
-      if user.organisation
-        if user.organisation.country
-          freqs[user.organisation.country] += 1
-        end
-      end
-    end
-    # Summarise with coordinates
-    data = []
-    freqs.each do |country_code, freqs|
-      if ISO3166::Country[country_code]
-        country = ISO3166::Country[country_code]
-        data << {name: country.iso_short_name, lat: country.geo["latitude"],
-                 lon: country.geo["longitude"], z: freqs }
-      end
-    end
-    data
+    users
+      .filter_map { |u| ISO3166::Country[u.try(:organisation).try(:country)] }
+      .reduce(Hash.new(0)) { |result, c| result[c] += 1; result }
+      .map { |c, z| { name: c.iso_short_name, lat: c.geo["latitude"], lon: c.geo["longitude"], z: z } }
   end
 
   # Counts the number of occurrences for each location in the photo model
   # and outputs corresponding coordinates
   def count_geographic_occurrences_of_photos(locations)
-    data = []
-    locations.each do |location|
-      data << {
-        name: location.description,
-        lat: location.latitude,
-        lon: location.longitude,
-        z: location.photos.count,
-        ownURL: location_path(location)
-      }
-    end
-    data
+    locations.map { |l|
+      { name: l.description, lat: l.latitude.to_f, lon: l.longitude.to_f, z: l.photos.count, ownURL: location_path(l) }
+    }
   end
 
   # Counts the number of occurrences for each location
   def count_geographic_occurrences_of_publications(publications)
-    freqs = Hash.new(0)
-
-    # Count occurrences
-    publications.each do |publication|
-      publication.locations.each do |location|
-        freqs[location] += 1
-      end
-    end
-    # Summarise with coordinates
-    data = []
-    freqs.each do |location, freqs|
-      data << {name: location.description, lat: location.latitude,
-               lon: location.longitude, z: freqs }
-    end
-    data
+    publications
+      .flat_map(&:locations)
+      .reduce(Hash.new(0)) { |result, l| result[l] += 1; result }
+      .map { |l, z| { name: l.description, lat: l.latitude.to_f, lon: l.longitude.to_f, z: z } }
   end
 
   # Counts the number of occurrences for each location for a particular user
