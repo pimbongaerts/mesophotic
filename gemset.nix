@@ -188,10 +188,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0q3q19insq5ablmr6ypq033qg1gsar5mdphhp7xg80rd615cnq97";
+      sha256 = "19klif1mj36h4706gc3l1frl8xgdpzfxjxg88l2scskyaz307r6p";
       type = "gem";
     };
-    version = "1.728.0";
+    version = "1.729.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
