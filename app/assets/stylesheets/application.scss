@@ -147,3 +147,15 @@ header { margin-bottom: 90px; }
   margin: 2em 0;
   padding: 1em 2em;
 }
+
+.status:last-child > div:last-child {
+  display: none;
+}
+
+.status > div > p:last-child {
+  margin: 0;
+}
+
+.status .invisible {
+  visibility: inherit;
+}

@@ -44,18 +44,35 @@
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong>Latest mentions</strong>
+        <strong><code>#Mesophotic</code> on Twitter</strong>
+        <%= image_tag "twitter_icon.png", size: "18x18", style: "float: right" %>
       </div>
       <div class="panel-body">
         <% cache "twitter_feed", expires_in: 1.hour do %>
-          <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(6) %>
+          <% tweets = TwitterFeed.search("#mesophotic -filter:retweets").take(5) %>
           <% users = User.where(twitter: tweets.map(&:user).map(&:screen_name)) %>
           <%= render partial: 'tweet', locals: { users: users }, collection: tweets, as: :tweet %>
         <% end %>
       </div>
       <div class="panel-footer">
-        To contribute posts simply use the <code>#mesophotic</code>
-        hashtag in Twitter
+        Use the <code>#mesophotic</code> hashtag to contribute
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong><code>#Mesophotic</code> on Mastodon</strong>
+        <%= image_tag "mastodon_logo.png", size: "18x18", style: "float: right" %>
+      </div>
+      <div class="panel-body">
+        <% cache "mastodon_feed", expires_in: 1.hour do %>
+          <% statuses = (StatusFeed.new "https://mastodon.social/tags/mesophotic.rss").take(5) %>
+          <% users = User.where(twitter: statuses.map(&:username)) %>
+          <%= render partial: 'status', locals: { users: users }, collection: statuses, as: :status %>
+        <% end %>
+      </div>
+      <div class="panel-footer">
+        Use the <code>#mesophotic</code> hashtag to contribute
       </div>
     </div>
   </div>

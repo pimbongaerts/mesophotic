@@ -4,7 +4,7 @@ class PagesController < ApplicationController
   def home
     @locations = Location.published
     @posts = Post.latest(2)
-    @publications = Publication.latest(10)
+    @publications = Publication.latest(12)
     @latest_update = Publication.maximum(:updated_at)
   end
 

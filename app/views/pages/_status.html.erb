@@ -1,0 +1,29 @@
+<div class="row status">
+  <% mastodon_user = users.find_by(twitter: "@#{status.username}") %>
+
+  <div class="col-sm-12">
+    <%# Twitter name and handle %>
+      <% if mastodon_user %>
+        <strong>
+          <%=
+            link_to "@#{user.firsfull_name_normal}", member_pages_path(mastodon_user)
+          %>&nbsp;<%=
+            link_to "@#{status.username}", status.profile_url.to_s
+          %>
+        </strong>
+      <% else %>
+        <%= link_to "@#{status.username}", status.profile_url.to_s %>
+      <% end %>
+    <%= link_to status.content_url.to_s do %>
+      <span class="glyphicon glyphicon-link" aria-hidden="true" style="float: right"></span>
+    <% end %>
+    <br>
+
+    <%# Tweet content %>
+    <%= status.content.html_safe %>
+  </div>
+
+  <div class="col-sm-12">
+    <hr>
+  </div>
+</div>

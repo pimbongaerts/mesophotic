@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row status">
   <div class="col-sm-2">
     <%# Avatar %>
     <% profile_pic_url = tweet.user.profile_image_uri.to_s %>
@@ -20,8 +20,10 @@
         <%= tweet.user.name %>
       <% end %>
     </strong>
-    &nbsp;<%= link_to "@#{tweet.user.screen_name}", tweet.uri.to_s %>
-    <%= link_to (image_tag "twitter_icon.png", size: "18x18", style: "float: right"), tweet.uri.to_s %>
+    &nbsp;<%= link_to "@#{tweet.user.screen_name}", tweet.user.uri.to_s %>
+    <%= link_to tweet.uri.to_s do %>
+      <span class="glyphicon glyphicon-link" aria-hidden="true" style="float: right"></span>
+    <% end %>
     <br>
 
     <%# Tweet content %>
@@ -29,13 +31,6 @@
           .gsub(/(?:f|ht)tps?:\/[^\s]+/, '') # remove the link string
           .gsub(/(#mesophotic)/i, "<strong>\\1</strong>") # bold the hashtag
           .html_safe %>
-
-    <%# Tweet links %>
-    <% tweet.urls.each do |url|  %>
-      <%= link_to url.expanded_url.to_s do %>
-          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-      <% end %>
-    <% end %>
 
     <%# Tweet media %>
     <% if tweet.media.count > 0 %>
@@ -47,9 +42,7 @@
     <% end %>
 
   </div>
-</div>
 
-<div class="row">
   <div class="col-sm-12">
     <hr>
   </div>
