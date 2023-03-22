@@ -9,6 +9,7 @@ let
 
 in mkShell {
   buildInputs = [
+    awscli
     env
     env.wrappedRuby
     imagemagick
