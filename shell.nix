@@ -1,8 +1,10 @@
-with (import <nixpkgs> {});
+{ pkgs ? import <nixpkgs> { } }:
+
+with pkgs;
 
 let
   env = bundlerEnv {
-    name = "mesophotic-bundler-env";
+    name = "mesophotic-development-environment";
     ruby = ruby_2_7;
     gemdir = ./.;
   };
