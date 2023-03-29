@@ -188,10 +188,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1kj1pfj1qfmmy7j70x19x21abvhgm5q22z6ynr0v7w85w2i71nji";
+      sha256 = "1ddrb7rbjgzy1f0sng4hhs0qg15pp6babpvil4lj0mykl7kx5aq0";
       type = "gem";
     };
-    version = "1.732.0";
+    version = "1.736.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -210,10 +210,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "19myd6fkrxmhrp55g2dlnqw0mnz96qv3zpl3zc0cv44zcbmaffsm";
+      sha256 = "0732vv8zi67z25fss1sdvqx0vv1ap3w6hz1avxzwznkjp002vj39";
       type = "gem";
     };
-    version = "3.170.1";
+    version = "3.171.0";
   };
   aws-sdk-dynamodb = {
     dependencies = ["aws-sdk-core" "aws-sigv4"];
@@ -254,10 +254,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1rpnlzsl52znhcki13jkwdshgwf51pn26267481f4fa842gr7xgp";
+      sha256 = "1100ir42jf60rf7kffgq16070g0sqg52pcwwnvy2113c8qk5zlkz";
       type = "gem";
     };
-    version = "1.119.1";
+    version = "1.119.2";
   };
   aws-sdk-ses = {
     dependencies = ["aws-sdk-core" "aws-sigv4"];
@@ -1406,10 +1406,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "064g96zvvx6rb60jl06dmcc73n16m2d89n7w3hdkh79lgsjszf2l";
+      sha256 = "1i47n6nkyigkyag00yqf9f3nj11bm1lb0ds5nkvkdvm7lxbna5jq";
       type = "gem";
     };
-    version = "1.6.1";
+    version = "1.6.2";
   };
   stackprof = {
     groups = ["development"];
