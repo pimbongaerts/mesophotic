@@ -188,10 +188,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1ddrb7rbjgzy1f0sng4hhs0qg15pp6babpvil4lj0mykl7kx5aq0";
+      sha256 = "0hsvjjmyi3ax5cc6sspslib29jqvsk3794b8lv0cfy7kjbgm8pi9";
       type = "gem";
     };
-    version = "1.736.0";
+    version = "1.738.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -918,10 +918,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1jr9grsdnlb8wgd9by7mhsc9c1wixijh9an4m4yq1ph0jg26x9rk";
+      sha256 = "172ky0r1jfcm3xyg067pia7k1lhc15vw9svv93max120gcdbrvji";
       type = "gem";
     };
-    version = "1.6.1";
+    version = "1.7.0";
   };
   multipart-post = {
     groups = ["default"];
@@ -1002,10 +1002,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "09rjjz3vqcx4gz0ldd7cjchgavij0nq4sqnz8ml4agng68l1mf1l";
+      sha256 = "1l6gv9hvwhwix48x6v3n3xk0n9yg39iir9rxwh41jan4596gk09c";
       type = "gem";
     };
-    version = "9.0.0";
+    version = "9.1.0";
   };
   nio4r = {
     groups = ["default"];
@@ -1075,10 +1075,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1j1hx19hh0hhnfcyn075i8rzxxv4vjrny0q1ywzfdbflbwzg7b21";
+      sha256 = "06084353fmgz0rslh4y0z30zrjky9wjzvzag4rf5a02jfpqp0fav";
       type = "gem";
     };
-    version = "6.1.1";
+    version = "6.2.0";
   };
   racc = {
     groups = ["default" "development"];
