@@ -98,7 +98,7 @@ module PublicationsHelper
       "           name=\"#{identifier}\"" \
       "           id=\"#{identifier}\"" \
       "           #{params[:search_params][param_name].try(:include?, option) ? "checked=\"checked\"" : ""}>" \
-      "    #{option.to_s.titleize}" \
+      "    #{option.length > 3 ? option.titleize : option.upcase}" \
       "  </label>" \
       "</li>"
     end.join + "</ul>").html_safe

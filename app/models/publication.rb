@@ -39,21 +39,21 @@
 
 class Publication < ApplicationRecord
   #self.inheritance_column = :_type_disabled # TODO: TEMPORARY FIX
-  
+
   # constants
   PUBLICATION_TYPES = ['scientific', 'technical', 'popular'].freeze
   PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
-  PUBLICATION_SEARCH_FIELDS = ["title", "abstract", "contents", "authors"].freeze
+  PUBLICATION_SEARCH_FIELDS = ['title', 'abstract', 'contents', 'authors', 'doi'].freeze
   PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
   PUBLICATION_LOCATIONS = Location.select(:description).order(:description).map(&:description).uniq.freeze
   PUBLICATION_FOCUSGROUPS = Focusgroup.select(:description).order(:description).map(&:description).uniq.freeze
   PUBLICATION_PLATFORMS = Platform.select(:description).order(:description).map(&:description).uniq.freeze
   PUBLICATION_FIELDS = Field.select(:description).order(:description).map(&:description).uniq.freeze
   WORDCLOUD_FREQLIMIT = 50.freeze
-  
+
   # attributes
   attr_accessor :new_journal_name
-  
+
   # associations
   belongs_to :journal, optional: true
   has_and_belongs_to_many :users
@@ -70,18 +70,18 @@ class Publication < ApplicationRecord
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
   belongs_to :contributor, class_name: 'User'
   has_one_attached :pdf
-  
+
   paginates_per 20
-  
+
   # validations
   validates :title, presence: true
   validates :authors, presence: true
   validates :publication_year, presence: true
   validates :pdf, content_type: 'application/pdf'
-  
+
   # callbacks
   before_save :create_journal_from_name
-  
+
   # other
   scope :validated, -> {
     select("publications.*, COUNT(validations.id) AS validations_count")
@@ -91,7 +91,7 @@ class Publication < ApplicationRecord
     .group("publications.id")
     .having("validations_count >= 2")
   }
-    
+
   scope :unvalidated, -> {
     select("publications.*, COUNT(validations.id) AS validations_count")
     .joins("LEFT JOIN validations
@@ -100,14 +100,14 @@ class Publication < ApplicationRecord
     .group("publications.id")
     .having("validations_count < 2")
   }
-      
+
   scope :expired, -> (user) {
     select("publications.*, COUNT(validations.id) AS validations_count")
     .joins(:validations)
     .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
     .group("publications.id") if user.present?
   }
-  
+
   scope :search, -> (search_term, search_params = Publication.default_search_params, is_editor_or_admin = false) {
     case [search_term.present?, is_editor_or_admin]
     when [true, true] then sift(search_term, search_params)
@@ -115,7 +115,7 @@ class Publication < ApplicationRecord
     else base_search(search_params).order(id: :asc)
     end
   }
-  
+
   scope :base_search, -> (search_params = Publication.default_search_params) {
     min_depth, max_depth = *(search_params["depth_range"] || "0,500").split(",").map(&:to_i)
     min_year, max_year = *(search_params["year_range"] || "#{Publication.min_year},#{Publication.max_year}").split(",").map(&:to_i)
@@ -139,7 +139,7 @@ class Publication < ApplicationRecord
       end
     }
   end
-  
+
   scope :sift, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
       fields = search_params["search_fields"] || []
@@ -149,7 +149,7 @@ class Publication < ApplicationRecord
       .base_search(search_params)
     end
   }
-  
+
   scope :relevance, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
       st = ActiveRecord::Base.sanitize_sql_for_conditions ["?", search_term]
@@ -157,7 +157,7 @@ class Publication < ApplicationRecord
       filter = (search_params["search_fields"] || ["title", "abstract", "contents", "authors"]).map { |field|
         "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
-      
+
       records = select("*, (#{filter}) / LENGTH(#{st}) AS relevance")
       limited = records.where("relevance > 0")
       records
@@ -166,11 +166,11 @@ class Publication < ApplicationRecord
       .order("relevance DESC, filename ASC")
     end
   }
-  
+
   scope :original, -> () {
     where(original_data: true)
   }
-  
+
   scope :statistics, -> () {
     validated
     .original
@@ -179,12 +179,12 @@ class Publication < ApplicationRecord
     .where(publication_type: 'scientific')
     .order('publication_year DESC, created_at DESC')
   }
-  
+
   scope :latest, -> (count) {
     order('publication_year DESC, created_at DESC')
     .limit(count)
   }
-  
+
   scope :annual_counts, -> () {
     # all.reduce({}) { |accum, p| accum[p.publication_year] = (accum[p.publication_year] || 0) + 1; accum }
     find_by_sql("
@@ -196,10 +196,10 @@ class Publication < ApplicationRecord
     .reduce({}) { |a, r| a[r.year] = r.count; a }
   }
 
-  scope :key, -> () { 
-    select("GROUP_CONCAT(publications.id, ',')") 
+  scope :key, -> () {
+    select("GROUP_CONCAT(publications.id, ',')")
   }
- 
+
   scope :word_cloud, -> (size) {
     everything = select("GROUP_CONCAT(contents, ' ') AS everything").first.everything
     WordCloud.generate size, everything
@@ -213,7 +213,7 @@ class Publication < ApplicationRecord
   scope :csv, -> (options = {}) {
     CSV.generate(options) do |csv|
       csv << csv_header
-      
+
       validated = Publication.validated.map(&:id)
       fields = Field
         .select("publications.id, GROUP_CONCAT(description, '; ') AS description")
@@ -235,18 +235,18 @@ class Publication < ApplicationRecord
         .joins(:publications)
         .group("publications.id")
         .reduce({}) { |result, a| result.update(a.id => a.description) }
-      
+
       for publication in csv_rows
         csv << csv_row(publication, validated, fields, focusgroups, platforms, locations)
       end
     end
   }
-  
+
   scope :csv_rows, -> {
     select(
       """
       publications.id,
-      
+
       publications.publication_type,
       publications.publication_format,
       publications.publication_year,
@@ -273,7 +273,7 @@ class Publication < ApplicationRecord
     )
     .left_joins(:journal, :pdf_attachment)
   }
-  
+
   def self.csv_header
     [
       "id",
@@ -307,10 +307,10 @@ class Publication < ApplicationRecord
       "locations"
     ]
   end
-  
+
   def self.csv_row publication, validated, fields, focusgroups, platforms, locations
     isValidated = validated.include?(publication.id)
-    
+
     [
       publication.id,
       isValidated,
@@ -343,7 +343,7 @@ class Publication < ApplicationRecord
       locations[publication.id],
     ]
   end
-  
+
   def self.default_search_params
     {
       "search_fields" => PUBLICATION_SEARCH_FIELDS,
@@ -358,64 +358,64 @@ class Publication < ApplicationRecord
       # "fields" => [],
     }
   end
-  
+
   def self.max_depth
     reorder(max_depth: :desc).first.try(:max_depth) || 500
   end
-  
+
   def self.min_depth
     reorder(min_depth: :asc).first.try(:min_depth) || 0
   end
-  
+
   def self.max_year
     reorder(publication_year: :desc).first.publication_year
   end
-  
+
   def self.min_year
     reorder(publication_year: :asc).first.publication_year
   end
-  
+
   def self.authors
     joins(:users)
     .select("users.id as id, users.first_name as first_name, users.last_name as last_name, count(users.id) as count")
     .group("users.id")
     .order("count DESC")
   end
-  
+
   # instance methods
   def create_journal_from_name
     create_journal(name: new_journal_name) unless new_journal_name.blank?
   end
-  
+
   def generate_filename_from_doi
     DOI.sub('/', '___')
   end
-  
+
   def title_truncated
     title.truncate(70)
   end
-  
+
   def open_access?
     journal && journal.open_access?
   end
-  
+
   def scientific_article?
     (publication_type == "scientific") &&
     (['article', 'review'].include? publication_format)
   end
-  
+
   def chapter?
     publication_format == "chapter"
   end
-  
+
   def doi_url
     "https://doi.org/#{self.DOI}"
   end
-  
+
   def scholar_url
     "http://scholar.google.com/scholar?q=#{self.DOI}"
   end
-  
+
   def short_citation
     author_list = authors.split(",")
     first_author_full = author_list[0]
@@ -429,31 +429,30 @@ class Publication < ApplicationRecord
       "#{first_author} et al. #{publication_year}"
     end
   end
-  
+
   def short_citation_with_title
     "#{short_citation} #{title.truncate(20)}"
   end
-  
+
   def behind_the_science?
     featured_post && featured_post.post_type == 'behind_the_science'
   end
-  
+
   def validated?
     Publication.validated.include?(self)
   end
-  
+
   def included_in_stats? validated
-    validated && 
-    original_data && 
-    mesophotic && 
-    publication_type == "scientific" && 
+    validated &&
+    original_data &&
+    mesophotic &&
+    publication_type == "scientific" &&
     publication_format == "article"
   end
-  
+
   def species_relevance object
     desc = Publication.where(id: id).relevance(object.name).first.try(:relevance) || 0
     sdesc = Publication.where(id: id).relevance(object.abbreviation).first.try(:relevance) || 0
     desc + sdesc
   end
 end
-  
