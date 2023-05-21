@@ -32,3 +32,7 @@ storage/
 # direnv
 .direnv/
 backup/
+
+# Worksheet
+publications.tsv
+titles.txt

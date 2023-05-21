@@ -63,7 +63,7 @@ class User < ApplicationRecord
   has_many :validations
   has_many :posts
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_user_id'
-  
+
   has_one_attached :profile_picture
 
   # validations
