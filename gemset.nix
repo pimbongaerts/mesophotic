@@ -177,10 +177,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "05qrwx39gqwsivs60yrym3md4pis1imvqcl6n5mvbwn72x2i1zdn";
+      sha256 = "1jm8aggbg0ws2pmdg3yplxca1crm7ipzvp3h682y9kb6gzvj4096";
       type = "gem";
     };
-    version = "1.769.0";
+    version = "1.771.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -1020,15 +1020,15 @@
     version = "1.7.2";
   };
   rails-html-sanitizer = {
-    dependencies = ["loofah"];
+    dependencies = ["loofah" "nokogiri"];
     groups = ["default" "development"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0ygav4xyq943qqyhjmi3mzirn180j565mc9h5j4css59x1sn0cmz";
+      sha256 = "1pm4z853nyz1bhhqr7fzl44alnx4bjachcr6rh6qjj375sfz3sc6";
       type = "gem";
     };
-    version = "1.5.0";
+    version = "1.6.0";
   };
   rails_admin = {
     dependencies = ["activemodel-serializers-xml" "builder" "haml" "jquery-rails" "jquery-ui-rails" "kaminari" "nested_form" "rack-pjax" "rails" "remotipart" "sassc-rails"];
@@ -1279,10 +1279,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1jj8lny5hp8gm920k73r6xpb40j5mpiw1dcr8g5id4hxjggkw8by";
+      sha256 = "09p32vp94sa1mbr0if0adf02yzc4ns00lsmpwns2xbkncwpzrqm4";
       type = "gem";
     };
-    version = "0.10.1";
+    version = "0.10.2";
   };
   thor = {
     groups = ["default" "development"];
