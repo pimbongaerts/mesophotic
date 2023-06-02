@@ -2,7 +2,7 @@
 <% if contributor %>
 	<div class="row">
 	  <div class="col-sm-4">
-	    <% if !contributor.profile_picture.nil? %>
+	    <% if contributor.profile_picture? %>
 	    	<%= image_tag contributor.profile_picture.variant(resize: "100x100>") %>
 	    <% end %>
 	  </div>
