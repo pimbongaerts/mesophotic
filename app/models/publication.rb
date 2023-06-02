@@ -147,6 +147,7 @@ class Publication < ApplicationRecord
       terms = Array.new(fields.count, "LOWER(%#{search_term}%)")
       where(clause, *terms)
       .base_search(search_params)
+      .order("publication_year DESC")
     end
   }
 
@@ -163,7 +164,7 @@ class Publication < ApplicationRecord
       records
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
-      .order("relevance DESC, filename ASC")
+      .order("relevance DESC, publication_year DESC, filename ASC")
     end
   }
 
