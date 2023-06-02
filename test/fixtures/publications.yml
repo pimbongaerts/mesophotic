@@ -60,7 +60,7 @@ two:
 three:
   title: "Led Zeppelin III"
   authors: "Robert Plant, Jimmy Page, John Paul Jones, John Bonham"
-  publication_year: 1969
+  publication_year: 1970
   publication_type: "popular"
   min_depth: 30
   max_depth: 100

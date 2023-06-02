@@ -144,7 +144,7 @@ class Publication < ApplicationRecord
     if search_term.present?
       fields = search_params["search_fields"] || []
       clause = fields.map { |field| "LOWER(#{field}) LIKE ?"}.join(" OR ")
-      terms = Array.new(fields.count, "LOWER(%#{search_term}%)")
+      terms = Array.new(fields.count, "%#{search_term.downcase}%")
       where(clause, *terms)
       .base_search(search_params)
       .order("publication_year DESC")
