@@ -143,8 +143,8 @@ class Publication < ApplicationRecord
   scope :sift, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
       fields = search_params["search_fields"] || []
-      clause = fields.map { |field| "#{field} LIKE ?"}.join(" OR ")
-      terms = Array.new(fields.count, "%#{search_term}%")
+      clause = fields.map { |field| "LOWER(#{field}) LIKE ?"}.join(" OR ")
+      terms = Array.new(fields.count, "LOWER(%#{search_term}%)")
       where(clause, *terms)
       .base_search(search_params)
     end
@@ -154,7 +154,7 @@ class Publication < ApplicationRecord
     if search_term.present?
       st = ActiveRecord::Base.sanitize_sql_for_conditions ["?", search_term]
 
-      filter = (search_params["search_fields"] || ["title", "abstract", "contents", "authors"]).map { |field|
+      filter = (search_params["search_fields"] || PUBLICATION_SEARCH_FIELDS).map { |field|
         "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
 
@@ -166,6 +166,20 @@ class Publication < ApplicationRecord
       .order("relevance DESC, filename ASC")
     end
   }
+
+  def self.should_show_relevance fields
+    fields.include? "contents" or fields.include? "abstract"
+  end
+
+  def relevance_content fields
+    if fields.include? "contents"
+      contents
+    elsif fields.include? "abstract"
+      abstract
+    else
+      nil
+    end
+  end
 
   scope :original, -> () {
     where(original_data: true)

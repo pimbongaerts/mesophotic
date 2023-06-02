@@ -6,7 +6,7 @@ module PublicationsHelper
     start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
     snippet = contents.force_encoding("UTF-8")[start, 600]
                       .squish
-                      .gsub(search_term, "<strong>#{search_term}</strong>")
+                      .gsub(/(#{search_term})/i, '<strong>\1</strong>')
     simple_format "…#{snippet}…"
   end
 

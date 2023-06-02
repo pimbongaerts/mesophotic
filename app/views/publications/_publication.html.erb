@@ -36,14 +36,14 @@
 </tr>
 
 <%# Extra information for search results %>
-<% if params[:search].present? %>
+<% if params[:search].present? && Publication.should_show_relevance(params[:search_params][:search_fields]) %>
   <tr valign='top' class='relevance'>
     <td>
       <span><%= publication.relevance %> <span>occurrence(s)</span></span>
     </td>
     <td>
       <blockquote>
-        <%= obtain_snippet(publication.contents, params[:search]) %>
+        <%= obtain_snippet((publication.relevance_content params[:search_params][:search_fields]), params[:search]) %>
       </blockquote>
     </td>
   </tr>
