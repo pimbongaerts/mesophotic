@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div id="collapse1" class="<%= params[:search_params].permit!.to_h == Publication.default_search_params ? "panel-collapse collapse search" : "panel-collapse search"%>">
+    <div id="collapse1" class="<%= (Publication.should_show_advanced params[:search_params]) ? "panel-collapse search" : "panel-collapse collapse search"%>">
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-12">

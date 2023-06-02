@@ -359,6 +359,22 @@ class Publication < ApplicationRecord
     }
   end
 
+  def self.should_show_advanced params
+    [
+      "depth_range",
+      "year_range",
+      "types",
+      "formats",
+      "characteristics",
+      "locations",
+      "focusgroups",
+      "platforms",
+      "fields"
+    ].reduce(false) { |result, field|
+      result || (default_search_params[field] != params[field])
+    }
+  end
+
   def self.max_depth
     reorder(max_depth: :desc).first.try(:max_depth) || 500
   end
