@@ -11,16 +11,17 @@
   <% if sidebar %>
     <div class="col-sm-8">
 
-      <div class="panel panel-default">
-        <div class="panel-body">
-          We are currently undertaking a large effort to bring the Mesophotic.org database up-to-date and ensure that the vast majority of published scientific literature is included. If you have published any 
-          scientific papers that are not currently listed, please add them to this <a href="https://tinyurl.com/mesopubs">Google Sheet (https://tinyurl.com/mesopubs)</a>.
-        </div>
-      </div>
-
   <% else %>
     <div class="col-sm-12">
   <% end %>
+
+  <%# Temporary message at top of page %>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      We are currently undertaking a large effort to bring the Mesophotic.org database up-to-date and ensure that the vast majority of published scientific literature is included. If you have published any 
+      scientific papers that are not currently listed, please add them to this <a href="https://tinyurl.com/mesopubs">Google Sheet (https://tinyurl.com/mesopubs)</a>.
+    </div>
+  </div>
 
   <%# Search field and pagination %>
   <%= render 'search_field' %>
