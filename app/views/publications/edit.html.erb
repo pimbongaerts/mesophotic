@@ -9,14 +9,13 @@
   <%= render partial: 'form_edit', locals: {f: f} %>
   <div class="row">
   	<div class="col-sm-6">
-		<%= button_to "Cancel", 
-		              publications_path,
-		              method: "get", class: "btn" %>		</div>
+			<%= link_to "Cancel", publications_path, class: "btn btn-basic" %>
+		</div>
 		<div class="col-sm-6" align="right">
 		  <div class="actions">
 		  	<small>Updating will expire existing validations</small>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-		  	<%= f.submit "Update publication", 
+		  	<%= f.submit "Update publication",
 		  				 class: "btn btn-primary" %>
 			</div>
 		</div>
