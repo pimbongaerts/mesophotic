@@ -18,7 +18,7 @@
   <%# Temporary message at top of page %>
   <div class="panel panel-default">
     <div class="panel-body">
-      We are currently undertaking a large effort to bring the Mesophotic.org database up-to-date and ensure that the vast majority of published scientific literature is included. If you have published any 
+      We are currently undertaking a large effort to bring the Mesophotic.org database up-to-date and ensure that the vast majority of published scientific literature is included. If you have published any
       scientific papers that are not currently listed, please add them to this <a href="https://tinyurl.com/mesopubs">Google Sheet (https://tinyurl.com/mesopubs)</a>.
     </div>
   </div>
@@ -26,12 +26,12 @@
   <%# Search field and pagination %>
   <%= render 'search_field' %>
   <% if current_user.try(:editor_or_admin?) %>
-    <%= paginate @publications %> 
+    <%= paginate @publications %>
     Reverse sorted by ID
   <% else %>
     <%= paginate @publications %>
   <% end %>
-  [<%= @publications.total_count %> results] 
+  [<%= @publications.total_count %> results]
   &bullet;
   <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %>
   <br><br>
@@ -48,7 +48,9 @@
     <% end %>
   </table>
 
-  <%= paginate @publications %>[<%= @publications.total_count %> results] &bullet; <%= link_to "Download as CSV", publications_path(format: :csv, publication_ids: @publications.map(&:id).join(',')) %>
+  <%= paginate @publications %>[<%= @publications.total_count %> results]
+  &bullet;
+  <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %>
 </div>
 
 <%# Right column (only visible when not searching/editor ) %>
