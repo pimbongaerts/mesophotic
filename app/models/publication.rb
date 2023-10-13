@@ -187,7 +187,8 @@ class Publication < ApplicationRecord
   }
 
   scope :statistics, -> () {
-    validated
+    # validated
+    all
     .original
     .where(mesophotic: true)
     .where(publication_format: 'article')
