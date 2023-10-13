@@ -5,12 +5,12 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-6">
-        <%= render_async world_publications_path %>
+        <%= render_async world_publications_path(status: @status) %>
         <br><br>
-        <%= render_async world_users_path %>
+        <%= render_async world_users_path(status: @status) %>
       </div>
       <div class="col-sm-6">
-      <%= render_async world_locations_path %>
+      <%= render_async world_locations_path(status: @status) %>
       </div>
     </div>
   </div>

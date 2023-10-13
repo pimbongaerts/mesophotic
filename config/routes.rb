@@ -40,7 +40,13 @@ Mesophotic::Application.routes.draw do
   get :member_keywords, controller: :pages
   get :member_research_summary, controller: :pages
 
-  resources :stats, only: [:index], path: 'statistics'
+  resources :stats, only: [], path: 'statistics' do
+    collection do
+      get :index, to: redirect('statistics/all')
+      get :all
+      get :validated
+    end
+  end
   get :growing_depth_range, controller: :stats
   get :growing_publications_over_time, controller: :stats
   get :growing_locations_over_time, controller: :stats

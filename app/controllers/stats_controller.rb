@@ -1,14 +1,43 @@
 class StatsController < ApplicationController
-  before_action :set_publications, only: [:index,
-                                          :growing_depth_range,
-                                          :growing_publications_over_time,
-                                          :growing_locations_over_time,
-                                          :growing_authors_over_time,
-                                          :world_publications]
-  before_action :set_annual_counts, only: [:time_refuge, :time_mesophotic]
+  before_action :load_publications_for_status, only: [
+    :growing_depth_range,
+    :growing_publications_over_time,
+    :growing_locations_over_time,
+    :growing_authors_over_time,
+    :world_publications,
+    :world_locations,
+    :summarized_fields,
+    :summarized_journals,
+    :summarized_focusgroups,
+    :summarized_platforms,
+    :time_refuge,
+    :time_mesophotic
+  ]
 
-  def index
+  before_action :load_annual_counts, only: [
+    :time_refuge,
+    :time_mesophotic
+  ]
+
+  module Status
+    ALL = :all
+    VALIDATED = :validated
+  end
+
+  def all
     @latest_update = Publication.maximum(:updated_at)
+    @status = Status::ALL
+    @publications = Publication.statistics @status
+
+    render :index
+  end
+
+  def validated
+    @latest_update = Publication.maximum(:updated_at)
+    @status = Status::VALIDATED
+    @publications = Publication.statistics @status
+
+    render :index
   end
 
   def growing_depth_range
@@ -32,7 +61,7 @@ class StatsController < ApplicationController
       Field
       .joins(:publications)
       .select('*, count(publications.id) as publications_count')
-      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('fields.id')
       .order('count(fields.id) DESC')
 
@@ -44,7 +73,7 @@ class StatsController < ApplicationController
       Journal
       .joins(:publications)
       .select('*, count(publications.id) as publications_count')
-      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('journals.id')
       .order('count(journals.id) DESC')
 
@@ -56,7 +85,7 @@ class StatsController < ApplicationController
       Focusgroup
       .joins(:publications)
       .select('*, count(publications.id) as publications_count')
-      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('focusgroups.id')
       .order('count(focusgroups.id) DESC')
 
@@ -68,7 +97,7 @@ class StatsController < ApplicationController
       Platform
       .joins(:publications)
       .select('*, count(publications.id) as publications_count')
-      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('platforms.id')
       .order('count(platforms.id) DESC')
 
@@ -90,7 +119,7 @@ class StatsController < ApplicationController
       Location
       .joins(:publications)
       .select('*, count(publications.id) as publications_count')
-      .where("publications.id IN (SELECT id FROM (#{Publication.statistics.to_sql}))")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('locations.id')
       .order('count(locations.id) DESC')
 
@@ -98,24 +127,25 @@ class StatsController < ApplicationController
   end
 
   def time_refuge
-    @annual_refuge_counts = Publication.statistics.relevance('refug').annual_counts
+    @annual_refuge_counts = @publications.relevance('refug').annual_counts
 
     render partial: "time_refuge"
   end
 
   def time_mesophotic
-    @annual_mesophotic_counts = Publication.statistics.relevance('mesophotic').annual_counts
+    @annual_mesophotic_counts = @publications.relevance('mesophotic').annual_counts
 
     render partial: "time_mesophotic"
   end
 
   private
 
-  def set_publications
-    @publications = Publication.statistics
+  def load_publications_for_status
+    @status = params['status'].to_sym
+    @publications = Publication.statistics @status
   end
 
-  def set_annual_counts
-    @annual_counts = Publication.statistics.annual_counts
+  def load_annual_counts
+    @annual_counts = @publications.annual_counts
   end
 end

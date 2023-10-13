@@ -186,9 +186,13 @@ class Publication < ApplicationRecord
     where(original_data: true)
   }
 
-  scope :statistics, -> () {
-    # validated
-    all
+  scope :statistics, -> (status) {
+    case status
+      when :all
+        all
+      when :validated
+        validated
+    end
     .original
     .where(mesophotic: true)
     .where(publication_format: 'article')

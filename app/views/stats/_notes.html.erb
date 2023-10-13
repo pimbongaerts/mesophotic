@@ -1,5 +1,11 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    The following graphs summarize the metadata across the <code><%= @publications.length %></code> scientific articles in this database that are validated and present original data from mesophotic depths. See the <%= link_to "Data Tutorial", tutorial_pages_path %> on how to produce similar figures yourself in R.
+    <p>The following graphs summarize the metadata across the <code><%= @publications.length %></code> scientific articles in this database that are validated and present original data from mesophotic depths. See the <%= link_to "Data Tutorial", tutorial_pages_path %> on how to produce similar figures yourself in R.</p>
+    <% case @status %>
+      <% when StatsController::Status::ALL %>
+      <%= link_to "View stats for validated publications only", validated_stats_path %>
+      <% when StatsController::Status::VALIDATED %>
+      <%= link_to "View stats for all publications", all_stats_path %>
+    <% end %>
   </div>
 </div>
