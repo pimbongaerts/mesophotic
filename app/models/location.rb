@@ -20,6 +20,7 @@ class Location < ApplicationRecord
   has_and_belongs_to_many :expeditions, touch: true
   has_many :sites # TODO: CHECK
   has_many :photos
+  belongs_to :eez
 
   # validations
   validates :description, presence: true
