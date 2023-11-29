@@ -1,0 +1,2 @@
+class Eez < ApplicationRecord
+end
