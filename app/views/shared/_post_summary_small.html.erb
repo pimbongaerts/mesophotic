@@ -1,14 +1,9 @@
 <div class="col-sm-6">
   <center>
     <% if post.post_type == "behind_the_science" %>
-      <%= render partial: 'shared/behind_the_scenes',
-                locals: {post: post,
-                          style: 'overview'} %>
-    <% elsif post.post_type == "early_career" &&
-            post.featured_user.present? %>
-      <%= render partial: 'shared/behind_the_scenes',
-              locals: {post: post ,
-                        style: 'overview'} %>
+      <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
+    <% elsif post.post_type == "early_career" && post.featured_user.present? %>
+      <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
     <% elsif post.post_type == "announcement" %>
       <%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                             post_pages_path(post) %>
