@@ -186,7 +186,7 @@ class Publication < ApplicationRecord
     where(original_data: true)
   }
 
-  scope :statistics, -> (status) {
+  scope :statistics, -> (status, year) {
     case status
       when :all
         all
@@ -197,6 +197,7 @@ class Publication < ApplicationRecord
     .where(mesophotic: true)
     .where(publication_format: 'article')
     .where(publication_type: 'scientific')
+    .where('publication_year <= ?', year)
     .order('publication_year DESC, created_at DESC')
   }
 

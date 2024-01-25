@@ -7,10 +7,10 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-6">
-        <%= render_async growing_depth_range_path(status: @status) %>
+        <%= render_async growing_depth_range_path(:status => @status, :year => @year) %>
       </div>
       <div class="col-sm-6">
-        <%= render_async growing_publications_over_time_path(status: @status) %>
+        <%= render_async growing_publications_over_time_path(:status => @status, :year => @year) %>
       </div>
     </div>
 
@@ -18,10 +18,10 @@
 
     <div class="row">
       <div class="col-sm-6">
-        <%= render_async growing_locations_over_time_path(status: @status) %>
+        <%= render_async growing_locations_over_time_path(:status => @status, :year => @year) %>
       </div>
       <div class="col-sm-6">
-        <%= render_async growing_authors_over_time_path(status: @status) %>
+        <%= render_async growing_authors_over_time_path(:status => @status, :year => @year) %>
       </div>
     </div>
   </div>

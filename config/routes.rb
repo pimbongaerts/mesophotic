@@ -42,9 +42,9 @@ Mesophotic::Application.routes.draw do
 
   resources :stats, only: [], path: 'statistics' do
     collection do
-      get :index, to: redirect('statistics/all')
-      get :all
-      get :validated
+      get :index, to: redirect('statistics/all/2023')
+      get "all/:year", to: "stats#all", as: :all
+      get "validated/:year", to: "stats#validated", as: :validated
     end
   end
   get :growing_depth_range, controller: :stats
