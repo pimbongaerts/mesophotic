@@ -55,7 +55,7 @@ group :development, :test do
   gem 'byebug'
   gem 'rails-erd'
   gem 'spring'
-  gem 'sqlite3'
+  gem 'sqlite3', '~> 1.6.0'
 end
 
 group :development do
