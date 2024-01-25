@@ -8,8 +8,7 @@ module StatsHelper
     [categories, percentages]
   end
 
-  def format_for_time_search_chart(found_annual_counts, annual_counts)
-    last_year = Time.now.year - 1
+  def format_for_time_search_chart(found_annual_counts, annual_counts, last_year)
     year_range = (1990..last_year)
     categories = []
     found_occurrences = []
@@ -139,7 +138,7 @@ module StatsHelper
   end
 
   # Counts the number of cumulative locations in publications over time (years)
-  def count_locations_over_time(publications)
+  def count_locations_over_time(publications, last_year)
     # Get a list of locations for each year
     year_location_list = Hash.new(0)
     publications.each do |publication|
@@ -153,7 +152,6 @@ module StatsHelper
       end
     end
     # Count number of cumulative locations over time
-    last_year = Time.new.year - 1
     year_range = (1990..last_year)
     categories = []
     values = []

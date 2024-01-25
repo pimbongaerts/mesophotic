@@ -1,5 +1,5 @@
 <center><h4>Steady increase in geographic scope over time</h4></center>
-<% cats, occurs = count_locations_over_time(@publications) %>
+<% cats, occurs = count_locations_over_time(@publications, @year) %>
 <%= render partial: 'shared/area_graph',
            locals: { title: 'locations_time',
                      categories: cats,

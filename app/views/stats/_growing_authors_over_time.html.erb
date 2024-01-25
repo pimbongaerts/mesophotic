@@ -1,5 +1,5 @@
 <center><h4>Community increased ><code>5</code>-fold since 10 years ago</h4></center>
-<% cats, occurs = count_first_authors_over_time(@publications) %>
+<% cats, occurs = count_first_authors_over_time(@publications, @year) %>
 <%= render partial: 'shared/area_graph',
            locals: { title: 'authors_time',
                      categories: cats,

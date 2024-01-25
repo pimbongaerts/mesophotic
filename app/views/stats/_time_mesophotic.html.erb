@@ -4,7 +4,7 @@
 </h4></center>
 <% occurrences = {} %>
 <% categories, occurrences["referring to mesophotic"], occurrences["not referring to mesophotic"] =
-format_for_time_search_chart(@annual_mesophotic_counts, @annual_counts)  %>
+format_for_time_search_chart(@annual_mesophotic_counts, @annual_counts, @year)  %>
 <%= render partial: 'shared/column_graph_series',
             locals: { title: 'search_mesophotic',
                       unit: 'Publications',

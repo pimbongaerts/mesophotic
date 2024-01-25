@@ -27,7 +27,7 @@ class StatsController < ApplicationController
   def all
     @latest_update = Publication.maximum(:updated_at)
     @status = Status::ALL
-    @year = params[:year]
+    @year = params[:year].to_i
     @title = "Stats for all publications up to #{@year}"
     @publications = Publication.statistics @status, @year
 
@@ -146,7 +146,7 @@ class StatsController < ApplicationController
 
   def load_publications_for_status
     @status = params[:status].to_sym
-    @year = params[:year]
+    @year = params[:year].to_i
     @publications = Publication.statistics @status, @year
   end
 

@@ -81,9 +81,8 @@ module ApplicationHelper
   end
 
   # Counts the number of total number of publications over time (years)
-  def count_publications_over_time(publications)
+  def count_publications_over_time(publications, last_year)
     annual_counts = publications.annual_counts
-    last_year = Time.new.year - 1
     year_range = (1970..last_year)
     categories = []
     values = []
@@ -101,7 +100,7 @@ module ApplicationHelper
   end
 
   # Counts the number of first authors of publications over time (years)
-  def count_first_authors_over_time(publications)
+  def count_first_authors_over_time(publications, last_year)
     # Get a list of first authors for each year
     year_author_list = Hash.new(0)
     publications.each do |publication|
@@ -115,7 +114,6 @@ module ApplicationHelper
 	    end
   	end
   	# Count number of unique first authors for each year
-  	last_year = Time.new.year - 1
     year_range = (1990..last_year)
   	categories = []
     values = []

@@ -1,5 +1,5 @@
 <center><h4>Literature increased ><code>3</code>-fold over past 10 years</h4></center>
-<% cats, occurs = count_publications_over_time(@publications) %>
+<% cats, occurs = count_publications_over_time(@publications, @year) %>
 <%= render partial: 'shared/area_graph',
            locals: { title: 'Publications',
                      categories: cats,
