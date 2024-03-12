@@ -49,7 +49,7 @@
         <strong>Growth of mesophotic community</strong>
       </div>
       <div class="panel-body" align="center">
-        <% cats, occurs = count_first_authors_over_time(@publications) %>
+        <% cats, occurs = count_first_authors_over_time(@publications, Time.new.year - 1) %>
         <%= render partial: 'shared/area_graph',
                    locals: { title: 'Publications',
                              categories: cats,
