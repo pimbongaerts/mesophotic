@@ -16,8 +16,10 @@ class PublicationsController < ApplicationController
       params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
       args = params[:validation_type] == 'expired' ? [current_user] : []
 
-      @publications = Publication.send(params[:validation_type] || :all, *args)
-                                  .search(params[:search], params[:search_params], is_editor_or_admin)
+      @publications = Publication
+        .send(params[:validation_type] || :all, *args)
+        .search(params[:search], params[:search_params], is_editor_or_admin)
+
       format.html {
         @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20)
 
@@ -110,45 +112,54 @@ class PublicationsController < ApplicationController
   end
 
   def detach_field
-      @publication.fields.delete(params[:format])
-      redirect_back fallback_location: root_path,
-                    notice: 'Field was successfully removed.'
+    @publication.fields.delete(params[:format])
+    redirect_back fallback_location: root_path,
+                  notice: 'Field was successfully removed.'
   end
 
   def detach_focusgroup
-      @publication.focusgroups.delete(params[:format])
-      redirect_back fallback_location: root_path,
-                    notice: 'Focusgroup was successfully removed.'
+    @publication.focusgroups.delete(params[:format])
+    redirect_back fallback_location: root_path,
+                  notice: 'Focusgroup was successfully removed.'
   end
 
   def detach_platform
-      @publication.platforms.delete(params[:format])
-      redirect_back fallback_location: root_path,
-                    notice: 'Platform was successfully removed.'
+    @publication.platforms.delete(params[:format])
+    redirect_back fallback_location: root_path,
+                  notice: 'Platform was successfully removed.'
   end
 
   def detach_location
-      @publication.locations.delete(params[:format])
-      redirect_back fallback_location: root_path,
-                    notice: 'Location was successfully removed.'
+    @publication.locations.delete(params[:format])
+    redirect_back fallback_location: root_path,
+                  notice: 'Location was successfully removed.'
   end
 
   def add_validation
-      @publication.validations.build(user_id: params[:format]).save!
-      redirect_back fallback_location: root_path,
-                    notice: 'Publication was successfully validated.'
+    @publication.validations.build(user_id: params[:format]).save!
+    redirect_back fallback_location: root_path,
+                  notice: 'Publication was successfully validated.'
   end
 
   def remove_validation
-      @publication.validations.find_by_user_id(params[:format]).delete
-      redirect_back fallback_location: root_path,
-                    notice: 'Validation was successfully removed.'
+    @publication.validations.find_by_user_id(params[:format]).delete
+    redirect_back fallback_location: root_path,
+                  notice: 'Validation was successfully removed.'
   end
 
   def touch_validation
-      @publication.validations.find_by_user_id(params[:format]).touch
-      redirect_back fallback_location: root_path,
+    @publication.validations.find_by_user_id(params[:format]).touch
+    redirect_back fallback_location: root_path,
                     notice: 'Publication was successfully revalidated.'
+  end
+
+  def touch_validations
+    Validation
+      .where(validatable_type: "Publication", validatable_id: params[:ids])
+      .update_all updated_at: Time.now
+
+    redirect_back fallback_location: root_path,
+                  notice: 'Publications were successfully revalidated.'
   end
 
   def publication_authors

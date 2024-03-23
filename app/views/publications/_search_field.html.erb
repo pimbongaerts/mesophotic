@@ -13,9 +13,13 @@
          <div class="col-sm-2">
             <div class="form-group">
               <%= select_tag :validation_type,
-                             options_for_select(Validation::VALIDATION_TYPES,
-                                                params[:validation_type]),
-                             class: "form-control" %>
+                  options_for_select(
+                    Validation::VALIDATION_TYPES
+                      .map { |a| a.gsub("_", " ") }
+                      .zip(Validation::VALIDATION_TYPES),
+                    params[:validation_type]
+                  ),
+                  class: "form-control" %>
             </div>
           </div>
         <% end %>

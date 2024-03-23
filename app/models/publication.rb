@@ -102,10 +102,19 @@ class Publication < ApplicationRecord
   }
 
   scope :expired, -> (user) {
+    if user.present?
+      select("publications.*, COUNT(validations.id) AS validations_count")
+      .joins(:validations)
+      .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
+      .group("publications.id")
+    end
+  }
+
+  scope :all_expired, -> {
     select("publications.*, COUNT(validations.id) AS validations_count")
     .joins(:validations)
-    .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
-    .group("publications.id") if user.present?
+    .where("validations.updated_at < publications.updated_at")
+    .group("publications.id")
   }
 
   scope :search, -> (search_term, search_params = Publication.default_search_params, is_editor_or_admin = false) {

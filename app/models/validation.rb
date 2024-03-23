@@ -12,7 +12,7 @@
 
 class Validation < ApplicationRecord
   # constants
-  VALIDATION_TYPES = ["all", "validated", "unvalidated", "expired"].freeze
+  VALIDATION_TYPES = ["all", "validated", "unvalidated", "expired", "all_expired"].freeze
 
   # attributes
 

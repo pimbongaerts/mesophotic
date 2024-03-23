@@ -16,6 +16,9 @@ Mesophotic::Application.routes.draw do
       get :remove_validation
       get :touch_validation
     end
+    collection do
+      post :touch_validations
+    end
   end
 
   get :publication_authors, controller: :publications

@@ -10,7 +10,6 @@
 <div class='row'>
   <% if sidebar %>
     <div class="col-sm-8">
-
   <% else %>
     <div class="col-sm-12">
   <% end %>
@@ -25,6 +24,7 @@
 
   <%# Search field and pagination %>
   <%= render 'search_field' %>
+
   <% if current_user.try(:editor_or_admin?) %>
     <%= paginate @publications %>
     Reverse sorted by ID
@@ -34,6 +34,16 @@
   [<%= @publications.total_count %> results]
   &bullet;
   <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %>
+
+  <% if (current_user.try(:editor_or_admin?) || false) && params[:validation_type] == 'all_expired' %>
+    <br><br>
+    <div class="btn-group">
+    <%= button_to "Revalidate All",
+                  touch_validations_publications_path(ids: @publications.map(&:id)),
+                  method: "post",
+                  class: "btn btn-warning btn-sm" %>
+    </div>
+  <% end %>
   <br><br>
 
   <%# Render publications %>
