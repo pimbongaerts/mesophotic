@@ -177,10 +177,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0mydgvc5wn4adsic86907hzyfhgvzaq6nr394pnvk83ryv4zx77p";
+      sha256 = "1ziqbjl9jgigzs8v89dq5xv16w8330li50sdn3n9hckbbwzvxhxi";
       type = "gem";
     };
-    version = "1.899.0";
+    version = "1.913.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -199,10 +199,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0dlalj0pw6nfmmfqddjj8b5rv6lq1hqdq19im3s8fjq5ln5ij8lr";
+      sha256 = "08h9apxdn2aflkg751j4i56ks4750znfbj56w4zlxf4jk7jxkbyk";
       type = "gem";
     };
-    version = "3.191.4";
+    version = "3.191.6";
   };
   aws-sdk-dynamodb = {
     dependencies = ["aws-sdk-core" "aws-sigv4"];
@@ -221,10 +221,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0fbp2vw5qnyiya63hlmwiqkbh30lipyqplancmhm84ad7i98ambb";
+      sha256 = "1cb0006xf5isq5drdwkvd6xz20886x3rzcj5qyly7g8gql5lc8aw";
       type = "gem";
     };
-    version = "1.78.0";
+    version = "1.79.0";
   };
   aws-sdk-rails = {
     dependencies = ["aws-record" "aws-sdk-ses" "aws-sdk-sesv2" "aws-sdk-sqs" "aws-sessionstore-dynamodb" "concurrent-ruby" "railties"];
@@ -232,10 +232,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0s3imsf68jr39fiav56q9adw33zp8h4v3marjlw6fm6jjkg2n19j";
+      sha256 = "1ln2zy1fyc9j47kj28834hc2xywzpyx2wgzam895ack9rl6siqng";
       type = "gem";
     };
-    version = "3.11.0";
+    version = "3.12.0";
   };
   aws-sdk-s3 = {
     dependencies = ["aws-sdk-core" "aws-sdk-kms" "aws-sigv4"];
@@ -243,10 +243,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1vz7s3a48ci06lg88n279g277ljxb4i41x36fxfb5nbsvnfgq1b7";
+      sha256 = "1al80phz4x9wwfnr07q1l8h5f0qxgfrrycbg8jvznhxm3zhrakrq";
       type = "gem";
     };
-    version = "1.146.0";
+    version = "1.146.1";
   };
   aws-sdk-ses = {
     dependencies = ["aws-sdk-core" "aws-sigv4"];
@@ -486,10 +486,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "121ljaaapil79dcsl5mkh5k613hv58z4z3g2lrnzb5qvqpb3h1j8";
+      sha256 = "1y57fpcvy1kjd4nb7zk7mvzq62wqcpfynrgblj558k3hbvz4404j";
       type = "gem";
     };
-    version = "4.9.3";
+    version = "4.9.4";
   };
   erubi = {
     groups = ["default" "development"];
@@ -855,20 +855,20 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0csspzqrg7s2v2wdp6vqqs1rra6w5ilpgnps5h52ig6rp7x2i389";
+      sha256 = "0amlhz8fhnjfmsiqcjajip57ici2xhw089x7zqyhpk51drg43h2z";
       type = "gem";
     };
-    version = "0.4.0.1";
+    version = "0.5.0";
   };
   newrelic_rpm = {
     groups = ["production"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0ybxqpd3b57qh8xzz7i3cvmbgf9k40zb6iaj7hfggmwv1d8mhq18";
+      sha256 = "1bv4qsn42yxhjnn4cdr1qrb6psxza2abiq71a6gihjb3x390nq33";
       type = "gem";
     };
-    version = "9.7.1";
+    version = "9.8.0";
   };
   nio4r = {
     groups = ["default"];
@@ -1068,10 +1068,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1ilr853hawi09626axx0mps4rkkmxcs54mapz9jnqvpnlwd3wsmy";
+      sha256 = "17850wcwkgi30p7yqh60960ypn7yibacjjha0av78zaxwvd3ijs6";
       type = "gem";
     };
-    version = "13.1.0";
+    version = "13.2.1";
   };
   rb-fsevent = {
     groups = ["default"];
@@ -1227,10 +1227,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0dqpd70xcaxsa8m8zd6rq464dfczy1rm086bascv9c5b7qnn2yyp";
+      sha256 = "0v896bi49nw2zz3kd1r38qi2n5rh6a7nn2ij20h9xfzmscsm2bgx";
       type = "gem";
     };
-    version = "4.1.3";
+    version = "4.2.0";
   };
   sprockets = {
     dependencies = ["concurrent-ruby" "rack"];
