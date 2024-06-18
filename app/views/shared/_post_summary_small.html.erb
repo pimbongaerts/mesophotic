@@ -4,7 +4,7 @@
       <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
     <% elsif post.post_type == "early_career" && post.featured_user.present? %>
       <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
-    <% elsif post.post_type == "announcement" %>
+    <% elsif post.post_type == "announcement" && post.photos.present? %>
       <%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
                             post_pages_path(post) %>
     <% end %>
