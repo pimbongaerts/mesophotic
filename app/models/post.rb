@@ -62,7 +62,7 @@ class Post < ApplicationRecord
 
   # scopes
   scope :published, -> {
-    where(draft: [false, 0])
+    where("draft IN (0, 'f', false)")
       .order('created_at DESC')
   }
 
@@ -71,7 +71,7 @@ class Post < ApplicationRecord
   }
 
   scope :drafted, -> {
-    where(draft: [true, 1])
+    where("draft IN (1, 't', true)")
       .order('created_at DESC')
   }
 
