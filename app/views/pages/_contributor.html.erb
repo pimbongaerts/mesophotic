@@ -8,7 +8,10 @@
 	  </div>
 	  <div class="col-sm-8">
 	    <strong><%= link_to "#{first_name} #{last_name}", member_pages_path(contributor.id) %></strong><br>
-		<%= contributor.organisation.name if contributor.organisation %><br>
+		<% if contributor.organisation_name %>
+			<%= contributor.organisation_name %>
+			<br>
+		<% end %>
 	    <i><%= role %></i><br>
 	  </div>
 	</div>

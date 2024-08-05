@@ -137,4 +137,8 @@ class User < ApplicationRecord
     twitter_name = twitter.tr("@", "")
     "http://www.twitter.com/#{twitter_name}"
   end
+
+  def organisation_name
+    organisation.try(:name) || other_organizations.try(:split, "\n").try(:first)
+  end
 end
