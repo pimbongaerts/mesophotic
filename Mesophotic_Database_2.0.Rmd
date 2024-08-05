@@ -1,0 +1,983 @@
+---
+title: "Mesophotic_Database_release_2.0"
+author: "Veronica Radice"
+date: "10/18/2023"
+output: html_document
+---
+
+Code for the manuscript:
+
+*"Recent trends and biases in mesophotic ecosystem research"*
+
+Veronica Z. Radice, Alejandra Hernandez-Agreda, Gonzalo Pérez-Rosales, Ryan Booker, Jessica Bellworthy, Manon Broadribb, Gaby E. Carpenter, Clara Diaz, Ryan J. Eckert, Nicola L. Foster, Johanna C. Gijsbers, Erika Gress, Jack H Laverick, Valerio Micaroni, Miriam Pierotti, Héloïse Rouzé, Angela Stevenson, Alexis B. Sturm, Pim Bongaerts
+
+< insert DOI and citation >
+
+
+### Load packages
+```{r message=FALSE}
+require(dplyr)
+require(plyr)
+require(tidyr)
+require(ggplot2)
+#require(ggstance)
+require(ggpubr)
+require(tidyverse)
+require(cowplot)
+library(RcppRoll)
+library(ggridges)
+```
+
+##### Colorblind-friendly palette
+```{r}
+# http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+#cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+library(viridis)
+
+viridisPalette5 <- c("#440154FF", "#7AD151FF", "#414487FF", "#fde725FF", "#2A788EFF")
+
+# "Fishes", "Macroalgae", "Octocorals", "Scleractinian Corals", "Sponges"
+# dark purple #440154
+# light green #5ec962 #7AD151FF
+# dark blue #3b528b #414487FF
+# yellow #fde725
+# teal #21918c #2A788EFF
+# #25858EFF
+```
+
+
+## Import the database directly from the *mesophotic.org* website into R
+
+Check its dimensions (rows x columns), and list the available fields/columns:
+```{r}
+# automatically download the latest database
+publs <- read.csv("http://www.mesophotic.org/publications.csv", as.is=TRUE)
+
+setwd("~/Documents/Collaborations/Mesophotic.org")
+
+# if importing from a directory on your computer
+#publs <- read.csv("publications.csv", as.is=TRUE)
+
+publs[sapply(publs, is.character)] <- lapply(publs[sapply(publs, is.character)], as.factor)
+
+# when need to use year as factor
+publs$year <- factor(publs$publication_year)
+
+# keep this as integer (numeric)
+#publs$publication_year <- factor(publs$publication_year)
+
+dim(publs)
+```
+
+```{r}
+colnames(publs)
+```
+
+```{r}
+publs %>% 
+  group_by(publication_format) %>% 
+   dplyr::summarise(count=n())
+```
+
+```{r}
+publs %>% 
+  group_by(publication_type) %>% 
+   dplyr::summarise(count=n())
+```
+
+```{r}
+publs %>% 
+  group_by(publication_type, publication_format) %>% 
+   dplyr::summarise(count=n())
+```
+
+```{r}
+publs %>% 
+  filter(publication_type == "scientific" & publication_format == "article" | publication_format == "chapter") %>% 
+    group_by(publication_type, publication_format, validated) %>% 
+      dplyr::summarise(count=n())
+```
+
+```{r}
+publs %>% 
+  filter(publication_type == "scientific" & publication_format == "article") %>% 
+    group_by(year) %>% 
+      dplyr::summarise(count=n()) %>%
+          arrange(desc(count)) #%>% 
+            #head()
+```
+
+#### Long-term monitoring (articles and reports) - by focusgroups
+```{r}
+publs_LTM_fields <- publs %>%
+  filter(grepl("Long-term monitoring", fields))
+
+publs_LTM_fields %>%
+  #filter(fields == "Long-term monitoring") %>%
+    group_by(publication_format) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+
+# articles and reports only
+publs_LTM_fields <- publs_LTM_fields %>%
+  filter(publication_format != "review" & publication_format != "chapter")
+```
+
+```{r}
+# Split `locations` into new rows
+publs_LTM_fields_locations <- separate_rows(publs_LTM_fields, "locations", sep=";\\s+") 
+
+# Remove rows with no associated `locations`
+publs_LTM_fields_locations <- publs_LTM_fields_locations[!
+(is.na(publs_LTM_fields_locations$locations) |
+publs_LTM_fields_locations$locations ==
+""), ]
+
+publs_LTM_fields_locations$locations <- factor(publs_LTM_fields_locations$locations)
+
+publs_LTM_fields_locations %>% 
+    group_by(locations, publication_format) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+```{r}
+# Split `fields` into new rows
+publs_LTM_fields <- separate_rows(publs_LTM_fields, "fields", sep=";\\s+") 
+
+# Remove rows with no associated `fields`
+publs_LTM_fields <- publs_LTM_fields[!
+(is.na(publs_LTM_fields$fields) |
+publs_LTM_fields$fields ==
+""), ]
+
+publs_LTM_fields$fields <- factor(publs_LTM_fields$fields)
+```
+
+
+Look at what other fields are studied in publications with Long-term monitoring
+```{r}
+publs_LTM_fields %>%
+    group_by(fields) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+Look at what focusgroups are studied in publications with Long-term monitoring
+```{r}
+publs_LTM_focusgroups <- publs %>%
+  filter(grepl("Long-term monitoring", fields))
+
+publs_LTM_focusgroups <- publs_LTM_focusgroups %>%
+  filter(publication_format != "review" & publication_format != "chapter")
+
+# Split `focusgroups` into new rows
+publs_LTM_focusgroups <- separate_rows(publs_LTM_focusgroups, "focusgroups", sep=";\\s+") 
+
+# Remove rows with no associated `focusgroups`
+publs_LTM_focusgroups <- publs_LTM_focusgroups[!
+(is.na(publs_LTM_focusgroups$focusgroups) |
+publs_LTM_focusgroups$focusgroups ==
+""), ]
+
+publs_LTM_focusgroups$focusgroups <- factor(publs_LTM_focusgroups$focusgroups)
+
+publs_LTM_focusgroups %>%
+    group_by(focusgroups) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+### Technical reports
+```{r}
+reports <- subset(publs, publication_type == "technical")
+```
+
+```{r}
+# Split `locations` into new rows
+reports_locations <- separate_rows(reports, "locations", sep=";\\s+") 
+
+# Remove rows with no associated `locations`
+reports_locations <- reports_locations[!
+(is.na(reports_locations$locations) |
+reports_locations$locations ==
+""), ]
+
+reports_locations$locations <- factor(reports_locations$locations)
+```
+
+##### Locations of reports
+```{r}
+reports_locations %>% 
+    group_by(locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+
+### Select only "Scientific" "Article" (original research)
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs <- droplevels(publs)
+```
+
+
+### Select validated publications
+
+Subset the publication list to those that are validated (i.e. metadata validated by two
+different content editors) and those that are included_in_stats (i.e. as validated but only
+including publications representing (peer-reviewed) scientific articles presenting original data
+from mesophotic depths):
+```{r}
+publs <- subset(publs, validated == "true") #publs_validated
+publs <- subset(publs, included_in_stats == "true") #publs_for_stats # Original data
+```
+
+
+##### Consider MCE and TME separately
+
+MCE
+```{r}
+publs.mce <- subset(publs, mce == "true")
+publs.mce <- droplevels(publs.mce)
+dim(publs.mce)
+```
+
+TME
+```{r}
+publs.tme <- subset(publs, tme == "true")
+publs.tme <- droplevels(publs.tme)
+dim(publs.tme)
+```
+
+
+# Data analysis
+
+## Change in publication numbers over time
+
+Calculate the fold-increase in publications 
+2008-2023
+```{r}
+publs_time_counts <- publs %>% #publs_validated
+  group_by(publication_year) %>%
+    dplyr::summarise(count=n()) %>%
+      mutate(total_count = cumsum(count))
+
+total_count <- publs_time_counts[publs_time_counts$publication_year==2023, "total_count"]/publs_time_counts[publs_time_counts$publication_year==2008, "total_count"]
+
+total_count
+```
+
+MCE specific
+```{r}
+publs_time_counts <- publs.mce %>% #publs_validated
+  group_by(publication_year) %>%
+    dplyr::summarise(count=n()) %>%
+      mutate(total_count = cumsum(count))
+
+total_count <- publs_time_counts[publs_time_counts$publication_year==2023, "total_count"]/publs_time_counts[publs_time_counts$publication_year==2008, "total_count"]
+
+total_count
+```
+
+TME specific
+```{r}
+publs_time_counts <- publs.tme %>% #publs_validated
+  group_by(publication_year) %>%
+    dplyr::summarise(count=n()) %>%
+      mutate(total_count = cumsum(count))
+
+total_count <- publs_time_counts[publs_time_counts$publication_year==2023, "total_count"]/publs_time_counts[publs_time_counts$publication_year==2008, "total_count"]
+
+total_count
+```
+
+### Publications by focus groups
+
+Where fields have multiple values (through so-called “HABTM” associations), such as
+research_fields , they are separated by semicolons, for example: Ecology; Community
+structure; Disturbances. 
+
+Therefore, to query any of these fields, we need to separate these into individual rows. Then, we can plot for example the number of publications for each of those fields.
+
+```{r}
+# Split `focusgroups` into new rows
+publs_focusgroups <- separate_rows(publs, "focusgroups", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `focusgroups`
+publs_focusgroups <- publs_focusgroups[!
+(is.na(publs_focusgroups$focusgroups) |
+publs_focusgroups$focusgroups ==
+""), ]
+
+publs_focusgroups$focusgroups <- factor(publs_focusgroups$focusgroups)
+```
+
+141 publications (scientific articles) with new species
+*Scleractinia (Hard Corals) 3 articles, for a total of 4 new species*
+```{r}
+publs_focusgroups %>% 
+  filter(new_species == "true") %>% 
+    group_by(focusgroups, publication_format) %>%  
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+```{r}
+publs_focusgroups %>%
+    group_by(focusgroups) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+```{r}
+publs_focusgroups_counts <- publs_focusgroups %>%
+     group_by(focusgroups, publication_year) %>%
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+### Corals vs. Fishes vs. Octocorals
+
+```{r}
+publs_focusgroups_counts %>% 
+  filter(focusgroups == "Scleractinia (Hard Corals)" | focusgroups == "Fishes" | focusgroups == "Octocorallia (Soft Corals)") %>% # 
+    ggplot(aes(x=publication_year, y=count, color = focusgroups)) +
+      geom_line() + 
+        geom_point() +
+          #geom_area(colour="black", size=.3, alpha=.4, position = "identity") +
+           scale_x_continuous(name = "Year", breaks = seq(1970, 2022, 4), limits = c(1970, 2022)) + #breaks = seq(1970, 2022, 4), limits = c(1970, 2022)
+            #scale_y_continuous(limits = c(0,15), breaks = c(0,2,4,6,8,10,12,14)) +
+            theme(panel.background = element_rect(fill = "white", colour = "black"), legend.position= "bottom")
+```
+
+## Publications by 'Fields'
+
+```{r}
+# Split `fields` into new rows
+publs_fields <- separate_rows(publs, "fields", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `fields`
+publs_fields <- publs_fields[!
+(is.na(publs_fields$fields) |
+publs_fields$fields ==
+""), ]
+
+publs_fields$fields <- factor(publs_fields$fields)
+```
+
+```{r}
+publs_fields %>%
+    group_by(fields) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+```{r}
+publs_fields %>%
+  filter(fields == "Taxonomy") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+```{r}
+publs_fields %>%
+  filter(fields == "Physiology") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+
+```{r}
+publs_fields %>%
+  filter(fields == "Molecular ecology") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+```{r}
+publs_fields %>%
+  filter(fields == "Management and Conservation") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+```{r}
+publs_fields %>%
+  filter(fields == "Geomorphology") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+```{r}
+publs_fields %>%
+  filter(fields == "Disturbances") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+		
+```{r}
+publs_fields %>%
+  filter(fields == "Reproduction") %>% 
+    group_by(publication_year) %>% 
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count)) %>% 
+          head()
+```
+
+
+Within Fields, split focusgroups
+```{r}
+# Split `fields` into new rows
+publs_fields_focusgroups <- separate_rows(publs_fields, "focusgroups", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `fields`
+publs_fields_focusgroups <- publs_fields_focusgroups[!
+(is.na(publs_fields_focusgroups$fields) |
+publs_fields_focusgroups$fields ==
+""), ]
+
+publs_fields_focusgroups$focusgroups <- factor(publs_fields_focusgroups$focusgroups)
+```
+
+```{r}
+publs_fields_focusgroups %>% 
+  filter(fields == "Taxonomy") %>% 
+    group_by(focusgroups) %>%  
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+```{r}
+publs_fields_focusgroups %>% 
+  filter(fields == "Taxonomy") %>% 
+    group_by(focusgroups, new_species) %>%  
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+
+```{r}
+publs_fields_focusgroups %>%
+  filter(fields == "Physiology") %>% 
+    group_by(focusgroups) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+```{r}
+publs_fields_focusgroups %>%
+  filter(fields == "Connectivity") %>% 
+    group_by(focusgroups) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+```{r}
+publs_fields_focusgroups %>%
+  filter(focusgroups == "Scleractinia (Hard Corals)" | focusgroups == "Fishes" | focusgroups ==  "Symbiodinium (zooxanthellae)") %>% 
+    group_by(focusgroups, fields) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+All fields
+```{r}
+publs_fields %>%
+    group_by(fields) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+Emerging fields
+```{r}
+publs_fields %>%
+  filter(fields == "Connectivity" | fields == "Taxonomy" | fields == "Management and Conservation" | fields == "Physiology" | fields == "Geomorphology" | fields == "Disturbances" | fields == "Reproduction" | fields == "Molecular ecology" | fields == "Long-term monitoring") %>% 
+    group_by(fields) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+```{r}
+# publs_fields$fields <- factor(publs_fields$fields, levels = c("Biodiversity", "Physiology", "Molecular ecology", "Management and Conservation", "Geomorphology", "Disturbances", "Connectivity", "Reproduction"))
+
+publs_fields$fields <- factor(publs_fields$fields, levels = c("Reproduction", "Long-term monitoring", "Connectivity", "Disturbances", "Geomorphology", "Management and Conservation", "Physiology", "Molecular ecology", "Taxonomy"))
+
+ridgeplot_fields <- publs_fields %>% 
+  filter(fields == "Taxonomy" | fields == "Molecular ecology" | fields == "Physiology" | fields == "Management and Conservation" | fields == "Geomorphology" | fields == "Disturbances" | fields == "Connectivity" | fields == "Long-term monitoring" | fields == "Reproduction") %>%  #fields ==  "Biodiversity" | 
+  ggplot(aes(x=publication_year, y=fields, fill = fields)) +
+    geom_density_ridges(alpha = 0.2) +
+    scale_x_continuous(name = "Year", breaks = seq(1989, 2023, 3), limits = c(1989, 2023)) +
+    xlab("Year") +
+    ylab("") +
+    theme_minimal() +  
+    theme(panel.background = element_rect(colour = "grey50"), legend.position = "none")
+
+ridgeplot_fields
+```
+
+alternate version b - with vertical line 2008 (to show last 15 years)
+```{r}
+# publs_fields$fields <- factor(publs_fields$fields, levels = c("Biodiversity", "Physiology", "Molecular ecology", "Management and Conservation", "Geomorphology", "Disturbances", "Connectivity", "Reproduction"))
+
+publs_fields$fields <- factor(publs_fields$fields, levels = c("Reproduction", "Long-term monitoring", "Connectivity", "Disturbances", "Geomorphology", "Management and Conservation", "Physiology", "Molecular ecology", "Taxonomy"))
+
+ridgeplot_fields_b <- publs_fields %>% 
+  filter(fields == "Taxonomy" | fields == "Molecular ecology" | fields == "Physiology" | fields == "Management and Conservation" | fields == "Geomorphology" | fields == "Disturbances" | fields == "Connectivity" | fields == "Long-term monitoring" | fields == "Reproduction") %>%  #fields ==  "Biodiversity" | 
+  ggplot(aes(x=publication_year, y=fields, fill = fields)) +
+    geom_density_ridges(alpha = 0.2) +
+    geom_vline(xintercept = 2008, linetype = 2, colour = "azure4", alpha = 1) +
+    scale_x_continuous(name = "Year", breaks = seq(1989, 2023, 3), limits = c(1989, 2023)) +
+    xlab("Year") +
+    ylab("") +
+    theme_minimal() +  
+    theme(panel.background = element_rect(colour = "grey50"), legend.position = "none")
+
+ridgeplot_fields_b
+```
+
+
+alternate version c - with histograms
+```{r}
+# publs_fields$fields <- factor(publs_fields$fields, levels = c("Biodiversity", "Physiology", "Molecular ecology", "Management and Conservation", "Geomorphology", "Disturbances", "Connectivity", "Reproduction"))
+
+publs_fields$fields <- factor(publs_fields$fields, levels = c("Reproduction", "Long-term monitoring", "Connectivity", "Disturbances", "Geomorphology", "Management and Conservation", "Physiology", "Molecular ecology", "Taxonomy"))
+
+ridgeplot_fields_c <- publs_fields %>% 
+  filter(fields == "Taxonomy" | fields == "Molecular ecology" | fields == "Physiology" | fields == "Management and Conservation" | fields == "Geomorphology" | fields == "Disturbances" | fields == "Connectivity" | fields == "Long-term monitoring" | fields == "Reproduction") %>%  #fields ==  "Biodiversity" | 
+  ggplot(aes(x=publication_year, y=fields, fill = fields)) +
+    geom_density_ridges(alpha = 0.2, stat="binline", bins=40) +
+    scale_x_continuous(name = "Year", breaks = seq(1989, 2023, 3), limits = c(1989, 2023)) +
+    xlab("Year") +
+    ylab("") +
+    theme_minimal() +  
+    theme(panel.background = element_rect(colour = "grey50"), legend.position = "none") #panel.spacing = unit(0.1, "lines"),
+
+ridgeplot_fields_c
+```
+
+
+```{r}
+publs_fields_CoralFishOctocoral <- publs_fields %>% 
+  filter(focusgroups == "Scleractinia (Hard Corals)" | focusgroups == "Fishes" | focusgroups == "Octocorallia (Soft Corals)")
+```
+
+
+```{r}
+#publs_fields_CoralFishOctocoral$focusgroups <- recode(publs_fields_CoralFishOctocoral$focusgroups, 'Algae (Macro, Turf and Crustose Coralline)' = "Macroalgae")
+
+publs_fields_CoralFishOctocoral$focusgroups <- recode(publs_fields_CoralFishOctocoral$focusgroups, 'Octocorallia (Soft Corals)' = "Octocorals")
+
+#publs_fields_CoralFishOctocoral$focusgroups <- recode(publs_fields_CoralFishOctocoral$focusgroups, 'Porifera (Sponges)' = "Sponges")
+
+publs_fields_CoralFishOctocoral$focusgroups <- recode(publs_fields_CoralFishOctocoral$focusgroups, 'Scleractinia (Hard Corals)' = "Scleractinian corals")
+
+publs_fields_CoralFishOctocoral$focusgroups <- factor(publs_fields_CoralFishOctocoral$focusgroups, levels = c("Octocorals", "Fishes", "Scleractinian corals"))
+
+barplot_fields <- publs_fields_CoralFishOctocoral %>% 
+  filter(fields == "Taxonomy" | fields == "Molecular ecology" | fields == "Physiology" | fields == "Management and Conservation" | fields == "Geomorphology" | fields == "Disturbances" | fields == "Connectivity" | fields == "Long-term monitoring" | fields == "Reproduction") %>%
+  group_by(fields, focusgroups) %>% 
+      dplyr::summarise(count=n()) %>%
+        ggplot(aes(x = count, y = fields, fill = focusgroups)) +
+          geom_bar(stat="identity", position="dodge") + #, fill = "grey"
+          theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+          #scale_fill_viridis(discrete=TRUE, name="") +
+          scale_fill_manual(values=c("#25858EFF", "#440154", "#fde725")) +
+          scale_x_continuous(limits = c(0, 60)) +
+          xlab("Publications") +
+          #ylab("") +
+          #labs(x = "Percent", y = "Fields", title = "TME") +
+           theme_minimal() +  
+           theme(panel.background = element_rect(colour = "grey50"), axis.text.y=element_blank(), axis.title.y=element_blank(), legend.key.height = unit(1, "null"), legend.position = c(.7,.05), legend.title = element_text(size = 6), legend.text = element_text(size = 6))
+
+# legend.key.width = unit(5, "null"), 
+# By setting the legend.key{.height/.width} theme argument as a "null" unit, legends can now expand to fill the available space.
+
+barplot_fields
+```
+
+Break out into top focusgroups - Scleractinian corals, Fishes, Octocorallia
+
+
+
+merge ridgeline with barplot counts
+```{r}
+# cowplot
+
+#pdf("Fig Fields emerging rideplot barplot combo_focusgroups_07-28.pdf", width = 8, height = 6, encoding="MacRoman") #width = 10
+
+plot <- plot_grid(ridgeplot_fields, 
+                  barplot_fields,
+                  #labels = c('a)', 'b)', 'c)', 'd)'), 
+                  #hjust = -1, 
+                  #vjust = 1, 
+                  #align = "hv",
+                  rel_widths = c(3, 1),
+                  rel_heights = 1,
+                  #scale = c(1, 1. 1, 1),
+                  label_size = 12,
+                  ncol = 2,
+                  label_fontface = "plain")
+
+plot
+
+#dev.off()
+
+#svg("Fig Fields emerging rideplot barplot combo_focusgroups_07-28.svg", width = 8, height = 6)
+#print(plot)
+#dev.off()
+```
+
+
+Alternate ridgeline b with barplot counts
+```{r}
+# cowplot
+
+#pdf("Fig Fields emerging rideplot barplot combo_focusgroups_07-28_ALT-2008-vline.pdf", width = 8, height = 6, encoding="MacRoman") #width = 10
+
+plot <- plot_grid(ridgeplot_fields_b, 
+                  barplot_fields,
+                  #labels = c('a)', 'b)', 'c)', 'd)'), 
+                  #hjust = -1, 
+                  #vjust = 1, 
+                  #align = "hv",
+                  rel_widths = c(3, 1),
+                  rel_heights = 1,
+                  #scale = c(1, 1. 1, 1),
+                  label_size = 12,
+                  ncol = 2,
+                  label_fontface = "plain")
+
+plot
+
+#dev.off()
+
+#svg("Fig Fields emerging rideplot barplot combo_focusgroups_07-28_ALT-2008-vline.svg", width = 8, height = 6)
+#print(plot)
+#dev.off()
+```
+
+## Publications by 'Platforms'
+```{r}
+# Split `platforms` into new rows
+publs_platforms <- separate_rows(publs, "platforms", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `platforms`
+publs_platforms <- publs_platforms[!
+(is.na(publs_platforms$platforms) |
+publs_platforms$platforms ==
+""), ]
+
+publs_platforms$platforms <- factor(publs_platforms$platforms)
+
+#write.csv(publs_platforms, "publs_platforms.csv")
+```
+
+
+```{r}
+publs_platforms %>%
+     group_by(platforms) %>%
+      dplyr::summarise(count=n()) %>% 
+        arrange(desc(count))
+```
+
+
+### Platforms by Location
+
+```{r}
+# Split `locations` into new rows
+publs_platforms_location <- separate_rows(publs_platforms, "locations", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `locations`
+publs_platforms_location <- publs_platforms_location[!
+(is.na(publs_platforms_location$locations) |
+publs_platforms_location$locations ==
+""), ]
+
+publs_platforms_location$locations <- factor(publs_platforms_location$locations)
+
+#write.csv(publs_platforms_location, "publs_platforms_location.csv")
+```
+
+
+```{r}
+publs_platforms_location %>%
+  filter(platforms == "Manned Submersible") %>% 
+    group_by(locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+```{r}
+publs_platforms_location %>%
+  filter(platforms == "Rebreather") %>% 
+    group_by(locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+Platforms used by location - organized by platform
+```{r}
+publs_platforms_location_counts <- publs_platforms_location %>%
+    group_by(platforms, locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(15, count) %>%
+          arrange(desc(count))
+
+head(publs_platforms_location_counts)
+```
+
+top 10
+```{r}
+publs_platforms_location %>%
+    group_by(platforms, locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+## Publications by 'Locations'
+
+##### Consider MCE and TME separately
+
+MCE - publications that only had MCE locations
+```{r}
+publs.mce <- subset(publs, mce == "true" & tme == "false")
+publs.mce <- droplevels(publs.mce)
+```
+
+```{r}
+# Split `locations` into new rows
+publs.mce_locations <- separate_rows(publs.mce, "locations", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `locations`
+publs.mce_locations <- publs.mce_locations[!
+(is.na(publs.mce_locations$locations) |
+publs.mce_locations$locations ==
+""), ]
+
+publs.mce_locations$locations <- factor(publs.mce_locations$locations)
+```
+
+```{r}
+n_distinct(publs.mce_locations$locations)
+#unique(publs.mce_locations$locations)
+```
+
+```{r}
+#Separate by periods, before 2008 and 2008-2023
+publs.mce_locations$range <- ifelse(publs.mce_locations$publication_year <= 2007, '<2008',
+                       ifelse(publs.mce_locations$publication_year <=2023, '<2023', 'unassigned'))
+```
+
+```{r}
+publs.mce_locations %>% 
+  group_by(range) %>% 
+    dplyr::summarise(count=n())
+```
+
+```{r}
+#before 2008
+publs_mce_2008 <- subset(publs.mce_locations, range == "<2008")
+#publs_mce_2008 <- droplevels(publs_mce_2008)
+n_distinct(publs_mce_2008$locations)
+```
+
+```{r}
+publs_mce_2008 %>% 
+  group_by(locations) %>% 
+    dplyr::summarise() %>% #dplyr::summarise(count=n())
+      head()
+```
+
+```{r}
+#2008-2023
+publs_mce_2023 <- subset(publs.mce_locations, range == "<2023")
+n_distinct(publs_mce_2023$locations)
+```
+
+```{r}
+publs_mce_2023 %>% 
+  group_by(locations) %>% 
+    dplyr::summarise() %>% #dplyr::summarise(count=n())
+      head()
+```
+
+*However, there is overlap of locations that are present in both Before 2008 and 2008-2023 data*
+
+***Cross check to only obtain unique locations***
+
+In summary, 51 MCE locations were both in Before 2008 and 2008-2023 categories
+Therefore 98 new locations 2008-2023 - 51 shared locations = 47 new MCE locations between 2008-2023
+Note: 14 unique MCE locations that were only from Before 2008 (but not studied again in 2008-2023)
+Grand total = 14 unique locations Before 2008 + 51 shared locations two time periods + 47 new MCE locations 2008-2023 = TOTAL 112 unique MCE locations
+```{r}
+#find duplicates between two data frames
+dplyr::intersect(publs_mce_2008$locations, publs_mce_2023$locations)
+```
+
+Number of publications per location
+```{r}
+publs.mce_locations_counts <- publs.mce_locations %>% 
+  group_by(locations) %>% 
+    dplyr::summarise(count=n()) %>% 
+      arrange(count)
+
+publs.mce_locations_counts
+
+#write.csv(publs.mce_locations_counts, "publs.mce_locations_counts.csv")
+```
+
+
+#### TME - publications that only had TME locations
+```{r}
+publs.tme <- subset(publs, tme == "true" & mce == "false")
+publs.tme <- droplevels(publs.tme)
+```
+
+```{r}
+# Split `locations` into new rows
+publs.tme_locations <- separate_rows(publs.tme, "locations", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `locations`
+publs.tme_locations <- publs.tme_locations[!
+(is.na(publs.tme_locations$locations) |
+publs.tme_locations$locations ==
+""), ]
+
+publs.tme_locations$locations <- factor(publs.tme_locations$locations)
+```
+
+```{r}
+n_distinct(publs.tme_locations$locations)
+#unique(publs.tme_locations$locations)
+```
+
+```{r}
+#Separate by periods, before 2008 and 2008-2023
+publs.tme_locations$range <- ifelse(publs.tme_locations$publication_year <= 2007, '<2008',
+                       ifelse(publs.tme_locations$publication_year <=2023, '<2023', 'unassigned'))
+```
+
+```{r}
+publs.tme_locations %>% 
+  group_by(range) %>% 
+    dplyr::summarise(count=n())
+```
+
+```{r}
+#before 2008
+publs_tme_2008 <- subset(publs.tme_locations, range == "<2008")
+n_distinct(publs_tme_2008$locations)
+```
+
+```{r}
+#2008-2023
+publs_tme_2023 <- subset(publs.tme_locations, range == "<2023")
+n_distinct(publs_tme_2023$locations)
+```
+
+In summary, 13 TME locations were both in Before 2008 and 2008-2023 categories
+Therefore 44 new locations 2008-2023 - 13 shared locations = 31 new TME locations between 2008-2023
+Therefore, 14 Before 2008 locations + 31 new 2008-2023 locations = 45 locations total
+```{r}
+#find duplicates between two data frames
+dplyr::intersect(publs_tme_2008$locations, publs_tme_2023$locations)
+```
+
+
+Number of publications per location
+```{r}
+publs.tme_locations_counts <- publs.tme_locations %>% 
+  group_by(locations) %>% 
+    dplyr::summarise(count=n()) %>% 
+      arrange(count)
+
+publs.tme_locations_counts
+
+#write.csv(publs.tme_locations_counts, "publs.tme_locations_counts.csv")
+```
+
+
+### Overall locations
+```{r}
+# Split `locations` into new rows
+publs_locations <- separate_rows(publs, "locations", sep=";\\s+") #publs_for_stats
+
+# Remove rows with no associated `locations`
+publs_locations <- publs_locations[!
+(is.na(publs_locations$locations) |
+publs_locations$locations ==
+""), ]
+
+publs_locations$locations <- factor(publs_locations$locations)
+```
+
+```{r}
+#Separate by periods, before 2008 and 2008-2023
+publs_locations$range <- ifelse(publs_locations$publication_year <= 2007, '<2008',
+                       ifelse(publs_locations$publication_year <=2023, '<2023', 'unassigned'))
+```
+
+```{r}
+#before 2008
+publs_2008 <- subset(publs_locations, range == "<2008")
+n_distinct(publs_2008$locations)
+```
+
+```{r}
+#2008-2023
+publs_2023 <- subset(publs_locations, range == "<2023")
+n_distinct(publs_2023$locations)
+```
+
+```{r}
+publs_locations %>%
+    group_by(locations) %>% 
+      dplyr::summarise(count=n()) %>% 
+        #top_n(10, count) %>%
+          arrange(desc(count))
+```
+
+
+```{r}
+publs_locations <- subset(publs_locations, original_data == "true")
+
+#write.csv(publs_locations, "publs_locations_scientific_articles_original-data.csv")
+```
+
+
+
+
