@@ -190,9 +190,9 @@ class PublicationsController < ApplicationController
 
     # Convert contents to utf8 format to avoid errors in forms
     def contents_convert_utf8
-      @publication.title = @publication.title.try(:gsub, "\r\n", "\n") || ""
-      @publication.abstract = @publication.abstract.try(:gsub, "\r\n", "\n") || ""
-      @publication.contents = @publication.contents.try(:gsub, "\r\n", "\n") || ""
+      @publication.title = @publication.title.try(:force_encoding, "utf-8") || ""
+      @publication.abstract = @publication.abstract.try(:force_encoding, "utf-8") || ""
+      @publication.contents = @publication.contents.try(:force_encoding, "utf-8") || ""
     end
 
     # Depending on publication_type, empty fields that are not being used
