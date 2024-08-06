@@ -198,6 +198,7 @@ class PublicationsController < ApplicationController
     def sanitize(input)
       input
         .gsub("\\r\\n", "\n")
+        .gsub("\r\n", "\n")
         .gsub(/\\x([0-9a-fA-F]{2})/) { |m|
           [$1].pack("H*").force_encoding('UTF-8')
         }
