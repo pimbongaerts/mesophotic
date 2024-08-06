@@ -94,7 +94,6 @@ class PublicationsController < ApplicationController
 
   def update
     respond_to do |format|
-      byebug
       if @publication.update(publication_params)
         format.html { redirect_back fallback_location: root_path,
                       notice: 'Publication was successfully updated.' }
