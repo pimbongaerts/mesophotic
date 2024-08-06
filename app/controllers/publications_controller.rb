@@ -94,6 +94,7 @@ class PublicationsController < ApplicationController
 
   def update
     respond_to do |format|
+      byebug
       if @publication.update(publication_params)
         format.html { redirect_back fallback_location: root_path,
                       notice: 'Publication was successfully updated.' }
@@ -190,20 +191,17 @@ class PublicationsController < ApplicationController
 
     # Convert contents to utf8 format to avoid errors in forms
     def contents_convert_utf8
-      @publication.title = @publication.title ? convert_hex_to_utf8(@publication.title) : ""
-      @publication.abstract = @publication.abstract ? convert_hex_to_utf8(@publication.abstract) : ""
-      @publication.contents = @publication.contents ? convert_hex_to_utf8(@publication.contents) : ""
+      @publication.title = @publication.title ? sanitize(@publication.title) : ""
+      @publication.abstract = @publication.abstract ? sanitize(@publication.abstract) : ""
+      @publication.contents = @publication.contents ? sanitize(@publication.contents) : ""
     end
 
-    def convert_hex_to_utf8(input)
-      # Use gsub with a regular expression to find all \xHH sequences
-      utf8_string = input.gsub(/\\x([0-9a-fA-F]{2})/) do |match|
-        # Convert each hex pair to a character
-        [$1.to_i(16)].pack("C")
-      end
-
-      # Ensure the resulting string is interpreted as UTF-8
-      utf8_string.force_encoding("UTF-8")
+    def sanitize(input)
+      input
+        .gsub("\\r\\n", "\n")
+        .gsub(/\\x([0-9a-fA-F]{2})/) { |m|
+          [$1].pack("H*").force_encoding('UTF-8')
+        }
     end
 
     # Depending on publication_type, empty fields that are not being used
