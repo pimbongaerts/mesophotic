@@ -190,9 +190,21 @@ class PublicationsController < ApplicationController
 
     # Convert contents to utf8 format to avoid errors in forms
     def contents_convert_utf8
-      @publication.title = @publication.title.try(:force_encoding, "utf-8") || ""
-      @publication.abstract = @publication.abstract.try(:force_encoding, "utf-8") || ""
-      @publication.contents = @publication.contents.try(:force_encoding, "utf-8") || ""
+      byebug
+      @publication.title = @publication.title ? convert_hex_to_utf8(@publication.title).force_encoding("utf-8") : ""
+      @publication.abstract = @publication.abstract ? convert_hex_to_utf8(@publication.abstract).force_encoding("utf-8") : ""
+      @publication.contents = @publication.contents ? convert_hex_to_utf8(@publication.contents).force_encoding("utf-8") : ""
+    end
+
+    def convert_hex_to_utf8(input)
+      # Use gsub with a regular expression to find all \xHH sequences
+      utf8_string = input.gsub(/\\x([0-9a-fA-F]{2})/) do |match|
+        # Convert each hex pair to a character
+        [$1.to_i(16)].pack("C")
+      end
+
+      # Ensure the resulting string is interpreted as UTF-8
+      utf8_string.force_encoding("UTF-8")
     end
 
     # Depending on publication_type, empty fields that are not being used
