@@ -190,10 +190,9 @@ class PublicationsController < ApplicationController
 
     # Convert contents to utf8 format to avoid errors in forms
     def contents_convert_utf8
-      byebug
-      @publication.title = @publication.title ? convert_hex_to_utf8(@publication.title).force_encoding("utf-8") : ""
-      @publication.abstract = @publication.abstract ? convert_hex_to_utf8(@publication.abstract).force_encoding("utf-8") : ""
-      @publication.contents = @publication.contents ? convert_hex_to_utf8(@publication.contents).force_encoding("utf-8") : ""
+      @publication.title = @publication.title ? convert_hex_to_utf8(@publication.title) : ""
+      @publication.abstract = @publication.abstract ? convert_hex_to_utf8(@publication.abstract) : ""
+      @publication.contents = @publication.contents ? convert_hex_to_utf8(@publication.contents) : ""
     end
 
     def convert_hex_to_utf8(input)
