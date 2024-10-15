@@ -1,0 +1,1280 @@
+---
+title: "Mesophotic.org database release 2.1"
+author: "Gonzalo Pérez-Rosales, https://github.com/gonzaloprb"
+date: "14/08/2024"
+output: html_document
+---
+
+### Load the following packages for manipulating and viewing the data:
+```{r message=FALSE}
+require(dplyr)
+require(tidyr)
+require(ggplot2)
+require(ggpubr)
+require(tidyverse)
+require(cowplot)
+library(RcppRoll)
+require (plyr); 
+require(reshape2)
+require (patchwork)
+rm(list=ls()) 
+```
+
+
+## Import the database directly from the website into R
+
+Check its dimensions (rows x columns), and list the available fields/columns:
+```{r}
+
+# first database release used
+publs <- read.csv("http://www.mesophotic.org/publications.csv", as.is=TRUE)
+# Update to the Github Directory
+setwd("~/Documents/AAASea_Science/Mesophotic.org/")
+
+publs[sapply(publs, is.character)] <- lapply(publs[sapply(publs, is.character)], as.factor)
+
+# when need to use year as factor
+publs$year <- factor(publs$publication_year)
+
+# Quick check up and info of how the data is structured
+dim(publs)
+colnames(publs)
+levels(publs$publication_format)
+
+# Summary format
+publs %>% 
+  group_by(publication_format) %>% 
+   dplyr::summarise(count=n())
+
+levels(publs$publication_type)
+# Publication type
+publs %>% 
+  group_by(publication_type) %>% 
+   dplyr::summarise(count=n())
+
+# Complete publications columns
+publs_complete <- publs %>% complete(publication_type,publication_year, focusgroups,fill = list(publication_year = NA))
+
+```
+
+
+## This code makes the figures used in the manuscript. 
+(At the bottom of the R pipeline there are many other figure outputs, which are not used in the Manuscript)
+
+Plot by platforms with max Depth
+Make a box plot.
+- filtering publications with a original data, validated, stats and a single platform only, 
+- Consider max depths
+
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data", "platforms","min_depth", "max_depth")]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Filter to publications having a single platform
+# Made that by deleting rows containing ";"
+platforms_df <- publs_data[!grepl(";", publs_data$platforms),]
+# Delete columns where platforms is empty
+platforms_df <- platforms_df[-which(platforms_df$platforms == ""), ]
+
+# Remove publications where max_depth == 0 (No depth range or only mesophotic depth range)
+platforms_df <- platforms_df %>% filter(max_depth > 29) # Dropped publications where max_depth less than 29
+# To consider the mesophotic depth range 
+
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(platforms_df$min_depth))
+# Replace by max depth
+platforms_df$min_depth <- ifelse(is.na(platforms_df$min_depth), platforms_df$max_depth, platforms_df$min_depth)
+# check
+sum(is.na(platforms_df$max_depth)) 
+
+# Filter publications deeper than Mesophotic for the min_depth 
+platforms_df <- platforms_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m. Otherwise, outside Mesophotic range
+
+# Make the plot - with all platforms (see filtered plot after)
+ggplot(data = platforms_df, aes (y=max_depth, x = factor(platforms))) +   
+  geom_boxplot() +
+  labs(y = "Depth (m)", x = "", title = "") + scale_y_reverse() +
+  theme_bw() + scale_x_discrete(position = "top") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# Keep only certain platforms and arrange by depth
+keep_plat <-  c ("SCUBA (open-circuit or unspecified)","Autonomous Underwater Vehicle (AUV)","Rebreather","Baited Remote Underwater Video (BRUV)","Fishing","Remotely Operated Vehicle (ROV)","Manned Submersible", "Dredging / trawling", "Sonar / Multibeam")
+platforms_df <- subset(platforms_df,platforms %in% keep_plat)
+
+# Transform characters to simplified names
+platforms_df$platforms<- gsub("SCUBA \\(open-circuit or unspecified\\)", "SCUBA",platforms_df$platforms)
+platforms_df$platforms<- gsub("Autonomous Underwater Vehicle \\(AUV\\)", "AUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Sonar / Multibeam", "Sonar",platforms_df$platforms)
+platforms_df$platforms<- gsub("Baited Remote Underwater Video \\(BRUV\\)", "BRUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Dredging / trawling", "Dredging",platforms_df$platforms)
+platforms_df$platforms<- gsub("Remotely Operated Vehicle \\(ROV\\)", "ROV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Manned Submersible", "Submersible",platforms_df$platforms)
+
+# Set in the right order
+platforms_df$platforms <- factor(platforms_df$platforms, levels = c("SCUBA","Submersible","Rebreather","ROV","Dredging","Fishing","BRUV","AUV","Sonar"))
+
+
+# Make a summary table with the number of publications per category: 
+pubs_platforms <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Pubs_number= length(x$id))})
+
+pubs_platforms_depth <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Max_depth_mean= mean(x$max_depth))})
+
+pubs_platforms_depth_median <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Max_depth_median= median(x$max_depth))})
+# Merge dataframes
+pubs_platforms <- merge (pubs_platforms,pubs_platforms_depth)
+pubs_platforms <- merge (pubs_platforms,pubs_platforms_depth_median)
+
+
+# Function to give number of publications 
+give.n <- function(x){
+  return(c(y = median(x)*1.05, label = length(x))) 
+  # experiment with the multiplier to find the perfect position
+}
+
+# Make a first boxplot. Single platform, not duplicate if multilocation, remove jitter, hard stop of plot at 200 m
+ggplot(data = platforms_df, aes (y=max_depth, x = factor(platforms))) + # geom_point() +
+  geom_boxplot(outlier.shape = NA) + stat_summary(fun.data = give.n, geom = "text", size=5, 
+                                mapping = aes(y = 20), vjust = -0.5, fun.y = median,
+                                position = position_dodge(width = 0.75)) + 
+  labs(y ="Max depth (m)", x = "", title = "") + 
+  scale_y_reverse() + coord_cartesian(ylim=c(300, 0)) +
+  scale_y_reverse(breaks = c(300, 250, 200, 150, 100, 50, 0)) + # Otherwise, scale_y_reverse(limits=c(4000,0))
+  theme_bw() + scale_x_discrete(position = "top") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, lineheight=1))
+
+
+##### Make the Figure 3 (a) / Fig_Platform_MaxDepth
+# Violin plot 
+Fig_Platform_MaxDepth <- ggplot(data = platforms_df, aes (y=max_depth, x = factor(platforms))) + # geom_point() +
+  geom_violin(draw_quantiles = c(0.5),trim=T, width = 2) +
+    #geom_violin(draw_quantiles = c(0.1, 0.5, 0.9),trim=F, width = 2) +
+  geom_jitter(size = 0.5, position = position_jitter(seed = 1, width = 0.005)) +
+  stat_summary(fun.data = give.n, 
+    geom = "text", size=5, mapping = aes(y = 15), vjust = -0.5, fun.y = median,
+    position = position_dodge(width = 0.75))+
+  labs(y ="Max depth (m)", x = "", title = "Direct human presence                      Indirect / collection                Observations only") +
+  scale_y_reverse() + coord_cartesian(ylim=c(300, 0)) +
+  scale_y_reverse(breaks = c(300, 250, 200, 150, 100, 50, 0)) + # Otherwise, scale_y_reverse(limits=c(4000,0))
+  theme_bw() + scale_x_discrete(position = "top") + 
+  theme(axis.text.x = element_text(size = 10))
+Fig_Platform_MaxDepth
+
+
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platform_MaxDepth.pdf", Fig_Platform_MaxDepth,width = 8.5, height = 3.5)
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platform_MaxDepth.jpeg", Fig_Platform_MaxDepth,width = 8.5, height = 3.5)
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platform_MaxDepth.svg", Fig_Platform_MaxDepth,width = 8.5, height = 3.5)
+
+
+rm (top_locations,pubs_platforms_pubs_ecosystem, pubs_platforms_depth_median, pubs_platforms_locationspubls, order, Locations, publs_complete, pubs_platforms_depth_median, platforms_df, pubs_platforms_depth, Fig_Platform_MaxDepth)
+
+```
+
+
+Figure of research fields by platforms 
+These plots also exist by focus groups below
+
+- filtering publications with a original data, validated, stats and a single platform only, 
+
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data", "platforms","min_depth", "max_depth", "fields")]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Generate a new database
+platforms_df <- publs_data
+
+# Work on PLATFORMS
+# Here we Keep all platforms! We do not filter to publications with single platform! 
+# First delete columns where platforms is empty
+platforms_df <- platforms_df[-which(platforms_df$platforms == ""), ]
+
+# Work on FIELDS
+# Remove rows with no associated `fields`
+platforms_df <- platforms_df[!(is.na(platforms_df$fields) | platforms_df$fields == ""), ]
+
+# Remove publications where max_depth == 0
+platforms_df <- platforms_df %>% filter(max_depth > 29) # Dropped publications where max_depth > 29
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(platforms_df$min_depth))
+# Replace by max depth
+platforms_df$min_depth <- ifelse(is.na(platforms_df$min_depth), platforms_df$max_depth, platforms_df$min_depth)
+# check
+sum(is.na(platforms_df$max_depth)) 
+
+# Filter publications deeper than Mesophotic for the min_depth
+platforms_df <- platforms_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m
+# To consider the Mesophotic depth range
+
+# Necessary to separate by rows. Be aware that these commands generate more publications numbers due to multiplatform and multifields - Keep all of them but as separate rows 
+platforms_df <- separate_rows(platforms_df, "platforms", sep=";\\s+") 
+platforms_df <- separate_rows(platforms_df, "fields", sep=";\\s+") 
+# We keep all rows. No need to delete duplicated
+
+# Keep only certain platforms and arrange by depth
+keep_plat <-  c ("SCUBA (open-circuit or unspecified)","Autonomous Underwater Vehicle (AUV)","Rebreather","Baited Remote Underwater Video (BRUV)","Fishing","Remotely Operated Vehicle (ROV)","Manned Submersible", "Dredging / trawling", "Sonar / Multibeam")
+platforms_df <- subset(platforms_df,platforms %in% keep_plat)
+
+# Transform characters to simplified names
+platforms_df$platforms<- gsub("SCUBA \\(open-circuit or unspecified\\)", "SCUBA",platforms_df$platforms)
+platforms_df$platforms<- gsub("Autonomous Underwater Vehicle \\(AUV\\)", "AUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Sonar / Multibeam", "Sonar",platforms_df$platforms)
+platforms_df$platforms<- gsub("Baited Remote Underwater Video \\(BRUV\\)", "BRUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Dredging / trawling", "Dredging",platforms_df$platforms)
+platforms_df$platforms<- gsub("Remotely Operated Vehicle \\(ROV\\)", "ROV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Manned Submersible", "Submersible",platforms_df$platforms)
+platforms_df$fields<- gsub("Management and Conservation", "Management & Conservation",platforms_df$fields)
+
+# Set in the right order
+platforms_df$platforms <- factor(platforms_df$platforms, levels = c("SCUBA","Submersible","Rebreather","ROV","Dredging","Fishing","BRUV","AUV","Sonar"))
+
+
+# Make the plot of the top fields 
+# Facetwrap by platform, display only top fields
+pubs_platforms_fields <- ddply(platforms_df, ~ platforms + fields,
+                   function(x){c(Freq= length(x$id))})
+
+# Measure the most important fields
+pubs_fields <- ddply(platforms_df, ~ fields,
+                   function(x){c(Freq_Fields= length(x$id))})
+pubs_fields <- pubs_fields[order(pubs_fields$Freq_Fields, decreasing = T), ]
+
+# Keep only the top 10 fields (this number can change)
+pubs_fields_top <- pubs_fields %>% 
+  arrange(desc(Freq_Fields)) %>%  slice_max(order_by = Freq_Fields, n = 12, with_ties = F)
+top_fields <- unique (pubs_fields_top$fields)
+
+# Keep in database "pubs_platforms_fields_top" the following selected fields
+keep_field <-  c ("Ecology","Biodiversity","Community structure","Management & Conservation","Disturbances","Long-term monitoring","Physiology","Taxonomy","Molecular ecology", "Connectivity", "Fisheries","Geomorphology")
+pubs_platforms_fields_top <- subset(pubs_platforms_fields,fields %in% keep_field)
+
+# Set in the right order
+pubs_platforms_fields_top$fields <- factor(pubs_platforms_fields_top$fields, levels = c("Geomorphology","Fisheries",  "Long-term monitoring","Management & Conservation","Disturbances","Taxonomy","Connectivity","Molecular ecology","Physiology","Ecology","Community structure","Biodiversity"))
+
+
+##### Figure 3, Platforms by fields
+Fig_Platforms_fields <- ggplot(pubs_platforms_fields_top, aes(x = Freq, y = fields)) + # y =   reorder (fields, Freq))
+    geom_col(position = position_dodge()) + 
+    facet_wrap(~platforms, labeller = label_wrap_gen(width = 18), nrow = 1) + # scales = "free_y"
+    scale_x_continuous(breaks = c(0, 100,200)) +
+    labs(y = "", x = "Publications") +  
+    theme_bw() + theme (axis.text.x = element_text(angle = 90, hjust = 1), 
+                        axis.text = element_text(size = 10), 
+                        strip.text = element_text(size = 8), 
+                        strip.background = element_rect(fill="white")) # ,axis.text.y = element_blank()
+Fig_Platforms_fields
+
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platforms_fields.pdf", Fig_Platforms_fields,width = 8.5, height = 3.5)
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platforms_fields.jpeg", Fig_Platforms_fields,width = 8.5, height = 3.5)
+ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platforms_fields.svg", Fig_Platforms_fields,width = 8.5, height = 3.5)
+
+# For visual reasons and figure making, I saved the plot without yaxis
+# ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platforms_fields_noyaxis.pdf", Fig_Platforms_fields,width = 8.5, height = 3.5)
+
+
+rm (top_fields,pubs_platforms_pubs_ecosystem, pubs_platforms_depth_median, pubs_platforms_fieldspubls, order, fields, publs_complete, pubs_platforms_depth, pubs_platforms_fields_top,pubs_fields_top,pubs_fields, pubs_platforms_fields, platforms_df, Fig_Platforms_fields, pubs_platforms )
+
+```
+
+
+Make Area plot considering min and max depths. Like the figure from the previous manuscript (Bongaerts et al 2019) or website stats: http://www.mesophotic.org/statistics
+Loop to account publications if it gets inside the specific depth target
+Make the figure for all other groups
+
+Supplementary Figure S2 For corals and fish
+Supplementary Figure S3 For the rest of groups
+
+- filtering publications with a original data, validated, stats and a single platform only, 
+
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data", "platforms", "min_depth", "max_depth", "focusgroups" )]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Work on the Depth 
+# Filter to publications having different max_depth than 0
+depths_df <- filter(publs_data, max_depth != 0) 
+# Or publications with max_depth in the mesophotic range
+depths_df <- depths_df %>% filter(max_depth > 29) # Dropped publications where max_depth > 29
+# To start making the plot from 30 m like in the website
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(depths_df$min_depth))
+# Replace by max depth
+depths_df$min_depth <- ifelse(is.na(depths_df$min_depth), depths_df$max_depth, depths_df$min_depth)
+# check
+sum(is.na(depths_df$max_depth)) 
+# These are the single depth publication 
+
+# Filter publications deeper than mesophotic for the min_depth
+depths_df <- depths_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m
+# Now we are within the mesophotic range
+
+
+# Make the loop to generate a second dataframe and account for publications which min-max depths is inside the specific target depth 
+
+# Loop should be like:
+# for n from 30 to 150 depth
+# Is it inside min and max, yes, account for this depth
+# It is outside min and max, no, do not account for this depth
+
+# How many pubs are between max and min depth
+
+# 1st checking the numbers for particular depths
+checkdepth = 31 # (you can check 50, 4000, etc. m)
+nrow(filtered_rows <- depths_df %>%
+  filter(checkdepth >= min_depth & checkdepth <= max_depth))
+
+# Check another methodology
+sum( depths_df$min_depth <= checkdepth & depths_df$max_depth >= checkdepth)
+sum( checkdepth <= depths_df$max_depth & checkdepth >= depths_df$min_depth)
+# They both give the same, regardless of the order
+
+
+# Make the loop:
+# Initialize an empty data frame to store results
+result_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+# Iterate through each checkdepth value
+# val can be from 1 or from 30 (mesophotic)
+for (val in 1:max(depths_df$max_depth)) { 
+  filtered_rows <- depths_df %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  result_df <- rbind(result_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+result_df
+
+# Let's filter the depths (from 30 to 150 m)
+result_df <- subset (result_df, checkdepth<151)
+result_df <- subset (result_df, checkdepth>29)
+
+
+# Make the gg plot for all groups together
+ggplot(result_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "cornflowerblue") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(breaks = c(0,100,200,300,400,500,600,700))+
+    coord_flip()+
+    labs(title = "All focus groups",
+    x = "Depths (m)",
+    y = "Publications") +
+  theme_bw()
+
+
+# Make the figure for each group. 
+# First of all, Separate all the main focusgroups in rows // Important command: 
+depths_df <- separate_rows(depths_df, "focusgroups", sep=";\\s+") 
+
+# Change names to simplify life later
+depths_df$focusgroups<- gsub("Scleractinia \\(Hard Corals\\)", "Scleractinian",depths_df$focusgroups)
+depths_df$focusgroups<- gsub("Octocorallia \\(Soft Corals\\)", "Octocorals",depths_df$focusgroups) # Unnecessary if onyl corals vs fish
+depths_df$focusgroups<- gsub("Overall benthic \\(groups\\)", "Benthos",depths_df$focusgroups) # Unnecessary if only corals vs fish
+
+# Check number of publications per group
+ddply(depths_df, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+
+
+##### Make figure plots for Fishes and Corals separately, Fig S2
+
+### FISHES 
+# Filter the data for fishes only 
+depths_df_fishes <- subset(depths_df,focusgroups == "Fishes")
+
+# Measure the number of publication where depth range is between 30 - 150 m
+ddply(depths_df_fishes, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+fish_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { # max(depths_df_fishes$max_depth)
+  filtered_rows <- depths_df_fishes %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  fish_df <- rbind(fish_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (fish_df)
+
+# Make the ggplot for fishes
+Fig_S3_Fish <- ggplot(fish_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "#440154FF") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Fishes",
+    x = "Depth (m)",
+    y = "Publications") +
+  theme_bw()
+Fig_S3_Fish
+
+### SCLERACTINIAN - Corals
+depths_df_scleractinian <- subset(depths_df,focusgroups == "Scleractinian")
+
+# Number of pubs sclractinian
+ddply(depths_df_scleractinian, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+scleractinian_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_scleractinian %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  scleractinian_df <- rbind(scleractinian_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (scleractinian_df)
+
+# Make the ggplot for scleractiian
+Fig_S3_Scleractinia <- ggplot(scleractinian_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "#fde725FF") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Scleractinian corals",
+    x = "",
+    y = "Publications") +
+  theme_bw()
+Fig_S3_Scleractinia
+
+# Make the Figure S2 witht he combination of both
+(Figure_S2 = Fig_S3_Fish + Fig_S3_Scleractinia + plot_layout(guides = 'collect', nrow = 1))
+
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_S2_Great_Divide_Area_plot.pdf", Figure_S2,  width = 7, height = 3)
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_S2_Great_Divide_Area_plot.jpeg", Figure_S2,  width = 7, height = 3)
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_S2_Great_Divide_Area_plot.svg", Figure_S2,  width = 7, height = 3)
+
+#### Break in the figures ####
+# Get numbers for the manuscript of the great divide for the MS
+great_divide <- rbind (depths_df_fishes, depths_df_scleractinian)
+length (unique(great_divide$id))
+great_divide[duplicated(great_divide[,1]),]
+# 614 publications which are studying either coral, fish or both
+# 16 publications including both focal taxa, studying both at the same time: 152, 160, 257, 285, 306, 385, 721, 796, 799, 817, 818, 823, 966, 1046, 1424, 1528
+#### Break in the figures ####
+
+
+##### Make the Fig. S3 for the other groups
+
+### Octocorals "seagreen",
+depths_df_octocorals <- subset(depths_df,focusgroups == "Octocorals")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+octocorals_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_octocorals %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  octocorals_df <- rbind(octocorals_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (octocorals_df)
+
+# Make the ggplot for octocorals
+Fig_Octo <- ggplot(octocorals_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "blueviolet") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Octocorals",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Octo
+
+
+### Benthos "gray62",
+depths_df_benthos <- subset(depths_df,focusgroups == "Benthos")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+benthos_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_benthos %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  benthos_df <- rbind(benthos_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (benthos_df)
+
+# Make the ggplot for benthos
+Fig_Benthos <- ggplot(benthos_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "gray62") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Overall benthic groups",
+    x = "Depths (m)",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Benthos
+
+
+### Algae (Macro, Turf and Crustose Coralline)
+depths_df_algae <- subset(depths_df,focusgroups == "Algae (Macro, Turf and Crustose Coralline)")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+algae_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_algae %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  algae_df <- rbind(algae_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (blackcorals_df)
+
+# Make the ggplot for benthos
+Fig_Algae <- ggplot(algae_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "green") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Algae (Macro, Turf and CCA)",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Algae
+
+
+### Porifera (Sponges)
+depths_df_sponges <- subset(depths_df,focusgroups == "Porifera (Sponges)")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+sponges_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_sponges %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  sponges_df <- rbind(sponges_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (sponges_df)
+
+# Make the ggplot for benthos
+Fig_Sponges <- ggplot(sponges_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "coral1") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Porifera (Sponges)",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Sponges
+
+
+### Antipatharia (Black Corals)
+depths_df_bc <- subset(depths_df,focusgroups == "Antipatharia (Black Corals)")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+blackcorals_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_bc %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  blackcorals_df <- rbind(blackcorals_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (blackcorals_df)
+
+# Make the ggplot for benthos
+Fig_Blackcorals <- ggplot(blackcorals_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "black") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Antipatharia (Black Corals)",
+    x = "Depths (m)",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Blackcorals
+
+
+### Crustacea
+depths_df_crustacea <- subset(depths_df,focusgroups == "Crustacea")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+crustacea_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_crustacea %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  crustacea_df <- rbind(crustacea_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (crustacea_df)
+
+# Make the ggplot for benthos
+Fig_Crustacea <- ggplot(crustacea_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "brown3") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Crustacea",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Crustacea
+
+
+### Other invertebrates
+depths_df_otherinvertebrates <- subset(depths_df,focusgroups == "Other invertebrates")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+inv_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_otherinvertebrates %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  inv_df <- rbind(inv_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (inv_df)
+
+# Make the ggplot for benthos
+Fig_Other_inv <- ggplot(inv_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "darkgoldenrod1") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Other invertebrates",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Other_inv
+
+
+### Symbiodinium (zooxanthellae)
+depths_df_Symbio <- subset(depths_df,focusgroups == "Symbiodinium (zooxanthellae)")
+
+# Make the loop
+# Iterate through depth, already from 30 to 150 (mesophotic)
+symbio_df <- data.frame(checkdepth = numeric(0), PubNumber = numeric(0))
+for (val in 30:150) { 
+  filtered_rows <- depths_df_Symbio %>%
+    filter(val >= min_depth & val <= max_depth)  # Filter rows for the current value
+  PubNumber <- nrow(filtered_rows)  # Count the rows
+  symbio_df <- rbind(symbio_df, data.frame(checkdepth = val, PubNumber = PubNumber))
+}
+# Display the resulting data frame
+# view (symbio_df)
+
+# Make the ggplot for benthos
+Fig_Symbio <- ggplot(symbio_df, aes(x = checkdepth, y = PubNumber)) +
+  geom_area(fill = "darkolivegreen1") +
+  # scale_x_continuous(limits = c(30, 60))+ # breaks = c(30:150:10) 
+  scale_x_reverse(limits = c(150, 30),breaks = seq(150,30,-10) )+
+  scale_y_continuous(limits = c(0,250),breaks = c(0,50,100,150,200,250))+
+    coord_flip()+
+    labs(title = "Symbiodinium (zooxanthellae)",
+    x = "",
+    y = "Publications") +
+  theme_bw()+ theme (plot.title = element_text(size = 11))
+Fig_Symbio
+
+#### Make Fig S3 combining them all
+
+(Figure_S3 = Fig_Benthos + Fig_Algae + Fig_Sponges + Fig_Octo + Fig_Blackcorals + Fig_Symbio + Fig_Crustacea + Fig_Other_inv +plot_layout(guides = 'collect', nrow = 2))
+
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Figure_S3.pdf", Figure_S3,  width = 11, height = 6)
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Figure_S3.jpeg", Figure_S3,  width = 11, height = 6)
+ggsave( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Figure_S3.svg", Figure_S3,  width = 11, height = 6)
+
+rm (depths_df, benthos_df, octocorals_df, algae_df, blackcorals_df, crustacea_df, depths_df_algae,depths_df_bc,depths_df_benthos,depths_df_crustacea,depths_df_fishes, depths_df_octocorals,depths_df_otherinvertebrates,depths_df_scleractinian,depths_df_sponges,depths_df_Symbio,Fig_Algae,Fig_Benthos,Fig_Blackcorals,Fig_Crustacea,Fig_Octo,Fig_Other_inv,Fig_S3_Fish,Fig_S3_Scleractinia,Fig_Sponges,Fig_Symbio,Figure_S3,fish_df,great_divide,filtered_rows,inv_df,scleractinian_df,sponges_df,symbio_df,result_df, Figure_S2)
+
+```
+
+
+## THE END OF FIGURES USED IN THE MANUSCRIPT
+
+From here below is additional. Codes are not necessarily clean. 
+
+Plot of platforms frequency 
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data","fields","focusgroups", "platforms", "locations")]
+
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Split `Platforms` into new rows, but keep ID
+publs_platforms <- separate_rows(publs_data, "platforms", sep=";\\s+") 
+
+# Remove rows with no associated `platforms`
+publs_platforms <- publs_platforms[!
+(is.na(publs_platforms$platforms) |
+publs_platforms$platforms ==
+""), ]
+
+platforms <- as.data.frame(table(publs_platforms$platforms))
+colnames (platforms) <- c("Platform", "freq")
+
+# Measure in respect to different to mean
+platforms$media_freq <- platforms$freq - median (platforms$freq) # or mean 
+
+platforms <- arrange(platforms, media_freq)
+platforms$Platform <- factor(platforms$Platform, levels = platforms$Platform)
+# Make the plot
+
+ggplot(platforms, aes(Platform, media_freq, fill = Platform)) + 
+  geom_col(position = position_dodge()) + 
+  labs(y = "Frequency based on median", x = "", 
+  title = "Platform") + coord_flip() + 
+  theme_bw() + theme(legend.position="none")
+
+rm (platforms, publs_data, publs_platforms)
+
+```
+
+Another plot by platforms 
+```{r}
+
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data","fields","focusgroups", "platforms", "locations")]
+
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Number of publications per year
+publs_data1 <- ddply(publs_data, ~ publication_year,
+                   function(x){c(NumbPubs= length(x$id)) })
+
+publs_data2 <- dplyr::filter(publs_data, grepl('Rebreather', platforms)) # You can add extra categories like |Remotely Operated Vehicle (ROV)|Manned Submersible...
+
+publs_data3 <- dplyr::filter(publs_data, grepl('Manned Submersible', platforms)) 
+
+publs_data4 <- dplyr::filter(publs_data, grepl('SCUBA', platforms)) 
+
+## Number of publications using Rebreather per year!
+pubs_rebreather <- ddply(publs_data2, ~ publication_year,
+                   function(x){c(pubs_rebreather= length(x$id))})
+
+## Number of publications using Submersible per year!
+pubs_Submersible <- ddply(publs_data3, ~ publication_year,
+                   function(x){c(pubs_Submersible= length(x$id))})
+
+## Number of publications using SCUBA!
+pubs_SCUBA <- ddply(publs_data4, ~ publication_year,
+                   function(x){c(pubs_SCUBA= length(x$id))})
+
+
+# Merge all dataframes!
+pubs_human_access <- merge (publs_data1, pubs_rebreather, by.x = "publication_year", all = T )
+pubs_human_access <- merge (pubs_human_access, pubs_Submersible, by.x = "publication_year", all = T )
+pubs_human_access <- merge (pubs_human_access, pubs_SCUBA, by.x = "publication_year", all = T )
+
+# Replace all NA by 0 
+pubs_human_access <- pubs_human_access %>% replace(is.na(.), 0)
+
+# Cummulative Rolling sum 
+pubs_human_access$All_Pub <- cumsum(pubs_human_access$NumbPubs)
+pubs_human_access$Reb_Pub <- cumsum(pubs_human_access$pubs_rebreather)
+pubs_human_access$Sub_Pub <- cumsum(pubs_human_access$pubs_Submersible)
+pubs_human_access$SCUBA_Pub <- cumsum(pubs_human_access$pubs_SCUBA)
+# They are defined as "_Pub"
+
+# Accumulative representation
+pubs_human_access_acumm <- pubs_human_access[c("publication_year","All_Pub","Reb_Pub","Sub_Pub","SCUBA_Pub")]
+df_accum <- melt(pubs_human_access_acumm ,  id.vars = 'publication_year', variable.name = 'series')
+# Make the plot 
+ggplot(df_accum, aes(publication_year, value)) +
+  geom_line(aes(colour = series)) + labs(y = "Number Publications", x= "Years", 
+                                         title = "Human access to Mesophotic depths") +
+  theme_bw()
+
+# Non-Accummulative
+pubs_human_access_non_accumm <- pubs_human_access[c("publication_year","NumbPubs","pubs_rebreather","pubs_Submersible","pubs_SCUBA")]
+df_non_accumm <- melt(pubs_human_access_non_accumm ,  id.vars = 'publication_year', variable.name = 'series')
+# Make the plot
+ggplot(df_non_accumm, aes(publication_year, value)) +
+  geom_line(aes(colour = series)) + labs(y = "Number Publications", x= "Years", 
+  title = "Human access to Mesophotic depths")  +
+  theme_bw()
+
+
+rm (publs_data1, publs_data2,publs_data3,publs_data4, pubs_rebreather, pubs_SCUBA, pubs_Submersible, pubs_human_access, pubs_human_access_acumm,pubs_human_access_non_accumm, pubs_human_access, df_accum, df_non_accumm)
+
+```
+
+Plot by depths. Publications and focus groups. Max_depth target vs depth ranges target
+
+```{r}
+
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data", "platforms", "min_depth", "max_depth", "focusgroups" )]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Delete columns where platforms is empty
+depths_df <- publs_data[-which(publs_data$platforms == ""), ]
+
+# Filter to publications having different max_depth than 0
+depths_df <- filter(depths_df, max_depth != 0)
+# Or publications with max_depth in the mesophotic range
+depths_df <- depths_df %>% filter(max_depth > 29) # Dropped publications where max_depth > 29
+
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(depths_df$min_depth))
+# Replace by max depth
+depths_df$min_depth <- ifelse(is.na(depths_df$min_depth), depths_df$max_depth, depths_df$min_depth)
+# check
+sum(is.na(depths_df$max_depth)) # check the max depths
+
+# Filter publications deeper than mesophotic for the min_depth
+depths_df <- depths_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m
+
+
+# Transform all rows where "max_depth" is more than 300 (as outside of mesophotic range)
+# Should be unnecessary based on plot after
+depths_df$max_depth <- ifelse(depths_df$max_depth>300,300,depths_df$max_depth)
+
+# Measure publications depth range
+depths_df$Depth_range <- depths_df$max_depth - depths_df$min_depth
+
+# THIS SHOULD BE UNNECESSARY based on command above- Transform all values where "Depth_range" is more than 300 (as outside of mesophotic range) 
+depths_df$Depth_range <- ifelse(depths_df$Depth_range>300,300,depths_df$Depth_range)
+
+# Quick check histograms
+hist (depths_df$Depth_range)
+
+
+# scale the variable, target max depths and not depth ranges
+depths_df$max_depth_target = cut(depths_df$max_depth,c(29,40,60,80,100,150,300)) # 3962
+unique (depths_df$max_depth_target)
+# You can also choose the number: , breaks = 5
+levels(depths_df$max_depth_target) = c("30-40 m","40-60 m", "60-80 m", "80-100 m", "100-150 m", "> 150 m")
+
+# This would be for Group_Depth_ranges
+depths_df$group_depth_range = cut(depths_df$Depth_range,c(-1,1,10,50,100,300)) # 3962
+unique (depths_df$group_depth_range)
+# You can also choose the number: , breaks = 5
+levels(depths_df$group_depth_range) = c("0 m","1-10 m", "10-50 m", "50-100 m", "> 100 m")
+
+ggplot(data =depths_df,aes(x=max_depth_target)) + 
+  geom_bar() +
+  labs(x="Depth range (m)", y="Number of publications") + theme_bw()
+
+
+#  set factors in the right order
+depths_df$max_depth_target <- factor(depths_df$max_depth_target, levels = c("> 150 m","100-150 m","80-100 m","60-80 m","40-60 m", "30-40 m"))
+
+ggplot(data =depths_df,aes(y=max_depth_target)) +
+  geom_bar(position = position_dodge()) +
+  labs(x="Number of publications", y="Maximum depths (m)") + 
+  scale_x_continuous(position = "bottom", breaks = c(0, 50, 100,150, 200,250))+
+  theme_bw() + 
+  theme (legend.position="none", legend.title=element_blank())
+
+
+# Quick check: 
+ddply(depths_df, ~ max_depth_target,
+                   function(x){c(Pubs_number_all= length(x$id))})
+
+# Important command: Separate all the main focusgroups
+depths_df <- separate_rows(depths_df, "focusgroups", sep=";\\s+") 
+
+# Only the great divide, corals vs fish
+keep_focus_groups <- c("Fishes", "Scleractinia (Hard Corals)") 
+
+# Another option for keeping other focus groups
+# keep_focus_groups <- c("Fishes", "Scleractinia (Hard Corals)","Octocorallia (Soft Corals)", "Overall benthic (groups)") # "Algae (Macro, Turf and Crustose Coralline)", "Porifera (Sponges)"
+
+depths_df <- subset(depths_df,focusgroups %in% keep_focus_groups)
+
+
+# Change names to simplify life
+depths_df$focusgroups<- gsub("Scleractinia \\(Hard Corals\\)", "Scleractinian",depths_df$focusgroups)
+# Unnecessary if only corals vs fish
+# depths_df$focusgroups<- gsub("Octocorallia \\(Soft Corals\\)", "Octocorals",depths_df$focusgroups) 
+# depths_df$focusgroups<- gsub("Overall benthic \\(groups\\)", "Benthos",depths_df$focusgroups) # Unnecessary if onyl corals vs fish
+
+# Check number of publications per focus groups
+ddply(depths_df, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+# Numbers are a bit lower than the mentioned in the manuscript because we are droping the publications where platform is empty
+
+# Set colours manually, order and colour
+depths_df$focusgroups <- factor(depths_df$focusgroups, levels = c("Fishes", "Scleractinian")) # Only Fishes and Scleractinian
+viridisPalette5 <- c("#440154FF", "#fde725FF")
+
+# depths_df$focusgroups <- factor(depths_df$focusgroups, levels = c("Fishes", "Octocorals", "Scleractinian", "Benthos")) # Unnecessary if only corals vs fish
+# viridisPalette5 <- c("#440154FF", "#414487FF", "#fde725FF", "gray62")
+
+ggplot(data =depths_df,aes(x=group_depth_range, fill = focusgroups)) + 
+  geom_bar(position = position_dodge()) +
+  labs(x="Depth range (m)", y="Number of publications") + 
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="bottom", legend.title=element_blank())
+
+# 2nd option
+ggplot(data =depths_df,aes(x=group_depth_range, fill = focusgroups)) + 
+  geom_bar(position = position_dodge()) +
+  facet_wrap(~focusgroups) +
+  labs(x="Depth range (m)", y="Number of publications") + 
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="none", legend.title=element_blank())
+
+
+# Instead of depth ranges, target max_depths by groups!
+# scale the variable max_depth
+depths_df$max_depth_target = cut(depths_df$max_depth,c(29,40,60,80,100,150,300)) # 3962
+unique (depths_df$max_depth_target)
+# You can also choose the number: , breaks = 5
+levels(depths_df$max_depth_target) = c("30-40 m","40-60 m", "60-80 m", "80-100 m", "100-150 m", "> 150 m")
+
+# Make a manual ddply to verify the values
+summary_groups_depths <- ddply(depths_df, ~ focusgroups + max_depth_target,
+                   function(x){c(Pubs_number= length(x$id))})
+
+ggplot(data =depths_df,aes(x=max_depth_target, fill = focusgroups)) + 
+  geom_bar(position = position_dodge()) +
+  labs(x="Max depth target (m)", y="Number of publications") + 
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="bottom", legend.title=element_blank())
+
+
+# 2nd option with all 4
+ggplot(data =depths_df,aes(x=max_depth_target, fill = focusgroups)) + 
+  geom_bar(position = position_dodge()) +
+  facet_wrap(~focusgroups, nrow = 1) +
+  labs(x="Max depth target (m)", y="Number of publications") + 
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="none", legend.title=element_blank(),axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+# Necessary to set the order of y axis manually again
+depths_df$max_depth_target <- factor(depths_df$max_depth_target, levels = c("> 150 m","100-150 m","80-100 m","60-80 m","40-60 m", "30-40 m"))
+
+ggplot(data =depths_df,aes(y=max_depth_target, fill = focusgroups)) +
+  geom_bar(position = position_dodge()) +
+  facet_wrap(~focusgroups, nrow = 1) +
+  labs(x="Number of publications", y="Maximum depths (m)") + 
+  scale_x_continuous(position = "bottom", breaks = c(0, 25, 50,75, 100))+
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="none", legend.title=element_blank())
+
+
+# Check of figure with new summary dataframe
+summary_groups_depths$max_depth_target <- factor(summary_groups_depths$max_depth_target, levels = c("> 150 m","100-150 m","80-100 m","60-80 m","40-60 m", "30-40 m"))
+
+ggplot(data =summary_groups_depths,aes(y=max_depth_target,x=Pubs_number, fill = focusgroups)) +
+  geom_bar(stat='identity') +
+  facet_wrap(~focusgroups, nrow = 1) +
+  labs(x="Number of publications", y="Maximum depths (m)") + 
+  scale_x_continuous(position = "bottom", breaks = c(0, 25, 50,75, 100))+
+  scale_fill_manual(values=viridisPalette5) + theme_bw() + 
+  theme (legend.position="none", legend.title=element_blank())
+
+rm (pubs_platforms, summary_groups_depths, platforms_df, depths_df)
+
+```
+
+
+Check number of publications per focus groups
+For long-term
+
+```{r}
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data","min_depth", "max_depth", "focusgroups", "fields")]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Filter to publications having different max_depth than 0
+depths_df <- filter(publs_data, max_depth != 0) # If you run command above, change "publs_data" with "depths_df"
+# Or publications with max_depth in the mesophotic range
+depths_df <- depths_df %>% filter(max_depth > 29) # Dropped publications where max_depth > 29
+# To start making the plot from 30 m like in the website
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(depths_df$min_depth))
+# Replace by max depth
+depths_df$min_depth <- ifelse(is.na(depths_df$min_depth), depths_df$max_depth, depths_df$min_depth)
+# check
+sum(is.na(depths_df$max_depth)) 
+
+# Filter publications deeper than mesophotic for the min_depth
+depths_df <- depths_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m
+
+
+# Making it for Fishes and corals separately
+# First of all, Separate all the main focusgroups in rows // Important command: 
+depths_df <- separate_rows(depths_df, "focusgroups", sep=";\\s+") 
+
+# Change names to simplify life later
+depths_df$focusgroups<- gsub("Scleractinia \\(Hard Corals\\)", "Scleractinian",depths_df$focusgroups)
+depths_df$focusgroups<- gsub("Octocorallia \\(Soft Corals\\)", "Octocorals",depths_df$focusgroups) # Unnecessary if onyl corals vs fish
+depths_df$focusgroups<- gsub("Overall benthic \\(groups\\)", "Benthos",depths_df$focusgroups) # Unnecessary if onyl corals vs fish
+
+# Check number of publications of fishes and corals
+ddply(depths_df, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+
+depths_df <- separate_rows(depths_df, "fields", sep=";\\s+") 
+
+long_term <- filter(depths_df, fields == "Long-term monitoring") 
+
+ddply(long_term, ~ focusgroups,
+                   function(x){c(Pubs_number= length(x$id))})
+
+# Put scleractinian, symbiodinium, benthos, octocorals together
+keep_groups <- c("Scleractinian", "Symbiodinium (zooxanthellae)", "Octocorals", "Benthos")
+
+long_term_2 <-  long_term[long_term$focusgroups %in% keep_groups, ]
+
+length (unique(long_term_2$id))
+long_term_2[duplicated(long_term_2[,1]),] # 15 multigroup manuscripts
+
+rm (depths_df,long_term,long_term_2)
+
+```
+
+Figure by platforms and locations, 
+Keep locations in the same order
+Info of TME and MCEs is unnecessary according to coregroup
+
+```{r}
+
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","validated","included_in_stats","publication_year","original_data","mce", "platforms","min_depth", "max_depth", "locations")]
+publs_data <- subset (publs_data, original_data == "true")
+publs_data <- subset (publs_data, validated == "true")
+publs_data <- subset (publs_data, included_in_stats == "true")
+
+# Replace mce column by Ecosystem
+colnames(publs_data)[colnames(publs_data) == 'mce'] <- 'Ecosystem'
+
+# Set info of MCE or TME
+publs_data$Ecosystem <- ifelse(publs_data$Ecosystem %in% c('true'), "MCE","TME")
+
+# Generate a new database
+platforms_df <- publs_data
+
+# Keep all platforms! Do not filter to publications with single platform! (if necessary check above)
+# Work on PLATFORMS
+# First delete columns where platforms is empty
+platforms_df <- platforms_df[-which(platforms_df$platforms == ""), ]
+
+# Work on LOCATIONS
+# Remove rows with no associated `locations`
+platforms_df <- platforms_df[!(is.na(platforms_df$locations) | platforms_df$locations == ""), ]
+
+# Remove publications where max_depth == 0
+platforms_df <- platforms_df %>% filter(max_depth > 29) # Dropped publications where max_depth > 29
+
+
+# Transform publications where min_depth is NA to Max_Depth
+# How many do we have?
+sum(is.na(platforms_df$min_depth))
+# Replace by max depth
+platforms_df$min_depth <- ifelse(is.na(platforms_df$min_depth), platforms_df$max_depth, platforms_df$min_depth)
+# check
+sum(is.na(platforms_df$max_depth)) 
+
+# Filter publications deeper than mesophotic for the min_depth
+platforms_df <- platforms_df %>% filter(min_depth < 151) # Keep publications where min_depth is less than 150 m
+
+
+#### BE CAREFUL - THESE COMMANDS GENERATES MORE PUBLICATIONS NUMBERS due multiplatform and multilocation - Keep all of them but as separate rows (option to be decided) #####
+platforms_df <- separate_rows(platforms_df, "platforms", sep=";\\s+") 
+platforms_df <- separate_rows(platforms_df, "locations", sep=";\\s+") 
+
+# Remove string after "-" to keep only the country.
+# platforms_df$locations <- sub("\\ -.*", "", platforms_df$locations)
+
+# Delete duplicated rows because multiple locations withing the same country. 
+platforms_df <- platforms_df[!duplicated(platforms_df), ]
+
+# Check number of publications
+top_locations <- ddply(platforms_df, ~ Ecosystem + locations,
+                   function(x){c(Pubs_number= length(x$id))})
+
+# Check number of publications
+top_locations <- ddply(platforms_df, ~ locations,
+                   function(x){c(Pubs_number= length(x$id))})
+
+order (top_locations)
+
+# Keep only certain platforms and arrange by depth
+keep_plat <-  c ("SCUBA (open-circuit or unspecified)","Autonomous Underwater Vehicle (AUV)","Rebreather","Baited Remote Underwater Video (BRUV)","Fishing","Remotely Operated Vehicle (ROV)","Manned Submersible", "Dredging / trawling", "Sonar / Multibeam")
+platforms_df <- subset(platforms_df,platforms %in% keep_plat)
+
+# Transform characters to simplified names
+platforms_df$platforms<- gsub("SCUBA \\(open-circuit or unspecified\\)", "SCUBA",platforms_df$platforms)
+platforms_df$platforms<- gsub("Autonomous Underwater Vehicle \\(AUV\\)", "AUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Sonar / Multibeam", "Sonar",platforms_df$platforms)
+platforms_df$platforms<- gsub("Baited Remote Underwater Video \\(BRUV\\)", "BRUV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Dredging / trawling", "Dredging",platforms_df$platforms)
+platforms_df$platforms<- gsub("Remotely Operated Vehicle \\(ROV\\)", "ROV",platforms_df$platforms)
+platforms_df$platforms<- gsub("Manned Submersible", "Submersible",platforms_df$platforms)
+
+# Set in the right order
+platforms_df$platforms <- factor(platforms_df$platforms, levels = c("SCUBA","Submersible","Rebreather","ROV","Dredging","Fishing","BRUV","AUV","Sonar"))
+
+# Make a table with the number of publications per category: 
+pubs_platforms <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Pubs_number= length(x$id))})
+pubs_platforms_depth <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Max_depth_mean= mean(x$max_depth))})
+pubs_platforms_depth_median <- ddply(platforms_df, ~ platforms,
+                   function(x){c(Max_depth_median= median(x$max_depth))})
+pubs_platforms_pubs_ecosystem <- ddply(platforms_df, ~ platforms + Ecosystem,
+                   function(x){c(Pubs_number_ecos= length(x$id))})
+pubs_platforms <- merge (pubs_platforms,pubs_platforms_depth)
+pubs_platforms <- merge (pubs_platforms,pubs_platforms_depth_median)
+pubs_platforms <- merge (pubs_platforms,pubs_platforms_pubs_ecosystem)
+
+# Make the plot of the top locations 
+# Facetwrap by platform, display only top locations
+pubs_platforms_locations <- ddply(platforms_df, ~ platforms + locations,
+                   function(x){c(Freq= length(x$id))})
+
+# Measure most important location
+pubs_locations <- ddply(platforms_df, ~ locations,
+                   function(x){c(Freq_Loc= length(x$id))})
+pubs_locations <- pubs_locations[order(pubs_locations$Freq_Loc, decreasing = T), ]
+
+
+# Keep only the top 10 locations (this number can change)
+pubs_locations_top <- pubs_locations %>% 
+  arrange(desc(Freq_Loc)) %>%  slice_max(order_by = Freq_Loc, n = 10, with_ties = F)
+
+top_locations <- unique (pubs_locations_top$locations)
+
+# Keep in database "pubs_platforms_locations_top" only the top 10 locations
+pubs_platforms_locations_top <- subset(pubs_platforms_locations,locations %in% top_locations)
+
+# Set in the same order
+pubs_platforms_locations_top$locations <- factor(pubs_platforms_locations_top$locations, levels = top_locations)
+
+
+# Fig_Platforms_Locations
+ggplot(pubs_platforms_locations_top, aes(x = Freq, y = reorder (locations, Freq))) + 
+  geom_col(position = position_dodge()) + 
+  facet_wrap(~platforms, labeller = label_wrap_gen(width = 18), nrow = 1) + # scales = "free_y"
+  scale_x_continuous(breaks = c(0, 25, 50, 75, 100)) +
+  labs(y = "", x = "Number of publications (n)", title = "Top 10 locations") +  
+  theme_bw() 
+
+rm (top_locations,pubs_platforms_pubs_ecosystem, pubs_platforms_depth_median, pubs_platforms_locationspubls, order, Locations, publs_complete, pubs_platforms_depth, pubs_platforms_locations_top,pubs_locations_top,pubs_locations, Fig_Platforms_Locations,pubs_platforms_locations, pubs_platforms_depth, pubs_platforms, platforms_df)
+
+```
+
+Plot by focus groups and top locations
+
+```{r}
+
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
+publs_data <- publs[c("id","publication_year","original_data","fields","focusgroups", "platforms", "locations")]
+publs_data <- subset (publs_data, original_data == "true")
+
+# Split `focusgroups` into new rows, but keep ID
+publs_focusgroups <- separate_rows(publs_data, "focusgroups", sep=";\\s+") 
+
+# Remove rows with no associated `platforms`
+publs_focusgroups <- publs_focusgroups[!
+(is.na(publs_focusgroups$focusgroups) |
+publs_focusgroups$focusgroups ==
+""), ]
+
+Groups <- as.data.frame(table(publs_focusgroups$focusgroups))
+colnames (Groups) <- c("Focus_groups", "freq")
+
+Groups$media_freq <- Groups$freq - median (Groups$freq)
+
+Groups <- arrange(Groups, media_freq)
+# Groups <- rbind(head(Groups,5), tail(Groups,5))
+Groups$Focus_groups <- factor(Groups$Focus_groups, levels = Groups$Focus_groups)
+# Make the plot
+
+ggplot(Groups, aes(Focus_groups, media_freq, fill = Focus_groups)) + 
+  geom_col(position = position_dodge()) + 
+  labs(y = "Frequency based on the median", x = "", 
+  title = "Focus groups") + coord_flip() + 
+  theme_bw() + theme(legend.position="none")
+
+rm (Groups, publs_focusgroups)
+
+```
+
+Plot by locations, filtering to top locations only
+
+```{r}
+
+# Split `locations` into new rows, but keep ID
+publs_locations <- separate_rows(publs_data, "locations", sep=";\\s+") 
+
+# Remove rows with no associated `platforms`
+publs_locations <- publs_locations[!
+(is.na(publs_locations$locations) |
+publs_locations$locations ==
+""), ]
+
+Locations <- as.data.frame(table(publs_locations$locations))
+colnames (Locations) <- c("Locations", "freq")
+
+Locations$media_freq <- Locations$freq - median (Locations$freq)
+
+Locations <- arrange(Locations, media_freq)
+# Locations <- rbind(head(Locations,7), tail(Locations,7))
+Locations <- rbind(tail(Locations,15))
+
+Locations$Locations <- factor(Locations$Locations, levels = Locations$Locations)
+# Make the plot
+
+ggplot(Locations, aes(Locations, media_freq, fill = Locations)) + 
+  geom_col(position = position_dodge()) + 
+  labs(y = "Frequency based on the median", x = "", 
+  title = "Locations") + coord_flip() + 
+  theme_bw() + theme(legend.position="none")
+
+rm (Locations, publs_locations)
+
+```
+
+#### THE END
+
+
