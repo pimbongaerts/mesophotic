@@ -1,0 +1,1346 @@
+---
+title: "Mesophotic.org database release Maps 2.2"
+author: "Alejandra Hernández & Gonzalo Pérez-Rosales; https://github.com/gonzaloprb"
+date: "2024-09-19"
+output: html_document
+---
+
+Code to make a map showing the progress of mesophotic research (2008 vs 2023) for the release of the 2'24 database. The code downloads the latest version of the database: "http://www.mesophotic.org/publications.csv"
+It also uses an external source database of EEZ (Exclusive Economic Zone)
+
+Our code is based on the following tutorial: https://rpubs.com/drfinlayscott/989660
+
+### Load the following packages (dependencies) for manipulating and viewing the data:
+```{r message=FALSE}
+require(oceanmap)
+require(ggplot2)
+require(svglite)
+require(tidyverse)
+require(dplyr)
+require(tidyr)
+require(ggmap)
+require(sf)
+require(sp)
+require(rgdal)
+require(maptools)
+require(maps)
+require(rgdal)
+require(gridExtra)
+require(ggstar)
+require (rgeos)
+rm(list=ls()) 
+# Set the main working directory for the savings: 
+setwd("~/Documents/AAASea_Science/Mesophotic.org/")
+
+```
+
+Open previously generated EEZ database and apply the necessary corrections
+```{r}
+# EEZ
+EEZ <- read.csv("~/Documents/AAASea_Science/Mesophotic.org/mesophotic_org_EEZ_16112023.csv", as.is=TRUE)
+colnames(EEZ)[2] <- 'locations'
+
+# Select certain columns of the matrix
+EEZ <- EEZ[,c(2, 5, 6, 11, 12)]                                               
+
+# Checking duplicates based on typos
+unique(EEZ$locations)                                                  
+as.data.frame(unique(EEZ$locations))
+
+unique(EEZ$SOVEREIGN1)                                                        
+as.data.frame(unique(EEZ$SOVEREIGN1))
+
+unique(EEZ$TERRITORY1)                                                 
+as.data.frame(unique(EEZ$TERRITORY1))
+
+
+# Fixing typos to make sure there are NO NA
+EEZ$locations <- gsub("Reunion Islands", "Reunion Island", EEZ$locations)
+
+replacements_sovereign <- c("Costa Rica " = "Costa Rica",
+                  "India " = "India",
+                  "Italy " = "Italy",
+                  "Japan " = "Japan",
+                  "Portugal " = "Portugal",
+                  "USA " = "United States",
+                  "Turkey " = "Turkey",
+                  "Honduras " = "Honduras",
+                  "Panama " = "Panama",
+                  "Spain " = "Spain",
+                  "Sudan " = "Sudan",
+                  "Venezuela " = "Venezuela",
+                  "Colombia " = "Colombia",
+                  "Australia " = "Australia",
+                  "Brazil " = "Brazil",
+                  "Micronesia " = "Micronesia",
+                  "Ecuador " = "Ecuador",
+                  "Israel " = "Israel",
+                  "Saudi Arabia " = "Saudi Arabia",
+                  "Mexico " = "Mexico",
+                  "Egypt " = "Egypt",
+                  "Canada " = "Canada",
+                  "China " = "China",
+                  "High Seas" = "Republic of Mauritius", 
+                  "USA" = "United States",
+                  "Mauritius" = "Republic of Mauritius")
+
+EEZ$SOVEREIGN1 <- recode(EEZ$SOVEREIGN1, !!!replacements_sovereign)
+
+replacements_territories <- c("USA " = "United States",
+                  "USA" = "United States",
+                  "Great Barrier Reef" = "Australia",
+                  "Northern Australia" = "Australia",
+                  "Coral Sea" = "Australia",
+                  "Southeastern Australia" = "Australia",
+                  "Scott Reef" = "Australia",
+                  "Western Australia" = "Australia",
+                  "Eastern Brazil" = "Brazil",
+                  "Trindade and Martin Vaz" = "Trindade",
+                  "St Peter and St Paul Archipelago" = "Brazil",
+                  "Fernando Noronha" = "Brazil",
+                  "China " = "China",
+                  "Colombia " = "Colombia",
+                  "Comoros" = "Comores",
+                  "Costa Rica " = "Costa Rica",
+                  "Galapagos Islands" = "Galapagos",
+                  "Egypt " = "Egypt",
+                  "Reunion Islands" = "Réunion",
+                  "France " = "France",
+                  "Bay Islands" = "Honduras",
+                  "India " = "India",
+                  "Bay of Bengal" = "India",
+                  "Andaman and Nicobar Islands" = "Andaman and Nicobar",
+                  "Israel " = "Israel",
+                  "Ryukyu Islands" = "Japan",
+                  "Ogasawara Islands" = "Japan",
+                  "Kiribati" = "Line Group",
+                  "Baja California" = "Mexico",
+                  "Gulf of Mexico" = "Mexico",
+                  "Caroline Islands" = "Micronesia",
+                  "Chuuk atoll" = "Micronesia",
+                  "Curacao" = "Curaçao",
+                  "Saba Bank" = "Saba",
+                  "Panama " = "Panama",
+                  "Mauritius" = "Republic of Mauritius",
+                  "Saya de Malha Bank" = "Republic of Mauritius",
+                  "St Vincent" = "Saint Vincent and the Grenadines",
+                  "Jejudo Island" = "South Korea",
+                  "Sudan " = "Sudan",
+                  "Turkey " = "Turkey",
+                  "Turks and Caicos" = "Turks and Caicos Islands",
+                  "Pitcairn Islands" = "Pitcairn",
+                  "US Virgin Islands" = "United States Virgin Islands",
+                  "Pulley Ridge" = "United States",
+                  "Mariana Islands" = "United States Virgin Islands",
+                  "Venezuela " = "Venezuela",
+                  "Canada " = "Canada",
+                  "Italy " = "Italy",
+                  "Scotland" = "United Kingdom",
+                  "England" = "United Kingdom",
+                  "Mexico " = "Mexico",
+                  "Saudi Arabia " = "Saudi Arabia",
+                  "Spain " = "Spain")
+
+EEZ$TERRITORY1 <- recode(EEZ$TERRITORY1, !!!replacements_territories)
+
+# Now there should not be duplicate typos
+unique(EEZ$SOVEREIGN1)                                                 
+as.data.frame(unique(EEZ$SOVEREIGN1))
+
+unique(EEZ$TERRITORY1)                                                       
+as.data.frame(unique(EEZ$TERRITORY1))
+
+
+# Making a separated matrix for those sites currently without EEZ
+str(EEZ)
+misslocations <-  c("Italy - Ligurian-Tyrrhenian","Italy - Adriatic-Ionian", "Romania")
+misssLatitude <- c("40.711614","38.390000", "45.943")
+missLongitude <- c("13.200073","16.760000", "24.967")
+misssovereign <-  c("Italy","Italy", "Romania")
+missterritory <- c("Italy","Italy","Romania")
+
+missed_EEZ <- as.data.frame(bind_cols(misslocations, misssLatitude))
+missed_EEZ <- as.data.frame(bind_cols(missed_EEZ, missLongitude))
+missed_EEZ <- as.data.frame(bind_cols(missed_EEZ, misssovereign))
+missed_EEZ <- as.data.frame(bind_cols(missed_EEZ, missterritory))
+
+# Set colnames of "missed_EEZ"
+colnames(missed_EEZ) <- c("locations", "Latitude",  "Longitude", "SOVEREIGN1", "TERRITORY1")
+                                   
+# Check dataframe
+str(EEZ)
+str(missed_EEZ)
+
+missed_EEZ$Latitude <- as.numeric(missed_EEZ$Latitude)
+missed_EEZ$Longitude <- as.numeric(missed_EEZ$Longitude)
+
+#Reorder columns to merge and merge
+EEZ <- bind_rows(EEZ, missed_EEZ)
+
+
+rm (misslocations, missLongitude, misssLatitude, misssovereign, missterritory,replacements_sovereign, replacements_territories, missed_EEZ)
+```
+
+## Open and work with mesophotic.org data
+It uptakes the most recent database
+```{r}
+#Mesophotic.org data, automatically download the latest database
+publs <- read.csv("http://www.mesophotic.org/publications.csv", as.is=TRUE)                 
+
+#Select only "Scientific" "Article" (original research) 
+publs <- subset(publs, publication_type == "scientific" & publication_format == "article" & original_data == "true")
+# For the map, we are not applying the filter of validated and stats; otherwise add:
+# publs <- subset(publs, validated == "true" & included_in_stats == "true")
+
+# Drop levels
+publs <- droplevels(publs)                                                                  
+
+## Publications by 'Locations'
+# Split `locations` into new rows
+publs_locations <- separate_rows(publs, "locations", sep=";\\s+") 
+
+# Remove rows with no associated `locations`
+publs_locations <- publs_locations[!(is.na(publs_locations$locations) |publs_locations$locations ==""), ]
+
+publs_locations$locations <- factor(publs_locations$locations)
+
+# Display locations levels
+levels(publs_locations$locations)                                                             
+
+# Adding coordinates, sovereign and territory
+publs2 <- publs_locations
+publs2$Latitude <- with(EEZ,Latitude[match(publs2$locations,locations)])
+publs2$Longitude <- with(EEZ,Longitude[match(publs2$locations,locations)])
+publs2$SOVEREIGN1 <- with(EEZ,SOVEREIGN1[match(publs2$locations,locations)])
+publs2$TERRITORY1 <- with(EEZ,TERRITORY1[match(publs2$locations,locations)])
+
+
+# Separate by periods, before 2008 and 2008-2023
+publs2$range <- ifelse(publs2$publication_year <= 2007, '<2008',
+                       ifelse(publs2$publication_year <=2023, '<2023', 'unassigned'))
+
+# Before 2008
+publs_2008 <- subset(publs2, range == "<2008")                          
+
+# After 2008
+publs_2023 <- subset(publs2, range == "<2023")                           
+
+# Saving the locations as vector
+locations_2008_temp <- publs_2008[,29] # Column 29 is locations
+locations_2023_temp <- publs_2023[,29]
+
+
+# Remove duplicates
+locations_2008_temp <- locations_2008_temp[!duplicated(locations_2008_temp$locations),]
+locations_2023_temp <- locations_2023_temp[!duplicated(locations_2023_temp$locations),]
+
+
+# Categorising range
+locations_2008_temp$range <- "to_2008"
+locations_2023_temp$range <- "2008-2023"
+
+locations_both <- bind_rows(locations_2023_temp, locations_2008_temp)
+locations_both <- locations_both[!duplicated(locations_both$locations),]
+
+
+# Adding coordinates and EEZ
+locations_both$Latitude <- with(EEZ,Latitude[match(locations_both$locations,locations)])
+locations_both$Longitude <- with(EEZ,Longitude[match(locations_both$locations,locations)])
+locations_both$SOVEREIGN1 <- with(EEZ,SOVEREIGN1[match(locations_both$locations,locations)])
+locations_both$TERRITORY1 <- with(EEZ,TERRITORY1[match(locations_both$locations,locations)])
+
+
+#Adding coordinates and EEZ for the pre 2008 and 2023 dataframes
+# 2008
+locations_2008_temp$Latitude <- with(EEZ,Latitude[match(locations_2008_temp$locations,locations)])
+locations_2008_temp$Longitude <- with(EEZ,Longitude[match(locations_2008_temp$locations,locations)])
+locations_2008_temp$SOVEREIGN1 <- with(EEZ,SOVEREIGN1[match(locations_2008_temp$locations,locations)])
+locations_2008_temp$TERRITORY1 <- with(EEZ,TERRITORY1[match(locations_2008_temp$locations,locations)])
+
+# 2023
+locations_2023_temp$Latitude <- with(EEZ,Latitude[match(locations_2023_temp$locations,locations)])
+locations_2023_temp$Longitude <- with(EEZ,Longitude[match(locations_2023_temp$locations,locations)])
+locations_2023_temp$SOVEREIGN1 <- with(EEZ,SOVEREIGN1[match(locations_2023_temp$locations,locations)])
+locations_2023_temp$TERRITORY1 <- with(EEZ,TERRITORY1[match(locations_2023_temp$locations,locations)])
+
+```
+
+## Prepare eez shapefile with regions and make first world map
+The first tests of the map are in # Comment. Be careful, if you run the maps they take forever and they are not the final figures
+```{r}
+## Make the first map using library SF 
+# It comes from here: https://www.marineregions.org/downloads.php
+
+# Final shapefile (The lowres file is enough instead of the full resolution)
+eez <- st_read("~/Documents/AAASea_Science/Mesophotic.org/World_EEZ_v12_20231025_LR/eez_v12_lowres.shp")
+# Full resolution (not necessary) is: World_EEZ_v11_20191118_HR_0_360/eez_boundaries_v11_0_360.shp")
+
+# Check the shp
+st_geometry_type(eez)
+st_crs(eez)
+
+# Generate a polygon representing the entire landmass from map_data
+world <- ggplot2::map_data("world")
+
+# Select countries to moodify colors
+mworld <- world %>%  group_by(region) %>% 
+  summarize(mlo= mean(long), mla=mean(lat))
+
+
+#Checking match between territories and sovereigns
+plubs2_sovereign <- publs2
+plubs2_sovereign <-plubs2_sovereign[,c(29:34)]                                                    #Hardcoded
+plubs2_sovereign$UN_SOV1 <- with(eez,UN_SOV1[match(plubs2_sovereign$SOVEREIGN1,SOVEREIGN1)])
+
+which(is.na(plubs2_sovereign), arr.ind=TRUE)
+plubs2_sovereign_NA <- plubs2_sovereign[is.na(plubs2_sovereign$UN_SOV1),]
+plubs2_sovereign_NA$SOVEREIGN1 <- as.factor(plubs2_sovereign_NA$SOVEREIGN1)
+levels(plubs2_sovereign_NA$SOVEREIGN1)
+# They are fixed now
+
+#### First, run this 2 themes - Later are used ####
+clean_theme <-  theme(axis.title = element_text(size=20),
+                      axis.line = element_line(colour = "black"),
+                      axis.text = element_text(size=20),
+                      panel.grid.major = element_blank(),
+                      panel.grid.minor = element_blank(),
+                      panel.border = element_blank(),
+                      panel.grid = element_blank(),
+                      panel.background = element_blank(),
+                      legend.position = "right",
+                      axis.text.x = element_text(size=20),
+                      axis.text.y = element_text(size=20))
+
+
+clean_theme2 <-  theme(axis.title = element_text(size=20),
+                      axis.line = element_line(colour = "black"),
+                      axis.text = element_text(size=20),
+                      panel.grid.major = element_blank(),
+                      panel.grid.minor = element_blank(),
+                      panel.border = element_blank(),
+                      panel.grid = element_blank(),
+                      panel.background = element_blank(),
+                      legend.position = "right",
+                      axis.text.y = element_text(size=10),
+                      axis.text.x = element_text(size=20))
+#### First, run this 2 themes - Later are used ####
+# Preset conditions of the map
+
+
+# First tests ploting the maps
+
+# Optional, make the first tests maps
+
+# Test of map EEZ (takes forever)
+# ggplot() + geom_sf(data=eez, fill = "lightgray") + coord_sf()+ clean_theme
+
+
+# Test of Landmass map (takes forever)
+# ggplot(world,aes( x= long, y = lat, group=group, fill=region)) +
+#   geom_polygon(aes(fill=region),
+#                color = "lightgray", fill="lightgray")+ 
+#                clean_theme
+
+
+```
+
+## Separate between MCE and TME and number of studies
+The idea is to create a map with different Colors based on MCE vs TME and number of studies.
+Clean and prepare the different objects for the final map 
+eez, publs, world
+Fix locations
+Manual editing of problematic locations, etc
+The test plots are in comments because they take very long time to run
+
+```{r}
+# Color the EEZ based on MCE vs TME and number of studies
+###################################################################################################
+# Checking if TME and MCE  have overlapping sites; they should not, but there are many
+#Separate by MCE and TME
+#Total data has 1719 records
+publs_MCE <- subset(publs2, mce == "true" & tme == "false")                                                  #1152 publications
+publs_TME <- subset(publs2, mce == "false" & tme == "true")                                                  #352 publications
+publs_MCE_TME <- subset(publs2, mce == "true" & tme == "true")                                               #14 publications
+publs_none <- subset(publs2, mce == "false" & tme == "false")                                               #105 publications
+#Just to check
+unique(publs_MCE_TME$id)                                                                            
+# We fixed many of these in the website
+unique(publs_MCE_TME$locations)
+
+unique(publs_none$id)                                                                               
+
+# To communicate, there are 105 publications not classified as any of them
+
+###################################################################################################
+#Double checking the locations with both MCE and TME, case by case - MANY OF THEM ARE ALREADY RESOLVED in the website
+###################################################################################################
+#Double checking the locations with both MCE and TME, case by case
+publs_MCE_TME$id <- as.factor(publs_MCE_TME$id)
+
+#1. Identify the location(s) and latitude(s)
+temp <- subset(publs_MCE_TME, id == "885")
+unique(temp$locations)
+unique(temp$Latitude)
+
+#2. Identify if locations have been previously classified as TME, MCE or both databases 
+#which ecoregion are they in (Spalding et al., 2019)
+location_test <- "Peru"
+temp_MCE <- publs_MCE %>% filter(locations == location_test)
+print(temp_MCE$id)
+
+temp_TME <- publs_TME %>% filter(locations == location_test)
+print(temp_TME$id)
+
+#3. Check the topic of the paper
+
+
+#ID: 420 - OK to be TME & MCE, locations will be split
+#[1] Costa Rica - Pacific Ocean Mexico - Baja California   Peru 
+
+#Costa Rica - Pacific Ocean - MCE
+#MCE: [1]  389  421  752  997 1477 1542
+#TME: [1] 1612
+#Although one manuscript (ID: 1612) as TME, and I think it should also be MCE (Isla Cocos is officially in 
+#tropical marine ecoregion)
+
+#Mexico - Baja California - TME
+#MCE:[1]  649  668  997 1217
+#TME: NA
+#But it's officially in temperate marine ecoregion
+
+#Peru - TME
+#MCE: NA
+#TME: NA
+#Officially in temperate marine ecoregion
+
+#ID:849  - TME
+#[1] Australia - Western Australia
+unique(temp$Latitude)
+# [1] -24.5721
+unique(temp$Longitude)
+#[1] 112.5879
+#MCE: [1]  166  235  236  401  494  675  677  690  705  719  761  806  977  988 1304 1341 1496 1513 1514 1515
+# [21] 1566 1595
+#TME: [1]  240 1030 1240 1310 1507 1508
+#Western Australia is borderline between tropical and temperate, but this particular coordinate is
+#Temperate and the paper is about temperate reefs
+#I think it should be TME
+
+#ID: 885  - OK to be TME & MCE, locations will be split 
+#[1] Australia - Northern Australia     Australia - Southeastern Australia
+#[1] Australia - Northern Australia - MCE
+#MCE: [1]   77   98  100  113  147  630  675 1071 1362 1496
+#TME: NA
+
+# Australia - Southeastern Australia -TME
+#MCE: NA
+#TME: NA
+#Latitude: -33.01385
+
+#ID: 943  - OK to be TME & MCE, locations will be split 
+#[1] American Samoa                   US Virgin Islands                USA - Continental Atlantic Ocean
+# [4] USA - Continental Pacific Ocean 
+
+#[1] American Samoa - MCE
+#MCE:[1]   42  782  861 1056
+#TME: NA
+
+#US Virgin Islands - MCE
+#MCE: [1]   14   15   16   31   34   37   52   55   64   65   73   77   78   90  129  131  136  144  146  154
+# [21]  156  173  202  206  219  229  242  260  261  264  293  294  298  311  344  383  394  417  482  483
+# [41]  490  589  616  635  686  722  989 1012 1061 1526 1554 1594
+#TME: NA
+
+#USA - Continental Atlantic Ocean - TME
+#Latitude: 35.23553
+#Longitude: -75.476074
+#This is NC, temperate
+#MCE:[1]   77  234  437  438  487  488  513  517  518  520  548  570  733  821 1033 1182 1320 1375 1393 1637
+#TME:[1]  204  406  445 1406
+
+
+#USA - Continental Pacific Ocean - TME
+#Latitude: 44.635437
+#Longitude:-125.024414
+#This is Portland, temperate
+#MCE:[1] 317 435 649
+#TME: [1]   60  684 1026 1407 1414 1421 1422 1444 1456 1470 1572 1611 1625
+
+
+#ID: 1035 - TME
+#[1] Italy - Ligurian-Tyrrhenian
+#[1] 40.71161
+#MCE: [1] 509 510
+#TME: [1]   47  118  122  245  245  357  359  360  361  361  362  364  365  368  369  369  373  374  376  524
+# [21]  530  546  585  592  592  602  606  606  613  613  614  614  621  621  626  629  631  631  634  640
+# [41]  647  648  652  653  659  661  680  680  681  697  790  790  798  798  980  980 1015 1019 1024 1027
+# [61] 1059 1159 1167 1185 1221 1222 1224 1225 1226 1230 1231 1241 1247 1248 1248 1250 1262 1263 1274 1275
+# [81] 1276 1277 1277 1281 1309 1318 1329 1348 1359 1502 1529 1623
+#Geology paper
+
+
+
+#ID:1037 - TME
+#[1] Croatia                 Italy - Adriatic-Ionian
+#[1] 44.373 38.390
+
+#[1] Croatia - TME
+#MCE:NA
+#TME: [1]  495  613  660 1187 1230 1623
+
+#Italy - Adriatic-Ionian -TME
+#MCE: NA
+#TME:[1]  369  606  606  613  624  624  789  798 1036 1193 1207 1208 1208 1250 1251 1272 1305 1305 1318 1620
+#The paper is about connectivity of macrobenthos
+
+
+#ID:1319 - unsure
+#[1] Norway
+#MCE: NA
+#TME: [1] 1431 1459 1609
+#the article is about Scleractinia but this is a temperate region, maybe it's ok to stay in both TME
+#And MCE and count in both?
+
+
+#ID:1366  - OK to be TME & MCE, locations will be split 
+#[1] Israel - Red Sea                    Israel - Mediterranean Sea         
+#[3] India - Andaman and Nicobar Islands
+#[1] 29.53370 32.11700 12.03237
+
+#Israel - Red Sea - MCE
+# #MCE:  [1]   45   48   56   62   69   75   76   82   92   93  109  110  116  124  133  137  149  158  185  207
+# [21]  208  209  210  239  244  251  297  308  309  314  318  339  340  342  345  411  448  450  458  461
+# [41]  471  477  479  480  492  493  747  749  784  795  797  832  837  838  841  843  851  854  866  871
+# [61]  877  883  934  953  958  975  985  995 1014 1016 1054 1060 1065 1066 1070 1071 1079 1160 1162 1286
+# [81] 1314 1324 1326 1342 1347 1349 1372 1390 1391 1499 1500 1524 1547 1581 1583
+#TME: NA
+
+#Israel - Mediterranean Sea -TME
+#Latitude: 32.11700
+#Longitude: 34.71400
+#MCE:[1] 1078
+#TME:[1]  779  905 1354 1365
+#based on coordinates, this one should be TME
+
+#India - Andaman and Nicobar Islands - MCE
+#MCE: [1] 1523
+#TME: NA
+
+
+#ID:1411 - unsure
+#[1] Scotland - TME
+#MCE:NA
+#TME:[1] 1399 1469 1545
+#The manuscript is in a temperate location, but these are Scleractinian formed reefs
+#Maybe ok to keep as MCE & TME and count as double
+
+
+#ID:1424 - unsure
+#[1] USA - Continental Pacific Ocean
+#Latitude: 44.635437
+#Longitude: -125.024414
+#MCE:[1] 317 435 649
+#TME: [1]   60  684 1026 1407 1414 1421 1422 1444 1456 1470 1572 1611 1625
+#Based on the coordinates, it should be temperate (around Oregon coast)
+#The reefs are both Scleractinian and soft coral formed
+#Maybe ok to keep as MCE & TME and count as double
+
+
+#ID:1527 - TME
+#[1] France - Mediterranean Sea  Italy - Ligurian-Tyrrhenian
+
+#France - Mediterranean Sea - TME
+#MCE: [1] 1229 1270
+#TME:[1]  601  638 1214 1215 1232 1258 1260 1267 1282 1593
+
+#Italy - Ligurian-Tyrrhenian - TME
+#MCE:[1] 509 510
+# #TME: [1]   47  118  122  245  245  357  359  360  361  361  362  364  365  368  369  369  373  374  376  524
+# [21]  530  546  585  592  592  602  606  606  613  613  614  614  621  621  626  629  631  631  634  640
+# [41]  647  648  652  653  659  661  680  680  681  697  790  790  798  798  980  980 1015 1019 1024 1027
+# [61] 1059 1159 1167 1185 1221 1222 1224 1225 1226 1230 1231 1241 1247 1248 1248 1250 1262 1263 1274 1275
+# [81] 1276 1277 1277 1281 1309 1318 1329 1348 1359 1502 1529 1623
+#The article is about Polychaeta
+
+
+#ID:1528 - unsure
+#[1] Italy - Ligurian-Tyrrhenian - TME
+#MCE:[1] 509 510
+# #TME: [1]   47  118  122  245  245  357  359  360  361  361  362  364  365  368  369  369  373  374  376  524
+# [21]  530  546  585  592  592  602  606  606  613  613  614  614  621  621  626  629  631  631  634  640
+# [41]  647  648  652  653  659  661  680  680  681  697  790  790  798  798  980  980 1015 1019 1024 1027
+# [61] 1059 1159 1167 1185 1221 1222 1224 1225 1226 1230 1231 1241 1247 1248 1248 1250 1262 1263 1274 1275
+# [81] 1276 1277 1277 1281 1309 1318 1329 1348 1359 1502 1529 1623
+#Paper is about Scleractinian, but location is temperate
+#Maybe ok to keep as MCE & TME and count as double
+
+
+#ID:1570 - TME
+#[1] Italy - Ligurian-Tyrrhenian - TME
+#MCE:[1] 509 510
+# #TME: [1]   47  118  122  245  245  357  359  360  361  361  362  364  365  368  369  369  373  374  376  524
+# [21]  530  546  585  592  592  602  606  606  613  613  614  614  621  621  626  629  631  631  634  640
+# [41]  647  648  652  653  659  661  680  680  681  697  790  790  798  798  980  980 1015 1019 1024 1027
+# [61] 1059 1159 1167 1185 1221 1222 1224 1225 1226 1230 1231 1241 1247 1248 1248 1250 1262 1263 1274 1275
+# [81] 1276 1277 1277 1281 1309 1318 1329 1348 1359 1502 1529 1623
+#The article is about Anthipatharia and Anthozoa, animal forest
+#I think it should be TME
+
+
+#ID: 1642 - OK to be TME & MCE, locations will be split
+#[1] France - Mediterranean Sea La Perouse 
+#[1]  43.25480 -19.71666
+
+#France - Mediterranean Sea - TME
+#MCE:[1] 1229 1270
+#TME:[1]  601  638 1214 1215 1232 1258 1260 1267 1282 1593
+
+#La Perouse - MCE
+#Latitude: -19.71666
+#Longitude: 54.1666
+#MCE: NA
+#TME: NA
+#The paper is about eDNA
+
+
+
+#Split the locations between TME and MCE 
+#5 publications marked as both TME and MCE
+#[1]  420  885  943 1366 1642
+
+############################################################
+#ID: 420 - OK to be TME & MCE, locations will be split
+#Costa Rica - Pacific Ocean - MCE
+#Mexico - Baja California - TME
+#Peru - TME
+############################################################
+#ID: 885  - OK to be TME & MCE, locations will be split 
+#Australia - Northern Australia - MCE
+# Australia - Southeastern Australia -TME
+############################################################
+#ID: 943  - OK to be TME & MCE, locations will be split 
+#American Samoa - MCE
+#US Virgin Islands - MCE
+#USA - Continental Atlantic Ocean - TME
+#USA - Continental Pacific Ocean - TME
+############################################################
+#ID:1366  - OK to be TME & MCE, locations will be split 
+#Israel - Red Sea - MCE
+#Israel - Mediterranean Sea -TME
+#India - Andaman and Nicobar Islands - MCE
+############################################################
+#ID: 1642 - OK to be TME & MCE, locations will be split
+#France - Mediterranean Sea - TME
+#La Perouse - MCE
+
+
+#Separate these locations can be classified as TME or MCE (publications will be considered in both sets of data)
+locations_mce <- c("Costa Rica - Pacific Ocean", 
+                   "Australia - Northern Australia",
+                   "American Samoa",
+                   "US Virgin Islands",
+                   "Israel - Red Sea",
+                   "India - Andaman and Nicobar Islands",
+                   "La Perouse")
+locations_tme <- c("Mexico - Baja California",
+                   "Peru", 
+                   "Australia - Southeastern Australia",
+                   "USA - Continental Atlantic Ocean",
+                   "USA - Continental Pacific Ocean",
+                   "Israel - Mediterranean Sea",
+                   "France - Mediterranean Sea")
+
+
+missing_mce <- publs_MCE_TME[publs_MCE_TME$locations %in% locations_mce, ]        #7 locations
+missing_tme <- publs_MCE_TME[publs_MCE_TME$locations %in% locations_tme, ]        #7 locations
+
+#Adding this data to each dataframe
+str(publs_MCE)
+str(missing_mce)
+missing_mce$id <- as.integer(missing_mce$id)
+publs_MCE <- bind_rows(publs_MCE,missing_mce)                                     #rows:1152+7=1159
+
+missing_tme$id <- as.integer(missing_tme$id)
+publs_TME <- bind_rows(publs_TME,missing_tme)                                     #rows:352+7=359  
+
+
+# Some publications still need to be manually changed either in mesophotic.org or hardcoded in the code
+# Most of these corrections are made in the website: mesophotic.org
+
+
+# Australia - Southeastern Australia
+# South Africa
+# USA - Continental Pacific Ocean
+# I can't see New Zealand (the problem might come because it is the sovereign of Cook Islands)
+# Sweeden is not in the database
+# Canada (British Columbia), there is not such location. There is overlapping regaarding USA - Continental Pacific Ocean that I moved to TME
+
+
+#Count number of publication per SOVEREIGN1
+levels_mce <- as.data.frame(table(publs_MCE$SOVEREIGN1))
+min(levels_mce$Freq)
+#[1] 1
+max(levels_mce$Freq)
+#[1] 323
+#Quick visualization
+ggplot(data = levels_mce, aes(x=Freq)) + 
+  geom_histogram() + theme_bw()
+
+levels_tme <- as.data.frame(table(publs_TME$SOVEREIGN1))
+min(levels_tme$Freq)
+#[1] 1
+max(levels_tme$Freq)
+#[1] 147
+#Quick visualization
+ggplot(data = levels_tme, aes(x=Freq)) + 
+  geom_histogram() + theme_bw()
+
+#Categories to show number of pubs
+#1, 2-10, 10-50, 50-100, 100-200, >300
+levels_mce$EEZ_color <- ifelse(levels_mce$Freq <= 1, '1-mce',
+                                ifelse(levels_mce$Freq >= 1 & levels_mce$Freq <= 10, '2-10-mce',
+                                       ifelse(levels_mce$Freq >= 10 & levels_mce$Freq <= 50, '10-50-mce',
+                                              ifelse(levels_mce$Freq >= 50 & levels_mce$Freq <= 100, '50-100-mce',
+                                                     ifelse(levels_mce$Freq >= 100 & levels_mce$Freq <= 200, '100-200-mce',
+                                                            ifelse(levels_mce$Freq >=300, '<300-mce', 'unassigned'))))))
+
+
+levels_tme$EEZ_color <- ifelse(levels_tme$Freq <= 1, '1-tme',
+                               ifelse(levels_tme$Freq >= 1 & levels_tme$Freq <= 10, '2-10-tme',
+                                      ifelse(levels_tme$Freq >= 10 & levels_tme$Freq <= 50, '10-50-tme',
+                                             ifelse(levels_tme$Freq >= 50 & levels_tme$Freq <= 100, '50-100-tme',
+                                                    ifelse(levels_tme$Freq >= 100 & levels_tme$Freq <= 200, '100-200-tme',
+                                                           ifelse(levels_tme$Freq >=300, '<300-tme', 'unassigned'))))))
+
+
+levels <- bind_rows(levels_mce, levels_tme)
+str(levels)
+colnames(levels)[1] <- "SOVEREIGN1"
+unique(levels$SOVEREIGN1)   
+levels$EEZ_color <- as.factor(levels$EEZ_color)
+levels(levels$EEZ_color)
+
+#Add this factor to eez
+eez$EEZ_color  <- with(levels,EEZ_color[match(eez$SOVEREIGN1,SOVEREIGN1)])
+
+
+#Checking EEZ with NA
+eez_color_NA <- as.data.frame(eez[,c(8,6,33)])
+# eez_color_NA[is.na(eez_color_NA)] <- "0"
+# eez_color_NA <- subset(eez, EEZ_color == "0")
+
+
+#Checking that where there are points there is color assigned
+
+locations_2008_temp$EEZ_color  <- with(levels,EEZ_color[match(locations_2008_temp$SOVEREIGN1,SOVEREIGN1)])
+locations_2023_temp$EEZ_color  <- with(levels,EEZ_color[match(locations_2023_temp$SOVEREIGN1,SOVEREIGN1)])
+
+
+#Selecting colors and ordering factors
+str(eez)
+levels(eez$EEZ_color)
+eez$EEZ_color <- as.factor(eez$EEZ_color)
+# levels(eez$EEZ_color)
+# [1] "<300-mce"    "1-mce"       "1-tme"       "10-50-mce"   "10-50-tme"   "100-200-mce" "100-200-tme" "2-10-mce"   
+# [9] "2-10-tme"    "50-100-mce" 
+
+
+eez$EEZ_color <- factor(eez$EEZ_color,levels=c("1-mce","2-10-mce","10-50-mce","100-200-mce","<300-mce",
+                                               "1-tme","2-10-tme", "10-50-tme","50-100-mce","100-200-tme"))
+
+
+#2,4,6 = https://coolors.co/palette/590d22-800f2f-a4133c-c9184a-ff4d6d-ff758f-ff8fa3-ffb3c1-ffccd5-fff0f3
+#https://coolors.co/palette/03045e-023e8a-0077b6-0096c7-00b4d8-48cae4-90e0ef-ade8f4-caf0f8
+#1,3,5,7,9 = https://coolors.co/palette/d8f3dc-b7e4c7-95d5b2-74c69d-52b788-40916c-2d6a4f-1b4332-081c15
+
+colors <- c("1-mce"="#ffccd5","2-10-mce"="#ff8fa3","10-50-mce"="#ff4d6d","100-200-mce"="#A4133C","<300-mce"="#590D22",
+            "1-tme"="#ade8f4","2-10-tme"="#48cae4", "10-50-tme"="#0096c7","50-100-mce"="#0077B6","100-200-tme"="#03045E")
+
+
+# Test map figures (they take forever, Not recommended running)
+# ggplot() +
+#   geom_polygon(data=world,aes(x= long, y = lat, group=group, fill=region), color = "lightgray", fill="white")+
+#   geom_sf(data = eez, color=NA, aes(fill = TERRITORY1))+ # This is the difference
+#   geom_point(data=locations_2008_temp, aes(x=Longitude,y=Latitude),color="black", size = 1.2)+
+#   geom_point(data=locations_2023_temp, aes(x=Longitude,y=Latitude),color="white", size = 0.6)+
+#   scale_fill_manual(values=colors)+
+#  theme_classic()
+
+
+# ggplot() +
+#   geom_polygon(data=world,aes(x= long, y = lat, group=group, fill=region), color = "lightgray", fill="lightgray")+ 
+#   geom_sf(data = eez, color=NA, aes(fill = SOVEREIGN1))+
+#   geom_point(data=locations_2008_temp, aes(x=Longitude,y=Latitude),color="black", size = 1.2)+
+#   geom_point(data=locations_2023_temp, aes(x=Longitude,y=Latitude),color="white", size = 0.6)+
+#   scale_fill_manual(values=colors)+
+#   theme_classic ()
+# 
+# sf::sf_use_s2(FALSE)
+
+ 
+# ggplot() +
+#   geom_polygon(data=world,aes(x= long, y = lat, group=group, fill=region), color = "lightgray", fill="lightgray")+
+#   geom_sf(data = eez, color=NA, aes(fill = EEZ_color))+ # The problem comes from here... MCE and TME ecoregions should have a unique colour, the points change colour
+#   geom_point(data=locations_2008_temp, aes(x=Longitude,y=Latitude),color="cyan", size = 0.6)+
+#   geom_point(data=locations_2023_temp, aes(x=Longitude,y=Latitude),color="lightcoral", size = 0.6)+
+#     scale_fill_manual(values=colors,na.value="#e9ecef")+
+#   clean_theme+
+#   labs(x = "Longitude", y = "Latitude")+
+#   coord_sf(expand = FALSE)
+
+
+
+```
+
+
+To address the expansion/extension more visual, we are making two maps (one for MCE main figure and one for TME Sup. Fig. 1), highlighting in shade color for <2008 or after. 
+
+EEZs that not MCEs or TMEs are in grey
+
+We are also categorising the map points according to number of publications per location: < 5; 5-30; and > 30 publications
+
+Separating maps for MCEs and TMEs
+
+We start with MCEs, it generate figure 1
+```{r}
+
+#MCEs
+#Separate again the datasets
+publs_2008_MCE <- subset(publs_2008, mce == "true" & tme == "false")      #270 publications                              
+publs_2023_MCE <- subset(publs_2023, mce == "true" & tme == "false")      #882 publications                                    
+#Count number of publication per TERRITORY1
+#<2008
+unique(publs_2008_MCE$TERRITORY1)         #62 territories                                     
+publs_2008_MCE$TERRITORY1 <- as.factor(publs_2008_MCE$TERRITORY1)
+n_pub_before2008_mce <- publs_2008_MCE %>%
+  group_by(TERRITORY1) %>%
+  dplyr::summarise(Freq = dplyr::n())
+
+# colnames(n_pub_before2008_mce)[2] <- "Freq" # Unnecessary
+min(n_pub_before2008_mce$Freq)        #[1] 1
+max(n_pub_before2008_mce$Freq)        #[1] 22
+#Quick visualization
+ggplot(data = n_pub_before2008_mce, aes(x=Freq)) + 
+  geom_histogram() + theme_bw() + ggtitle("MCE publications by Territory <2008")
+
+
+#2008-2023
+unique(publs_2023_MCE$TERRITORY1)                       #86 territories
+publs_2023_MCE$TERRITORY1 <- as.factor(publs_2023_MCE$TERRITORY1)
+n_pub_before2023_mce <- publs_2023_MCE %>%
+  group_by(TERRITORY1) %>%
+  dplyr::summarise(Freq = dplyr::n())
+
+#colnames(n_pub_before2023_mce)[2] <- "Freq"
+min(n_pub_before2023_mce$Freq)      #[1] 1
+max(n_pub_before2023_mce$Freq)      #[1] 97
+#Quick visualization
+ggplot(data = n_pub_before2023_mce, aes(x=Freq)) + 
+  geom_histogram() + theme_bw() + ggtitle("MCE publications by Territory 2008-2023")
+
+
+#Count number of publication per locations
+#<2008
+unique(publs_2008_MCE$locations)     #66 locations                                      
+publs_2008_MCE$locations <- as.factor(publs_2008_MCE$locations)
+n_pub_before2008_mce_loc <- publs_2008_MCE %>% group_by(locations) %>% dplyr::summarise(Freq = dplyr::n())
+min(n_pub_before2008_mce_loc$Freq)    #[1] 1
+max(n_pub_before2008_mce_loc$Freq)    #[1] 22
+#Quick visualization
+ggplot(data = n_pub_before2008_mce_loc, aes(x=Freq))  + 
+  geom_bar() +
+  scale_x_continuous(limits = c(0, 80))+
+  scale_y_continuous(limits = c(0, 40))+
+  clean_theme + 
+  ggtitle("MCE publications by locations <2008")+
+  labs(x = "N. of publications", y = "N. of locations")
+
+ggplot(n_pub_before2008_mce_loc, aes(y=reorder(locations, Freq), x=Freq)) + 
+  geom_bar(stat = "identity")+
+  scale_x_continuous(limits = c(0, 40))+
+  clean_theme2+
+  labs(y = "Locations", x = "N. of publications")+ 
+  ggtitle("MCE publications by locations <2008")
+
+
+#2008-2023
+unique(publs_2023_MCE$locations)            #107 locations
+publs_2023_MCE$locations <- as.factor(publs_2023_MCE$locations)
+n_pub_before2023_mce_loc <- publs_2023_MCE %>% group_by(locations) %>% dplyr::summarise(Freq = dplyr::n())
+
+min(n_pub_before2023_mce_loc$Freq)      #[1] 1
+max(n_pub_before2023_mce_loc$Freq)      #[1] 74
+#Quick visualization
+ggplot(data = n_pub_before2023_mce_loc, aes(x=Freq)) + 
+  geom_bar() +
+  scale_x_continuous(limits = c(0, 80))+
+  scale_y_continuous(limits = c(0, 40))+
+clean_theme + 
+  ggtitle("MCE publications by locations 2008-2023")+
+    labs(x = "N. of publications", y = "N. of locations")
+
+ggplot(n_pub_before2023_mce_loc, aes(y=reorder(locations, Freq), x=Freq)) + 
+  geom_bar(stat = "identity")+
+  clean_theme2+
+  labs(x = "N. of publications", y = "N. of locations")+
+  scale_x_continuous(limits = c(0, 80))+ 
+  ggtitle("MCE publications by locations 2008-2023")
+
+
+#Adding this information to the layer
+loc_2008_mce <- unique(publs_2008_MCE[,c(29:34)])                                             
+loc_2023_mce <- unique(publs_2023_MCE[,c(29:34)])                                             
+
+loc_mce <- bind_rows(loc_2008_mce,loc_2023_mce)     
+sort (unique(loc_mce$TERRITORY1))                    
+
+#Remove duplicates of Territories (conserving 2008 as primary)
+loc_mce <- loc_mce[!duplicated(loc_mce$TERRITORY1),]
+loc_mce$TERRITORY1                                                                            
+
+#Adding it to the layer
+colnames(loc_mce)[6] <- "mce_territory"                                                       
+
+#Checking that all the territories in mce are in eez
+loc_mce$UN_SOV1 <- with(eez,UN_SOV1[match(loc_mce$TERRITORY1,TERRITORY1)])
+which(is.na(loc_mce), arr.ind=TRUE)
+loc_mce_NA <- loc_mce[is.na(loc_mce$UN_SOV1),]
+loc_mce_NA$TERRITORY1<- as.factor(loc_mce_NA$TERRITORY1)
+unique(loc_mce_NA$TERRITORY1)
+loc_mce_NA <- loc_mce_NA[,1:5]
+
+
+# Check the mesophotic locations. 
+# Necessary to make it one by one
+sort (unique(loc_mce$locations))  
+sort (unique(loc_mce$TERRITORY1))  
+# There are some problems, see below in the Fixing problematic locations section
+# Add mce_territory into eez!
+eez$mce_territory  <- with(loc_mce,mce_territory[match(eez$TERRITORY1,TERRITORY1)])
+table(eez$mce_territory)
+
+#Adding colors
+eez$mce_territory
+eez$mce_territory <- factor(eez$mce_territory,levels=c("<2008", "<2023"))
+
+
+#Make an MCE overall data set 
+n_pub_mce_loc <- as.data.frame(full_join(n_pub_before2008_mce_loc,n_pub_before2023_mce_loc, by ="locations"))
+n_pub_mce_loc[is.na(n_pub_mce_loc)] <- 0
+n_pub_mce_loc$total <- n_pub_mce_loc$Freq.x + n_pub_mce_loc$Freq.y
+colnames(n_pub_mce_loc)[2] <- "before_2008"
+colnames(n_pub_mce_loc)[3] <- "between_2008-2023"
+
+#Categorise locations according to number of publications as follows:
+n_pub_mce_loc$Publications <- ifelse(n_pub_mce_loc$total >= 30, '>= 30',
+                             ifelse(n_pub_mce_loc$total < 5, '< 5', '<30 & >= 5'))
+n_pub_mce_loc$Publications <- factor(n_pub_mce_loc$Publications, levels = c(">= 30", "<30 & >= 5", "< 5"))
+
+#add coordinates
+n_pub_mce_loc$Latitude <- with(EEZ,Latitude[match(n_pub_mce_loc$locations,locations)])
+n_pub_mce_loc$Longitude <- with(EEZ,Longitude[match(n_pub_mce_loc$locations,locations)])
+
+# Quick visualisation of number of publications
+ggplot(n_pub_mce_loc, aes(y=reorder(locations, total), x=total)) + 
+  geom_bar(stat = "identity")+
+  clean_theme2+
+  labs(x = "N. of publications", y = "N. of locations")
+
+
+# Drop rows of eez if EEZ_color and mce_territory is NA
+eez_mce <- eez[!with(eez, is.na(mce_territory)), ] # & is.na(EEZ_color) 
+
+# Add the column Publications
+publs_2023_MCE <- merge(publs_2023_MCE, n_pub_mce_loc, by = c("locations", "Latitude", "Longitude"), all.x = TRUE)
+publs_2008_MCE <- merge(publs_2008_MCE, n_pub_mce_loc, by = c("locations", "Latitude", "Longitude"), all.x = TRUE)
+
+### FIXING LOCATIONS SECTION 
+# Fixing the problematic publications! We corrected most of them in mesophotic.org instead of hardcoding
+# However, some need hardcoding because they are multilocation comprising MCEs and TMEs
+# For example, some problems are:
+# Australia - Southeastern Australia
+# South Africa
+# USA - Continental Pacific Ocean
+# I can't see New Zealand (the problem might come because it is the sovereign of Cook Islands)
+# Sweeden is not in the database
+# Canada (British Columbia), there is not such location. There is overlapping regaarding USA - Continental Pacific Ocean that I moved to TME
+
+# Necessary to hardcode to remove locations giving problems and displaying as TME
+# These are: 
+# Australia - Southeastern Australia
+# South Africa
+# USA - Continental Pacific Ocean.
+# The problem resides that these are multilocation studies that study both TMC and MCE sites. 
+# In the end, we have decided to hardcode because the other solution of filtering to a single location study will remove a lot of locations
+
+# First remove them from eez_mce and later remove them in publs_2023_MCE and publs_2008_MCE
+# Remove following locations
+eez_mce <- eez_mce[!grepl("South African Exclusive Economic Zone", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("Turkish Exclusive Economic Zone", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("Joint regime area: Spain / France", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("Joint regime area: France / Italy", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("Brazilian Exclusive Economic Zone (Trindade)", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("Joint regime area: United States / Russia", eez_mce$GEONAME),]
+eez_mce <- eez_mce[!grepl("2204", eez_mce$MRGID_TER1),] # IF I write "United States Exclusive Economic Zone" eliminates all the islands
+# eez_mce <- eez_mce[!grepl("French Exclusive Economic Zone", eez_mce$GEONAME),] # The same happens here, it removes French Pol, New Caledonia and all overseas French Territories
+
+# Remove South Africa from publs_2023_MCE and publs_2008_MCE
+publs_2023_MCE <- publs_2023_MCE[!grepl("South Africa", publs_2023_MCE$locations),]
+publs_2008_MCE <- publs_2008_MCE[!grepl("South Africa", publs_2008_MCE$locations),]
+
+# Remove USA - Continental Pacific Ocean
+publs_2023_MCE <- publs_2023_MCE[!grepl("USA - Continental Pacific Ocean", publs_2023_MCE$locations),]
+publs_2008_MCE <- publs_2008_MCE[!grepl("USA - Continental Pacific Ocean", publs_2008_MCE$locations),]
+
+# Remove USA - Continental Atlantic Ocean
+publs_2023_MCE <- publs_2023_MCE[!grepl("USA - Continental Atlantic Ocean", publs_2023_MCE$locations),]
+publs_2008_MCE <- publs_2008_MCE[!grepl("USA - Continental Atlantic Ocean", publs_2008_MCE$locations),]
+
+# Remove Australia-Eastern Australia
+publs_2023_MCE <- publs_2023_MCE[!grepl("Australia - Southeastern Australia", publs_2023_MCE$locations),]
+publs_2008_MCE <- publs_2008_MCE[!grepl("Australia - Southeastern Australia", publs_2008_MCE$locations),]
+
+# Remove Turkey
+publs_2023_MCE <- publs_2023_MCE[!grepl("Turkey - Sea of Marmara", publs_2023_MCE$locations),]
+
+# Remove France - Mediterranean Sea
+publs_2023_MCE <- publs_2023_MCE[!grepl("France - Mediterranean Sea", publs_2023_MCE$locations),]
+
+# Remove Brazil - Trindade and Martin Vaz
+publs_2008_MCE <- publs_2008_MCE[!grepl("Brazil - Trindade and Martin Vaz", publs_2008_MCE$locations),]
+publs_2023_MCE <- publs_2023_MCE[!grepl("Brazil - Trindade and Martin Vaz", publs_2023_MCE$locations),]
+
+publs_2008_MCE <- publs_2008_MCE[!grepl("Brazil - Eastern Brazil", publs_2008_MCE$locations),]
+publs_2023_MCE <- publs_2023_MCE[!grepl("Brazil - Eastern Brazil", publs_2023_MCE$locations),]
+
+### END OF FIXING LOCATIONS SECTION 
+
+# The database is ready to plot: 
+
+# Set the colours
+colors_mce <- c("<2008"="#CAF0F8","<2023"="#F8D1C9")
+
+# Make the plot with the updated eez and databases
+
+plot_3 <- ggplot() +
+  geom_polygon(data=world,aes(x= long, y = lat, group=group, fill=region), color = "lightgray", fill="lightgray")+ 
+  geom_sf(data = eez_mce, color=NA, aes(fill = mce_territory))+
+  geom_point(data=publs_2023_MCE, aes(x=Longitude,y=Latitude, shape = Publications),color="#DD2D4A", size = 1.5)+ # , size = 1.5
+  geom_point(data=publs_2008_MCE, aes(x=Longitude,y=Latitude, shape = Publications),color="#0096C7", size = 1.5)+
+  scale_fill_manual(values=colors_mce,na.value="#e9ecef")+
+  scale_shape_manual(values = c(2, 1, 6))+
+  clean_theme+
+  labs(x = "Longitude", y = "Latitude")+
+  coord_sf(expand = FALSE)+ ggtitle("") + guides(fill=guide_legend(title="Year"))
+plot_3
+
+ggsave(plot_3, file="plot_territory_EEZ_mce_v3.png", height = 8, width = 14, dpi = 300)
+ggsave(plot_3, file="plot_territory_EEZ_mce_v3.pdf", height = 8, width = 14, dpi = 300)
+ggsave(plot_3, file="plot_territory_EEZ_mce_v3.svg", height = 8, width = 14, dpi = 300)
+
+
+```
+
+
+TMEs
+It generates Sup. Fig. 1
+
+```{r}
+#TMEs
+#Separate the TME data set
+publs_2008_TME <- subset(publs_2008, mce == "false" & tme == "true")                          
+publs_2023_TME <- subset(publs_2023, mce == "false" & tme == "true")                          
+
+#Count number of publication per TERRITORY1
+#<2008
+unique(publs_2008_TME$TERRITORY1)                                                             
+publs_2008_TME$TERRITORY1 <- as.factor(publs_2008_TME$TERRITORY1)
+
+n_pub_before2008_tme <- publs_2008_TME %>% group_by(TERRITORY1) %>% dplyr::summarise(Freq = dplyr::n())
+
+min(n_pub_before2008_tme$Freq)
+max(n_pub_before2008_tme$Freq)
+
+#Quick visualization
+ggplot(data = n_pub_before2008_tme, aes(x=Freq)) + 
+  geom_histogram() + theme_bw() + ggtitle("TME publications by Territory <2008")
+
+#2008-2023
+unique(publs_2023_TME$TERRITORY1)  
+publs_2023_TME$TERRITORY1 <- as.factor(publs_2023_TME$TERRITORY1)
+
+n_pub_before2023_tme <- publs_2023_TME %>% group_by(TERRITORY1) %>% dplyr::summarise(Freq = dplyr::n())
+
+min(n_pub_before2023_tme$Freq)
+max(n_pub_before2023_tme$Freq)
+
+#Quick visualization
+ggplot(data = n_pub_before2023_tme, aes(x=Freq)) + 
+  geom_histogram() + theme_bw() + ggtitle("TME publications by Territory 2008-2023")
+
+
+#Count number of publication per locations
+#<2008
+unique(publs_2008_TME$locations)                                                            
+publs_2008_TME$locations <- as.factor(publs_2008_TME$locations)
+
+n_pub_before2008_tme_loc <- publs_2008_TME %>% group_by(locations) %>% dplyr::summarise(Freq = dplyr::n())
+
+min(n_pub_before2008_tme_loc$Freq)
+max(n_pub_before2008_tme_loc$Freq)
+
+#Quick visualization
+ggplot(data = n_pub_before2008_tme_loc, aes(x=Freq))  + 
+  geom_bar() +                                                 
+  scale_x_continuous(limits = c(0, 100))+
+  scale_y_continuous(limits = c(0, 20))+
+  clean_theme + 
+  ggtitle("TME publications by locations <2008")+
+  labs(x = "N. of publications", y = "N. of locations")
+
+ggplot(n_pub_before2008_tme_loc, aes(y=reorder(locations, Freq), x=Freq)) + 
+  geom_bar(stat = "identity")+
+  clean_theme2+
+  labs(x = "N. of publications", y = "N. of locations")+
+  scale_x_continuous(limits = c(0, 100))+ 
+  ggtitle("TME publications by locations <2008")
+# Way fewer locations than MCEs
+
+#2008-2023
+unique(publs_2023_TME$locations)                                                              
+publs_2023_TME$locations <- as.factor(publs_2023_TME$locations)
+n_pub_before2023_tme_loc <- publs_2023_TME %>% group_by(locations) %>% dplyr::summarise(Freq = dplyr::n())
+
+min(n_pub_before2023_tme_loc$Freq)
+max(n_pub_before2023_tme_loc$Freq)
+
+#Quick visualization
+ggplot(data = n_pub_before2023_tme_loc, aes(x=Freq)) + 
+  geom_bar() +                                                 
+  scale_x_continuous(limits = c(0, 100))+
+  scale_y_continuous(limits = c(0, 20))+
+  clean_theme + 
+  ggtitle("TME publications by locations 2008-2023")+
+  labs(x = "N. of publications", y = "N. of locations")
+
+ggplot(n_pub_before2023_tme_loc, aes(y=reorder(locations, Freq), x=Freq)) + 
+  geom_bar(stat = "identity")+
+  clean_theme2+
+  labs(x = "N. of publications", y = "N. of locations")+
+  scale_x_continuous(limits = c(0, 100))+ 
+  ggtitle("TME publications by locations 2008-2023")
+
+
+#Adding this information to the layer
+loc_2008_tme <- unique(publs_2008_TME[,c(29:34)])                                             
+loc_2023_tme <- unique(publs_2023_TME[,c(29:34)])                                             
+
+loc_tme <- bind_rows(loc_2008_tme,loc_2023_tme)                                               
+unique(loc_tme$TERRITORY1)                                                                    
+
+#Remove duplicates of Territories (conserving 2008 as primary)
+loc_tme <- loc_tme[!duplicated(loc_tme$TERRITORY1),]
+loc_tme$TERRITORY1                                                                            
+
+#Adding it to the layer
+colnames(loc_tme)[6] <- "tme_territory"                                                       
+
+#Checking that all the territories in tme are in eez
+loc_tme$UN_SOV1 <- with(eez,UN_SOV1[match(loc_tme$TERRITORY1,TERRITORY1)])
+which(is.na(loc_tme), arr.ind=TRUE)
+loc_tme_NA <- loc_tme[is.na(loc_tme$UN_SOV1),]
+loc_tme_NA$TERRITORY1<- as.factor(loc_tme_NA$TERRITORY1)
+unique(loc_tme_NA$TERRITORY1)
+loc_tme_NA <- loc_tme_NA[,1:5]
+#write.csv(loc_tme_NA, "loc_tme_NA.csv")
+
+# Check the TME locations one by one!
+sort (unique(loc_tme$locations))  
+sort (unique(loc_tme$TERRITORY1))  
+# you can already see some problematic locations; see below:
+
+# Add TME territories into eez!
+eez$tme_territory  <- with(loc_tme,tme_territory[match(eez$TERRITORY1,TERRITORY1)])
+table(eez$tme_territory)
+
+#Adding colors
+eez$tme_territory
+eez$tme_territory <- factor(eez$tme_territory,levels=c("<2008", "<2023"))
+
+#Make a TME overall data set to add start
+n_pub_tme_loc <- as.data.frame(full_join(n_pub_before2008_tme_loc,n_pub_before2023_tme_loc, by ="locations"))
+n_pub_tme_loc[is.na(n_pub_tme_loc)] <- 0
+n_pub_tme_loc$total <- n_pub_tme_loc$Freq.x + n_pub_tme_loc$Freq.y
+colnames(n_pub_tme_loc)[2] <- "before_2008"
+colnames(n_pub_tme_loc)[3] <- "between_2008-2023"
+
+# Categorise the points by number of publications. The same way as for MCEs
+n_pub_tme_loc$Publications <- ifelse(n_pub_tme_loc$total >= 30, '>= 30',
+                             ifelse(n_pub_tme_loc$total < 5, '< 5', '<30 & >= 5'))
+
+n_pub_tme_loc$Publications <- factor(n_pub_tme_loc$Publications, levels = c(">= 30", "<30 & >= 5", "< 5"))
+
+
+#add coordinates
+n_pub_tme_loc$Latitude <- with(EEZ,Latitude[match(n_pub_tme_loc$locations,locations)])
+n_pub_tme_loc$Longitude <- with(EEZ,Longitude[match(n_pub_tme_loc$locations,locations)])
+
+ggplot(n_pub_tme_loc, aes(y=reorder(locations, total), x=total)) + 
+  geom_bar(stat = "identity")+
+  clean_theme2+
+  labs(x = "N. of publications", y = "N. of locations")
+
+
+# Drop rows of eez if EEZ_color and tme_territory is NA
+eez_tme <- eez[!with(eez, is.na(tme_territory)), ] # & is.na(EEZ_color) 
+eez_tme <- eez_tme[!grepl("Joint regime area: United States / Russia", eez_tme$GEONAME),]
+eez_tme <- eez_tme[!grepl("Overlapping claim: Canada / United States", eez_tme$GEONAME),]
+eez_tme <- eez_tme[!grepl("Canadian Exclusive Economic Zone", eez_tme$GEONAME),]
+
+
+# Add the column freq
+publs_2023_TME <- merge(publs_2023_TME, n_pub_tme_loc, by = c("locations", "Latitude", "Longitude"), all.x = TRUE)
+publs_2008_TME <- merge(publs_2008_TME, n_pub_tme_loc, by = c("locations", "Latitude", "Longitude"), all.x = TRUE)
+
+### FIXING LOCATIONS SECTION 
+
+# Locations that need to be fixed are: 
+# I think Bermuda and Chile - Easter Island are tropical MCE no? 
+# Also Mexico - Baja California, could be both. Controversial
+
+# Drop some of the locations
+# Remove Mexico - Baja California
+publs_2008_TME <- publs_2008_TME[!grepl("Mexico - Baja California", publs_2008_TME$locations),]
+publs_2023_TME <- publs_2023_TME[!grepl("Poland", publs_2023_TME$locations),]
+
+### END OF FIXING LOCATIONS SECTION 
+
+# Make the plot, add the colours
+colors_tme <- c("<2008"="#CAF0F8","<2023"="#F8D1C9")
+
+plotS1 <- ggplot() +
+  geom_polygon(data=world,aes(x= long, y = lat, group=group, fill=region), color = "lightgray", fill="lightgray")+ 
+  geom_sf(data = eez_tme, color=NA, aes(fill = tme_territory))+
+  geom_point(data=publs_2023_TME, aes(x=Longitude,y=Latitude, shape = Publications),color="#DD2D4A", size = 1.5)+
+  geom_point(data=publs_2008_TME, aes(x=Longitude,y=Latitude, shape = Publications),color="#0096C7", size = 1.5)+
+  # geom_star(data=subset(n_pub_tme_loc, star == "star"), aes(x=Longitude,y=Latitude,  starshape="star"),color="black",fill="black", size = 1.2)+
+  scale_fill_manual(values=colors_tme,na.value="#e9ecef")+
+  scale_shape_manual(values = c(2, 1, 6))+
+  clean_theme+
+  labs(x = "Longitude", y = "Latitude")+
+  coord_sf(expand = FALSE)+ ggtitle("") + guides(fill=guide_legend(title="Year"))
+plotS1
+
+
+ggsave(plotS1, file="plot_territory_EEZ_tme_v3.png", height = 8, width = 14, dpi = 300)
+ggsave(plotS1, file="plot_territory_EEZ_tme_v3.pdf", height = 8, width = 14, dpi = 300)
+ggsave(plotS1, file="plot_territory_EEZ_tme_v3.svg", height = 8, width = 14, dpi = 300)
+
+
+
+```
+
+Some commands to get extra information for the manuscript; these numbers might change according to last mesophotic.org updates
+
+```{r}
+# For instance, we have seen nearly a doubling of the number of research locations" - in EEZ, territories
+
+#publs2
+unique(publs2$TERRITORY1)
+#123
+loc_total <- as.data.frame(unique(publs2$locations))
+ter_total <- as.data.frame(unique(publs2$TERRITORY1))
+#publs2 = 123
+
+#before 2008
+unique(publs_2008$TERRITORY1)
+ter_total_2008 <- as.data.frame(unique(publs_2008$TERRITORY1))
+#before 2008 = 71
+
+#2008-2023
+unique(publs_2023$TERRITORY1)
+ter_total_2023 <- as.data.frame(unique(publs_2023$TERRITORY1))
+#before 2023 = 113
+113/71
+#[1] 1.591549
+
+# Increase in Number of locations 
+#Increase from 2008 to 2023
+# MCEs
+#Total locations = locations sampled before 2008 and onwards + locations sampled from 2008 (new) + Locations sampled before 2008 and not any more
+unique(n_pub_mce_loc$locations)
+#120 locations
+#locations sampled before 2008 and onwards
+sum(n_pub_mce_loc$before_2008 != 0 & n_pub_mce_loc$`between_2008-2023` != 0)
+#[1] 53
+#locations sampled from 2008 (new)
+sum(n_pub_mce_loc$before_2008 == 0 & n_pub_mce_loc$`between_2008-2023` != 0)
+#[1] 54
+#Locations sampled before 2008 and not any more
+sum(n_pub_mce_loc$before_2008 != 0 & n_pub_mce_loc$`between_2008-2023` == 0)
+#[1] 13
+
+#Before and since 2008
+53+13
+#[1] 66
+#Increase 
+54*100/66
+#[1] 81.81818 - 82% increase or
+66/54
+#[1] 1.222222 - 1.2 fold increase
+
+# TMEs
+unique(n_pub_tme_loc$locations)
+#45 locations
+#locations sampled before 2008 and onwards
+sum(n_pub_tme_loc$before_2008 != 0 & n_pub_tme_loc$`between_2008-2023` != 0)
+#[1] 14
+#locations sampled from 2008 (new)
+sum(n_pub_tme_loc$before_2008 == 0 & n_pub_tme_loc$`between_2008-2023` != 0)
+#[1] 30
+#Locations sampled before 2008 and not any more
+sum(n_pub_tme_loc$before_2008 != 0 & n_pub_tme_loc$`between_2008-2023` == 0)
+#[1] 1
+
+#Before and since 2008
+14+1
+#[1] 15
+#Increase 
+30*100/15
+#[1] 200 - increase or
+30/15
+#[1] 2 - 2 fold increase
+
+
+#Number of locations with only 1-2 study
+#MCE
+sum(n_pub_mce_loc$total < 3)
+#[1] 54
+54*100/120
+#[1] 45 - 45%
+
+#TME
+sum(n_pub_tme_loc$total < 3)
+#[1] 22
+22*100/45
+#[[1] 48.88889 - 49%
+
+
+# Number of locations with les than 10 publications
+#MCE
+sum(n_pub_mce_loc$total < 10)
+#[1] 88
+88*100/120
+#[1]73.33333 - 73%
+
+#TME
+sum(n_pub_tme_loc$total < 10)
+#[1] 38
+38*100/45
+#[1] 84.44444 - 84%
+
+
+```
+
+THE END
+
