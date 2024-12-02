@@ -65,6 +65,7 @@ Plot by platforms with max Depth
 Make a box plot.
 - filtering publications with a original data, validated, stats and a single platform only, 
 - Consider max depths
+- Please note that for SCUBA (open-circuit or unspecified), there are 10 publications deeper than 100 m and 25 deeper than 70 m
 
 ```{r}
 publs <- subset(publs, publication_type == "scientific" & publication_format == "article")
@@ -167,6 +168,7 @@ Fig_Platform_MaxDepth <- ggplot(data = platforms_df, aes (y=max_depth, x = facto
   theme(axis.text.x = element_text(size = 10))
 Fig_Platform_MaxDepth
 
+# Please note that for SCUBA (open-circuit or unspecified), there are 10 publications deeper than 100 m and 25 deeper than 70 m
 
 ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platform_MaxDepth.pdf", Fig_Platform_MaxDepth,width = 8.5, height = 3.5)
 ggsave ( "~/Documents/AAASea_Science/Mesophotic.org/Figures/Fig_Platform_MaxDepth.jpeg", Fig_Platform_MaxDepth,width = 8.5, height = 3.5)
