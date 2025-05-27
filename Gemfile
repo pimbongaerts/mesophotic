@@ -53,6 +53,7 @@ end
 group :development, :test do
   gem 'annotate'
   gem 'byebug'
+  gem 'derailed_benchmarks'
   gem 'rails-erd'
   gem 'spring'
   gem 'sqlite3', '~> 1.6.0'
