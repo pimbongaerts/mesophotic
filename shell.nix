@@ -1,22 +1,14 @@
-{ pkgs ? import <nixpkgs> { } }:
-
-with pkgs;
-
-let
-  env = bundlerEnv {
-    name = "mesophotic-development-environment";
-    ruby = ruby_2_7;
-    gemdir = ./.;
-  };
-
-in mkShell {
+{ nixpkgs ? import <nixpkgs>
+, pkgs ? nixpkgs {}
+, nixpkgs-ruby ? import (builtins.fetchTarball {
+    url = "https://github.com/bobvanderlinden/nixpkgs-ruby/archive/c1ba161adf31119cfdbb24489766a7bcd4dbe881.tar.gz";
+  })
+, ruby ? nixpkgs-ruby.packages.${builtins.currentSystem}."ruby-2.7"
+, bundler ? nixpkgs-ruby.packages.${builtins.currentSystem}."bundler"
+}:
+pkgs.mkShell {
   buildInputs = [
-    awscli
-    env
-    env.wrappedRuby
-    imagemagick
-    ghostscript
-    mupdf
-    v8
+    ruby
+    pkgs.bundix
   ];
 }
