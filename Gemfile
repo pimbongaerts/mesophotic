@@ -53,7 +53,6 @@ end
 group :development, :test do
   gem 'annotate'
   gem 'byebug'
-  gem 'derailed_benchmarks'
   gem 'rails-erd'
   gem 'spring'
   gem 'sqlite3', '~> 1.6.0'
@@ -63,6 +62,7 @@ group :development do
   gem 'web-console'
 
   # Profiling
+  gem 'derailed_benchmarks'
   gem 'flamegraph'
   gem 'memory_profiler'
   gem 'rack-mini-profiler', require: false
