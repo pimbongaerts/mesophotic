@@ -3,6 +3,7 @@
 *~
 .byebug_history
 .DS_Store
+.dh-diag
 .envrc
 .idea
 .project
