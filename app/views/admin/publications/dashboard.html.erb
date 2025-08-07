@@ -7,7 +7,7 @@
 	<%= paginate @publications %>
 	<table class="table table-striped">
 	<% @publications.each do |publication| %>
-  	<%= render publication %>
+  	<%= render "publications/publication", publication: publication %>
 	<% end %>
 	</table>
 	<%= paginate @publications %>
