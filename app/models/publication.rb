@@ -154,7 +154,8 @@ class Publication < ApplicationRecord
       fields = search_params["search_fields"] || []
       clause = fields.map { |field| "LOWER(#{field}) LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term.downcase}%")
-      where(clause, *terms)
+      select("publications.*")
+      .where(clause, *terms)
       .base_search(search_params)
       .order("publication_year DESC")
     end
@@ -168,8 +169,9 @@ class Publication < ApplicationRecord
         "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
 
-      records = select("*, (#{filter}) / LENGTH(#{st}) AS relevance")
+      records = select("publications.*, (#{filter}) / LENGTH(#{st}) AS relevance")
       limited = records.where("relevance > 0")
+
       records
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
