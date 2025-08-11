@@ -5,7 +5,7 @@
       <%= link_to image_tag('adobe_pdf.png'), url_for(publication.pdf) %>
     <% elsif !publication.DOI.blank? %>
       <%= link_to publication.doi_url do %>
-        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        <i class="bi bi-link-45deg" aria-hidden="true"></i>
       <% end %>
     <% end %>
   </td>

@@ -3,73 +3,80 @@
     <%= render partial: 'layouts/link',
                locals: { path: root_path,
                          title: 'Home',
-                         glyphicon: 'glyphicon-home'} %>
+                         icon: 'bi-house-door-fill' } %>
 
     <%# render partial: 'layouts/link',
                locals: { path: root_path,
                          title: 'Info',
-                         glyphicon: 'glyphicon-info-sign'} %>
+                         icon: 'bi-info-circle-fill' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: posts_pages_path,
                          title: 'News',
-                         glyphicon: 'glyphicon-th-list'} %>
+                         icon: 'bi-newspaper' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: members_pages_path,
                          title: 'People',
-                         glyphicon: 'glyphicon-user'} %>
+                         icon: 'bi-people-fill' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: publications_path,
                          title: 'Publications',
-                         glyphicon: 'glyphicon-file'} %>
+                         icon: 'bi-file-earmark-fill' } %>
 
     <%# render partial: 'layouts/link',
                locals: { path: locations_path,
                          title: 'Locations',
-                         glyphicon: 'glyphicon-globe'} %>
+                         icon: 'bi-globe-asia-australia-fill' } %>
 
-    <%= render partial: 'layouts/link_categories' %>
+    <%= render partial: 'layouts/link_categories',
+               locals: { title: 'Categories',
+                         icon: 'bi-crosshair2' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: photos_path,
                          title: 'Images',
-                         glyphicon: 'glyphicon-picture'} %>
+                         icon: 'bi-image' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: stats_path,
                          title: 'Stats',
-                         glyphicon: 'glyphicon-stats'} %>
+                         icon: 'bi-bar-chart-fill' } %>
 
     <%# render partial: 'layouts/link',
                locals: { path: species_index_path,
                          title: 'Species',
-                         glyphicon: 'glyphicon-tree-deciduous'} %>
+                         icon: 'bi-tree-fill' } %>
 
     <%= render partial: 'layouts/link',
                locals: { path: about_pages_path,
                          title: 'About',
-                         glyphicon: 'glyphicon-question-sign'} %>
+                         icon: 'bi-question-circle-fill' } %>
 
   <%# Links accessible to signed in users %>
   <% if !user_signed_in? %>
       <%= render partial: 'layouts/link',
                  locals: { path: new_user_session_path,
                            title: 'Sign in',
-                           glyphicon: ' glyphicon-cog'} %>
+                           icon: 'bi-gear-fill' } %>
 
   <% else %>
 
       <%# Links accessible to admins %>
       <% if current_user.admin? %>
         <%= render partial: 'layouts/user_links',
-                   locals: { user: 'admin'} %>
+                   locals: { user: 'admin',
+                             title: 'Admin',
+                             icon: 'bi-gear-fill' } %>
 
       <%# Links accessible to regular users %>
       <% else %>
         <%= render partial: 'layouts/user_links',
-             locals: { user: 'regular'} %>
+                   locals: { user: 'regular',
+                             title: 'Profile',
+                             icon: 'bi-gear-fill' } %>
+
       <% end%>
 
     </li>

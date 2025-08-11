@@ -19,7 +19,8 @@ $link-hover-color: darken($link-color, 15%);
 
 // Typography
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
-@import url(http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css);
+@import url(https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css);
+
 $font-family-sans-serif: 'Open Sans', Helvetica, Arial, sans-serif;
 $font-family-serif: Georgia, 'Times New Roman', Times, serif;
 $font-family-monospace: 'Menlo','Monaco','Consolas','Courier New', monospace;

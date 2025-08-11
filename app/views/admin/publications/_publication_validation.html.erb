@@ -74,7 +74,7 @@
     <br >
     <% if not publication.DOI.blank? %>
       <%= link_to "https://doi.org/#{publication.DOI}" do %>
-          <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+          <i class="bi bi-link-45deg" aria-hidden="true"></i>
       <% end %>
     <% end %>
     <%= link_to 'Edit', edit_publication_path(publication) %><br>

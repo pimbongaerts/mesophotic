@@ -177,10 +177,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1zpd7a3205y7lnp115pjan1hpvhg0xbdjpyyfyg29zmd06xkpgxp";
+      sha256 = "0jgc64axdp2j5fn9sj6lvr96f0nlzwhkl6ma8a2j6xiszid7d305";
       type = "gem";
     };
-    version = "1.1143.0";
+    version = "1.1144.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -592,17 +592,6 @@
       type = "gem";
     };
     version = "0.9.5";
-  };
-  font-awesome-rails = {
-    dependencies = ["railties"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0cl75j217vc81lbv3g0jfs2bzfg4v8ay9fjgv2w7hcdziy848l5l";
-      type = "gem";
-    };
-    version = "4.7.0.9";
   };
   friendly_id = {
     dependencies = ["activerecord"];

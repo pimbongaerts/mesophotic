@@ -1,20 +1,18 @@
 <li class="dropdown">
 	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-	  <span class="glyphicon glyphicon-screenshot"></span>
-		<strong class="hidden-sm hidden-md"><small>
-			Categories
-		</small></strong>
+		<i class="bi <%= icon %>"></i>&nbsp;
+		<strong class="hidden-md hidden-sm"><small><%= title %></small></strong>
 		<span class="caret"></span>
 	</a>
 	<ul class="dropdown-menu">
 	   <li>&nbsp;&nbsp;Publications by ...</li>
-	   <li><%= link_to "Geographic location", 
+	   <li><%= link_to "Geographic location",
 	   				   locations_path %></li>
-	   <li><%= link_to "Technology / platform", 
+	   <li><%= link_to "Technology / platform",
 	   				   "http://mesophotic.org/platforms/10" %></li>
-	   <li><%= link_to "Research field", 
+	   <li><%= link_to "Research field",
 	   				   "http://mesophotic.org/fields/10" %></li>
-	   <li><%= link_to "Research focus", 
+	   <li><%= link_to "Research focus",
 	   				   "http://mesophotic.org/focusgroups/9" %></li>
 	   <li><%= link_to "Species list", species_index_path %></li>
 	</ul>

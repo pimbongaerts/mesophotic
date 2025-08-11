@@ -25,14 +25,14 @@
         <td><%= site.estimated %></td>
         <td>
           <%= link_to edit_site_path(site) do %>
-            <span class="glyphicon glyphicon-pencil"></span>
+            <i class="bi bi-pencil-fill"></i>
           <% end %>
           &nbsp;&nbsp;
         </td>
         <td>
-          <%= link_to site, method: :delete, 
+          <%= link_to site, method: :delete,
                       data: { confirm: 'Are you sure?' } do %>
-            <span class="glyphicon glyphicon-remove"></span>
+            <i class="bi bi-x"></i>
           <% end %>
         </td>
       </tr>
