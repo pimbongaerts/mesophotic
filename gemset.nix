@@ -177,10 +177,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0jgc64axdp2j5fn9sj6lvr96f0nlzwhkl6ma8a2j6xiszid7d305";
+      sha256 = "0ksd0xqnz7jbrimn4dik3c5nwgv4w8fpapsw1nmhqv46ghg26k2a";
       type = "gem";
     };
-    version = "1.1144.0";
+    version = "1.1147.0";
   };
   aws-record = {
     dependencies = ["aws-sdk-dynamodb"];
@@ -210,10 +210,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "065rijchs3nnclfnrfa60wfjxvgmj02fyvnb2v8kqj51biafzywd";
+      sha256 = "1b29q344sbviz6a8isqzpgqbajjjbdc98n0wmq0l434ayh4p7ppj";
       type = "gem";
     };
-    version = "1.149.0";
+    version = "1.150.0";
   };
   aws-sdk-kms = {
     dependencies = ["aws-sdk-core" "aws-sigv4"];
@@ -859,16 +859,6 @@
     };
     version = "1.1.5";
   };
-  mini_portile2 = {
-    groups = ["default" "development" "test"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "12f2830x7pq3kj0v8nz0zjvaw02sv01bqs1zwdrc04704kwcgmqc";
-      type = "gem";
-    };
-    version = "2.8.9";
-  };
   minitest = {
     groups = ["default" "development" "test"];
     platforms = [];
@@ -964,12 +954,12 @@
     version = "2.7.4";
   };
   nokogiri = {
-    dependencies = ["mini_portile2" "racc"];
+    dependencies = ["racc"];
     groups = ["default" "development"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "16w64l83ycfwbaqyw06j8c8l8r30xy33lkv761516byix5nzl3ls";
+      sha256 = "1sl7xs24qsqzqd4piwa8zjnj0qc4wdaakzaz8f8bkhq97d03v7hn";
       type = "gem";
     };
     version = "1.15.7";
@@ -1348,12 +1338,11 @@
     version = "3.4.2";
   };
   sqlite3 = {
-    dependencies = ["mini_portile2"];
     groups = ["development" "test"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "08irz5llz31im8pmkk5k0kw433jyyji1qa98xkdmpphncdjr38am";
+      sha256 = "bed643cefc56db014dc6a20f5a5c8aa1df5a200bc172a9f3ef0a92c596846147";
       type = "gem";
     };
     version = "1.6.9";

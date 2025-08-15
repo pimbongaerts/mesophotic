@@ -27,7 +27,6 @@ gem 'acts_as_textcaptcha'
 gem 'country_select'
 gem 'figaro'
 gem 'histogram'
-gem 'nokogiri'
 gem 'owlcarousel-rails'
 gem 'paper_trail'
 gem 'rails_admin'
@@ -54,7 +53,7 @@ group :development, :test do
   gem 'byebug'
   gem 'rails-erd'
   gem 'spring'
-  gem 'sqlite3', '~> 1.6.0'
+  gem 'sqlite3', '~> 1.6.9'
 end
 
 group :development do

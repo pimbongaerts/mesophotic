@@ -2,12 +2,13 @@
   description = "Mesophotic Rails development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-ruby.url = "github:bobvanderlinden/nixpkgs-ruby";
+    nixpkgs-ruby.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-ruby, flake-utils, ... }:
+  outputs = { self, nixpkgs, nixpkgs-ruby, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -15,28 +16,57 @@
           overlays = [ nixpkgs-ruby.overlays.default ];
         };
 
-        rubyEnv = pkgs.bundlerEnv {
-          name = "mesophotic-dev-env";
-          ruby = pkgs."ruby-2.7";
-          gemdir = ./.;
+        ruby = nixpkgs-ruby.lib.packageFromRubyVersionFile {
+          file = ./.ruby-version;
+          inherit system;
         };
 
-        shellBuildInputs = [
-          pkgs.awscli
-          rubyEnv
-          rubyEnv.wrappedRuby
-          pkgs.imagemagick
-          pkgs.ghostscript
-          pkgs.mupdf
-          pkgs.v8
-        ];
+        gems = pkgs.bundlerEnv {
+          inherit ruby;
+          name = "gemset";
+
+          gemConfig.nokogiri = attrs: {
+            version = attrs.version
+              + "-"
+              + (
+                if system == "aarch64-darwin"
+                then "arm64-darwin"
+                else system
+              );
+          };
+
+          gemConfig.sqlite3 = attrs: {
+            version = attrs.version
+              + "-"
+              + (
+                if system == "aarch64-darwin"
+                then "arm64-darwin"
+                else system
+              );
+          };
+
+          gemfile = ./Gemfile;
+          lockfile = ./Gemfile.lock;
+          gemset = ./gemset.nix;
+          gemdir = ./.;
+          groups = [ "default" "production" "development" "test" ];
+        };
       in
       {
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = shellBuildInputs;
+        devShell = with pkgs;
+          mkShell {
+            buildInputs = [
+              gems
+              ruby
+              bundix
+
+              awscli
+              imagemagick
+              ghostscript
+              mupdf
+              nodejs.libv8
+            ];
           };
-        };
       }
     );
 }
