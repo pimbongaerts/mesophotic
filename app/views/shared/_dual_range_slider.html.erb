@@ -1,0 +1,52 @@
+<div class="dual-range-wrapper">
+  <span class="range-label-min"><%= opts[:min_label] || "#{opts[:min]}#{opts[:suffix]}" %></span>
+  
+  <div class="dual-range-container <%= opts[:class] %>" data-min="<%= opts[:min] %>" data-max="<%= opts[:max] %>">
+    <div class="slider-track"></div>
+    <div class="slider-range" id="<%= highlight_id %>"></div>
+    
+    <input
+      type="range"
+      class="dual-range-input dual-range-min"
+      id="<%= min_id %>"
+      name="<%= name %>_min"
+      min="<%= opts[:min] %>"
+      max="<%= opts[:max] %>"
+      step="<%= opts[:step] %>"
+      value="<%= min_val %>">
+      
+    <input
+      type="range"
+      class="dual-range-input dual-range-max"
+      id="<%= max_id %>"
+      name="<%= name %>_max"
+      min="<%= opts[:min] %>"
+      max="<%= opts[:max] %>"
+      step="<%= opts[:step] %>"
+      value="<%= max_val %>">
+      
+    <input type="hidden" name="<%= name %>" id="<%= hidden_id %>" value="<%= current_value %>">
+    
+    <!-- Single centered range tag -->
+    <div class="range-tag" id="<%= base_id %>_range_tag">
+      <span id="<%= min_display_id %>"><%= min_val %></span><%= opts[:suffix] %> - <span id="<%= max_display_id %>"><%= max_val %></span><%= opts[:suffix] %>
+    </div>
+  </div>
+  
+  <span class="range-label-max"><%= opts[:max_label] || "#{opts[:max]}#{opts[:suffix]}" %></span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const minInput = document.getElementById('<%= min_id %>');
+    const maxInput = document.getElementById('<%= max_id %>');
+    const minDisplay = document.getElementById('<%= min_display_id %>');
+    const maxDisplay = document.getElementById('<%= max_display_id %>');
+    const hiddenInput = document.getElementById('<%= hidden_id %>');
+    const rangeHighlight = document.getElementById('<%= highlight_id %>');
+    
+    if (minInput && maxInput) {
+      initDualRange(minInput, maxInput, minDisplay, maxDisplay, hiddenInput, rangeHighlight);
+    }
+  });
+</script>

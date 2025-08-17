@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require bootstrap-slider
+//= require dual_range
 // = require analytics
 // = require owl.carousel
 // = require wordcloud2
