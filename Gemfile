@@ -16,7 +16,6 @@ gem 'uglifier'
 
 # RailsBricks gems
 gem 'bootstrap-sass', '~> 3.4.1'
-gem 'bootstrap-slider-rails'
 gem 'devise', '>= 4.6.0'
 gem 'friendly_id'
 gem 'kaminari'

@@ -40,46 +40,32 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-12">
-            <div class="col-sm-1 right">
-              <b><%= Publication.min_year %></b>
-            </div>
-            <div class="col-sm-9">
-              <input
-                type="text"
-                id="year_slider"
-                name="search_params[year_range]"
-                data-provide="slider"
-                data-slider-min="<%= Publication.min_year %>"
-                data-slider-max="<%= Publication.max_year %>"
-                data-slider-step="1"
-                data-slider-value="[<%= params[:search_params][:year_range] %>]">
-              <script>$('#year_slider').slider();</script>
-            </div>
-            <div class="col-sm-1">
-              <b><%= Publication.max_year %></b>
-            </div>
+            <% 
+              year_range = params.dig(:search_params, :year_range) || "#{Publication.min_year},#{Publication.max_year}"
+            %>
+            <%= dual_range_slider('search_params[year_range]', {
+              min: Publication.min_year,
+              max: Publication.max_year,
+              step: 1,
+              value: year_range,
+              id: 'year_slider'
+            }) %>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <div class="col-sm-1 right">
-              <b>0&nbsp;m</b>
-            </div>
-            <div class="col-sm-9">
-              <input
-                type="text"
-                id="depth_slider"
-                name="search_params[depth_range]"
-                data-provide="slider"
-                data-slider-min="0"
-                data-slider-max="500"
-                data-slider-step="5"
-                data-slider-value="[<%= params[:search_params][:depth_range] %>]">
-              <script>$('#depth_slider').slider();</script>
-            </div>
-            <div class="col-sm-1">
-              <b>>&nbsp;500&nbsp;m</b>
-            </div>
+            <% 
+              depth_range = params.dig(:search_params, :depth_range) || "0,500"
+            %>
+            <%= dual_range_slider('search_params[depth_range]', {
+              min: 0,
+              max: 500,
+              step: 5,
+              value: depth_range,
+              id: 'depth_slider',
+              suffix: 'm',
+              max_label: '500m+'
+            }) %>
           </div>
         </div>
         <div class="row">

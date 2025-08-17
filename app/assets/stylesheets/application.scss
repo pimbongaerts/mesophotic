@@ -3,9 +3,7 @@
  *
  *= require_self
  *= require owl.carousel
- *= require bootstrap-slider
  */
-
 @import "owl.theme.default";
 @import "railsbricks_custom";
 
@@ -86,17 +84,174 @@ span.bi-link {
 
   .right { text-align: right; }
 
-  .slider {
-    &.slider-horizontal {
+  .dual-range-input {
+    width: 100%;
+
+    &::-webkit-slider-thumb {
+      background: rgb(124, 181, 236);
+    }
+
+    &::-moz-range-thumb {
+      background: rgb(124, 181, 236);
+    }
+
+    &::-webkit-slider-track {
+      background: rgb(149, 206, 255);
+    }
+
+    &::-moz-range-track {
+      background: rgb(149, 206, 255);
+    }
+  }
+
+  .dual-range-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center; // Center labels with track
+    gap: 12px;
+    padding-top: 15px; // Minimal space for tag above track
+
+    .range-label-min,
+    .range-label-max {
+      font-size: 1.2rem;
+      color: #000000;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+  }
+
+  .dual-range-container {
+    position: relative;
+    width: 100%;
+    height: 50px; // Back to original height
+    display: flex;
+    align-items: center;
+
+    .slider-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-color: #dee2e6;
+      border-radius: 4px;
+      transform: translateY(-50%);
+    }
+
+    .slider-range {
+      position: absolute;
+      top: 50%;
+      height: 8px;
+      background-color: #8bb7e9;
+      border-radius: 4px;
+      transform: translateY(-50%);
+    }
+
+    .dual-range-input {
+      position: absolute;
+      top: 0;
       width: 100%;
+      height: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+      pointer-events: none; // Disable pointer events on track
+
+      &::-webkit-slider-track {
+        -webkit-appearance: none;
+        background: transparent;
+        height: 8px;
+        margin-top: calc(50% - 4px); // Center the 8px track vertically
+      }
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        background: #0d6efd;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 0;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: all 0.15s ease-in-out;
+        pointer-events: auto; // Enable pointer events on thumb
+
+        &:hover {
+          background-color: #0b5ed7;
+          transform: scale(1.1);
+        }
+
+        &:active {
+          background-color: #0a58ca;
+          transform: scale(1.2);
+        }
+      }
+
+      &::-moz-range-track {
+        background: transparent;
+        height: 8px;
+        border: 0;
+      }
+
+      &::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        background: #0d6efd;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 0;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: all 0.15s ease-in-out;
+        pointer-events: auto; // Enable pointer events on thumb
+        -moz-appearance: none;
+
+        &:hover {
+          background-color: #0b5ed7;
+          transform: scale(1.1);
+        }
+
+        &:active {
+          background-color: #0a58ca;
+          transform: scale(1.2);
+        }
+      }
+
+      &.dual-range-min {
+        z-index: 1;
+      }
+
+      &.dual-range-max {
+        z-index: 2;
+      }
     }
 
-    .slider-handle {
-      background: rgb(124, 181, 236)
-    }
+    .range-tag {
+      position: absolute;
+      background: #212529;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      font-weight: normal;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+      top: 50%;
+      transform: translate(-50%, -140%); // Position above the center of the highlighted range
+      border: 1px solid #dee2e6;
 
-    .slider-selection {
-      background: rgb(149, 206, 255)
+      // Arrow pointing down
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 4px solid transparent;
+        border-top-color: #212529;
+      }
     }
   }
 }
