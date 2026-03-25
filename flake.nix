@@ -21,28 +21,28 @@
           inherit system;
         };
 
-        gems = pkgs.bundlerEnv {
+        bundler = pkgs.buildRubyGem rec {
+          inherit ruby;
+          name = "${gemName}-${version}";
+          gemName = "bundler";
+          version = "2.4.22";
+          source = {
+            remotes = ["https://rubygems.org"];
+            sha256 = "sha256-dHulCw5n3yXL07SPlYMad6TVOlgdVfBjly/LFG0ULF8=";
+            type = "gem";
+          };
+        };
+
+        gems = pkgs.bundlerEnv.override { inherit bundler; } {
           inherit ruby;
           name = "gemset";
 
-          gemConfig.nokogiri = attrs: {
-            version = attrs.version
-              + "-"
-              + (
-                if system == "aarch64-darwin"
-                then "arm64-darwin"
-                else system
-              );
-          };
-
-          gemConfig.sqlite3 = attrs: {
-            version = attrs.version
-              + "-"
-              + (
-                if system == "aarch64-darwin"
-                then "arm64-darwin"
-                else system
-              );
+          gemConfig = let
+            platformSuffix = if system == "aarch64-darwin" then "arm64-darwin" else system;
+            withPlatformSuffix = attrs: { version = "${attrs.version}-${platformSuffix}"; };
+          in {
+            nokogiri = withPlatformSuffix;
+            sqlite3 = withPlatformSuffix;
           };
 
           gemfile = ./Gemfile;
@@ -58,6 +58,7 @@
             buildInputs = [
               gems
               ruby
+              bundler
               bundix
 
               awscli
