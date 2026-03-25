@@ -105,4 +105,60 @@ class PublicationTest < ActiveSupport::TestCase
   test "depth search, find one" do
     assert_equal [publications(:book_chapter), publications(:one)], (Publication.search "", Publication.default_search_params.merge("depth_range" => "200, 300")).to_a
   end
+
+  # -- Task 4: Validation and association tests --
+
+  test "requires title" do
+    pub = Publication.new(authors: "Author", publication_year: 2020, contributor: users(:admin_user))
+    assert_not pub.valid?
+    assert_includes pub.errors[:title], "can't be blank"
+  end
+
+  test "requires authors" do
+    pub = Publication.new(title: "Title", publication_year: 2020, contributor: users(:admin_user))
+    assert_not pub.valid?
+    assert_includes pub.errors[:authors], "can't be blank"
+  end
+
+  test "requires publication_year" do
+    pub = Publication.new(title: "Title", authors: "Author", contributor: users(:admin_user))
+    assert_not pub.valid?
+    assert_includes pub.errors[:publication_year], "can't be blank"
+  end
+
+  test "valid publication saves" do
+    pub = Publication.new(
+      title: "Valid Publication",
+      authors: "Author A",
+      publication_year: 2020,
+      contributor: users(:admin_user)
+    )
+    assert pub.valid?
+  end
+
+  test "belongs to journal" do
+    pub = publications(:scientific_article)
+    assert_equal journals(:open_journal), pub.journal
+  end
+
+  test "journal is optional" do
+    pub = publications(:one)
+    assert_nil pub.journal
+  end
+
+  test "belongs to contributor" do
+    pub = publications(:scientific_article)
+    assert_equal users(:admin_user), pub.contributor
+  end
+
+  test "has and belongs to many users" do
+    pub = publications(:scientific_article)
+    pub.users << users(:regular_user)
+    assert_includes pub.users, users(:regular_user)
+  end
+
+  test "has many validations" do
+    pub = publications(:scientific_article)
+    assert_equal 2, pub.validations.count
+  end
 end
