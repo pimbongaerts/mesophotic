@@ -1,0 +1,7 @@
+scuba:
+  description: "SCUBA diving"
+  short_description: "SCUBA"
+
+rov:
+  description: "Remotely Operated Vehicle"
+  short_description: "ROV"

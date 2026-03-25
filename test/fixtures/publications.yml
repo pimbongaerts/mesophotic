@@ -64,3 +64,41 @@ three:
   publication_type: "popular"
   min_depth: 30
   max_depth: 100
+
+scientific_article:
+  title: "Mesophotic coral ecosystems of the Great Barrier Reef"
+  authors: "Smith, J.; Jones, A.; Williams, B."
+  publication_year: 2020
+  publication_type: "scientific"
+  publication_format: "article"
+  abstract: "This study examines mesophotic coral reef ecosystems at depths of 30-150m."
+  contents: "Mesophotic coral ecosystems (MCEs) are deep reef communities found at depths of 30-150m."
+  min_depth: 30
+  max_depth: 150
+  DOI: "10.1234/meso.2020"
+  original_data: true
+  mesophotic: true
+  mce: true
+  journal: open_journal
+  contributor: admin_user
+  created_at: "2024-01-01 00:00:00"
+  updated_at: "2024-01-01 00:00:00"
+
+book_chapter:
+  title: "Chapter 5: Deep Reef Refugia"
+  authors: "Brown, C.; Davis, D."
+  publication_year: 2019
+  publication_type: "scientific"
+  publication_format: "chapter"
+  book_title: "Coral Reef Science"
+  book_publisher: "Academic Press"
+  book_authors: "Editor, E."
+  min_depth: 60
+  max_depth: 200
+  original_data: true
+  mesophotic: true
+  mce: true
+  journal: closed_journal
+  contributor: editor_user
+  created_at: "2024-01-01 00:00:00"
+  updated_at: "2024-01-01 00:00:00"
