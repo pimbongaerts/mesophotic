@@ -261,4 +261,50 @@ class PublicationTest < ActiveSupport::TestCase
       pub.save!
     end
   end
+
+  # -- Task 6: Scope tests --
+
+  test "validated scope returns publications with 2+ validations" do
+    validated = Publication.validated
+    assert_includes validated, publications(:scientific_article)
+    assert_not_includes validated, publications(:book_chapter)
+  end
+
+  test "unvalidated scope returns publications with fewer than 2 validations" do
+    unvalidated = Publication.unvalidated
+    assert_includes unvalidated, publications(:book_chapter)
+    assert_not_includes unvalidated, publications(:scientific_article)
+  end
+
+  test "latest scope returns publications ordered by year desc" do
+    latest = Publication.latest(3)
+    assert_equal 3, latest.length
+    assert latest.first.publication_year >= latest.last.publication_year
+  end
+
+  test "statistics scope filters by status and year" do
+    stats = Publication.statistics(:all, 2025)
+    assert stats.is_a?(ActiveRecord::Relation)
+  end
+
+  test "annual_counts groups by year" do
+    counts = Publication.annual_counts
+    assert counts.is_a?(Hash)
+  end
+
+  test "max_year returns highest publication year" do
+    assert_equal 2020, Publication.max_year
+  end
+
+  test "min_year returns lowest publication year" do
+    assert_equal 1969, Publication.min_year
+  end
+
+  test "max_depth returns highest max_depth" do
+    assert Publication.max_depth.is_a?(Integer)
+  end
+
+  test "min_depth returns lowest min_depth" do
+    assert Publication.min_depth.is_a?(Integer)
+  end
 end
