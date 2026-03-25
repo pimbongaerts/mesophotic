@@ -12,7 +12,7 @@
 - **Dev environment:** Nix flake + direnv
 - **VCS:** jj (colocated with git)
 - **Models:** 22, **Controllers:** 23, **Views:** 171 ERB files
-- **Custom engine:** `engines/dual_range_slider/` (recent replacement for `bootstrap-rails-slider` gem)
+- **Custom component:** Dual range slider in `app/helpers/dual_range_helper.rb`, `app/views/shared/_dual_range_slider.html.erb`, `app/assets/javascripts/dual_range.js`, and inline SCSS (recent replacement for `bootstrap-rails-slider` gem)
 
 ## Principles
 
@@ -36,7 +36,7 @@ Priority models (those with real logic beyond simple associations):
 | User | Validations (Devise fields). Associations (organisation, publications, platforms, photos). Role methods (admin/editor checks). `paginates_per 100`. |
 | Post | Validations. Markdown-to-HTML conversion (`before_save`). FriendlyId slug generation. Scopes (`published`, `drafted`). Polymorphic `postable` association. |
 | Photo | Validations. Associations (photographer, location, site, expedition, etc.). Scopes (`media_gallery`, `showcases_location`). |
-| Species | Associations (focusgroup, observations, publications). `after_create` speciation callback. Abbreviation generation. |
+| Species | Associations (focusgroup, observations, publications). `after_create` speciation callback (note: runs `SpeciationJob.perform_now` which is heavy — stub this in tests). Abbreviation generation. |
 | Location | `place_data` method for map rendering. `published` scope. |
 | Journal | `open_access` flag. Association with publications. |
 | Validation (model) | Polymorphic validatable. The 2-validation-threshold logic. |
@@ -49,7 +49,7 @@ Priority models (those with real logic beyond simple associations):
 | PagesController | `home`, `about`, `members`, `show_member`, `media_gallery`, `contact`/`email`. |
 | StatsController | `all` and `validated` with year param. Key chart endpoints return 200. |
 | Admin::* | Auth gate — unauthenticated users get redirected. Admin users can access dashboard. |
-| ApplicationController | `require_admin!` and `require_admin_or_editor!` helpers. `reject_locked!` behaviour. |
+| ApplicationController | `require_admin!` and `require_admin_or_editor!` helpers (note: `require_admin_or_editor!` uses `@current_user` instead of `current_user` — verify this works consistently). `reject_locked!` behaviour. |
 
 ### Helper Tests
 
@@ -79,13 +79,17 @@ Expand from the current 3 publication fixtures to cover:
 
 ### Gem Changes
 
-- Remove: `bootstrap-sass` (~3.4.1)
+- Remove: `bootstrap-sass` (~3.4.1), `sass` (deprecated Ruby Sass gem — unused, `sass-rails` delegates to `sassc` internally)
 - Add: `bootstrap` (~5.3)
 - May need: `sassc-rails` or update sass compilation pipeline
 
 ### SCSS Migration
 
 `railsbricks_custom.scss` is the primary file. Key changes:
+
+**Critical: File restructuring required.** Currently `@import "bootstrap"` is at the top of the file (line 2), before all variable overrides. In Bootstrap 3's `bootstrap-sass`, this happened to work. In Bootstrap 5, variables use `!default` flags and **must be declared before the `@import "bootstrap"` line** or they will be silently ignored. The file must be restructured to: variable overrides first, then `@import "bootstrap"`.
+
+**Variable name changes:**
 
 | Bootstrap 3 | Bootstrap 5 |
 |-------------|-------------|
@@ -94,19 +98,24 @@ Expand from the current 3 publication fixtures to cover:
 | Panel variables | Card variables |
 | Navbar variables (`$navbar-default-*`) | Navbar variables (`$navbar-light-*` or `$navbar-dark-*`) |
 | `$btn-default-*` | `$btn-secondary-*` (no "default" variant in BS5) |
+| `$font-size-base: 14px` | `$font-size-base: 0.875rem` (BS5 uses `rem` units — `14px` will compile but causes calculation issues in BS5's `rem`-based math) |
+
+**SCSS `@extend` breakage:** `railsbricks_custom.scss` uses `@extend .img-responsive` which will cause a Sass **compilation error** — Bootstrap 5 renamed this to `.img-fluid`. This is not just a visual bug; the build will fail.
 
 ### View Class Migration
 
 Commits grouped by component type:
 
-1. **Navbar:** `navbar-default` → `navbar-light bg-light`. `navbar-toggle` → `navbar-toggler`. `icon-bar` spans → `navbar-toggler-icon`. `navbar-right` → `ms-auto`.
+1. **Navbar:** `navbar-default` → `navbar-light bg-light`. `navbar-fixed-top` → `fixed-top`. `navbar-toggle` → `navbar-toggler`. `icon-bar` spans → `navbar-toggler-icon`. `navbar-right` → `ms-auto`.
 2. **Panels → Cards:** `panel` → `card`. `panel-heading` → `card-header`. `panel-body` → `card-body`. `panel-footer` → `card-footer`. `panel-default` → (just `card`).
 3. **Grid:** `col-xs-*` → `col-*`. `col-*-offset-*` → `offset-*-*`.
 4. **Responsive utilities:** `hidden-xs` → `d-none d-sm-block`. `hidden-sm hidden-md` → appropriate `d-*-none d-*-block` combos.
-5. **Data attributes:** `data-toggle` → `data-bs-toggle`. `data-dismiss` → `data-bs-dismiss`. `data-target` → `data-bs-target`. `data-parent` → `data-bs-parent`.
-6. **Buttons:** `btn-default` → `btn-secondary`. Verify `btn-basic` custom class still works.
-7. **Badges:** `badge` → `badge bg-secondary` (or appropriate contextual class).
-8. **Misc:** `caret` class (remove — BS5 dropdowns handle this with CSS). `sr-only` → `visually-hidden`.
+5. **Forms:** `form-group` → `mb-3` (removed in BS5, use margin utilities). `form-horizontal` → removed (use grid directly). `form-inline` → removed (use flex utilities). `control-label` → `form-label`. `help-block` → `form-text`. ~136 occurrences across 21 view files including Devise, publication, admin, and contact forms.
+6. **Data attributes:** `data-toggle` → `data-bs-toggle`. `data-dismiss` → `data-bs-dismiss`. `data-target` → `data-bs-target`. `data-parent` → `data-bs-parent`.
+7. **Buttons:** `btn-default` → `btn-secondary`. Verify `btn-basic` custom class still works.
+8. **Labels → Badges:** BS3 `label label-success`, `label-info`, `label-primary`, `label-warning`, `label-danger` → BS5 `badge bg-success`, `badge bg-info`, etc. (~10 occurrences in publication validation views). The `label` component was removed in BS5; all become badges.
+9. **Badges:** Existing bare `badge` class → `badge bg-secondary` (BS5 badges have no default background — contextual class required). ~14 view files affected.
+10. **Misc:** `caret` class (remove — BS5 dropdowns handle this with CSS). `sr-only` → `visually-hidden`.
 
 ### JavaScript
 
@@ -122,11 +131,12 @@ Commits grouped by component type:
 
 ### Kaminari
 
-- Check if kaminari pagination templates use Bootstrap 3 classes. If so, regenerate with `rails g kaminari:views bootstrap5` or equivalent.
+- No custom Kaminari views exist (no `app/views/kaminari/` directory). Kaminari uses its default theme.
+- Generate Bootstrap 5-compatible views: `rails g kaminari:views bootstrap5`.
 
 ### Devise Views
 
-- Devise views in `app/views/devise/` use Bootstrap form classes. Verify they still render correctly.
+- Devise views in `app/views/devise/` use Bootstrap form classes (`form-group`, `control-label`, etc.). These need the same form class migration as step 5 above.
 
 ## Phase 2: Rails 5.2 → 6.0
 
@@ -137,6 +147,8 @@ Commits grouped by component type:
 ### Key Changes
 
 - **Zeitwerk autoloader:** Replace classic autoloader. Run `bin/rails zeitwerk:check` to identify issues. Most common problem: files that don't match the expected naming convention.
+- **Zeitwerk hazard — class-level DB queries:** `Publication` model has constants (`PUBLICATION_CHARACTERISTICS`, `PUBLICATION_LOCATIONS`, `PUBLICATION_FOCUSGROUPS`, `PUBLICATION_PLATFORMS`, `PUBLICATION_FIELDS`) that execute database queries at class load time. Under Zeitwerk's lazy loading, if `Publication` is loaded before the database is ready (during `db:migrate`, `assets:precompile`, etc.), these will raise errors. Fix: convert to class methods with memoization.
+- **`jquery_ujs` → `rails-ujs`:** Rails 5.1+ ships `rails-ujs` as the default UJS driver. While `jquery_ujs` still works on Rails 6, it will be dropped in Rails 7. Begin the transition here: replace `//= require jquery_ujs` with `//= require rails-ujs` in `application.js`. This affects `data-method`, `data-confirm`, and `data-remote` attributes in views (should work identically).
 - **`config/application.rb`:** Update `config.load_defaults` from `5.2` to `6.0`.
 - **`rails app:update`:** Generate config diffs and resolve each one.
 - **Credentials:** Rails 6 encourages `credentials.yml.enc` over Figaro. No need to migrate immediately — Figaro still works.
@@ -175,41 +187,55 @@ Commits grouped by component type:
 - `rails app:update` — resolve config diffs.
 - Fix any deprecation warnings introduced in 6.0.
 - `ActiveRecord::Base` → may see deprecation warnings about `connection` usage.
+- **Remove `represent_boolean_as_integer`:** The config line `config.active_record.sqlite3.represent_boolean_as_integer = true` in `config/application.rb` was deprecated in Rails 6.0 and **removed in Rails 6.1** — it will cause a startup error if not deleted.
+- **Verify boolean scopes:** The `Post` model uses raw SQL boolean comparisons (`where("draft = 0 OR draft = 'f'")`). After removing the boolean config, verify these still work. Ideally convert to `where(draft: false)` / `where(draft: true)`.
 
-This is expected to be the smoothest step.
+This is expected to be a smooth step aside from the boolean config removal.
 
-## Phase 4: Rails 6.1 → 7.0 + Ruby 3.2
+## Phase 4: Ruby 3.2 + Rails 7.0
 
 **Bookmark:** `ryan/rails-7.0`
 **Parent:** `ryan/rails-6.1`
 
-### Ruby 2.7 → 3.2
+This is the riskiest phase. It combines a Ruby major version upgrade with a Rails major version upgrade. To keep commits bisectable, work in this order:
+
+### 4a: Ruby 2.7 → 3.2 (on Rails 6.1)
 
 - Update `.ruby-version` to `3.2`.
 - Update Nix flake: change Ruby overlay version.
+- Update Bundler version if needed.
+- Run `bundle lock && bundix`.
 - **Keyword arguments:** Ruby 3 is strict. `method(opts)` where `opts` is a hash no longer auto-splats into keyword args. Grep for patterns like `method(**options)` and hash-to-kwargs calls.
 - **Frozen string literals:** Not enforced by default but good to note.
-- Run full test suite after Ruby upgrade, before Rails upgrade.
+- Run full test suite. Fix all failures before proceeding.
 
-### CoffeeScript Removal
+### 4b: CoffeeScript Removal (on Rails 6.1 + Ruby 3.2)
 
-- `coffee-rails` doesn't work well on Rails 7. Convert any `.coffee` files to `.js`.
-- Currently `analytics.js.coffee` exists but is commented out in `application.js`. Can likely just delete it.
+- `coffee-rails` doesn't work well on Rails 7. Remove it now while the rest of the stack is stable.
+- Currently `analytics.js.coffee` exists but is commented out in `application.js`. Delete it.
 - Audit for any other CoffeeScript files.
+- Remove `coffee-rails` from Gemfile.
 
-### Turbolinks → Turbo
+### 4c: Rails 6.1 → 7.0
+
+- `config.load_defaults '7.0'`.
+- `rails app:update` — resolve config diffs.
+- `button_to` default method changes from POST to PATCH in some contexts — audit forms.
+- `Rails.application.credentials` changes — verify Figaro still works.
+
+### 4d: `rails_admin` 2.x → 3.x
+
+- `rails_admin` 2.3.1 has a hard dependency of `rails (>= 5.0, < 7)`. It **will not install** on Rails 7.
+- `rails_admin` 3.x is a major rewrite: drops `haml`, `jquery-ui-rails`, `nested_form`, `rack-pjax`, and `remotipart` as dependencies.
+- The `config/initializers/rails_admin.rb` configuration API changes. Review and update.
+- Test the admin interface manually after upgrade.
+
+### 4e: Turbolinks → Turbo
 
 - Remove `turbolinks` gem, add `turbo-rails`.
 - Or: use `turbolinks` compatibility shim if Turbo migration is too disruptive.
 - `Turbolinks.visit()` → `Turbo.visit()`. `data-turbolinks-*` → `data-turbo-*`.
 - The app's JavaScript is relatively simple so this should be manageable.
-
-### Other
-
-- `config.load_defaults '7.0'`.
-- `rails app:update`.
-- `button_to` default method changes from POST to PATCH in some contexts — audit forms.
-- `Rails.application.credentials` changes — verify Figaro still works.
 
 ## Phase 5: Rails 7.0 → 7.1
 
@@ -239,9 +265,13 @@ These are noted for future planning but not part of this modernization effort:
 
 ## Risk Notes
 
-- **`bootstrap-sass` → `bootstrap` gem:** The SCSS import paths change completely. This will touch every stylesheet.
-- **Zeitwerk (Rails 6.0):** If any models/controllers don't follow naming conventions, autoloading will break. `bin/rails zeitwerk:check` is the diagnostic tool.
+- **`bootstrap-sass` → `bootstrap` gem:** The SCSS import paths change completely. This will touch every stylesheet. The file structure of `railsbricks_custom.scss` must be restructured (variables before imports).
+- **SCSS compilation errors:** `@extend .img-responsive` will cause a build failure (BS5 renames to `.img-fluid`). Must be caught before the form class migration.
+- **Form class volume:** ~136 form class occurrences across 21 view files. This is the most tedious part of the Bootstrap migration.
+- **Zeitwerk (Rails 6.0):** If any models/controllers don't follow naming conventions, autoloading will break. `bin/rails zeitwerk:check` is the diagnostic tool. The `Publication` model's class-level DB queries are a known hazard.
+- **`represent_boolean_as_integer` (Rails 6.1):** Must be removed before upgrading to 6.1 or the app won't start.
 - **Ruby 3.2 kwargs:** This is historically the most labor-intensive part of a Ruby 2 → 3 migration. The test suite from Phase 0 is critical here.
+- **`rails_admin` 3.x (Rails 7.0):** Major rewrite required. Config API changes, transitive dependencies removed. Cannot be deferred — `rails_admin` 2.x won't install on Rails 7.
 - **`acts_as_textcaptcha`:** This gem may be abandoned. If it doesn't support Rails 7, we'll need to fork it or replace it with a simple custom implementation.
-- **`rails_admin`:** Major version bumps between Rails 5 and 7. UI may change. Test the admin interface manually at each step.
 - **SQLite3 gem:** Version constraints may shift. The `~> 1.6.9` pin may need updating.
+- **`owlcarousel-rails`:** Currently commented out in `application.js` and `application.scss`. Not actively breaking anything, but if re-enabled it may conflict with BS5 styles.
