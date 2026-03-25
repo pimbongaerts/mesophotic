@@ -161,4 +161,104 @@ class PublicationTest < ActiveSupport::TestCase
     pub = publications(:scientific_article)
     assert_equal 2, pub.validations.count
   end
+
+  # -- Task 5: Instance method and callback tests --
+
+  test "open_access? returns true when journal is open access" do
+    pub = publications(:scientific_article)
+    assert pub.open_access?
+  end
+
+  test "open_access? returns false when journal is not open access" do
+    pub = publications(:book_chapter)
+    assert_equal journals(:closed_journal), pub.journal
+    assert_not pub.open_access?
+  end
+
+  test "open_access? returns false when no journal" do
+    pub = publications(:one)
+    assert_nil pub.journal
+    assert_not pub.open_access?
+  end
+
+  test "scientific_article? for scientific article" do
+    pub = publications(:scientific_article)
+    assert pub.scientific_article?
+  end
+
+  test "scientific_article? false for chapter" do
+    pub = publications(:book_chapter)
+    assert_not pub.scientific_article?
+  end
+
+  test "chapter? for chapter format" do
+    pub = publications(:book_chapter)
+    assert pub.chapter?
+  end
+
+  test "chapter? false for article" do
+    pub = publications(:scientific_article)
+    assert_not pub.chapter?
+  end
+
+  test "doi_url returns formatted DOI link" do
+    pub = publications(:scientific_article)
+    assert_equal "https://doi.org/10.1234/meso.2020", pub.doi_url
+  end
+
+  test "scholar_url returns Google Scholar link with DOI" do
+    pub = publications(:scientific_article)
+    url = pub.scholar_url
+    assert_match /scholar\.google\.com/, url
+    assert_match /10\.1234/, url
+  end
+
+  test "short_citation formats authors and year" do
+    pub = publications(:scientific_article)
+    citation = pub.short_citation
+    assert_match /Smith/, citation
+    assert_match /2020/, citation
+  end
+
+  test "title_truncated truncates long titles" do
+    pub = publications(:scientific_article)
+    assert pub.title_truncated.length <= 73  # 70 + "..."
+  end
+
+  test "validated? returns true with 2+ validations" do
+    pub = publications(:scientific_article)
+    assert pub.validated?
+  end
+
+  test "validated? returns false with fewer than 2 validations" do
+    pub = publications(:book_chapter)
+    assert_not pub.validated?
+  end
+
+  test "create_journal_from_name creates journal on save" do
+    pub = Publication.new(
+      title: "Test",
+      authors: "Author",
+      publication_year: 2020,
+      contributor: users(:admin_user),
+      new_journal_name: "Brand New Journal"
+    )
+    assert_difference "Journal.count", 1 do
+      pub.save!
+    end
+    assert_equal "Brand New Journal", pub.journal.name
+  end
+
+  test "create_journal_from_name does nothing when name blank" do
+    pub = Publication.new(
+      title: "Test",
+      authors: "Author",
+      publication_year: 2020,
+      contributor: users(:admin_user),
+      new_journal_name: ""
+    )
+    assert_no_difference "Journal.count" do
+      pub.save!
+    end
+  end
 end
