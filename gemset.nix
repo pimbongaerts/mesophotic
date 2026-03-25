@@ -375,17 +375,6 @@
     };
     version = "3.4.1";
   };
-  bootstrap-slider-rails = {
-    dependencies = ["railties"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0r4idrwfywbj531a2j22dpp73hyj7lz3sqjhfx4w7k54vhli98rg";
-      type = "gem";
-    };
-    version = "9.8.0";
-  };
   builder = {
     groups = ["default" "development"];
     platforms = [];
@@ -1342,7 +1331,7 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "bed643cefc56db014dc6a20f5a5c8aa1df5a200bc172a9f3ef0a92c596846147";
+      sha256 = "0iv1hjbcb4haxzrsjwn11ch5mpx1i9f5l3x2qr6h3nsnzk747mmy";
       type = "gem";
     };
     version = "1.6.9";
