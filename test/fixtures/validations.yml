@@ -1,0 +1,20 @@
+validation_one:
+  validatable: scientific_article
+  validatable_type: Publication
+  user: admin_user
+  created_at: "2025-01-01 00:00:00"
+  updated_at: "2025-01-01 00:00:00"
+
+validation_two:
+  validatable: scientific_article
+  validatable_type: Publication
+  user: editor_user
+  created_at: "2025-01-01 00:00:00"
+  updated_at: "2025-01-01 00:00:00"
+
+validation_three:
+  validatable: book_chapter
+  validatable_type: Publication
+  user: admin_user
+  created_at: "2025-01-01 00:00:00"
+  updated_at: "2025-01-01 00:00:00"

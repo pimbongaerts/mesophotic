@@ -1,0 +1,20 @@
+published_post:
+  title: "Behind the Science: Mesophotic Reefs"
+  content_md: "This is the **markdown** content of the post."
+  content_html: "<p>This is the <strong>markdown</strong> content of the post.</p>"
+  draft: false
+  post_type: "behind_the_science"
+  user: admin_user
+  featured_user: regular_user
+  featured_publication: scientific_article
+  slug: "behind-the-science-mesophotic-reefs"
+
+drafted_post:
+  title: "Draft Announcement"
+  content_md: "This is a draft post."
+  content_html: "<p>This is a draft post.</p>"
+  draft: true
+  post_type: "announcement"
+  user: editor_user
+  featured_user: editor_user
+  slug: "draft-announcement"

@@ -1,0 +1,7 @@
+open_journal:
+  name: "Open Access Journal"
+  open_access: true
+
+closed_journal:
+  name: "Closed Journal"
+  open_access: false

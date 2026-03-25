@@ -1,0 +1,11 @@
+great_barrier_reef:
+  description: "Great Barrier Reef"
+  short_description: "GBR;Australia"
+  latitude: -18.2861
+  longitude: 147.7000
+
+red_sea:
+  description: "Red Sea"
+  short_description: "Red Sea;Middle East"
+  latitude: 27.2000
+  longitude: 34.8000

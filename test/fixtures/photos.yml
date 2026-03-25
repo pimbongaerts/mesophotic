@@ -1,0 +1,20 @@
+cc_photo:
+  credit: "Photographer A"
+  description: "Mesophotic reef at 60m depth"
+  depth: 60
+  creative_commons: true
+  underwater: true
+  showcases_location: true
+  media_gallery: true
+  photographer: regular_user
+  location: great_barrier_reef
+
+regular_photo:
+  credit: "Photographer B"
+  description: "Coral specimen"
+  depth: 30
+  creative_commons: false
+  underwater: false
+  showcases_location: false
+  media_gallery: false
+  photographer: admin_user
