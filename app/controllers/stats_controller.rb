@@ -67,7 +67,7 @@ class StatsController < ApplicationController
       .select('*, count(publications.id) as publications_count')
       .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('fields.id')
-      .order('count(fields.id) DESC')
+      .order(Arel.sql('count(fields.id) DESC'))
 
     render partial: "summarized_fields"
   end
@@ -79,7 +79,7 @@ class StatsController < ApplicationController
       .select('*, count(publications.id) as publications_count')
       .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('journals.id')
-      .order('count(journals.id) DESC')
+      .order(Arel.sql('count(journals.id) DESC'))
 
     render partial: "summarized_journals"
   end
@@ -91,7 +91,7 @@ class StatsController < ApplicationController
       .select('*, count(publications.id) as publications_count')
       .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('focusgroups.id')
-      .order('count(focusgroups.id) DESC')
+      .order(Arel.sql('count(focusgroups.id) DESC'))
 
     render partial: "summarized_focusgroups"
   end
@@ -103,7 +103,7 @@ class StatsController < ApplicationController
       .select('*, count(publications.id) as publications_count')
       .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('platforms.id')
-      .order('count(platforms.id) DESC')
+      .order(Arel.sql('count(platforms.id) DESC'))
 
     render partial: "summarized_platforms"
   end
@@ -125,7 +125,7 @@ class StatsController < ApplicationController
       .select('*, count(publications.id) as publications_count')
       .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
       .group('locations.id')
-      .order('count(locations.id) DESC')
+      .order(Arel.sql('count(locations.id) DESC'))
 
     render partial: "world_locations"
   end

@@ -3,7 +3,7 @@ class SitesController < ApplicationController
   before_action :set_site, only: [:show, :edit, :update, :destroy, :site_research_details]
 
   def index
-    @sites = Site.all.order('site_name ASC')
+    @sites = Site.all.order(site_name: :asc)
   end
 
   def show

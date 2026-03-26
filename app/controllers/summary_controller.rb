@@ -5,7 +5,7 @@ class SummaryController < ApplicationController
     respond_to do |format|
       format.html {
         @publications = publications.page(params[:page]).per(10)
-        @objects = @model.joins(:publications).group("#{params[:model]}.id").order('description ASC')   
+        @objects = @model.joins(:publications).group("#{params[:model]}.id").order(description: :asc)
       }
 
       format.csv { 
@@ -56,7 +56,7 @@ class SummaryController < ApplicationController
       .select('focusgroups.id, focusgroups.description, count(focusgroups.id) AS count')
       .joins(:focusgroups)
       .group('focusgroups.id')
-      .order('count DESC')
+      .order(Arel.sql('count DESC'))
       .limit(5)
   end
 
@@ -65,7 +65,7 @@ class SummaryController < ApplicationController
       .select('fields.id, fields.description, count(fields.id) AS count')
       .joins(:fields)
       .group('fields.id')
-      .order('count DESC')
+      .order(Arel.sql('count DESC'))
       .limit(5)
   end
 
@@ -74,7 +74,7 @@ class SummaryController < ApplicationController
       .select('platforms.id, platforms.description, count(platforms.id) AS count')
       .joins(:platforms)
       .group('platforms.id')
-      .order('count DESC')
+      .order(Arel.sql('count DESC'))
       .limit(5)
   end
 end
