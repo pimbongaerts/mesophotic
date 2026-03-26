@@ -37,7 +37,7 @@ class Location < ApplicationRecord
   scope :published, -> {
     joins(:publications)
     .group('locations.id')
-    .order('count(locations.id) DESC')
+    .order(Arel.sql('count(locations.id) DESC'))
   }
 
   # class methods

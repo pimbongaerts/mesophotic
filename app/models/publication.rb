@@ -157,7 +157,7 @@ class Publication < ApplicationRecord
       select("publications.*")
       .where(clause, *terms)
       .base_search(search_params)
-      .order("publication_year DESC")
+      .order(publication_year: :desc)
     end
   }
 
@@ -175,7 +175,7 @@ class Publication < ApplicationRecord
       records
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
-      .order("relevance DESC, publication_year DESC, filename ASC")
+      .order(Arel.sql("relevance DESC"), publication_year: :desc, filename: :asc)
     end
   }
 
@@ -209,11 +209,11 @@ class Publication < ApplicationRecord
     .where(publication_format: 'article')
     .where(publication_type: 'scientific')
     .where('publication_year <= ?', year)
-    .order('publication_year DESC, created_at DESC')
+    .order(publication_year: :desc, created_at: :desc)
   }
 
   scope :latest, -> (count) {
-    order('publication_year DESC, created_at DESC')
+    order(publication_year: :desc, created_at: :desc)
     .limit(count)
   }
 
@@ -427,7 +427,7 @@ class Publication < ApplicationRecord
     joins(:users)
     .select("users.id as id, users.first_name as first_name, users.last_name as last_name, count(users.id) as count")
     .group("users.id")
-    .order("count DESC")
+    .order(Arel.sql("count DESC"))
   end
 
   # instance methods
