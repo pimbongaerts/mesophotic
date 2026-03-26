@@ -3,7 +3,7 @@ class PresentationsController < ApplicationController
   before_action :set_presentation, only: [:show, :edit, :update, :destroy]
 
   def index
-    @presentations = Presentation.all.order('date ASC, time ASC')
+    @presentations = Presentation.all.order(date: :asc, time: :asc)
   end
 
   def show
