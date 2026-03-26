@@ -12,11 +12,11 @@ class PagesController < ApplicationController
   end
 
   def media_gallery
-    @photos = Photo.media_gallery.order('photos.id DESC').page(params[:page])
+    @photos = Photo.media_gallery.order(id: :desc).page(params[:page])
   end
 
   def members
-    @users = User.all.order('last_name ASC')
+    @users = User.all.order(last_name: :asc)
     @publications = Publication.all
   end
 
@@ -27,10 +27,10 @@ class PagesController < ApplicationController
   end
 
   def about
-    @platforms = Platform.all.order('description ASC')
-    @fields = Field.all.order('description ASC')
-    @focusgroups = Focusgroup.all.order('description ASC')
-    @locations = Location.all.order('description ASC')
+    @platforms = Platform.all.order(description: :asc)
+    @fields = Field.all.order(description: :asc)
+    @focusgroups = Focusgroup.all.order(description: :asc)
+    @locations = Location.all.order(description: :asc)
   end
 
   def posts

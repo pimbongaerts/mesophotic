@@ -6,7 +6,7 @@ class LocationsController < ApplicationController
   def index
   	# TODO: had to use `all` rather than `find_each` as offset
   	# for featured_publication did otherwise not work
-    @locations = Location.joins(:publications).group('locations.id').order('description ASC')
+    @locations = Location.joins(:publications).group('locations.id').order(description: :asc)
     @featured_photo = Photo.showcases_location.offset(offset = rand(Photo.showcases_location.count)).first
     @featured_location = @featured_photo.location
   end
