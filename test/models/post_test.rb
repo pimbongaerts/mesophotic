@@ -77,6 +77,18 @@ class PostTest < ActiveSupport::TestCase
     assert_equal "Behind the science", post.category
   end
 
+  test "requires featured_user for early_career" do
+    post = Post.new(
+      title: "EC Post",
+      content_md: "Content",
+      post_type: "early_career",
+      user: users(:admin_user)
+    )
+    assert_not post.valid?
+    # Error may be on :featured_user (belongs_to) or :featured_user_id (conditional validation)
+    assert post.errors[:featured_user_id].any? || post.errors[:featured_user].any?
+  end
+
   test "generates slug from title" do
     post = Post.new(
       title: "A New Unique Post Title",
