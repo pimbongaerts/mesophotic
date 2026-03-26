@@ -63,7 +63,7 @@ class Post < ApplicationRecord
   # scopes
   scope :published, -> {
     where("draft = 0 OR draft = 'f'")
-      .order('created_at DESC')
+      .order(created_at: :desc)
   }
 
   scope :latest, -> (count) {
@@ -72,7 +72,7 @@ class Post < ApplicationRecord
 
   scope :drafted, -> {
     where("draft = 1 OR draft = 't'")
-      .order('created_at DESC')
+      .order(created_at: :desc)
   }
 
   def word_cloud size
