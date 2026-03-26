@@ -48,4 +48,25 @@ class PublicationsHelperTest < ActionView::TestCase
     assert_match(/Coral Reef Science/, result)
     assert_match(/Academic Press/, result)
   end
+
+  test "search_param generates checkbox list HTML" do
+    params_hash = ActionController::Parameters.new({
+      search_params: { "publication_types" => ["scientific", "popular"] }
+    })
+    result = search_param(
+      "Types",
+      ["scientific", "technical", "popular"],
+      "publication_types",
+      params_hash
+    )
+    assert result.html_safe?
+    assert_match /Types/, result
+    assert_match /scientific/, result
+    assert_match /checkbox/, result
+    # Verify checked items are marked
+    assert_match /scientific.*checked/, result
+    # Verify unchecked item does not have checked attribute within its own element
+    technical_li = result[/publication_types\[technical\]\]"[^<]*>/, 0]
+    assert_not_includes technical_li, "checked"
+  end
 end

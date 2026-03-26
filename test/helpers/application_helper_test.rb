@@ -45,4 +45,20 @@ class ApplicationHelperTest < ActionView::TestCase
     result = new_table_row_on_iteration(0, 4)
     assert_nil result
   end
+
+  test "word_association returns hash of model associations" do
+    result = word_association
+    assert result.is_a?(Hash)
+    # Should contain entries from Platform, Field, Focusgroup, Location
+    assert result.keys.any?
+  end
+
+  test "species_association returns array of species data" do
+    result = species_association
+    assert result.is_a?(Array)
+  end
+
+  # linkify depends on word_association, species_association, and generates
+  # link_to calls with summary_path which requires routing context not
+  # available in a helper test. Skipping — better tested via integration tests.
 end
