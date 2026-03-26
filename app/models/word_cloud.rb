@@ -2,8 +2,8 @@ class WordCloud
   def self.generate size, content
     return [] unless content.present?
 
-    exclusions = WordExclusion.select("LOWER(word) AS word").distinct.order(word: :asc).map(&:word)
-    species = Species.select("LOWER(name) AS name").distinct.order(name: :asc).flat_map { |s| s.name.split(/\s/) }
+    exclusions = WordExclusion.select("LOWER(word) AS word").distinct.order(Arel.sql("LOWER(word) ASC")).map(&:word)
+    species = Species.select("LOWER(name) AS name").distinct.order(Arel.sql("LOWER(name) ASC")).flat_map { |s| s.name.split(/\s/) }
     
     frequencies = content
       .force_encoding("UTF-8")
