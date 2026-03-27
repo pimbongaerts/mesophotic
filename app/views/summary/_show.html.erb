@@ -1,24 +1,21 @@
 <%= render partial: "layouts/page_title",
            locals: {
              title: title,
-       	     subtitle: subtitle,
              backlink: root_path
            } %>
 
 <div class="row">
   <div class="col-sm-8">
 
+    <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
+
     <div class="card">
-      <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
-      <div class="card-footer">
+      <div class="card-header px-2" style="padding-top: 7px; padding-bottom: 7px;">
         <%= render partial: 'dropdown',
                    locals: { objects: objects, object: object, model: title.downcase } %>
       </div>
-		</div>
-
-    <div class="card">
       <div class="card-body">
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
 	      <table class="table table-striped">
@@ -26,7 +23,7 @@
 				    <%= render publication %>
 				  <% end %>
 				</table>
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
 	</div>
