@@ -8,11 +8,11 @@
 	   <li><%= link_to "Geographic location",
 	   				   locations_path, class: "dropdown-item" %></li>
 	   <li><%= link_to "Technology / platform",
-	   				   "http://mesophotic.org/platforms/10", class: "dropdown-item" %></li>
+	   				   summary_path(model: "platforms", id: 10), class: "dropdown-item" %></li>
 	   <li><%= link_to "Research field",
-	   				   "http://mesophotic.org/fields/10", class: "dropdown-item" %></li>
+	   				   summary_path(model: "fields", id: 10), class: "dropdown-item" %></li>
 	   <li><%= link_to "Research focus",
-	   				   "http://mesophotic.org/focusgroups/9", class: "dropdown-item" %></li>
+	   				   summary_path(model: "focusgroups", id: 9), class: "dropdown-item" %></li>
 	   <li><%= link_to "Species list", species_index_path, class: "dropdown-item" %></li>
 	</ul>
 </li>
