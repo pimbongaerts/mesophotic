@@ -10,17 +10,9 @@
 
 
 <!-- Latest news -->
-<div class="row">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header"><strong>Latest posts</strong></div>
-      <div class="card-body">
-        <div class="row">
-          <%= render partial: 'shared/post_summary_small', collection: @posts, as: :post %>
-        </div>
-      </div>
-    </div>
-  </div>
+<h5 class="mt-5"><strong>Latest posts</strong></h5>
+<div class="row mb-4">
+  <%= render partial: 'shared/post_summary_small', collection: @posts, as: :post %>
 </div>
 
 <!-- Latest publications -->

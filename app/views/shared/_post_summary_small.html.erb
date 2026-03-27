@@ -1,16 +1,38 @@
 <div class="col-sm-6">
-  <center>
-    <% if post.post_type == "behind_the_science" %>
-      <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
-    <% elsif post.post_type == "early_career" && post.featured_user.present? %>
-      <%= render partial: 'shared/behind_the_scenes', locals: { post: post, style: 'overview' } %>
-    <% elsif post.post_type == "announcement" && post.photos.present? %>
-      <%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                            post_pages_path(post) %>
+  <div class="card h-100">
+    <% if post.post_type == "behind_the_science" || post.post_type == "early_career" %>
+      <% if post.photos.count >= 4 %>
+        <%= link_to post_pages_path(post) do %>
+          <div class="card-img-top">
+            <div class="row g-1 p-1">
+              <% post.photos[0..3].each_slice(2).each do |row| %>
+                <% row.each do |photo| %>
+                  <div class="col-6">
+                    <%= image_tag photo.image.variant(resize: "300x200^", crop: "300x200+0+0"),
+                                  class: "img-fluid rounded-1" %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% elsif post.photos.present? %>
+        <%= link_to post_pages_path(post) do %>
+          <%= image_tag post.photos[0].image.variant(resize: "600x400^", crop: "600x400+0+0"),
+                        class: "card-img-top", style: "object-fit: cover; aspect-ratio: 3/2;" %>
+        <% end %>
+      <% end %>
+    <% elsif post.photos.present? %>
+      <%= link_to post_pages_path(post) do %>
+        <%= image_tag post.photos[0].image.variant(resize: "600x400^", crop: "600x400+0+0"),
+                      class: "card-img-top" %>
+      <% end %>
     <% end %>
-    <h4>
-      <%= post.category %>:
-      <%= link_to "#{post.title}", post_pages_path(post.slug) %>
-    </h4>
-  </center>
+    <div class="card-body">
+      <p class="text-muted mb-1"><small><%= post.category %></small></p>
+      <h5 class="card-title">
+        <%= link_to post.title, post_pages_path(post.slug), style: "text-decoration: none; color: inherit;" %>
+      </h5>
+    </div>
+  </div>
 </div>
