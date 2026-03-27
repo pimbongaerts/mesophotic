@@ -1,45 +1,55 @@
-<div class="row">
-  <div class="col-sm-5">
-    <% if post.post_type == "behind_the_science" %>
-      <%= render partial: 'shared/behind_the_scenes',
-                 locals: {post: post,
-                          style: 'overview'} %>
-    <% elsif post.post_type == "early_career" &&
-             post.featured_user.present? %>
-      <%= render partial: 'shared/early_career',
-               locals: {post: post } %>
-    <% elsif post.post_type == "announcement" && post.photos.present? %>
-      <%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                          post_pages_path(post) %>
-    <% end %>
-    <br><br>
-  </div>
-  <div class="col-sm-7">
-    <h4>
-      <%= post.category %>:
-      <%= link_to "#{post.title}", post_pages_path(post.slug) %>
-    </h4>
-      <small><i class="bi bi-calendar3"></i>&nbsp;&nbsp;
-      <%= post.created_at.strftime("%Y, %B %-d") %>
-      <% if post.user.present? %>
-        - posted by
-        <%= link_to "#{post.user.first_name} #{post.user.last_name}",
-                            member_pages_path(post.user) %></small>
+<div class="card mb-4">
+  <div class="row g-0">
+    <div class="col-sm-4">
+      <% if (post.post_type == "behind_the_science" || post.post_type == "early_career") && post.photos.count >= 6 %>
+        <%= link_to post_pages_path(post), style: "text-decoration: none;" do %>
+          <div class="row g-1 p-1 h-100">
+            <% post.photos[0..5].each do |photo| %>
+              <div class="col-4">
+                <%= image_tag photo.image.variant(resize: "150x100^", crop: "150x100+0+0"),
+                              class: "img-fluid rounded-1", style: "width: 100%; height: 100%; object-fit: cover;" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% elsif post.photos.present? %>
+        <%= link_to post_pages_path(post) do %>
+          <%= image_tag post.photos[0].image.variant(resize: "400x300^", crop: "400x300+0+0"),
+                        class: "img-fluid rounded-start", style: "width: 100%; height: 100%; object-fit: cover;" %>
+        <% end %>
       <% end %>
-      <br>
-      <% if post.post_type == "behind_the_science" &&
-            post.featured_user.present? &&
-            post.featured_publication.present? %>
-        An interview with
-        <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_pages_path(post.featured_user) %>
-        about their article
-        "<%= post.featured_publication.title %>".
-      <% elsif post.post_type == "early_career" &&
-               post.featured_user.present? %>
-        An interview with
-        <%= link_to "#{post.featured_user.first_name} #{post.featured_user.last_name}", member_pages_path(post.featured_user) %>
-        about their research and experiences.
-
-      <% end %>
+    </div>
+    <div class="col-sm-8">
+      <div class="card-body">
+        <p class="text-muted mb-1">
+          <small><%= post.category %></small>
+          <small class="ms-2"><i class="bi bi-calendar3"></i> <%= post.created_at.strftime("%B %-d, %Y") %></small>
+        </p>
+        <h5 class="card-title">
+          <%= link_to post.title, post_pages_path(post.slug), style: "text-decoration: none; color: inherit;" %>
+        </h5>
+        <p class="card-text" style="font-size: 0.9em;">
+          <% if post.post_type == "behind_the_science" &&
+                post.featured_user.present? &&
+                post.featured_publication.present? %>
+            An interview with
+            <%= link_to post.featured_user.full_name_normal, member_pages_path(post.featured_user) %>
+            about their article "<%= post.featured_publication.title_truncated %>".
+          <% elsif post.post_type == "early_career" &&
+                   post.featured_user.present? %>
+            An interview with
+            <%= link_to post.featured_user.full_name_normal, member_pages_path(post.featured_user) %>
+            about their research and experiences.
+          <% end %>
+        </p>
+        <% if post.user.present? %>
+          <p class="card-text">
+            <small class="text-muted">
+              Posted by <%= link_to post.user.full_name_normal, member_pages_path(post.user) %>
+            </small>
+          </p>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
