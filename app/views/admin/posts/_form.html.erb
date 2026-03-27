@@ -17,7 +17,7 @@
 <div class="form-group">
   <%= f.label :title %>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
       <%= f.text_field :title, :autofocus => true, class: "form-control monospaced-control", placeholder: "Title (also used for URL slug)..." %>
     </div>
   </div>
@@ -26,7 +26,7 @@
 <div class="form-group">
   <%= f.label :content_md, "Content" %>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
       <%= f.text_area :content_md, rows: 15, class: "form-control monospaced-control", placeholder: "Post content (Markdown format)..." %>
     </div>
   </div>
@@ -34,7 +34,7 @@
 
 <div class="form-group">
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
       <%= f.check_box :draft %> <%= f.label :draft, "draft" %>
     </div>
   </div>
@@ -61,14 +61,14 @@
 <div class="form-group">
   <%= f.label :updated_at, "Published date" %>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-12">
       <%= f.datetime_select :updated_at, class: "form-control" %>
     </div>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-xs-12 padded">
+  <div class="col-12 padded">
     <button class='btn btn-primary'>
       <i class='bi bi-plus-square'></i> Publish
     </button> - <%= link_to "Cancel", dashboard_admin_posts_path %>
