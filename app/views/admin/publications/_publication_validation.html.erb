@@ -29,7 +29,7 @@
   <td>
 		<strong>Fields</strong>:
 	  <% for field in publication.fields %>
-	    <span class="label label-success"><%= field.description %>
+	    <span class="badge bg-success"><%= field.description %>
 	  	<%= link_to "x", admin_publication_field_path(publication, field),
 	  									 data: {:confirm => 'Are you sure?'},
 	  									 :method => :delete %></span>
@@ -37,21 +37,21 @@
 	  <br>
 		<strong>Focusgroups</strong>:
 	  <% for focusgroup in publication.focusgroups %>
-	    <span class="label label-info"><%= focusgroup.description %>
+	    <span class="badge bg-info"><%= focusgroup.description %>
 	  	<%= link_to "x", admin_publication_focusgroup_path(publication, focusgroup),
 	  									 data: {:confirm => 'Are you sure?'},
 	  									 :method => :delete %></span>
 	  <% end %><br>
 		<strong>Platforms</strong>:
 	  <% for platform in publication.platforms %>
-	    <span class="label label-warning"><%= platform.description %>
+	    <span class="badge bg-warning text-dark"><%= platform.description %>
 	  	<%= link_to "x", admin_publication_platform_path(publication, platform),
 	  									 data: {:confirm => 'Are you sure?'},
 	  									 :method => :delete %></span>
 	  <% end %><br>
 		<strong>Locations</strong>:
 	  <% for location in publication.locations %>
-	    <span class="label label-danger"><%= location.description %>
+	    <span class="badge bg-danger"><%= location.description %>
 	  	<%= link_to "x", admin_publication_location_path(publication, location),
 	  									 data: {:confirm => 'Are you sure?'},
 	  									 :method => :delete %></span>
