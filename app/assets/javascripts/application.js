@@ -18,6 +18,7 @@
 // = require analytics
 // = require owl.carousel
 //= require wordcloud2
+//= require mastodon_avatars
 
 (function ($) {
     $.fn.sizeChanged = function (handleFunction) {

@@ -270,6 +270,38 @@ span.bi-link {
   }
 }
 
+/* Mastodon feed */
+.mastodon-content {
+  a {
+    color: #595aff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .invisible {
+    display: none;
+  }
+
+  .ellipsis::after {
+    content: "…";
+  }
+
+  .mention.hashtag {
+    color: #595aff;
+  }
+
+  p {
+    margin-bottom: 0.4em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .search.horizontal {
   h5 {
     display: inline-block;
