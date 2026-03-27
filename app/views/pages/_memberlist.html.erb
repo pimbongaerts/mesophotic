@@ -1,46 +1,37 @@
-<table class="table table-condensed table-striped">
-  <tr>
-    <th>First name</th>
-    <th>Last name</th>
-    <th>Institution</th>
-    <th>Country</th>
-    <th>Twitter</th>
-    <th>Publications</th>
-    <% if current_user.try(:admin?) %>
-      <th>Admin</th>
-    <% end %>
-  </tr>
-  <% users.each do |user| %>
+<table class="table table-sm table-striped table-hover mb-0">
+  <thead>
     <tr>
-      <td><%= user.first_name %> </td>
-      <td>
-        <strong>
-        <% if user.publications.count > 0 or user.research_interests %>
-          <%= link_to user.last_name, member_pages_path(user.id) %>
-        <% else %>
-          <%= user.last_name %>
-        <% end %>
-        </strong>
-      </td>
-      <td><%= truncate(user.organisation.name, length:30) if user.organisation %></td>
-      <td>
-        <%= user.organisation.country if user.organisation %>
-      </td>
-      <td>
-        <% if user.twitter? %>
-          <%= link_to (image_tag "twitter_icon.png"), user.twitter_url %>
-        <% end %>
-      </td>
-      <td>
-      <% if user.publications.count > 0 %>
-        <span class="badge bg-secondary"><%= user.publications.count %></span>
+      <th>Name</th>
+      <th>Institution</th>
+      <th>Country</th>
+      <th class="text-center">Pubs</th>
+      <% if current_user.try(:admin?) %>
+        <th></th>
       <% end %>
-      <% if current_user.try(:editor_or_admin?) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.each do |user| %>
+      <tr>
         <td>
-          <%= link_to "Edit",  edit_admin_user_path(user.id) %>
+          <% if user.publications.count > 0 or user.research_interests %>
+            <%= link_to "#{user.first_name} <strong>#{user.last_name}</strong>".html_safe,
+                        member_pages_path(user.id), style: "text-decoration: none;" %>
+          <% else %>
+            <%= user.first_name %> <strong><%= user.last_name %></strong>
+          <% end %>
         </td>
-      <% end %>
-      </td>
-      <td></td>
-  <% end %>
+        <td><small class="text-muted"><%= truncate(user.organisation.name, length: 30) if user.organisation %></small></td>
+        <td><small class="text-muted"><%= user.organisation.country if user.organisation %></small></td>
+        <td class="text-center">
+          <% if user.publications.count > 0 %>
+            <span class="badge bg-secondary"><%= user.publications.count %></span>
+          <% end %>
+        </td>
+        <% if current_user.try(:editor_or_admin?) %>
+          <td><%= link_to "Edit", edit_admin_user_path(user.id), class: "text-muted", style: "font-size: 0.8em;" %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

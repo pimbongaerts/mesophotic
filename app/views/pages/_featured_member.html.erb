@@ -1,32 +1,25 @@
-<div class="row">
-  <div class="col-sm-6">
-    <% potential_users = @users.joins(:publications)
-                               .where("publications.id is not null")
-                               .joins(:profile_picture_blob)
-                               .where("active_storage_blobs.filename is not null")
-                               .where("admin = ?", false)
-                               .uniq %>
-    <% offset = rand(potential_users.count) %>
-    <% featured_member = potential_users[offset] %>
-    <%= link_to image_tag(featured_member.profile_picture.variant(resize: "200x200>")),
-                member_pages_path(featured_member) %>
-
-  </div>
-  <div class="col-sm-6" align="left">
-    <strong>
-      <%= link_to "#{featured_member.first_name} #{featured_member.last_name}",
-                  member_pages_path(featured_member) %><br>
-    </strong>
-    <% if featured_member.organisation.present? %>
-      <%= featured_member.organisation.name %><br>
-      <%= ISO3166::Country[featured_member.country] %>
+<% potential_users = @users.joins(:publications)
+                             .where("publications.id is not null")
+                             .joins(:profile_picture_blob)
+                             .where("active_storage_blobs.filename is not null")
+                             .where("admin = ?", false)
+                             .uniq %>
+<% offset = rand(potential_users.count) %>
+<% featured_member = potential_users[offset] %>
+<div>
+  <%= link_to member_pages_path(featured_member) do %>
+    <%= image_tag featured_member.profile_picture.variant(resize: "128x128^", crop: "128x128+0+0"),
+                  class: "rounded-3 float-start me-3 mb-1", style: "width: 128px; height: 128px; object-fit: cover;" %>
+  <% end %>
+  <strong><%= link_to featured_member.full_name_normal,
+                      member_pages_path(featured_member), style: "text-decoration: none;" %></strong>
+  <% if featured_member.organisation.present? %>
+    <br><small class="text-muted"><%= featured_member.organisation.name %></small>
+    <% if featured_member.country.present? %>
+      <br><small class="text-muted"><%= ISO3166::Country[featured_member.country] %></small>
     <% end %>
-  </div>
+  <% end %>
+  <% if featured_member.research_interests.present? %>
+    <div style="margin-top: 6px;"><small style="font-size: 0.9em;"><%= truncate(featured_member.research_interests, length: 250) %></small></div>
+  <% end %>
 </div>
-<% if !featured_member.research_interests.nil? %>
-  <div class="row">
-    <div class="col-sm-12" align="left">
-      <%= featured_member.research_interests[0..200] %>...
-    </div>
-  </div>
-<% end %>
