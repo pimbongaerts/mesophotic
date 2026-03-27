@@ -68,8 +68,12 @@ span.bi-link {
     -webkit-padding-start: 1em;
 
     &.scrollable {
-      overflow: scroll;
-      height: 120px
+      overflow-y: auto;
+      height: 120px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 8px;
+      background-color: #f8f9fa;
     }
 
     li {
@@ -107,23 +111,35 @@ span.bi-link {
   .dual-range-wrapper {
     width: 100%;
     display: flex;
-    align-items: center; // Center labels with track
-    gap: 12px;
-    padding-top: 15px; // Minimal space for tag above track
+    align-items: center;
+    gap: 0;
+    padding-top: 12px; // Space for tag above track
+    margin-bottom: 10px; // Gap below each slider
 
     .range-label-min,
     .range-label-max {
-      font-size: 1.2rem;
-      color: #000000;
+      font-size: 0.75rem;
+      color: #6c757d;
       font-weight: bold;
       flex-shrink: 0;
+      width: 50px; // Fixed width so tracks align
+    }
+
+    .range-label-min {
+      text-align: right;
+      padding-right: 10px;
+    }
+
+    .range-label-max {
+      text-align: left;
+      padding-left: 10px;
     }
   }
 
   .dual-range-container {
     position: relative;
     width: 100%;
-    height: 50px; // Back to original height
+    height: 28px;
     display: flex;
     align-items: center;
 
@@ -132,19 +148,20 @@ span.bi-link {
       top: 50%;
       left: 0;
       right: 0;
-      height: 8px;
-      background-color: #dee2e6;
-      border-radius: 4px;
+      height: 6px;
+      background-color: #e9ecef;
+      border-radius: 3px;
       transform: translateY(-50%);
     }
 
     .slider-range {
       position: absolute;
       top: 50%;
-      height: 8px;
-      background-color: #8bb7e9;
-      border-radius: 4px;
+      height: 6px;
+      background-color: #0d6efd;
+      border-radius: 3px;
       transform: translateY(-50%);
+      opacity: 0.5;
     }
 
     .dual-range-input {
@@ -157,63 +174,63 @@ span.bi-link {
       background: transparent;
       outline: none;
       cursor: pointer;
-      pointer-events: none; // Disable pointer events on track
+      pointer-events: none;
 
       &::-webkit-slider-track {
         -webkit-appearance: none;
         background: transparent;
-        height: 8px;
-        margin-top: calc(50% - 4px); // Center the 8px track vertically
+        height: 6px;
+        margin-top: calc(50% - 3px);
       }
 
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
-        height: 16px;
-        width: 16px;
-        background: #0d6efd;
+        height: 18px;
+        width: 18px;
+        background: #fff;
+        border: 2px solid #0d6efd;
         border-radius: 50%;
         cursor: pointer;
-        border: 0;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         transition: all 0.15s ease-in-out;
-        pointer-events: auto; // Enable pointer events on thumb
+        pointer-events: auto;
 
         &:hover {
-          background-color: #0b5ed7;
-          transform: scale(1.1);
+          background-color: #e7f1ff;
+          transform: scale(1.15);
         }
 
         &:active {
-          background-color: #0a58ca;
+          background-color: #cfe2ff;
           transform: scale(1.2);
         }
       }
 
       &::-moz-range-track {
         background: transparent;
-        height: 8px;
+        height: 6px;
         border: 0;
       }
 
       &::-moz-range-thumb {
-        height: 16px;
-        width: 16px;
-        background: #0d6efd;
+        height: 18px;
+        width: 18px;
+        background: #fff;
+        border: 2px solid #0d6efd;
         border-radius: 50%;
         cursor: pointer;
-        border: 0;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         transition: all 0.15s ease-in-out;
-        pointer-events: auto; // Enable pointer events on thumb
+        pointer-events: auto;
         -moz-appearance: none;
 
         &:hover {
-          background-color: #0b5ed7;
-          transform: scale(1.1);
+          background-color: #e7f1ff;
+          transform: scale(1.15);
         }
 
         &:active {
-          background-color: #0a58ca;
+          background-color: #cfe2ff;
           transform: scale(1.2);
         }
       }
@@ -229,28 +246,25 @@ span.bi-link {
 
     .range-tag {
       position: absolute;
-      background: #212529;
-      color: white;
-      padding: 6px 10px;
+      background: #343a40;
+      color: #fff;
+      padding: 3px 8px;
       border-radius: 4px;
-      font-size: 1.2rem;
-      font-weight: normal;
+      font-size: 0.8rem;
       white-space: nowrap;
       pointer-events: none;
       z-index: 10;
       top: 50%;
-      transform: translate(-50%, -140%); // Position above the center of the highlighted range
-      border: 1px solid #dee2e6;
+      transform: translate(-50%, -140%);
 
-      // Arrow pointing down
       &::after {
         content: '';
         position: absolute;
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        border: 4px solid transparent;
-        border-top-color: #212529;
+        border: 6px solid transparent;
+        border-top-color: #343a40;
       }
     }
   }
@@ -259,10 +273,15 @@ span.bi-link {
 .search.horizontal {
   h5 {
     display: inline-block;
+
+    &:empty {
+      display: none;
+    }
   }
 
   ul {
     display: inline-block;
+    margin-bottom: 0;
 
     li {
       display: inline-block;
