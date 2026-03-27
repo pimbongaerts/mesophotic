@@ -33,7 +33,7 @@
       </td>
       <td>
       <% if user.publications.count > 0 %>
-        <span class="badge"><%= user.publications.count %></span>
+        <span class="badge bg-secondary"><%= user.publications.count %></span>
       <% end %>
       <% if current_user.try(:editor_or_admin?) %>
         <td>

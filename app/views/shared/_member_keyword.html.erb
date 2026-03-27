@@ -10,7 +10,7 @@
                 .limit(5)
     users = users.where("users.last_name IS NOT ?", user.last_name) if defined?(user)
     users.each do |member| %>
-    <span class="badge">
+    <span class="badge bg-secondary">
       <%= member.count %>
     </span>&nbsp;<%= link_to member.last_name, member_pages_path(member) %>
     <br>
