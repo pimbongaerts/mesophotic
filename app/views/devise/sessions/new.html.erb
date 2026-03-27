@@ -1,56 +1,38 @@
 <div class="row">
-  <div class="col-sm-6 ">
-    <h1>Sign in</h1>
-    <br>
-    <p class="bg-warning">&nbsp;
-      Involved in mesophotic research and not yet a member? 
-      <%= link_to "Register here!", new_user_registration_path %>
+  <div class="col-sm-6">
+    <h3 class="mb-4">Sign in</h3>
+    <p class="p-3 rounded" style="background-color: #fff9e6;">
+      Involved in mesophotic research and not yet a member?
+      <%= link_to "Sign up here!", new_user_registration_path %>
     </p>
 
-
-    
-    <%= form_for(resource, :as => resource_name,
-    :url => session_path(resource_name),
-    role: "form") do |f| %>
+    <%= form_for(resource, as: resource_name,
+    url: session_path(resource_name),
+    html: { role: "form", autocomplete: "on" }) do |f| %>
 
     <div class="mb-3">
       <%= f.label :email %>
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.text_field :email, :autofocus => true, class: "form-control" %>
-        </div>
-      </div>
+      <%= f.email_field :email, autofocus: true, class: "form-control",
+                        autocomplete: "username" %>
     </div>
 
     <div class="mb-3">
       <%= f.label :password %>
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.password_field :password, class: "form-control" %>
-        </div>
-      </div>
+      <%= f.password_field :password, class: "form-control",
+                           autocomplete: "current-password" %>
     </div>
 
-
-
     <% if devise_mapping.rememberable? -%>
-    <div class="mb-3">
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.check_box :remember_me %> <%= f.label :remember_me %>
-        </div>
-      </div>
+    <div class="mb-3 form-check">
+      <%= f.check_box :remember_me, class: "form-check-input" %>
+      <%= f.label :remember_me, class: "form-check-label" %>
     </div>
     <% end -%>
 
-    <div class="row">
-      <div class="col-sm-2">
-        <%= f.submit "Sign in", class: "btn btn-primary" %>
-      </div>
-      <div class="col-sm-2">
-        <%= link_to "Sign up as a new member", new_user_registration_path,
-                                               class: "btn btn-info" %>
-      </div>
+    <div class="d-flex gap-2">
+      <%= f.submit "Sign in", class: "btn btn-primary text-white" %>
+      <%= link_to "Sign up as a new member", new_user_registration_path,
+                                             class: "btn btn-outline-secondary" %>
     </div>
     <% end %>
     <%= render "devise/shared/links" %>

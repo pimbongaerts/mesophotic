@@ -1,77 +1,61 @@
 <div class="row">
   <div class="col-sm-6">
-    <h1>Sign up</h1>
+    <h3 class="mb-4">Sign up</h3>
 
     <%= form_for(
       resource,
-      :as => resource_name,
-      :url => registration_path(resource_name),
-      :html => { :role => "form" }
+      as: resource_name,
+      url: registration_path(resource_name),
+      html: { role: "form", autocomplete: "on" }
     ) do |f| %>
 
       <%= devise_error_messages! %>
 
       <div class="mb-3">
-        <%= f.label :first_name, class: 'required' %><br />
-        <%= f.text_field :first_name, class: "form-control" %>
+        <%= f.label :first_name, class: 'required' %>
+        <%= f.text_field :first_name, class: "form-control",
+                         autocomplete: "given-name" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :last_name, class: 'required' %><br />
-        <%= f.text_field :last_name, class: "form-control" %>
+        <%= f.label :last_name, class: 'required' %>
+        <%= f.text_field :last_name, class: "form-control",
+                         autocomplete: "family-name" %>
       </div>
 
       <div class="mb-3">
         <%= f.label :email %>
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.email_field :email, class: "form-control" %>
-          </div>
-        </div>
+        <%= f.email_field :email, class: "form-control",
+                          autocomplete: "email" %>
       </div>
 
       <div class="mb-3">
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.label :password %>
-            <%= f.password_field :password, class: "form-control" %>
-          </div>
-        </div>
+        <%= f.label :password %>
+        <%= f.password_field :password, class: "form-control",
+                             autocomplete: "new-password" %>
       </div>
 
       <div class="mb-3">
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.label :password_confirmation %>
-            <%= f.password_field :password_confirmation, class: "form-control" %>
-          </div>
-        </div>
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, class: "form-control",
+                             autocomplete: "new-password" %>
       </div>
 
       <div class="robot">
       <p><em>Answer the following question, to prove you're not a robot.</em></p>
       <%= textcaptcha_fields(f) do %>
         <div class="mb-3">
-          <div class="row">
-            <div class="col-sm-6">
-                <%= f.label :textcaptcha_answer, resource.textcaptcha_question %><br/>
-                <%= f.text_field :textcaptcha_answer, :value => '', class: "form-control"%>
-            </div>
-          </div>
+          <%= f.label :textcaptcha_answer, resource.textcaptcha_question %>
+          <%= f.text_field :textcaptcha_answer, value: '', class: "form-control" %>
         </div>
       <% end %>
       </div>
 
-      <div class="mb-3" style="background-color: #fefefe;">
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.submit "Sign up", class: "btn btn-primary" %>
-          </div>
-        </div>
+      <div class="d-flex gap-2">
+        <%= f.submit "Sign up", class: "btn btn-primary text-white" %>
+        <%= link_to "Sign in as an existing member", new_user_session_path, class: "btn btn-outline-secondary" %>
       </div>
     <% end %>
-
-    <%= render "devise/shared/links" %>
 
   </div>
 </div>
