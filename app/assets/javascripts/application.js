@@ -13,7 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require bootstrap
+//= require popper
+//= require bootstrap-sprockets
 //= require dual_range
 // = require analytics
 // = require owl.carousel
