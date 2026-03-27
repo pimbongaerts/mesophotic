@@ -10,13 +10,13 @@
   <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
 
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/highcharts.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/highcharts-more.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/modules/exporting.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/modules/export-data.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/maps/modules/map.js" %>
-  <%= javascript_include_tag "https://code.highcharts.com/mapdata/custom/world-continents.js" %>
+  <%= javascript_include_tag "proj4" %>
+  <%= javascript_include_tag "highcharts" %>
+  <%= javascript_include_tag "highcharts-more" %>
+  <%= javascript_include_tag "highcharts-exporting" %>
+  <%= javascript_include_tag "highcharts-export-data" %>
+  <%= javascript_include_tag "highcharts-map" %>
+  <%= javascript_include_tag "highcharts-world-continents" %>
   <%= render 'layouts/google_analytics' %>
 
   <%= csrf_meta_tags %>
