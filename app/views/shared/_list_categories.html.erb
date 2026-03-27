@@ -5,7 +5,7 @@
 	<br>
 	<% categories.each do |category| %>
 	  <code><%= category.description %></code>
-	  <span class="badge"><%= category.publications.count %></span>
+	  <span class="badge bg-secondary"><%= category.publications.count %></span>
 	  <% if category != categories.last %>
 	  	,&nbsp;  
 	  <% end %>

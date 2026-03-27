@@ -1,5 +1,5 @@
 <% authors.each do |author| %>
   <%= link_to "#{author.first_name} #{author.last_name}", member_pages_path(author.id) %>
-  ( <span class="badge"><%= author.publications.count %></span> pubs)
+  ( <span class="badge bg-secondary"><%= author.publications.count %></span> pubs)
   <br>
 <% end %>

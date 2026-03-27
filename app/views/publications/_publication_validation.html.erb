@@ -75,7 +75,7 @@
 
   <td>
     <% for field in publication.fields %>
-      <span class="label label-info"><%= field.description %>
+      <span class="badge bg-info"><%= field.description %>
       <%= link_to "x",
             detach_field_publication_path(publication, field),
             data: {:confirm => 'Are you sure?'} %>
@@ -84,7 +84,7 @@
   </td>
   <td>
     <% for focusgroup in publication.focusgroups %>
-      <span class="label label-primary"><%= focusgroup.description %>
+      <span class="badge bg-primary"><%= focusgroup.description %>
       <%= link_to "x",
             detach_focusgroup_publication_path(publication, focusgroup),
             data: {:confirm => 'Are you sure?'} %>
@@ -93,7 +93,7 @@
   </td>
   <td>
     <% for platform in publication.platforms %>
-      <span class="label label-info"><%= platform.description %>
+      <span class="badge bg-info"><%= platform.description %>
       <%= link_to "x",
             detach_platform_publication_path(publication, platform),
             data: {:confirm => 'Are you sure?'} %>
@@ -102,7 +102,7 @@
   </td>
   <td>
     <% for location in publication.locations %>
-      <span class="label label-primary"><%= location.description %>
+      <span class="badge bg-primary"><%= location.description %>
       <%= link_to "x",
             detach_location_publication_path(publication, location),
             data: {:confirm => 'Are you sure?'} %>
@@ -114,12 +114,12 @@
       <strong>Validators</strong>:
       <% for validation in publication.validations %>
         <% if publication.updated_at > validation.updated_at %>
-          <% expiration_label = "label-warning" %>
+          <% expiration_label = "bg-warning text-dark" %>
         <% else %>
-          <% expiration_label = "label-success" %>
+          <% expiration_label = "bg-success" %>
         <% end %>
 
-        <span class="label <%= expiration_label %>">
+        <span class="badge <%= expiration_label %>">
           <%= validation.user.first_name %> <%= validation.user.last_name  %>
           <% if publication.updated_at > validation.updated_at %>
             EXPIRED

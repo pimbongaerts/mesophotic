@@ -1,15 +1,15 @@
 <strong>Image category tags</strong><br>
 <% if @photo.contains_species %>
-	<span class="badge">Contains species</span>&nbsp;
+	<span class="badge bg-secondary">Contains species</span>&nbsp;
 <% end %>
 <% if @photo.underwater %>
-	<span class="badge">Underwater photo</span>&nbsp;
+	<span class="badge bg-secondary">Underwater photo</span>&nbsp;
 <% else %>
-	<span class="badge">Surface photo</span>&nbsp;
+	<span class="badge bg-secondary">Surface photo</span>&nbsp;
 <% end %><br>
 <% if @photo.platforms.count > 0 %>
   <% @photo.platforms.each do |platform| %>
-  	<span class="badge"><%= platform.description %></span>&nbsp;
+  	<span class="badge bg-secondary"><%= platform.description %></span>&nbsp;
   <% end %><br>
 <% end %>
 

@@ -7,7 +7,7 @@
                  .group("organisations.id")
                  .order("count DESC")
                  .limit(5).each do |organisation| %>
-    <span class="badge">
+    <span class="badge bg-secondary">
       <%= organisation.count %>
     </span>&nbsp;<%= organisation.name %>
     <br>

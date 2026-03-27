@@ -5,7 +5,7 @@
     <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<%= focusgroup_name %>" aria-expanded="true" aria-controls="collapse_<%= focusgroup_name %>">
       <%= focusgroup_description %>
       <% if focusgroup.species.count > 0 %>
-        <span class="badge"><%= focusgroup.species.count %></span>
+        <span class="badge bg-secondary"><%= focusgroup.species.count %></span>
       <% end %>
     </button>
   </div>
@@ -14,7 +14,7 @@
     <% species_list.order("name ASC").each do |species| %>
       <%= link_to species.name, species_path(species.id) %>
       <% if species.publications.count > 0 %>
-        <span class="badge"><%= species.publications.count %></span>
+        <span class="badge bg-secondary"><%= species.publications.count %></span>
       <% end %>
       <br>
     <% end %>
