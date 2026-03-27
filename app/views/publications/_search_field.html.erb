@@ -11,7 +11,7 @@
         </div>
         <% if current_user.try(:editor_or_admin?) %>
          <div class="col-sm-2">
-            <div class="form-group">
+            <div class="mb-3">
               <%= select_tag :validation_type,
                   options_for_select(
                     Validation::VALIDATION_TYPES

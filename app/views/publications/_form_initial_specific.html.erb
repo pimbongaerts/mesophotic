@@ -10,7 +10,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-12">
-       <div class="form-group">
+       <div class="mb-3">
           <%= f.label :journal_id %><br>
           <%= f.collection_select :journal_id, 
                                   Journal.all.order("LOWER(name) ASC"), 
@@ -24,7 +24,7 @@
         </div>
         <div class="row">
           <div class="col-6">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label 'DOI' %>
               <small>(important to format correctly)</small>
               <br>
@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="col-2">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :volume %><br>
               <%= f.text_field :volume, 
                                class: "form-control monospaced-control", 
@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="col-2">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :issue %><br>
               <%= f.text_field :issue, 
                                class: "form-control monospaced-control", 
@@ -50,7 +50,7 @@
             </div>
           </div>
           <div class="col-2">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :pages %><br>
               <%= f.text_field :pages, 
                                class: "form-control monospaced-control", 
@@ -75,7 +75,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label "Title of book / report / thesis" %>
           <small>
             (title of publication (book / report / thesis) containing the 
@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="col-6">
-         <div class="form-group">
+         <div class="mb-3">
           <%= f.label "Book / report / thesis editors" %>
           <small>
             (authors/editors of publication (book / report / thesis); 
@@ -117,7 +117,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label 'Publisher / Organisation / University / Magazine' %>
           <%= f.text_field :book_publisher, 
                            class: "form-control monospaced-control", 

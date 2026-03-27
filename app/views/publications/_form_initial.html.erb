@@ -9,7 +9,7 @@
 
       <%# Left column %>
       <div class="col-9">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label 'Title', class: "required" %>
           <small>(use the chapter title for a book chapter, or book title when
           referring to an entire book)</small>
@@ -20,7 +20,7 @@
                                  "reefs: 30 years of constancy and change " \
                                  "in reefs of Curacao and Bonaire" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :authors, class: "required" %>
           <small>(use the chapter authors for a book chapter, or book editors
           / authors when referring to an entire book)</small>
@@ -31,7 +31,7 @@
         </div>
         <div class="row">
           <div class="col-4">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :publication_year, class: "required" %><br>
               <%= f.select :publication_year,
                         (Time.zone.now.year - 116)..(Time.zone.now.year + 1),
@@ -49,7 +49,7 @@
                          class: "form-control" %>
           </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :abstract %><br>
           <%= f.text_area :abstract, rows: 8,
                           class: "form-control monospaced-control",
@@ -83,7 +83,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-12">
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :contents %>
             <small>(please include abstract but <em>not</em> references)</small>
             <br>

@@ -8,7 +8,7 @@
       <div class="col-7">
         <div class="row">
           <div class="col-4">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :title, class: 'required' %><br>
               <%= f.select :title, User::TITLES, class: "form-control",
                            :prompt => "Title..." %>
@@ -22,7 +22,7 @@
               Currently waiting confirmation for:
               <%= resource.unconfirmed_email %>
             <% else %>
-              <div class="form-group">
+              <div class="mb-3">
                 <% if current_user.try(:admin?) %>
                   <%= f.check_box :editor %>
                   <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
@@ -38,21 +38,21 @@
             <% end %>
           </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :first_name, class: 'required' %><br>
           <%= f.text_field :first_name, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :last_name, class: 'required' %><br>
           <%= f.text_field :last_name, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :email , class: 'required' %><br>
           <%= f.email_field :email, class: "form-control" %>
         </div>
       </div>
       <div class="col-5">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :profile_picture, class: 'required' %><br>
           <% if @user.profile_picture.attached? %>
             <%= image_tag @user.profile_picture.variant(resize: "200x200>") %><br>
@@ -72,7 +72,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-7">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :organisation_id %>
           <small>
             (primary organisation that you are affiliated with)
@@ -84,7 +84,7 @@
                                   class: "form-control",
                                   :prompt => "Organisation..." %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :department %>
           <small>(department of primary affiliation)</small>
           <br>
@@ -92,11 +92,11 @@
         </div>
       </div>
       <div class="col-5">
-        <div class="form-group">
+        <div class="mb-3">
           or organisation that is not already listed:
           <%= f.text_field :new_organisation_name, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :country %><br />
           <%= f.country_select :country, class: "form-control",
                                :prompt => "Country..." %>
@@ -105,7 +105,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :other_organizations %>
           <small>(other organisations that you are affiliated with; each
           organisation on a new line)</small>
@@ -125,23 +125,23 @@
   <div class="card-body">
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :google_scholar %>
           <small>(e.g. http://scholar.google.com/citations?user=you)</small>
           <br>
           <%= f.text_field :google_scholar, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :twitter %>
           <small>(e.g. @mesophotic)</small><br>
           <%= f.text_field :twitter, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :website %>
           <small>(e.g. http://www.mesophotic.org)</small><br>
           <%= f.text_field :website, class: "form-control" %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :alt_website %>
           <small>(e.g. http://www.mesophotic.org)</small><br>
           <%= f.text_field :alt_website, class: "form-control" %>
@@ -149,12 +149,12 @@
 
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :address %>
           <br>
           <%= f.text_area :address, class: "form-control", rows: 7 %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :phone %>
           <br>
           <%= f.text_field :phone, class: "form-control" %>
@@ -172,7 +172,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :research_interests %>
           <small>(bio or description of research interests)</small>
           <br>
@@ -181,7 +181,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :platforms %>
           <small>(that you have actively used in past research)</small>
           <br>
@@ -209,7 +209,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-12">
-        <div class="form-group">
+        <div class="mb-3">
           <%= hidden_field_tag "user[publication_ids][]", "" %>
           <% for publication in Publication.where("authors LIKE ?", "%#{@user.last_name}%") %>
             <div class="field">
