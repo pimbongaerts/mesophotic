@@ -103,6 +103,10 @@ $text-muted: #bbbbbb;
 
 //***********************************************************
 // APPLICATION-WIDE
+label {
+  font-weight: bold;
+}
+
 html,body {
   height: 100%;
 }
