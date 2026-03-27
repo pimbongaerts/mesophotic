@@ -5,7 +5,7 @@
   <div class="card-body">
     <% if @photo.image.attached? %>
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
           <%= image_tag @photo.image.variant(resize: "640x480>") %>
           <hr>
         </div>
@@ -13,7 +13,7 @@
     <% end %>
 
     <div class="row">
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="form-group">
           <%= f.label :image %><br>
           <%= f.file_field :image %>
@@ -45,7 +45,7 @@
           <%= f.label "Creative Commons license applies" %>
         </div>
       </div>
-      <div class="col-xs-5">
+      <div class="col-5">
         <div class="form-group">
           <%= f.label :location %><br>
           <%= f.collection_select :location_id,
@@ -93,7 +93,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-5">
+      <div class="col-5">
         <div class="form-group">
           <%= f.label "Researchers:" %><br>
           <div class="scrollbox">
@@ -106,7 +106,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="form-group">
           <%= f.label "Organisations:" %><br>
           <div class="scrollbox">
@@ -132,7 +132,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="form-group">
           <%= f.label :platforms %><br>
           <div class="scrollbox">
@@ -145,7 +145,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-5">
+      <div class="col-5">
         <div class="form-group">
           <%= f.label :species %><br>
           Not yet available.
@@ -163,7 +163,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :publication %><br>
           <%= f.collection_select :publication_id,
@@ -181,7 +181,7 @@
                                   class: "form-control" %>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :meeting %><br>
           <%= f.collection_select :meeting_id,

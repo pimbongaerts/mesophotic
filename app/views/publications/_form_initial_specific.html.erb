@@ -9,7 +9,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
        <div class="form-group">
           <%= f.label :journal_id %><br>
           <%= f.collection_select :journal_id, 
@@ -23,7 +23,7 @@
                            class: "form-control,small-form-width" %>
         </div>
         <div class="row">
-          <div class="col-xs-6">
+          <div class="col-6">
             <div class="form-group">
               <%= f.label 'DOI' %>
               <small>(important to format correctly)</small>
@@ -33,7 +33,7 @@
                                placeholder: "10.1007/s00338-005-0009-1" %>
             </div>
           </div>
-          <div class="col-xs-2">
+          <div class="col-2">
             <div class="form-group">
               <%= f.label :volume %><br>
               <%= f.text_field :volume, 
@@ -41,7 +41,7 @@
                                placeholder: "24" %>
             </div>
           </div>
-          <div class="col-xs-2">
+          <div class="col-2">
             <div class="form-group">
               <%= f.label :issue %><br>
               <%= f.text_field :issue, 
@@ -49,7 +49,7 @@
                                placeholder: "3" %>
             </div>
           </div>
-          <div class="col-xs-2">
+          <div class="col-2">
             <div class="form-group">
               <%= f.label :pages %><br>
               <%= f.text_field :pages, 
@@ -74,7 +74,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label "Title of book / report / thesis" %>
           <small>
@@ -87,7 +87,7 @@
                            placeholder: "The Great Barrier Reef" %>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
          <div class="form-group">
           <%= f.label "Book / report / thesis editors" %>
           <small>
@@ -116,7 +116,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label 'Publisher / Organisation / University / Magazine' %>
           <%= f.text_field :book_publisher, 
@@ -124,7 +124,7 @@
                            placeholder: "CSIRO Publishing" %>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
         <%= f.label 'URL' %>
         <small>(link to on-line version or related website)</small>
         <br>

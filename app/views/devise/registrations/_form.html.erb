@@ -5,16 +5,16 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="row">
-          <div class="col-xs-4">
+          <div class="col-4">
             <div class="form-group">
               <%= f.label :title, class: 'required' %><br>
               <%= f.select :title, User::TITLES, class: "form-control",
                            :prompt => "Title..." %>
             </div>
           </div>
-          <div class="col-xs-8">
+          <div class="col-8">
             <br>
             <% if current_user.try(:admin?)  %>
               <%# devise_mapping.confirmable? &&
@@ -51,7 +51,7 @@
           <%= f.email_field :email, class: "form-control" %>
         </div>
       </div>
-      <div class="col-xs-5">
+      <div class="col-5">
         <div class="form-group">
           <%= f.label :profile_picture, class: 'required' %><br>
           <% if @user.profile_picture.attached? %>
@@ -71,7 +71,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="form-group">
           <%= f.label :organisation_id %>
           <small>
@@ -91,7 +91,7 @@
           <%= f.text_field :department, class: "form-control" %>
         </div>
       </div>
-      <div class="col-xs-5">
+      <div class="col-5">
         <div class="form-group">
           or organisation that is not already listed:
           <%= f.text_field :new_organisation_name, class: "form-control" %>
@@ -104,7 +104,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="form-group">
           <%= f.label :other_organizations %>
           <small>(other organisations that you are affiliated with; each
@@ -124,7 +124,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :google_scholar %>
           <small>(e.g. http://scholar.google.com/citations?user=you)</small>
@@ -148,7 +148,7 @@
         </div>
 
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :address %>
           <br>
@@ -171,7 +171,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :research_interests %>
           <small>(bio or description of research interests)</small>
@@ -180,7 +180,7 @@
                           rows: 12 %>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :platforms %>
           <small>(that you have actively used in past research)</small>
@@ -208,7 +208,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="form-group">
           <%= hidden_field_tag "user[publication_ids][]", "" %>
           <% for publication in Publication.where("authors LIKE ?", "%#{@user.last_name}%") %>

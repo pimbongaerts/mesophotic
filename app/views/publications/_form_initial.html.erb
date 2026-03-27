@@ -8,7 +8,7 @@
     <div class="row">
 
       <%# Left column %>
-      <div class="col-xs-9">
+      <div class="col-9">
         <div class="form-group">
           <%= f.label 'Title', class: "required" %>
           <small>(use the chapter title for a book chapter, or book title when
@@ -30,7 +30,7 @@
                            placeholder: "Bak RPM, Nieuwland G, Meesters EH" %>
         </div>
         <div class="row">
-          <div class="col-xs-4">
+          <div class="col-4">
             <div class="form-group">
               <%= f.label :publication_year, class: "required" %><br>
               <%= f.select :publication_year,
@@ -38,12 +38,12 @@
                         class: "form-control monospaced-control" %>
             </div>
           </div>
-          <div class="col-xs-4">
+          <div class="col-4">
             <%= f.label :publication_type, class: "required" %><br>
             <%= f.select :publication_type, Publication::PUBLICATION_TYPES,
                          class: "form-control" %>
           </div>
-          <div class="col-xs-4">
+          <div class="col-4">
             <%= f.label :publication_format, class: "required" %><br>
             <%= f.select :publication_format, Publication::PUBLICATION_FORMATS,
                          class: "form-control" %>
@@ -58,7 +58,7 @@
       </div>
 
       <%# Right column %>
-      <div class="col-xs-3">
+      <div class="col-3">
         <% if @publication.pdf.attached? %>
           <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         <% end %>
@@ -82,7 +82,7 @@
 
     <div class="card-body">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
           <div class="form-group">
             <%= f.label :contents %>
             <small>(please include abstract but <em>not</em> references)</small>
