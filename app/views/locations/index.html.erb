@@ -1,12 +1,26 @@
-<% title("Locations") %>
-<p id="notice"><%= notice %></p>
-<h1>Locations</h1>
-<br>
+<%= render partial: "layouts/page_title",
+       locals: {title: "Locations",
+                backlink: root_path } %>
 
-<div class="col-sm-8">
-	<%= render 'location_dropdown' %>
-	<%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 300) %>
-</div>
-<div class="col-sm-4">
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card mb-0">
+      <div class="card-header px-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <select onchange="window.location=this.value" class="fw-bold" style="width: auto; display: inline-block; border: none; background-color: #dfe3e7; padding: 2px 8px; border-radius: 4px;">
+          <option>Select a location</option>
+          <% @locations.each do |location| %>
+            <option value="<%= summary_path(model: "locations", id: location.id) %>">
+              <%= location.description %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+      <div class="card-body p-1" style="min-height: 350px;">
+        <%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 350) %>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
     <%= render partial: 'featured_location' %>
+  </div>
 </div>

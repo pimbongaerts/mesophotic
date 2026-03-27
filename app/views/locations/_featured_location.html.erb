@@ -1,11 +1,14 @@
-<div class="card">
+<div class="card mb-0 h-100 d-flex flex-column">
   <div class="card-header"><strong>Featured location</strong></div>
-  <div class="card-body" align="center">
-    <%= link_to image_tag(@featured_photo.image.variant(resize: "340x227^", crop: "340x227+0+0")), 
-                location_path(@featured_location) %>
-    
-  </div>
-  <div class="card-footer" align="center">
-    <%= link_to @featured_location.description, location_path(@featured_location) %>
+  <%= link_to location_path(@featured_location) do %>
+    <%= image_tag @featured_photo.image.variant(resize: "400x300^", crop: "400x300+0+0"),
+                  style: "width: 100%;" %>
+  <% end %>
+  <div class="card-footer text-center flex-grow-1">
+    <%= link_to @featured_location.description, location_path(@featured_location),
+                style: "text-decoration: none;" %>
+    <% if @featured_photo.credit.present? %>
+      <br><small class="text-muted">&copy; <%= @featured_photo.credit %></small>
+    <% end %>
   </div>
 </div>
