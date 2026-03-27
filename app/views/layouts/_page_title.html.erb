@@ -6,20 +6,19 @@
   <% end %>
 </div>
 
+<% if backlink %>
+  <div class="mb-1">
+    <strong><%= link_to '<<< Back', backlink, style: "text-decoration: none;" %></strong>
+  </div>
+<% end %>
+
 <div class="row">
-  <div class="col-10">
+  <div class="col-12">
     <h3 class="page-title">
       <%= title %>
       <% if defined?(subtitle) && subtitle.present? %>
       <br><small><%= subtitle %></small>
       <% end %>
     </h3>
-  </div>
-  <div class="col-2">
-    <% if backlink %>
-      <h3 class="page-title text-end">
-        <%= link_to '<<< back', backlink, style: "font-size: 0.58em; text-decoration: none;" %>
-      </h3>
-    <% end %>
   </div>
 </div>

@@ -1,19 +1,22 @@
-<% if @user.department %>
-  <%= @user.department %><br>
-<% end %>
-<% if @user.organisation %>
-  <%= @user.organisation.name %>&nbsp;
-  (<%= ISO3166::Country[@user.organisation.country] %>)<br>
-<% end %>
-<% if @user.other_organizations %>
-  &&nbsp;
-  <%= @user.other_organizations %><br>
-<% end %>
-<% if @user.address %>
-  <br>
-  <%= @user.address %><br>
-<% end %>
-<% if !@user.phone.blank? %>
-  <i class="bi bi-phone-fill" aria-hidden="true"></i>
-  &nbsp;<%= @user.phone %><br>
-<% end %>
+<div>
+  <% if @user.department.present? || @user.organisation %>
+    <div class="mb-2" style="line-height: 1.3;">
+      <% if @user.department.present? %>
+        <small class="text-muted"><%= @user.department %></small><br>
+      <% end %>
+      <% if @user.organisation %>
+        <small class="text-muted"><%= @user.organisation.name %> (<%= ISO3166::Country[@user.organisation.country] %>)</small>
+      <% end %>
+    </div>
+  <% end %>
+  <% if @user.other_organizations.present? %>
+    <div class="mb-2">
+      <small class="text-muted"><%= @user.other_organizations %></small>
+    </div>
+  <% end %>
+  <% if @user.address.present? %>
+    <div class="mb-2">
+      <small class="text-muted"><%= @user.address %></small>
+    </div>
+  <% end %>
+</div>

@@ -1,41 +1,40 @@
-<%= render partial: "layouts/page_title",
-       locals: {title: "People",
-                subtitle: "#{@user.first_name} #{@user.last_name}",
-                backlink: members_pages_path } %>
-
+<div class="mb-1">
+  <strong><%= link_to '<<< Back', members_pages_path, style: "text-decoration: none;" %></strong>
+</div>
 
 <div class="row">
   <div class="col-sm-8">
-    <div class="card">
-      <div class="card-body" style="background: #CCCCCC;">
-        <div class="col-sm-4">
-          <% if @user.profile_picture.attached? %>
-            <%= image_tag @user.profile_picture.variant(resize: "200x200>") %>
-          <% else %>
-            <%= image_tag "/images/medium/missing.png" %>
-          <% end %>
-        </div>
-        <div class="col-sm-6">
-          <h2><%= @user.first_name %> <%= @user.last_name %></h2>
-          <address>
-            <%= render partial: 'contact_details',
-                       locals: { user: @user } %>
-          </address>
-        </div>
-        <div class="col-sm-2" align="right">
-          <%= render partial: 'contact_links',
-                       locals: { user: @user } %>
+    <div class="card" style="background-color: #f8f9fa;">
+      <div class="card-body">
+        <div class="d-flex align-items-start">
+          <div class="flex-shrink-0">
+            <% if @user.profile_picture.attached? %>
+              <%= image_tag @user.profile_picture.variant(resize: "150x150^", crop: "150x150+0+0"),
+                            class: "rounded-3", style: "width: 150px; height: 150px; object-fit: cover;" %>
+            <% else %>
+              <div class="rounded-3 bg-white d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                <i class="bi bi-person-fill text-muted" style="font-size: 3rem;"></i>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex-grow-1 ms-4">
+            <h4 class="mb-1"><%= @user.first_name %> <%= @user.last_name %></h4>
+            <%= render partial: 'contact_details', locals: { user: @user } %>
+            <div class="mt-2">
+              <%= render partial: 'contact_links', locals: { user: @user } %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <% if @user.research_interests %>
+    <% if @user.research_interests.present? %>
       <div class="card">
         <div class="card-header"><strong>Research interests</strong></div>
         <div class="card-body">
           <% if @user.last_sign_in_at.nil? %>
-            <p class="bg-warning">&nbsp;
-              Please note that this section was automatically populated - and
+            <p class="p-2 rounded" style="background-color: #fff9e6; font-size: 0.85em;">
+              Please note that this section was automatically populated and
               has not yet been edited by this user.
             </p>
           <% end %>
@@ -44,29 +43,28 @@
       </div>
     <% end %>
 
-    <div class="card">
-      <div class="card-header"><strong>Publications</strong></div>
-      <div class="card-body">
-        <% if @user.publications.count > 0 %>
-          <p class="bg-info">&nbsp;
-            Please note that only publications relevant to mesophotic reefs
-            are indexed.
+    <% if @user.publications.count > 0 %>
+      <div class="card">
+        <div class="card-header"><strong>Publications</strong></div>
+        <div class="card-body">
+          <p class="p-2 rounded text-muted" style="background-color: #e8f4fd; font-size: 0.85em;">
+            Only publications relevant to mesophotic reefs are indexed.
           </p>
-          <table class="table table-striped">
+          <table class="table table-sm table-striped">
             <% @user.publications.each do |publication| %>
               <%= render publication %>
             <% end %>
           </table>
-        <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 
   <div class="col-sm-4">
-
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-body">
+        <div class="card-header"><strong>Locations</strong></div>
+        <div class="card-body p-1">
           <% data = count_geographic_occurrences_of_publications_from_user(@user) %>
           <%= render partial: 'shared/world_map', locals: { title: 'Locations',
                                                             data: data,
@@ -77,10 +75,8 @@
 
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-header">
-          <strong>Research keywords</strong>
-        </div>
-        <div class="card-body" align="center" valign="center">
+        <div class="card-header"><strong>Research keywords</strong></div>
+        <div class="card-body">
           <%= render_async member_keywords_path(id: @user.id) %>
         </div>
       </div>
@@ -88,42 +84,35 @@
 
     <% if @user.platforms.count > 0 %>
       <div class="card">
-        <div class="card-header">
-          <strong>Research platform experience</strong>
-        </div>
+        <div class="card-header"><strong>Research platforms</strong></div>
         <div class="card-body">
-        <% @user.platforms.each do |platform| %>
-           <i class="bi bi-check"></i>&nbsp;
-          <%= platform.description %><br>
-        <% end %>
+          <% @user.platforms.each do |platform| %>
+            <i class="bi bi-check-lg text-success"></i>
+            <%= platform.description %><br>
+          <% end %>
         </div>
       </div>
     <% end %>
 
     <% if @user.photos.count > 0 %>
       <div class="card">
-        <div class="card-header">
-          <strong>Photographs</strong> (of <%=@user.full_name_normal %>)
-        </div>
+        <div class="card-header"><strong>Photographs</strong></div>
         <div class="card-body">
-        <% @user.photos.each do |photo| %>
-          <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                      photo_path(photo) %><br>
-        <% end %>
+          <% @user.photos.each do |photo| %>
+            <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0"), class: "img-fluid rounded mb-2"),
+                        photo_path(photo) %>
+          <% end %>
         </div>
       </div>
     <% end %>
 
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-header">
-          <strong>Research summary</strong> (from publications)
-        </div>
+        <div class="card-header"><strong>Research summary</strong></div>
         <div class="card-body">
           <%= render_async member_research_summary_path(id: @user.id) %>
         </div>
       </div>
     <% end %>
-
   </div>
 </div>

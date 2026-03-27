@@ -1,15 +1,32 @@
-<% if !@user.email.blank? %>
-	<%= mail_to @user.email, image_tag("email.png") %><br>
-<% end %>
-<% if !@user.website.blank? %>
-  <%= link_to image_tag("www.png"), @user.website %><br>
-<% end %>
-<% if !@user.alt_website.blank? %>
-  <%= link_to image_tag("www.png"), @user.alt_website %><br>
-<% end %>
-<% if !@user.google_scholar.blank? %>
-  <%= link_to image_tag("gscholar.png"), @user.google_scholar %><br>
-<% end %>
-<% if !@user.twitter.blank? %>
-  <%= link_to image_tag("twitter.png"), @user.twitter_url %><br>
-<% end %>
+<div class="d-flex gap-3">
+  <% if !@user.email.blank? %>
+    <%= mail_to @user.email, class: "text-muted" do %>
+      <i class="bi bi-envelope" style="font-size: 1.2rem;"></i>
+    <% end %>
+  <% end %>
+  <% if !@user.phone.blank? %>
+    <a href="tel:<%= @user.phone %>" class="text-muted">
+      <i class="bi bi-phone" style="font-size: 1.2rem;"></i>
+    </a>
+  <% end %>
+  <% if !@user.website.blank? %>
+    <%= link_to @user.website, class: "text-muted" do %>
+      <i class="bi bi-globe" style="font-size: 1.2rem;"></i>
+    <% end %>
+  <% end %>
+  <% if !@user.alt_website.blank? %>
+    <%= link_to @user.alt_website, class: "text-muted" do %>
+      <i class="bi bi-globe2" style="font-size: 1.2rem;"></i>
+    <% end %>
+  <% end %>
+  <% if !@user.google_scholar.blank? %>
+    <%= link_to @user.google_scholar, class: "text-muted" do %>
+      <i class="bi bi-mortarboard-fill" style="font-size: 1.2rem;"></i>
+    <% end %>
+  <% end %>
+  <% if !@user.twitter.blank? %>
+    <%= link_to @user.twitter_url, class: "text-muted" do %>
+      <i class="bi bi-twitter" style="font-size: 1.2rem;"></i>
+    <% end %>
+  <% end %>
+</div>
