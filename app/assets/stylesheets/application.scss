@@ -271,6 +271,12 @@ span.bi-link {
 }
 
 /* Mastodon feed */
+.mastodon-status:last-child {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 .mastodon-content {
   a {
     color: #595aff;
