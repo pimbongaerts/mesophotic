@@ -1,22 +1,27 @@
 <% focusgroup_description = focusgroup.try(:description)
    focusgroup_name = focusgroup_description.parameterize.underscore %>
-<div class="card">
-  <div class="card-header" id="heading_<%= focusgroup_name %>">
-    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<%= focusgroup_name %>" aria-expanded="true" aria-controls="collapse_<%= focusgroup_name %>">
+<div class="accordion-item">
+  <h2 class="accordion-header" id="heading_<%= focusgroup_name %>">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<%= focusgroup_name %>" aria-expanded="false" aria-controls="collapse_<%= focusgroup_name %>">
       <%= focusgroup_description %>
       <% if focusgroup.species.count > 0 %>
-        <span class="badge bg-secondary"><%= focusgroup.species.count %></span>
+        <span class="badge bg-secondary ms-2"><%= focusgroup.species.count %></span>
       <% end %>
     </button>
-  </div>
+  </h2>
 
-  <div class="card-body collapse" id="collapse_<%= focusgroup_name %>" aria-labelledby="heading_<%= focusgroup_name %>" data-bs-parent="#species_accordion">
-    <% species_list.order("name ASC").each do |species| %>
-      <%= link_to species.name, species_path(species.id) %>
-      <% if species.publications.count > 0 %>
-        <span class="badge bg-secondary"><%= species.publications.count %></span>
-      <% end %>
-      <br>
-    <% end %>
+  <div id="collapse_<%= focusgroup_name %>" class="accordion-collapse collapse" aria-labelledby="heading_<%= focusgroup_name %>" data-bs-parent="#species_accordion">
+    <div class="accordion-body">
+      <div class="row">
+        <% species_list.order("name ASC").each do |species| %>
+          <div class="col-sm-4 mb-1">
+            <i><%= link_to species.name, species_path(species.id), style: "text-decoration: none;" %></i>
+            <% if species.publications.count > 0 %>
+              <small class="text-muted">(<%= species.publications.count %>)</small>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

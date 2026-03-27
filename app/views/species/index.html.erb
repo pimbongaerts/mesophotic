@@ -4,10 +4,12 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <% @focusgroups.each do |focusgroup| %>
-      <%= render partial: 'specieslist', 
-                 locals: { focusgroup: focusgroup, 
-                           species_list: @species.where(focusgroup: focusgroup)} %>
-    <% end %>
+    <div class="accordion" id="species_accordion">
+      <% @focusgroups.each do |focusgroup| %>
+        <%= render partial: 'specieslist',
+                   locals: { focusgroup: focusgroup,
+                             species_list: @species.where(focusgroup: focusgroup)} %>
+      <% end %>
+    </div>
   </div>
 </div>
