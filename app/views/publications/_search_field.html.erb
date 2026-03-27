@@ -4,28 +4,26 @@
       Search full publication text
     </div>
     <div class="card-body">
-      <div class="row">
+      <div class="row align-items-start">
         <div class="col-sm-6">
-            <%= text_field_tag :search, params[:search],  class: "form-control",
-                               placeholder: "Search Publications" %>
+          <%= text_field_tag :search, params[:search], class: "form-control",
+                             placeholder: "Search Publications" %>
         </div>
         <% if current_user.try(:editor_or_admin?) %>
-         <div class="col-sm-2">
-            <div class="mb-3">
-              <%= select_tag :validation_type,
-                  options_for_select(
-                    Validation::VALIDATION_TYPES
-                      .map { |a| a.gsub("_", " ") }
-                      .zip(Validation::VALIDATION_TYPES),
-                    params[:validation_type]
-                  ),
-                  class: "form-control" %>
-            </div>
+          <div class="col-sm-2">
+            <%= select_tag :validation_type,
+                options_for_select(
+                  Validation::VALIDATION_TYPES
+                    .map { |a| a.gsub("_", " ") }
+                    .zip(Validation::VALIDATION_TYPES),
+                  params[:validation_type]
+                ),
+                class: "form-select" %>
           </div>
         <% end %>
-        <div class="col-sm-4 d-flex align-items-center gap-2">
+        <div class="col-sm-4 d-flex align-items-start gap-2">
           <%= submit_tag "Search", class: "btn btn-outline-secondary" %>
-          <a data-bs-toggle="collapse" href="#collapse1">Advanced...</a>
+          <a data-bs-toggle="collapse" href="#collapse1" class="btn btn-link p-0" style="line-height: 2.4;">Advanced...</a>
         </div>
       </div>
       <div class="row">

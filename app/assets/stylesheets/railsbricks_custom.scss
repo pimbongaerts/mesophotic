@@ -134,6 +134,12 @@ blockquote{
   margin-bottom: 20px;
 }
 
+// BS5 COMPAT: ensure outline buttons have white text on hover
+.btn-outline-danger:hover,
+.btn-outline-secondary:hover {
+  color: #fff;
+}
+
 // SPACING
 $space-lg: 60px;
 $space-md: 40px;
