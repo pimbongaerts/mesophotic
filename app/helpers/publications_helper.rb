@@ -95,7 +95,7 @@ module PublicationsHelper
       identifier = "search_params[#{param_name}[#{option}]]"
       "<li>" \
       "  <label for=\"#{identifier}\">" \
-      "    <input type=\"checkbox\"" \
+      "    <input type=\"checkbox\" class=\"form-check-input\"" \
       "           name=\"#{identifier}\"" \
       "           id=\"#{identifier}\"" \
       "           #{params[:search_params][param_name].try(:include?, option) ? "checked=\"checked\"" : ""}>" \
