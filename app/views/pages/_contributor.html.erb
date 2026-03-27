@@ -1,19 +1,24 @@
 <% contributor = User.find_by_first_name_and_last_name(first_name, last_name) %>
 <% if contributor %>
-	<div class="row">
-	  <div class="col-sm-4">
-	    <% if contributor.profile_picture.attached? %>
-	    	<%= image_tag contributor.profile_picture.variant(resize: "100x100>") %>
-	    <% end %>
-	  </div>
-	  <div class="col-sm-8">
-	    <strong><%= link_to "#{first_name} #{last_name}", member_pages_path(contributor.id) %></strong><br>
-		<% if contributor.organisation_name %>
-			<%= contributor.organisation_name %>
-			<br>
-		<% end %>
-	    <i><%= role %></i><br>
-	  </div>
-	</div>
-	<br>
+  <div class="d-flex align-items-center mb-3">
+    <div class="flex-shrink-0">
+      <% if contributor.profile_picture.attached? %>
+        <%= image_tag contributor.profile_picture.variant(resize: "64x64^", crop: "64x64+0+0"),
+                      class: "rounded-3", style: "width: 64px; height: 64px; object-fit: cover;" %>
+      <% else %>
+        <div class="rounded-3 bg-light d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+          <i class="bi bi-person-fill text-muted"></i>
+        </div>
+      <% end %>
+    </div>
+    <div class="flex-grow-1 ms-2">
+      <strong><%= link_to "#{first_name} #{last_name}", member_pages_path(contributor.id), style: "text-decoration: none;" %></strong>
+      <% if contributor.organisation_name.present? %>
+        <br><small class="text-muted"><%= contributor.organisation_name %></small>
+      <% end %>
+      <% if role.present? %>
+        <br><small class="text-muted fst-italic"><%= role %></small>
+      <% end %>
+    </div>
+  </div>
 <% end %>
