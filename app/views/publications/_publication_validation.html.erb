@@ -1,139 +1,110 @@
+<% darker = idx.even? %>
+<% card_bg = darker ? "#f5f6f8" : "#fff" %>
+<% header_bg = darker ? "#e9ecef" : "#f0f1f3" %>
+<% if idx > 0 %><tbody class="pub-spacer"><tr><td colspan="6"></td></tr></tbody><% end %>
+<tbody class="pub-article">
 <tr>
-  <td align="center">
-    [<%= publication.id %>]
-    <% if publication.pdf.attached? %>
-      <%= link_to image_tag('adobe_pdf.png'), url_for(publication.pdf) %>
-    <% elsif !publication.DOI.blank? %>
-      <%= link_to publication.doi_url do %>
-        <i class="bi bi-link-45deg" aria-hidden="true"></i>
-      <% end %>
-    <% end %>
-  </td>
-
-  <%# Publication links %>
-  <td align="center">
-    <% if !publication.user_validations.include? current_user %>
-      <%= button_to "Validate",
-                    add_validation_publication_path(publication,
-                                                    current_user),
-                    method: "get", class: "btn btn-success btn-sm" %>
-    <% else %>
-      <% if publication.updated_at > publication.validations
-                                    .find_by_user_id(current_user.id)
-                                    .updated_at %>
-        <%= button_to "Revalidate",
-                      touch_validation_publication_path(publication,
-                                                        current_user),
-                      method: "get", class: "btn btn-success btn-sm" %>
+  <%# Column 1: Buttons (spans both rows) %>
+  <td rowspan="2" style="white-space: nowrap; vertical-align: top; background: <%= card_bg %>; padding: 2px 3px;">
+    <div class="d-flex flex-column gap-1">
+      <% if !publication.user_validations.include? current_user %>
+        <%= button_to "Validate",
+                      add_validation_publication_path(publication, current_user),
+                      method: "get", class: "btn btn-success btn-sm text-white" %>
       <% else %>
-        <%= button_to "Unvalidate",
-                      remove_validation_publication_path(publication,
-                                                         current_user),
-                      method: "get", class: "btn btn-sm" %>
+        <% if publication.updated_at > publication.validations
+                                      .find_by_user_id(current_user.id)
+                                      .updated_at %>
+          <%= button_to "Revalidate",
+                        touch_validation_publication_path(publication, current_user),
+                        method: "get", class: "btn btn-warning btn-sm text-white" %>
+        <% else %>
+          <%= button_to "Unvalidate",
+                        remove_validation_publication_path(publication, current_user),
+                        method: "get", class: "btn btn-outline-secondary btn-sm" %>
+        <% end %>
       <% end %>
-    <% end %>
-    <%= link_to 'Edit', edit_publication_path(publication), target: :_blank %>
-    &nbsp;|&nbsp;
-    <%= link_to 'Del',  publication, method: :delete, target: :_blank,
-                  data: { confirm: 'Are you sure?' } %><br>
-
+      <div class="d-flex justify-content-between px-2">
+        <%= link_to edit_publication_path(publication), target: :_blank, class: "text-muted pub-icon-btn" do %>
+          <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
+        <% end %>
+        <%= link_to publication, method: :delete, target: :_blank,
+                    data: {confirm: 'Are you sure?'}, class: "text-danger pub-icon-btn" do %>
+          <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i>
+        <% end %>
+      </div>
+    </div>
   </td>
 
-  <%# Formatted publication %>
-  <td>
-    <%# format_publication_citation(publication).html_safe %>
-    <%= link_to publication.short_citation, publication_path(publication),
-                target: :_blank, title: publication.title %><br>
-    <small>
-      <%= publication.DOI %><br>
-      <%= publication.publication_type %> <%= publication.publication_format %>
+  <%# Row 1: Header — spans all remaining columns %>
+  <td colspan="5" style="vertical-align: top; background: <%= header_bg %>; padding: 6px 8px 4px 8px; font-weight: bold;">
+    <% if publication.user_validations.present? %>
+      <span class="float-end ms-2">
+        <% publication.validations.each do |validation| %>
+          <% initials = "#{validation.user.first_name[0]}#{validation.user.last_name[0]}" %>
+          <% full_name = "#{validation.user.first_name} #{validation.user.last_name}" %>
+          <% if publication.updated_at > validation.updated_at %>
+            <span class="badge bg-warning-subtle text-warning-emphasis" title="<%= full_name %> (expired)"><%= initials %></span>
+          <% else %>
+            <span class="badge bg-success-subtle text-success-emphasis" title="<%= full_name %>"><%= initials %></span>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
+    <small class="text-muted"><strong>#<%= publication.id %></strong></small>
+    <% if publication.pdf.attached? %><%= link_to url_for(publication.pdf), style: "text-decoration: none;" do %><i class="bi bi-file-earmark-pdf text-danger"></i><% end %><% elsif !publication.DOI.blank? %><%= link_to publication.doi_url, style: "text-decoration: none;" do %><i class="bi bi-link-45deg"></i><% end %><% end %> <%= link_to publication.short_citation, publication_path(publication),
+                target: :_blank, title: publication.title, style: "text-decoration: none;" %>
+    <small class="text-muted">
+      <% if publication.DOI.present? %>· <%= publication.DOI %> <% end %>· <%= publication.publication_type %> <%= publication.publication_format %>
+      · <%= publication.min_depth %>–<%= publication.max_depth %>m
     </small>
   </td>
-
-  <%# Editor links %>
-  <td>
-    <% if publication.mesophotic %>
-      <strong>mesophotic</strong><br>
-    <% end %>
-    <% if publication.mce %>
-      <strong>mesophotic_coral_ecosystem</strong><br>
-    <% end %>
-    <% if publication.tme %>
-      <strong>temperate_mesophotic_ecosystem</strong><br>
-    <% end %>
-    <% if publication.original_data %>
-      <strong>original_data</strong><br>
-    <% end %>
-    <% if publication.new_species %>
-      <strong>new_species</strong><br>
-    <% end %>
-  </td>
-
-  <td>
-    <%= publication.min_depth %>- <%= publication.max_depth %> m
-  </td>
-
-  <td>
-    <% for field in publication.fields %>
-      <span class="badge bg-info"><%= field.description %>
-      <%= link_to "x",
-            detach_field_publication_path(publication, field),
-            data: {:confirm => 'Are you sure?'} %>
-     </span><br>
-    <% end %>
-  </td>
-  <td>
-    <% for focusgroup in publication.focusgroups %>
-      <span class="badge bg-primary"><%= focusgroup.description %>
-      <%= link_to "x",
-            detach_focusgroup_publication_path(publication, focusgroup),
-            data: {:confirm => 'Are you sure?'} %>
-     </span><br>
-    <% end %>
-  </td>
-  <td>
-    <% for platform in publication.platforms %>
-      <span class="badge bg-info"><%= platform.description %>
-      <%= link_to "x",
-            detach_platform_publication_path(publication, platform),
-            data: {:confirm => 'Are you sure?'} %>
-      </span><br>
-    <% end %>
-  </td>
-  <td>
-    <% for location in publication.locations %>
-      <span class="badge bg-primary"><%= location.description %>
-      <%= link_to "x",
-            detach_location_publication_path(publication, location),
-            data: {:confirm => 'Are you sure?'} %>
-      </span><br>
-    <% end %>
-  </td>
-  <td>
-    <% if publication.user_validations.present? %>
-      <strong>Validators</strong>:
-      <% for validation in publication.validations %>
-        <% if publication.updated_at > validation.updated_at %>
-          <% expiration_label = "bg-warning text-dark" %>
-        <% else %>
-          <% expiration_label = "bg-success" %>
-        <% end %>
-
-        <span class="badge <%= expiration_label %>">
-          <%= validation.user.first_name %> <%= validation.user.last_name  %>
-          <% if publication.updated_at > validation.updated_at %>
-            EXPIRED
-          <% end %>
-          <% if validation.user == current_user %>
-            <%= link_to "x",
-                  remove_validation_publication_path(publication,
-                                     current_user),
-                  data: {:confirm => 'Are you sure?'} %>
-          <% end %>
-        </span>&nbsp;
-      <% end %>
-    <% else %>
-      Not yet validated.
-    <% end %>
-  </td>
 </tr>
+<tr>
+  <%# Row 2: Tag columns %>
+  <td style="vertical-align: top; background: <%= card_bg %>; padding: 2px 8px 4px 8px;">
+    <% if publication.mesophotic %><span class="badge bg-secondary-subtle text-secondary-emphasis">mesophotic</span><br><% end %>
+    <% if publication.mce %><span class="badge bg-secondary-subtle text-secondary-emphasis">mesophotic_coral_ecosystem</span><br><% end %>
+    <% if publication.tme %><span class="badge bg-secondary-subtle text-secondary-emphasis">temperate_mesophotic_ecosystem</span><br><% end %>
+    <% if publication.original_data %><span class="badge bg-secondary-subtle text-secondary-emphasis">original_data</span><br><% end %>
+    <% if publication.new_species %><span class="badge bg-secondary-subtle text-secondary-emphasis">new_species</span><br><% end %>
+  </td>
+
+  <td style="vertical-align: top; background: <%= card_bg %>; padding: 2px 8px 4px 8px;">
+    <% publication.fields.each do |field| %>
+      <span class="badge bg-info"><%= field.description %>
+      &#8201;<%= link_to "×", detach_field_publication_path(publication, field),
+            data: {confirm: 'Remove?'}, class: "text-white", style: "text-decoration: none;" %></span>
+<br>
+    <% end %>
+  </td>
+
+  <td style="vertical-align: top; background: <%= card_bg %>; padding: 2px 8px 4px 8px;">
+    <% publication.focusgroups.each do |focusgroup| %>
+      <span class="badge bg-primary"><%= focusgroup.description %>
+      &#8201;<%= link_to "×", detach_focusgroup_publication_path(publication, focusgroup),
+            data: {confirm: 'Remove?'}, class: "text-white", style: "text-decoration: none;" %></span>
+<br>
+    <% end %>
+  </td>
+
+  <td style="vertical-align: top; background: <%= card_bg %>; padding: 2px 8px 4px 8px;">
+    <% publication.platforms.each do |platform| %>
+      <span class="badge bg-info"><%= platform.description %>
+      &#8201;<%= link_to "×", detach_platform_publication_path(publication, platform),
+            data: {confirm: 'Remove?'}, class: "text-white", style: "text-decoration: none;" %></span>
+<br>
+    <% end %>
+  </td>
+
+  <td style="vertical-align: top; background: <%= card_bg %>; padding: 2px 8px 4px 8px;">
+    <% publication.locations.each do |location| %>
+      <span class="badge bg-primary"><%= location.description %>
+      &#8201;<%= link_to "×", detach_location_publication_path(publication, location),
+            data: {confirm: 'Remove?'}, class: "text-white", style: "text-decoration: none;" %></span>
+<br>
+    <% end %>
+  </td>
+
+</tr>
+</tbody>
