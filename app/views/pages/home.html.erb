@@ -29,19 +29,19 @@
 
   <div class="col-sm-5">
     <div class="card">
-      <div class="card-header">
-        <strong><code>#Mesophotic</code> on Mastodon</strong>
-        <%= image_tag "mastodon_logo.png", size: "18x18", style: "float: right" %>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong><span style="color: #595aff;">#Mesophotic</span> on Mastodon</strong>
+        <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;" %>
       </div>
       <div class="card-body">
         <% cache "mastodon_feed", expires_in: 1.hour do %>
-          <% statuses = (StatusFeed.new "https://mastodon.social/tags/mesophotic.rss").take(5) %>
+          <% statuses = (StatusFeed.new "https://mastodon.social/tags/mesophotic.rss").take(10) %>
           <% users = User.where(twitter: statuses.map(&:username)) %>
           <%= render partial: 'status', locals: { users: users }, collection: statuses, as: :status %>
         <% end %>
       </div>
-      <div class="card-footer">
-        Use the <code>#mesophotic</code> hashtag to contribute
+      <div class="card-footer text-muted" style="font-size: 0.85em;">
+        Use the <strong>#mesophotic</strong> hashtag to contribute
       </div>
     </div>
   </div>
