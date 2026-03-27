@@ -77,7 +77,7 @@ $(document).on('turbolinks:load', function() {
 
   function applyProfile(avatarEl, statusEl, profile) {
     if (profile.avatar) {
-      avatarEl.html('<img src="' + profile.avatar + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">');
+      avatarEl.html('<img src="' + profile.avatar + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.3rem;">');
     }
     if (profile.display_name && statusEl.length) {
       var nameEl = statusEl.find('.mastodon-display-name');
