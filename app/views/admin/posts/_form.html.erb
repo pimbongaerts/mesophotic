@@ -8,13 +8,13 @@
 
 <%= form_for [:admin, @post], role: "form" do |f| %>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :post_type, class: "required" %><br>
   <%= f.select :post_type, Post::POST_TYPES,
                class: "form-control" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :title %>
   <div class="row">
     <div class="col-12">
@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :content_md, "Content" %>
   <div class="row">
     <div class="col-12">
@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <div class="row">
     <div class="col-12">
       <%= f.check_box :draft %> <%= f.label :draft, "draft" %>
@@ -40,7 +40,7 @@
   </div>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :featured_publication %><br>
   <%= f.collection_select :featured_publication_id,
                           Publication.all.order("authors ASC, publication_year ASC"),
@@ -49,7 +49,7 @@
                           class: "form-control" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :featured_user %><br>
   <%= f.collection_select :featured_user_id,
                           User.all.order("last_name ASC, first_name ASC"),
@@ -58,7 +58,7 @@
                           class: "form-control" %>
 </div>
 
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :updated_at, "Published date" %>
   <div class="row">
     <div class="col-12">

@@ -11,17 +11,17 @@
 
       <%= devise_error_messages! %>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :first_name, class: 'required' %><br />
         <%= f.text_field :first_name, class: "form-control" %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :last_name, class: 'required' %><br />
         <%= f.text_field :last_name, class: "form-control" %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :email %>
         <div class="row">
           <div class="col-sm-6">
@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <div class="row">
           <div class="col-sm-6">
             <%= f.label :password %>
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <div class="row">
           <div class="col-sm-6">
             <%= f.label :password_confirmation %>
@@ -51,7 +51,7 @@
       <div class="robot">
       <p><em>Answer the following question, to prove you're not a robot.</em></p>
       <%= textcaptcha_fields(f) do %>
-        <div class="form-group">
+        <div class="mb-3">
           <div class="row">
             <div class="col-sm-6">
                 <%= f.label :textcaptcha_answer, resource.textcaptcha_question %><br/>
@@ -62,7 +62,7 @@
       <% end %>
       </div>
 
-      <div class="form-group" style="background-color: #fefefe;">
+      <div class="mb-3" style="background-color: #fefefe;">
         <div class="row">
           <div class="col-sm-6">
             <%= f.submit "Sign up", class: "btn btn-primary" %>
