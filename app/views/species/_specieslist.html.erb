@@ -1,7 +1,7 @@
 <% focusgroup_description = focusgroup.try(:description)
    focusgroup_name = focusgroup_description.parameterize.underscore %>
-<div class="panel panel-default">
-  <div class="panel-heading" id="heading_<%= focusgroup_name %>">
+<div class="card">
+  <div class="card-header" id="heading_<%= focusgroup_name %>">
     <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<%= focusgroup_name %>" aria-expanded="true" aria-controls="collapse_<%= focusgroup_name %>">
       <%= focusgroup_description %>
       <% if focusgroup.species.count > 0 %>
@@ -10,7 +10,7 @@
     </button>
   </div>
 
-  <div class="panel-body collapse" id="collapse_<%= focusgroup_name %>" aria-labelledby="heading_<%= focusgroup_name %>" data-bs-parent="#species_accordion">
+  <div class="card-body collapse" id="collapse_<%= focusgroup_name %>" aria-labelledby="heading_<%= focusgroup_name %>" data-bs-parent="#species_accordion">
     <% species_list.order("name ASC").each do |species| %>
       <%= link_to species.name, species_path(species.id) %>
       <% if species.publications.count > 0 %>

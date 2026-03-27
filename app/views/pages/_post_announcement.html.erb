@@ -18,9 +18,9 @@
     </small><br><br>
 
     <% if @post.user.present? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Posted by:</strong></div>
-        <div class="panel-body" align="center">
+      <div class="card">
+        <div class="card-header"><strong>Posted by:</strong></div>
+        <div class="card-body" align="center">
           <% if @post.user.profile_picture.attached? %>
             <%= link_to image_tag(@post.user.profile_picture.variant(resize: "200x200>")),
                         member_pages_path(@post.user) %>
@@ -38,9 +38,9 @@
       </div>
     <% end %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Announcement keywords</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Announcement keywords</strong></div>
+      <div class="card-body">
         <%= render partial: 'shared/wordcloud',
                    object: @post.word_cloud(20),
                    locals: { title: 'post_contents' } %>
@@ -63,11 +63,11 @@
     <% elsif @post.photos.count > 0  %>
       <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <strong>Photos</strong>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <%= render partial: 'shared/behind_the_scenes',
                          locals: {publication: @post,
                                   style: 'full'} %>

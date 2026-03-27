@@ -4,9 +4,9 @@
 
 <div class="row">
   <h2>ICRS Hawaii Conference 2016 <small> - Overview</small></h2><br>
-  <div class="panel panel-default">
-    <div class="panel-heading panel-primary"><strong>Presentations</strong></div>
-    <div class="panel-body">      
+  <div class="card">
+    <div class="card-header card"><strong>Presentations</strong></div>
+    <div class="card-body">      
       <% last_date = "" %>
       <% @presentations.where(:oral =>  true).each do |presentation| %>
         <% if last_date == "" %>

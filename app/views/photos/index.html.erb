@@ -21,9 +21,9 @@
 	</div>
 
   <div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Image locations</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Image locations</strong></div>
+      <div class="card-body" align="center">
         <% data = format_counts_for_world_map(@location_counts) %>
         <%= render partial: 'shared/world_map', locals: { title: 'Locations',
                                                           data: data,
@@ -32,11 +32,11 @@
     </div>
 
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Images metadata summary</strong> (top 5 / category)
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render partial: 'shared/keyword',
                    locals: { objects: @photos },
                    collection: [Location, Platform] %>

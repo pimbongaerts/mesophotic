@@ -1,10 +1,10 @@
 <%# Basic publication information %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title">Publication information</h4>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Publication information</h4>
   </div>
 
-  <div class="panel-body">
+  <div class="card-body">
     <div class="row">
 
       <%# Left column %>
@@ -67,20 +67,20 @@
         <small>Note: image only updates after saving.</small>
       </div>
     </div> <%# div: row %>
-  </div> <%# div: panel-body %>
-</div> <%# div: panel %>
+  </div> <%# div: card-body %>
+</div> <%# div: card %>
 
 <%# Basic publication information %>
 <%= render partial: 'form_initial_specific', locals: {f: f } %>
 
 <%# Contents container for admins %>
 <% if current_user.try(:admin?) || current_user.try(:editor?) %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">Publication contents</h4>
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Publication contents</h4>
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
@@ -93,6 +93,6 @@
           </div>
         </div>
       </div> <%# div: row %>
-    </div> <%# div: panel-body %>
-  </div> <%# div: panel %>
+    </div> <%# div: card-body %>
+  </div> <%# div: card %>
 <% end %>
