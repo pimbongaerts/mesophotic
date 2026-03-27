@@ -9,8 +9,8 @@
 <div class="row">
   <div class="col-10">
     <h3 class="page-title">
-      <%= title %>:
-      <% if defined?(subtitle) %>
+      <%= title %>
+      <% if defined?(subtitle) && subtitle.present? %>
       <br><small><%= subtitle %></small>
       <% end %>
     </h3>
