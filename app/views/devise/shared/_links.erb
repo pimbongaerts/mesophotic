@@ -2,7 +2,9 @@
 <div class="row shared-links">
   <div class="col-sm-8">
     <%- if controller_name != 'sessions' %>
-    <%= link_to "Sign in", new_session_path(resource_name) %><br />
+    <div class="mb-3">
+      <%= link_to "Sign in", new_session_path(resource_name), class: "btn btn-outline-secondary" %>
+    </div>
     <% end -%>
 
     <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
