@@ -270,6 +270,13 @@ span.bi-link {
   }
 }
 
+/* Profile picture drop zone */
+.profile-picture-drop:hover {
+  border-color: #0d6efd !important;
+  background-color: #e7f1ff !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
 /* Mastodon feed */
 .mastodon-status:last-child {
   border-bottom: none !important;
