@@ -1,23 +1,16 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Edit publication",
-          subtitle: @publication.title_truncated,
-          backlink: :back } %>
+       locals: {title: "Editing \"#{@publication.title_truncated}\"",
+          backlink: publication_path(@publication) } %>
 
 <%= form_for(@publication) do |f| %>
   <%= render partial: 'form_errorheader', locals: {f: f} %>
   <%= render partial: 'form_initial', locals: {f: f} %>
   <%= render partial: 'form_edit', locals: {f: f} %>
-  <div class="row">
-  	<div class="col-sm-6">
-			<%= link_to "Cancel", publications_path, class: "btn btn-basic" %>
-		</div>
-		<div class="col-sm-6" align="right">
-		  <div class="actions">
-		  	<small>Updating will expire existing validations</small>
-				&nbsp;&nbsp;&nbsp;&nbsp;
-		  	<%= f.submit "Update publication",
-		  				 class: "btn btn-primary" %>
-			</div>
-		</div>
-	</div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex gap-2">
+      <%= f.submit "Update publication", class: "btn btn-primary text-white" %>
+      <%= link_to "Cancel", publications_path, class: "btn btn-outline-secondary" %>
+    </div>
+    <small class="text-muted">Updating will expire existing validations</small>
+  </div>
 <% end %>

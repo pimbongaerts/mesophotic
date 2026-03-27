@@ -1,33 +1,28 @@
 <% if @publication.authors %>
   <div class="card">
     <div class="card-header">
-      <h4 class="card-title">Users linked to publication</h4>
+      <strong>Users linked to publication</strong>
     </div>
     <div class="card-body">
-      <div class="mb-3">
-        <%= f.label :user %>&nbsp;(list automatically generated)<br />
-        <div class="row">
-          <div class="col-12">
-            <% for author in @publication.authors.split(', ') %>
-              <% last_name = author.split()[0] %>
-              <%= hidden_field_tag "publication[user_ids][]", "" %>
-              <% for user in User.where(:last_name => last_name)  %>
-                <%= check_box_tag "publication[user_ids][]", user.id,
-                                  @publication.users.include?(user) %>
-                <%= user.first_name %>
-                <%= user.last_name %><br />
-              <% end %>
-            <% end %>
+      <%= f.label :user %> <small class="text-muted">(list automatically generated)</small>
+      <% for author in @publication.authors.split(', ') %>
+        <% last_name = author.split()[0] %>
+        <%= hidden_field_tag "publication[user_ids][]", "" %>
+        <% for user in User.where(:last_name => last_name) %>
+          <div class="form-check">
+            <%= check_box_tag "publication[user_ids][]", user.id,
+                              @publication.users.include?(user), class: "form-check-input" %>
+            <label class="form-check-label fw-normal"><%= user.first_name %> <%= user.last_name %></label>
           </div>
-        </div>
-      </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
 <% end %>
 
 <div class="card">
   <div class="card-header">
-    <h4 class="card-title">Publication metadata</h4>
+    <strong>Publication metadata</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -46,112 +41,90 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="mb-3">
-          <%= f.check_box :mesophotic %>
-          <%= f.label "Mesophotic" %>
-          <small>(indicates whether the publications presents data from, or presents a discussion on, the mesophotic depth range)</small>
+        <div class="form-check mb-2">
+          <%= f.check_box :mesophotic, class: "form-check-input" %>
+          <%= f.label "Mesophotic", class: "form-check-label fw-normal" %>
+          <br><small class="text-muted">(presents data from or discusses the mesophotic depth range)</small>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :mce %>
-          <%= f.label "Mesophotic Coral Ecosystem" %>
-          <small>
-            (indicates whether the publications presents data from, or presents a discussion on, a mesophotic coral reef ecosystem; 
-            should always have the "mesophotic" tag too)
-          </small>
+        <div class="form-check mb-2">
+          <%= f.check_box :mce, class: "form-check-input" %>
+          <%= f.label "Mesophotic Coral Ecosystem", class: "form-check-label fw-normal" %>
+          <br><small class="text-muted">(mesophotic coral reef ecosystem; should also have "mesophotic")</small>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :tme %>
-          <%= f.label "Temperate Mesophotic Ecosystem" %>
-          <small>
-            (indicates whether the publications presents data from, or presents a discussion on, a temperate mesophotic ecosystem; 
-            should always have the "mesophotic" tag too)
-          </small>
+        <div class="form-check mb-2">
+          <%= f.check_box :tme, class: "form-check-input" %>
+          <%= f.label "Temperate Mesophotic Ecosystem", class: "form-check-label fw-normal" %>
+          <br><small class="text-muted">(temperate mesophotic ecosystem; should also have "mesophotic")</small>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :original_data %>
-          <%= f.label :original_data %>
-          <small>(publication documents original data)</small>
+        <div class="form-check mb-2">
+          <%= f.check_box :original_data, class: "form-check-input" %>
+          <%= f.label :original_data, class: "form-check-label fw-normal" %>
+          <br><small class="text-muted">(publication documents original data)</small>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :new_species %>
-          <%= f.label :new_species %>
-          <small>(publication describes new species)</small>
+        <div class="form-check mb-2">
+          <%= f.check_box :new_species, class: "form-check-input" %>
+          <%= f.label :new_species, class: "form-check-label fw-normal" %>
+          <br><small class="text-muted">(publication describes new species)</small>
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-3">
-        <div class="mb-3">
-          <%= f.label :platform %><br />
-          <div class="row">
-            <div class="col-12">
-              <%= hidden_field_tag "publication[platform_ids][]", "" %>
-              <% for platform in Platform.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[platform_ids][]", platform.id,
-                                  @publication.platforms.include?(platform) %>
-                <%= platform.description %>&nbsp;
-                <strong><%= count_word_in_contents(platform.description,
-                                                   @publication.contents) %>
-                </strong><br />
-              <% end %>
-            </div>
+        <%= f.label :platform %>
+        <%= hidden_field_tag "publication[platform_ids][]", "" %>
+        <% for platform in Platform.all.order("LOWER(description) ASC") %>
+          <div class="form-check">
+            <%= check_box_tag "publication[platform_ids][]", platform.id,
+                              @publication.platforms.include?(platform), class: "form-check-input" %>
+            <label class="form-check-label fw-normal"><%= platform.description %>
+              <% wc = count_word_in_contents(platform.description, @publication.contents) %>
+              <% if wc.present? %><small class="text-muted">(<%= wc %>)</small><% end %>
+            </label>
           </div>
-        </div>
+        <% end %>
       </div>
 
       <div class="col-3">
-        <div class="mb-3">
-          <%= f.label :field %><br />
-          <div class="row">
-            <div class="col-12">
-              <%= hidden_field_tag "publication[field_ids][]", "" %>
-              <% for field in Field.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[field_ids][]", field.id,
-                                  @publication.fields.include?(field) %>
-                <%= field.description %>&nbsp;
-                <strong><%= count_word_in_contents(field.description,
-                                                   @publication.contents) %>
-                </strong><br />
-              <% end %>
-            </div>
+        <%= f.label :field %>
+        <%= hidden_field_tag "publication[field_ids][]", "" %>
+        <% for field in Field.all.order("LOWER(description) ASC") %>
+          <div class="form-check">
+            <%= check_box_tag "publication[field_ids][]", field.id,
+                              @publication.fields.include?(field), class: "form-check-input" %>
+            <label class="form-check-label fw-normal"><%= field.description %>
+              <% wc = count_word_in_contents(field.description, @publication.contents) %>
+              <% if wc.present? %><small class="text-muted">(<%= wc %>)</small><% end %>
+            </label>
           </div>
-        </div>
+        <% end %>
       </div>
 
       <div class="col-3">
-        <div class="mb-3">
-          <%= f.label :focusgroup %><br />
-          <div class="row">
-            <div class="col-12">
-              <%= hidden_field_tag "publication[focusgroup_ids][]", "" %>
-              <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id,
-                                  @publication.focusgroups.include?(focusgroup) %>
-                <%= focusgroup.description %>&nbsp;
-                <strong><%= count_word_in_contents(focusgroup.description,
-                                                   @publication.contents) %>
-                </strong><br />
-              <% end %>
-            </div>
+        <%= f.label :focusgroup %>
+        <%= hidden_field_tag "publication[focusgroup_ids][]", "" %>
+        <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
+          <div class="form-check">
+            <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id,
+                              @publication.focusgroups.include?(focusgroup), class: "form-check-input" %>
+            <label class="form-check-label fw-normal"><%= focusgroup.description %>
+              <% wc = count_word_in_contents(focusgroup.description, @publication.contents) %>
+              <% if wc.present? %><small class="text-muted">(<%= wc %>)</small><% end %>
+            </label>
           </div>
-        </div>
+        <% end %>
       </div>
 
       <div class="col-3">
-        <div class="mb-3">
-          <%= f.label :location %><br />
-          <div class="row">
-            <div class="col-12">
-              <%= hidden_field_tag "publication[location_ids][]", "" %>
-              <% for location in Location.all.order("LOWER(description) ASC") %>
-                <%= check_box_tag "publication[location_ids][]", location.id,
-                                  @publication.locations.include?(location) %>
-                <%= location.description %><br />
-              <% end %>
-            </div>
+        <%= f.label :location %>
+        <%= hidden_field_tag "publication[location_ids][]", "" %>
+        <% for location in Location.all.order("LOWER(description) ASC") %>
+          <div class="form-check">
+            <%= check_box_tag "publication[location_ids][]", location.id,
+                              @publication.locations.include?(location), class: "form-check-input" %>
+            <label class="form-check-label fw-normal"><%= location.description %></label>
           </div>
-        </div>
+        <% end %>
       </div>
 
     </div>
