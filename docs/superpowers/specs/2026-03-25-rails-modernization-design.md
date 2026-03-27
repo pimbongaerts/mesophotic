@@ -254,6 +254,12 @@ This is the riskiest phase. It combines a Ruby major version upgrade with a Rail
 
 These are noted for future planning but not part of this modernization effort:
 
+### Features
+- **Bluesky feed:** Add Bluesky `#mesophotic` feed alongside existing Mastodon feed on home page. Use tabbed logo selection (Mastodon/Bluesky). Bluesky public API: `public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23mesophotic`. Fetch profile pics/names async similar to Mastodon implementation.
+- **Multiple social media handles:** Allow users to specify multiple social handles (Mastodon, BlueSky, Threads, Twitter/X) instead of the single `twitter` field. Likely needs a `social_links` table or JSON column. Update edit profile form, member profile page, and contact_links partial.
+- **Fix textcaptcha:** The `acts_as_textcaptcha` gem's external API returns nil questions. Either fix the API key, replace with a different captcha service (e.g. reCAPTCHA), or implement a simple custom captcha. This gem may also not support Rails 7.
+
+### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
 - **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline.
 - **`owlcarousel-rails` → modern alternative:** The gem is unmaintained. Replace with a vanilla JS carousel or CSS-only solution.
