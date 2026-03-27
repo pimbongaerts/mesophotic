@@ -129,6 +129,11 @@ blockquote{
 //***********************************************************
 
 //***********************************************************
+// BS5 COMPAT: restore default spacing that BS3 panels/rows had
+.card {
+  margin-bottom: 20px;
+}
+
 // SPACING
 $space-lg: 60px;
 $space-md: 40px;
@@ -203,11 +208,46 @@ $space-xs: 10px;
 //***********************************************************
 
 //***********************************************************
+// BS5 COMPAT: restore BS3-style code element (red text, pale background)
+code {
+  color: #c7254e;
+  background-color: #f9f2f4;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 75%;
+}
+
 // NAVBAR
+body {
+  padding-top: 126px; // offset for fixed-top navbar
+}
+
+.navbar {
+  margin-bottom: 4px;
+  border-bottom: 1px solid darken(#f8f8f8, 7%);
+}
+
 .navbar-brand {
   font-size: inherit;
   padding-top: 10px;
   min-height: 80px;
+}
+
+.navbar-nav .nav-link {
+  color: #777777;
+  padding: 10px 15px;
+
+  &:hover, &:focus {
+    color: #333333;
+  }
+}
+
+.navbar-nav .dropdown-menu a {
+  color: #777777;
+
+  &:hover, &:focus {
+    color: #333333;
+  }
 }
 //***********************************************************
 

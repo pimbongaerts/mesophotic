@@ -13,12 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require popper
-//= require bootstrap-sprockets
+//= require bootstrap
 //= require dual_range
 // = require analytics
 // = require owl.carousel
-// = require wordcloud2
+//= require wordcloud2
 
 (function ($) {
     $.fn.sizeChanged = function (handleFunction) {
