@@ -7,7 +7,7 @@
       <div class="form-group">
         <%= f.label :user %>&nbsp;(list automatically generated)<br />
         <div class="row">
-          <div class="col-xs-12">
+          <div class="col-12">
             <% for author in @publication.authors.split(', ') %>
               <% last_name = author.split()[0] %>
               <%= hidden_field_tag "publication[user_ids][]", "" %>
@@ -31,7 +31,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.label :min_depth %><br>
           <%= f.text_field :min_depth,
@@ -45,7 +45,7 @@
                            placeholder: "40" %>
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-6">
         <div class="form-group">
           <%= f.check_box :mesophotic %>
           <%= f.label "Mesophotic" %>
@@ -81,11 +81,11 @@
     </div>
 
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-3">
         <div class="form-group">
           <%= f.label :platform %><br />
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
               <%= hidden_field_tag "publication[platform_ids][]", "" %>
               <% for platform in Platform.all.order("LOWER(description) ASC") %>
                 <%= check_box_tag "publication[platform_ids][]", platform.id,
@@ -100,11 +100,11 @@
         </div>
       </div>
 
-      <div class="col-xs-3">
+      <div class="col-3">
         <div class="form-group">
           <%= f.label :field %><br />
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
               <%= hidden_field_tag "publication[field_ids][]", "" %>
               <% for field in Field.all.order("LOWER(description) ASC") %>
                 <%= check_box_tag "publication[field_ids][]", field.id,
@@ -119,11 +119,11 @@
         </div>
       </div>
 
-      <div class="col-xs-3">
+      <div class="col-3">
         <div class="form-group">
           <%= f.label :focusgroup %><br />
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
               <%= hidden_field_tag "publication[focusgroup_ids][]", "" %>
               <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
                 <%= check_box_tag "publication[focusgroup_ids][]", focusgroup.id,
@@ -138,11 +138,11 @@
         </div>
       </div>
 
-      <div class="col-xs-3">
+      <div class="col-3">
         <div class="form-group">
           <%= f.label :location %><br />
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
               <%= hidden_field_tag "publication[location_ids][]", "" %>
               <% for location in Location.all.order("LOWER(description) ASC") %>
                 <%= check_box_tag "publication[location_ids][]", location.id,

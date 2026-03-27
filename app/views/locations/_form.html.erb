@@ -4,7 +4,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-xs-7">
+      <div class="col-7">
         <div class="form-group">
           <%= f.label :description %><br>
           <%= f.text_field :description, style: 'width:90%;' %>
@@ -24,7 +24,7 @@
           </p>
         <% end %>
       </div>
-      <div class="col-xs-5">
+      <div class="col-5">
         <%= render_async world_map_path(key: "locations_form", model: Location, ids: location.id, height: 230) %>
       </div>
     </div>
