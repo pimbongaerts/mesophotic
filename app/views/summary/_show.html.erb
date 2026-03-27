@@ -8,16 +8,16 @@
 <div class="row">
   <div class="col-sm-8">
 
-    <div class="panel panel-default">
+    <div class="card">
       <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
-      <div class="panel-footer">
+      <div class="card-footer">
         <%= render partial: 'dropdown',
                    locals: { objects: objects, object: object, model: title.downcase } %>
       </div>
 		</div>
 
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
         <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
@@ -32,32 +32,32 @@
 	</div>
 
   <div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Research keywords</strong>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
          <%= render_async summary_keywords_path(model: title.downcase, id: object.id) %>
       </div>
     </div>
 
     <% if @publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Researchers</strong> (that published on this location)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <%= render_async summary_researchers_path(model: title.downcase, id: object.id) %>
         </div>
       </div>
     <% end %>
 
     <% if object.try(:photos) && object.photos.showcases_location.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Photographs</strong> (from the field)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
         <% object.photos.showcases_location.each do |photo| %>
           <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0")),
                       photo_path(photo) %><br>
@@ -67,11 +67,11 @@
     <% end %>
 
     <% if publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Publication summary</strong> (top 5 / category)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <%= render_async summary_publications_path(model: title.downcase, id: object.id) %>
         </div>
       </div>

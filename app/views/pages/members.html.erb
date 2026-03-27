@@ -4,15 +4,15 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <div class="panel panel-default">
-      <!-- Default panel contents -->
-      <div class="panel-heading">
+    <div class="card">
+      <!-- Default card contents -->
+      <div class="card-header">
         This list of  <%= @users.count %> people was generated from the list
         of publications (first authors) and members of the old website. Please
         contact us if you want your name removed or added to this list (option
         to that through the website soon available).
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render partial: 'memberlist', locals: { users: @users } %>
       </div>
       <!-- Table with members -->
@@ -20,23 +20,23 @@
   </div>
 
   <div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Featured profile</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Featured profile</strong></div>
+      <div class="card-body" align="center">
         <%= render partial: 'featured_member' %>
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Recently updated profiles</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Recently updated profiles</strong></div>
+      <div class="card-body" align="center">
         <%= render partial: 'latest_members' %>
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>People locations</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>People locations</strong></div>
+      <div class="card-body" align="center">
         <% data = count_geographic_occurrences_of_users(@users) %>
         <%= render partial: 'shared/world_map', locals: { title: 'Sites',
                                                           data: data,
@@ -44,11 +44,11 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Growth of mesophotic community</strong>
       </div>
-      <div class="panel-body" align="center">
+      <div class="card-body" align="center">
         <% cats, occurs = count_first_authors_over_time(@publications, Time.new.year - 1) %>
         <%= render partial: 'shared/area_graph',
                    locals: { title: 'Publications',

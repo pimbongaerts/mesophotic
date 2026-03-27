@@ -19,9 +19,9 @@
       <% end %>
     </small><br><br>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>An interview with:</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>An interview with:</strong></div>
+      <div class="card-body" align="center">
         <% if @researcher.profile_picture.attached? %>
           <%= link_to image_tag(@researcher.profile_picture.variant(resize: "200x200>")),
                       member_pages_path(@researcher) %>
@@ -39,9 +39,9 @@
     </div>
 
     <% if @researcher.research_interests.present? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Short bio:</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Short bio:</strong></div>
+        <div class="card-body">
           <small>
             <%= markdown(@researcher.research_interests) %>
           </small>
@@ -49,9 +49,9 @@
       </div>
     <% end %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Interview keywords</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Interview keywords</strong></div>
+      <div class="card-body">
         <%= render partial: 'shared/wordcloud',
                    object: @post.word_cloud(20),
                    locals: { title: 'post_contents' } %>
@@ -59,9 +59,9 @@
     </div>
 
     <% if @researcher.publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Study locations</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Study locations</strong></div>
+        <div class="card-body">
           <% data = count_geographic_occurrences_of_publications_from_user(@researcher) %>
           <%= render partial: 'shared/world_map', locals: { title: 'Locations',
                                                             data: data,
@@ -80,8 +80,8 @@
           <font color="#2b82bc">
             <h1>Early Career Scientist: <%= @researcher.full_name_normal %></h1>
           </font><br>
-          <div class="panel panel-default">
-            <div class="panel-body" align="center" style="background-color: #f5f5f5">
+          <div class="card">
+            <div class="card-body" align="center" style="background-color: #f5f5f5">
               <div class="row">
                 <div class="col-sm-6">
                   <%= markdown(behind_sections[0]) %>
@@ -94,8 +94,8 @@
           </div>
           <%= markdown(behind_sections[2]) %>
           <%= markdown(behind_sections[3]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
+          <div class="card">
+            <div class="card-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -110,8 +110,8 @@
           </div>
           <%= markdown(behind_sections[4]) %>
           <%= markdown(behind_sections[5]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
+          <div class="card">
+            <div class="card-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -126,8 +126,8 @@
           </div>
           <%= markdown(behind_sections[6]) %>
           <%= markdown(behind_sections[7]) %>
-          <div class="panel panel-default">
-            <div class="panel-body">
+          <div class="card">
+            <div class="card-body">
               <div class="row">
                 <div class="col-sm-6">
                   <%= render partial: 'photo_with_subtitle',
@@ -146,11 +146,11 @@
     <% elsif @post.photos.count > 0  %>
       <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <strong>Photos</strong>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <%= render partial: 'shared/behind_the_scenes',
                          locals: {publication: @post,
                                   style: 'full'} %>

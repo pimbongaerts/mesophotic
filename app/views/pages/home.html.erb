@@ -1,7 +1,7 @@
 <%= render partial: "layouts/home_title" %>
 
-<div class="panel panel-default">
-  <div class="panel-body background_image" align="center">
+<div class="card">
+  <div class="card-body background_image" align="center">
     <div class="row">&nbsp;</div>
     <div class="row">
       <div class="col-sm-1">&nbsp;</div>
@@ -18,9 +18,9 @@
 <!-- Latest news -->
 <div class="row">
   <div class="col-sm-12">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Latest posts</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Latest posts</strong></div>
+      <div class="card-body">
         <div class="row">
           <%= render partial: 'shared/post_summary_small', collection: @posts, as: :post %>
         </div>
@@ -32,9 +32,9 @@
 <!-- Latest publications -->
 <div class="row">
   <div class="col-sm-7">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Latest publications</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Latest publications</strong></div>
+      <div class="card-body">
         <%= render partial: 'newsfeed',
                    locals: { publications: @publications } %>
       </div>
@@ -42,19 +42,19 @@
   </div>
 
   <div class="col-sm-5">
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong><code>#Mesophotic</code> on Mastodon</strong>
         <%= image_tag "mastodon_logo.png", size: "18x18", style: "float: right" %>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <% cache "mastodon_feed", expires_in: 1.hour do %>
           <% statuses = (StatusFeed.new "https://mastodon.social/tags/mesophotic.rss").take(5) %>
           <% users = User.where(twitter: statuses.map(&:username)) %>
           <%= render partial: 'status', locals: { users: users }, collection: statuses, as: :status %>
         <% end %>
       </div>
-      <div class="panel-footer">
+      <div class="card-footer">
         Use the <code>#mesophotic</code> hashtag to contribute
       </div>
     </div>

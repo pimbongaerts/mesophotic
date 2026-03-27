@@ -1,9 +1,9 @@
 <% if @publication.authors %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">Users linked to publication</h4>
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Users linked to publication</h4>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <div class="form-group">
         <%= f.label :user %>&nbsp;(list automatically generated)<br />
         <div class="row">
@@ -25,11 +25,11 @@
   </div>
 <% end %>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title">Publication metadata</h4>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Publication metadata</h4>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <div class="row">
       <div class="col-xs-6">
         <div class="form-group">

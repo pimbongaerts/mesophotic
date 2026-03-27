@@ -6,8 +6,8 @@
 <div class="row">
   <div class="col-sm-8">
 
-    <div class="panel panel-default">
-      <div class="panel-body" style="background: #CCCCCC;">
+    <div class="card">
+      <div class="card-body" style="background: #CCCCCC;">
         <div class="col-sm-10">
           <p>
             <strong>
@@ -38,20 +38,20 @@
     </div>
 
     <% if @publication.abstract.present? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Abstract</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Abstract</strong></div>
+        <div class="card-body">
           <p><%= linkify(@publication.abstract) %></p>
         </div>
       </div>
     <% end %>
 
     <% if @publication.behind_the_science? %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Behind the science</strong>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <%= render partial: 'shared/behind_the_scenes',
                      locals: { post: @publication.featured_post,
                                style: 'overview' } %>
@@ -60,12 +60,12 @@
     <% end %>
 
     <% if @publication.sites.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Research sites</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Research sites</strong></div>
+        <div class="card-body">
           <%= render_async world_map_path(key: "publications_show", model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
           <table width="100%">
             <% for site in @publication.sites %>
               <tr>
@@ -84,31 +84,31 @@
 
   <div class="col-sm-4">
     <% if @publication.pdf.attached? %>
-      <div class="panel panel-default">
-        <div class="panel-body" align="center">
+      <div class="card">
+        <div class="card-body" align="center">
           <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         </div>
       </div>
     <% end %>
 
     <% if not @publication.contents.blank? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Keywords</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Keywords</strong></div>
+        <div class="card-body">
           <%= render_async publication_keywords_path(id: @publication.id) %>
         </div>
       </div>
     <% end %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Meta-data</strong>
+    <div class="card">
+      <div class="card-header"><strong>Meta-data</strong>
         <% if @publication.validated? %>
           <i class="bi bi-check-circle-fill" info="At least two editors have validated these metadata."></i>
         <% else %>
           (pending validation)
         <% end %>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <% if @publication.min_depth and @publication.max_depth %>
           <strong>Depth range</strong><br>
           <%= @publication.min_depth %>-
@@ -148,7 +148,7 @@
                    locals: { entity: @publication } %>
 
       </div>
-      <div class="panel-footer">
+      <div class="card-footer">
         <%
         credits = []
         if @publication.contributor.present?
@@ -164,9 +164,9 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Author profiles</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Author profiles</strong></div>
+      <div class="card-body">
         <%= render_async publication_authors_path(id: @publication.id) %>
       </div>
     </div>

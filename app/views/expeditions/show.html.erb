@@ -5,8 +5,8 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div class="panel panel-default">
-      <div class="panel-body" style="background: #CCCCCC;">
+    <div class="card">
+      <div class="card-body" style="background: #CCCCCC;">
         <div class="col-sm-6">
           <% if @expedition.featured_image.attached? %>
             <%= image_tag @expedition.featured_image.variant(resize: "640x480>") %>
@@ -33,9 +33,9 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Expedition description</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Expedition description</strong></div>
+      <div class="card-body">
         <p><%= @expedition.description %></p>
       </div>
     </div>
@@ -43,9 +43,9 @@
 
   <div class="col-sm-4">
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Institutions / Members</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Institutions / Members</strong></div>
+      <div class="card-body">
         <strong>Institutions</strong><br>
         <% @expedition.organisations.each do |organisation| %>
           <%= organisation.name %>
@@ -59,21 +59,21 @@
           <br>
         <% end %>
       </div>
-      <div class="panel-footer">Listed in alphabetical order</div>
+      <div class="card-footer">Listed in alphabetical order</div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Expedition metadata</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Expedition metadata</strong></div>
+      <div class="card-body">
         <%= render partial: 'shared/metadata',
                    locals: { entity: @expedition } %>
       </div>
     </div>
 
     <% if @expedition.posts.count > 1 %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Expedition posts</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Expedition posts</strong></div>
+        <div class="card-body">
 
         </div>
       </div>

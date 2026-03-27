@@ -8,14 +8,14 @@
 <div class="row">
   <div class="col-sm-7">
 
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
 	    	<h2><i><%= object.name %></i></h2>
 			</div>
 		</div>
 
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
         <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
@@ -28,8 +28,8 @@
 	</div>
 
   <div class="col-sm-5">
-    <div class="panel panel-default">
-      <div class="panel-heading" align=center">
+    <div class="card">
+      <div class="card-header" align=center">
         <%= render_async species_image_path(id: object.id) %>
 			</div>
 		</div>
