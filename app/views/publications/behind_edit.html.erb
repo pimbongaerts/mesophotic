@@ -5,8 +5,8 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <div class="panel panel-default">
-      <div class="panel-body" style="background: #2b82bc;">
+    <div class="card">
+      <div class="card-body" style="background: #2b82bc;">
         <div class="col-sm-10">
           <h3><%= @publication.title %></h3>
           <p><%= @publication.authors %></p>
@@ -25,11 +25,11 @@
 
 <div class="row">
   <div class="col-sm-7">
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Questions and answers</strong>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
 
       	<%= form_for(@publication) do |f| %>
 					<div class="form-group">
@@ -44,11 +44,11 @@
   </div>
   <div class="col-sm-5">
   <% if @publication.photos.count > 0 %>
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Photos</strong>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%# render partial: 'shared/behind_the_scenes',
                    locals: {publication: @publication,
                             style: 'full'} %>
@@ -62,9 +62,9 @@
 
 
 <% if not @publication.contents.blank? %>
-  <div class="panel panel-default">
-    <div class="panel-heading"><strong>Keywords</strong></div>
-    <div class="panel-body">
+  <div class="card">
+    <div class="card-header"><strong>Keywords</strong></div>
+    <div class="card-body">
       <%= render partial: 'shared/wordcloud',
                   object: @publication.word_cloud(40),
                   locals: { title: 'publication_contents' } %>

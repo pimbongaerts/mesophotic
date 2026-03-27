@@ -15,8 +15,8 @@
   <% end %>
 
   <%# Temporary message at top of page %>
-  <div class="panel panel-default">
-    <div class="panel-body">
+  <div class="card">
+    <div class="card-body">
       We are currently undertaking a large effort to bring the Mesophotic.org database up-to-date and ensure that the vast majority of published scientific literature is included. If you have published any
       scientific papers that are not currently listed, please add them to this <a href="https://tinyurl.com/mesopubs">Google Sheet (https://tinyurl.com/mesopubs)</a>.
     </div>
@@ -69,15 +69,15 @@
 
     <%= render partial: 'featured_pub' %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Locations</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Locations</strong></div>
+      <div class="card-body" align="center">
         <%= render_async world_map_path(key: "publications_index", model: Location, ids: @locations, height: 150) %>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Research focus</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Research focus</strong></div>
+      <div class="card-body" align="center">
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Focus',
                              categories: @focusgroups.map(&:short_chart_description),
@@ -86,9 +86,9 @@
                              unit: "Publications" } %>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Fields</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Fields</strong></div>
+      <div class="card-body" align="center">
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Fields',
                              categories: @fields.map(&:short_chart_description),
@@ -97,9 +97,9 @@
                              unit: "Publications" } %>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Research platforms</strong></div>
-      <div class="panel-body" align="center">
+    <div class="card">
+      <div class="card-header"><strong>Research platforms</strong></div>
+      <div class="card-body" align="center">
         <%= render partial: 'shared/bar_graph',
                    locals: { title: 'Platforms',
                              categories: @platforms.map(&:short_chart_description),

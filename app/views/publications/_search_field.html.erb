@@ -1,9 +1,9 @@
 <%= form_tag(publications_path, :method => "get", id: "search-form") do %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
+  <div class="card">
+    <div class="card-header">
       Search full publication text
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <div class="row">
         <div class="col-sm-6">
             <%= text_field_tag :search, params[:search],  class: "form-control",
@@ -36,8 +36,8 @@
         </div>
       </div>
     </div>
-    <div id="collapse1" class="<%= (Publication.should_show_advanced params[:search_params]) ? "panel-collapse search" : "panel-collapse collapse search"%>">
-      <div class="panel-body">
+    <div id="collapse1" class="<%= (Publication.should_show_advanced params[:search_params]) ? "collapse search" : "collapse search"%>">
+      <div class="card-body">
         <div class="row">
           <div class="col-sm-12">
             <% 

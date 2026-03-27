@@ -177,9 +177,9 @@
     &nbsp;
   </div>
   <div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Current contributors</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Current contributors</strong></div>
+      <div class="card-body">
         <%= render partial: 'contributor',
                    locals: { first_name: "Pim",
                              last_name: "Bongaerts",
@@ -263,9 +263,9 @@
         </p>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Past contributors</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Past contributors</strong></div>
+      <div class="card-body">
         <%= render partial: 'contributor',
                    locals: { first_name: "Jessica",
                              last_name: "Bellworthy",
@@ -320,11 +320,11 @@
                              role: "Data curation - Publications" } %>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Source code</strong>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         This web application was written in
         <a href="https://www.ruby-lang.org/en/">Ruby (2.5.0)</a> on
         <a href="http://rubyonrails.org/">Rails (5.1.4)</a>, with the code
@@ -332,9 +332,9 @@
         <a href="https://github.com/pimbongaerts/mesophotic">GitHub</a>.
       </div>
     </div>
-     <div class="panel panel-default">
-        <div class="panel-heading"><strong>Contact</strong></div>
-        <div class="panel-body">
+     <div class="card">
+        <div class="card-header"><strong>Contact</strong></div>
+        <div class="card-body">
           For any questions, please contact us at: info[at]mesophotic.org
         </div>
       </div>

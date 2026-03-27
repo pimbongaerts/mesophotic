@@ -6,8 +6,8 @@
 <div class="row">
   <div class="col-sm-8">
 
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
 	      <table class="table table-striped">
 				  <% @site.publications.where(original_data: true)
 				              .order('publication_year DESC, created_at DESC')
@@ -20,21 +20,21 @@
 	</div>
 
   <div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card">
+      <div class="card-header">
         <strong>Research keywords</strong>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render_async site_keywords_path(id: @site.id) %>
 			</div>
 		</div>
 
     <% if @site.publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Research details</strong> (top 5 / category)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <%= render_async site_research_details_path(id: @site.id) %>
         </div>
       </div>

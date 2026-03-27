@@ -6,8 +6,8 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <div class="panel panel-default">
-      <div class="panel-body" style="background: #CCCCCC;">
+    <div class="card">
+      <div class="card-body" style="background: #CCCCCC;">
         <div class="col-sm-4">
           <% if @user.profile_picture.attached? %>
             <%= image_tag @user.profile_picture.variant(resize: "200x200>") %>
@@ -30,9 +30,9 @@
     </div>
 
     <% if @user.research_interests %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>Research interests</strong></div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><strong>Research interests</strong></div>
+        <div class="card-body">
           <% if @user.last_sign_in_at.nil? %>
             <p class="bg-warning">&nbsp;
               Please note that this section was automatically populated - and
@@ -44,9 +44,9 @@
       </div>
     <% end %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Publications</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Publications</strong></div>
+      <div class="card-body">
         <% if @user.publications.count > 0 %>
           <p class="bg-info">&nbsp;
             Please note that only publications relevant to mesophotic reefs
@@ -65,8 +65,8 @@
   <div class="col-sm-4">
 
     <% if @user.publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-body">
           <% data = count_geographic_occurrences_of_publications_from_user(@user) %>
           <%= render partial: 'shared/world_map', locals: { title: 'Locations',
                                                             data: data,
@@ -76,22 +76,22 @@
     <% end %>
 
     <% if @user.publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Research keywords</strong>
         </div>
-        <div class="panel-body" align="center" valign="center">
+        <div class="card-body" align="center" valign="center">
           <%= render_async member_keywords_path(id: @user.id) %>
         </div>
       </div>
     <% end %>
 
     <% if @user.platforms.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Research platform experience</strong>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
         <% @user.platforms.each do |platform| %>
            <i class="bi bi-check"></i>&nbsp;
           <%= platform.description %><br>
@@ -101,11 +101,11 @@
     <% end %>
 
     <% if @user.photos.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Photographs</strong> (of <%=@user.full_name_normal %>)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
         <% @user.photos.each do |photo| %>
           <%= link_to image_tag(photo.image.variant(resize: "340x227^", crop: "340x227+0+0")),
                       photo_path(photo) %><br>
@@ -115,11 +115,11 @@
     <% end %>
 
     <% if @user.publications.count > 0 %>
-      <div class="panel panel-default">
-        <div class="panel-heading">
+      <div class="card">
+        <div class="card-header">
           <strong>Research summary</strong> (from publications)
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <%= render_async member_research_summary_path(id: @user.id) %>
         </div>
       </div>

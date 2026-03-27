@@ -20,9 +20,9 @@
     </small><br><br>
 
     <% if @post.featured_user.present? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>An interview with:</strong></div>
-        <div class="panel-body" align="center">
+      <div class="card">
+        <div class="card-header"><strong>An interview with:</strong></div>
+        <div class="card-body" align="center">
           <% if @post.featured_user.profile_picture.attached? %>
             <%= link_to image_tag(@post.featured_user.profile_picture.variant(resize: "200x200>")),
                         member_pages_path(@post.featured_user) %>
@@ -40,24 +40,24 @@
       </div>
     <% end %>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Interview keywords</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Interview keywords</strong></div>
+      <div class="card-body">
         <%= render partial: 'shared/wordcloud',
                    object: @post.word_cloud(20),
                    locals: { title: 'post_contents' } %>
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Study location</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Study location</strong></div>
+      <div class="card-body">
         <%= render_async world_map_path(key: "pages_post_behind", model: Location, ids: @publication.locations.map(&:id).join(','), height: 150, z: 1) %>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Publication metadata</strong></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-header"><strong>Publication metadata</strong></div>
+      <div class="card-body">
         <%= render partial: 'shared/metadata',
                    locals: { entity: @publication } %>
       </div>
@@ -76,8 +76,8 @@
           <% @post.content_md.split(/\s*?\r\n\s*?\r\n\s*?/).zip(@post.photos).in_groups_of(2).each do |bs| %>
             <%= markdown(bs[0][0]) if bs[0].present? %>
             <%= markdown(bs[1][0]) if bs[1].present? %>
-            <div class="panel panel-default">
-              <div class="panel-body">
+            <div class="card">
+              <div class="card-body">
                 <div class="row">
                   <% if bs[0].present? && bs[0][1].present? %>
                   <div class="col-sm-6">
@@ -106,11 +106,11 @@
     <% elsif @post.photos.count > 0  %>
       <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <strong>Photos</strong>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <%= render partial: 'shared/behind_the_scenes',
                          locals: {publication: @post,
                                   style: 'full'} %>
