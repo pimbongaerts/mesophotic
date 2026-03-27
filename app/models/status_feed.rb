@@ -21,21 +21,54 @@ class StatusFeed
       @feed = (RSS::Parser.parse rss).channel.items
         .reject { |item| item.categories.map(&:content).include? "introduction" }
         .map { |item|
+          uri = URI.parse(item.link)
+          username = extract_username(uri)
+          profile_url = extract_profile_url(uri, username)
+
           Status.new(
-            item.link[/\@(.*?)\//, 1],
-            (URI.parse item.link.split('/')[0..-2].join('/')),
+            username,
+            profile_url,
             item.description,
-            (URI.parse item.link)
+            uri,
+            item.pubDate
           )
         }
+    end
+  end
+
+  private
+
+  def extract_username(uri)
+    case uri.path
+    when /\/@([^\/]+)/          # Mastodon, Pleroma, GoToSocial, Akkoma
+      $1
+    when /\/users\/([^\/]+)/    # Some Pleroma instances
+      $1
+    when /\/notes\//            # Misskey, Firefish, Sharkey
+      uri.host
+    when /\/objects\//           # Hubzilla, Friendica
+      uri.host
+    else
+      uri.host
+    end
+  end
+
+  def extract_profile_url(uri, username)
+    case uri.path
+    when /\/@([^\/]+)/
+      URI.parse("#{uri.scheme}://#{uri.host}/@#{username}")
+    when /\/users\/([^\/]+)/
+      URI.parse("#{uri.scheme}://#{uri.host}/users/#{username}")
+    else
+      URI.parse("#{uri.scheme}://#{uri.host}/")
     end
   end
 end
 
 class Status
-  attr_reader :username, :profile_url, :content, :content_url
+  attr_reader :username, :profile_url, :content, :content_url, :published_at
 
-  def initialize username, profile_url, content, content_url
-    @username, @profile_url, @content, @content_url = username, profile_url, content, content_url
+  def initialize username, profile_url, content, content_url, published_at = nil
+    @username, @profile_url, @content, @content_url, @published_at = username, profile_url, content, content_url, published_at
   end
 end

@@ -1,29 +1,36 @@
-<div class="row status">
-  <% mastodon_user = users.find_by(twitter: "@#{status.username}") %>
-
-  <div class="col-sm-12">
-    <%# Twitter name and handle %>
-      <% if mastodon_user %>
-        <strong>
-          <%=
-            link_to "@#{user.firsfull_name_normal}", member_pages_path(mastodon_user)
-          %>&nbsp;<%=
-            link_to "@#{status.username}", status.profile_url.to_s
-          %>
-        </strong>
-      <% else %>
-        <%= link_to "@#{status.username}", status.profile_url.to_s %>
-      <% end %>
-    <%= link_to status.content_url.to_s do %>
-      <i class="bi bi-link-45deg" aria-hidden="true" style="float: right"></i>
-    <% end %>
-    <br>
-
-    <%# Tweet content %>
-    <%= status.content.html_safe %>
+<% if status.username.present? %>
+<div class="d-flex align-items-start mb-3 mastodon-status">
+  <div class="flex-shrink-0">
+    <a href="<%= status.profile_url %>" target="_blank" rel="noopener">
+      <div class="rounded-circle bg-light d-flex align-items-center justify-content-center overflow-hidden mastodon-avatar"
+           style="width: 36px; height: 36px;"
+           data-profile-url="<%= status.profile_url %>"
+           data-content-url="<%= status.content_url %>">
+        <i class="bi bi-person-fill text-muted" style="font-size: 1.2rem;"></i>
+      </div>
+    </a>
   </div>
-
-  <div class="col-sm-12">
-    <hr>
+  <div class="flex-grow-1 ms-2">
+    <div class="d-flex justify-content-between align-items-center">
+      <% mastodon_user = users.find_by(twitter: "@#{status.username}") %>
+      <div>
+        <% if mastodon_user %>
+          <strong><%= link_to mastodon_user.full_name_normal, member_pages_path(mastodon_user), style: "text-decoration: none; color: inherit;" %></strong>
+        <% else %>
+          <strong class="mastodon-display-name" style="display: none;"></strong>
+        <% end %>
+        <%= link_to "@#{status.username}", status.profile_url.to_s, class: "text-muted mastodon-handle", style: "text-decoration: none; font-size: 0.85em;" %>
+        <% if status.published_at %>
+          <span class="text-muted" style="font-size: 0.8em;"> · <%= time_ago_in_words(status.published_at) %> ago</span>
+        <% end %>
+      </div>
+      <%= link_to status.content_url.to_s, class: "text-muted" do %>
+        <i class="bi bi-box-arrow-up-right" style="font-size: 0.8em;"></i>
+      <% end %>
+    </div>
+    <div class="mt-1 mastodon-content" style="font-size: 0.9em;">
+      <%= status.content.html_safe %>
+    </div>
   </div>
 </div>
+<% end %>
