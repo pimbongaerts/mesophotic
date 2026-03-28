@@ -7,7 +7,7 @@ class LocationsController < ApplicationController
     @locations = Location.joins(:publications).group('locations.id').order(description: :asc)
     @featured_location = Location.joins(:photos)
       .merge(Photo.showcases_location)
-      .order(Arel.sql('RANDOM()'))
+      .reorder(Arel.sql('RANDOM()'))
       .first
     @featured_photo = @featured_location&.photos&.showcases_location&.first
   end
