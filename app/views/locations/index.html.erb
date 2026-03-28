@@ -15,7 +15,7 @@
           <% end %>
         </select>
       </div>
-      <div class="card-body p-1" style="min-height: 350px;">
+      <div class="card-body p-1" style="min-height: 358px;">
         <%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 350) %>
       </div>
     </div>
