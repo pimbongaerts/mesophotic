@@ -943,7 +943,7 @@
     version = "2.7.5";
   };
   nokogiri = {
-    dependencies = ["mini_portile2" "racc"];
+    dependencies = ["racc"];
     groups = ["default" "development"];
     platforms = [];
     source = {
