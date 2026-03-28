@@ -20,7 +20,9 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-4">
-    <%= render partial: 'featured_location' %>
-  </div>
+  <% if @featured_location && @featured_photo %>
+    <div class="col-sm-4">
+      <%= render partial: 'featured_location' %>
+    </div>
+  <% end %>
 </div>

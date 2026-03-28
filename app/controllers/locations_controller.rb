@@ -4,11 +4,12 @@ class LocationsController < ApplicationController
   before_action :set_location, only: [:edit, :update, :destroy, :detach_publication]
 
   def index
-  	# TODO: had to use `all` rather than `find_each` as offset
-  	# for featured_publication did otherwise not work
     @locations = Location.joins(:publications).group('locations.id').order(description: :asc)
-    @featured_photo = Photo.showcases_location.offset(offset = rand(Photo.showcases_location.count)).first
-    @featured_location = @featured_photo.location
+    @featured_location = Location.joins(:photos)
+      .merge(Photo.showcases_location)
+      .order(Arel.sql('RANDOM()'))
+      .first
+    @featured_photo = @featured_location&.photos&.showcases_location&.first
   end
 
   def new
