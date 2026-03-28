@@ -9,7 +9,7 @@ class LocationsController < ApplicationController
       .merge(Photo.showcases_location)
       .reorder(Arel.sql('RANDOM()'))
       .first
-    @featured_photo = @featured_location&.photos&.showcases_location&.first
+    @featured_photo = @featured_location&.photos&.showcases_location&.reorder(Arel.sql('RANDOM()'))&.first
   end
 
   def new
