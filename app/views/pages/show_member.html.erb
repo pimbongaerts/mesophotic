@@ -76,7 +76,7 @@
     <% if @user.publications.count > 0 %>
       <div class="card">
         <div class="card-header"><strong>Research keywords</strong></div>
-        <div class="card-body">
+        <div class="card-body" style="min-height: 232px;">
           <%= render_async member_keywords_path(id: @user.id) %>
         </div>
       </div>

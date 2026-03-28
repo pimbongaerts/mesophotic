@@ -94,7 +94,7 @@
     <% if not @publication.contents.blank? %>
       <div class="card">
         <div class="card-header"><strong>Keywords</strong></div>
-        <div class="card-body">
+        <div class="card-body" style="min-height: 232px;">
           <%= render_async publication_keywords_path(id: @publication.id) %>
         </div>
       </div>
