@@ -14,9 +14,9 @@
         <% end %>
       </div>
     <% elsif post.photos.present? %>
-      <div class="col-sm-4" style="aspect-ratio: 4/3; overflow: hidden; background-color: #f0f1f3;">
+      <div class="col-sm-4" style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
         <%= link_to post_pages_path(post) do %>
-          <%= image_tag post.photos[0].image.variant(resize: "400x300^", crop: "400x300+0+0"),
+          <%= image_tag post.photos[0].image.variant(resize: "600x400^", crop: "600x400+0+0"),
                         class: "img-fluid rounded-start", style: "width: 100%; height: 100%; object-fit: cover;" %>
         <% end %>
       </div>
