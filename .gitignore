@@ -38,3 +38,5 @@ backup/
 # Worksheet
 publications.tsv
 titles.txt
+
+/config/credentials/development.key

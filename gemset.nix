@@ -142,16 +142,6 @@
     };
     version = "6.1.7.10";
   };
-  acts_as_textcaptcha = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0nqf25jdya3ypy7hqq252iszjvjwghn4zlpl9wy1igl4cjiags3x";
-      type = "gem";
-    };
-    version = "4.6.0";
-  };
   annotate = {
     dependencies = ["activerecord" "rake"];
     groups = ["development" "test"];

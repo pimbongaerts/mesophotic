@@ -1,9 +1,13 @@
 class RegistrationsController < Devise::RegistrationsController
   before_action :permit_params, only: [:create]
 
-  def new
-    super do
-      resource.textcaptcha
+  def create
+    if verify_turnstile
+      super
+    else
+      build_resource(sign_up_params)
+      resource.errors.add(:base, "Captcha verification failed. Please try again.")
+      render :new
     end
   end
 
@@ -19,6 +23,19 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def verify_turnstile
+    token = params['cf-turnstile-response']
+    return false if token.blank?
+
+    secret = Rails.application.credentials.dig(:turnstile, :secret_key)
+    uri = URI.parse('https://challenges.cloudflare.com/turnstile/v0/siteverify')
+    response = Net::HTTP.post_form(uri, secret: secret, response: token)
+    result = JSON.parse(response.body)
+    result['success']
+  rescue StandardError
+    false
+  end
+
   def permit_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [
       :first_name,
@@ -26,8 +43,6 @@ class RegistrationsController < Devise::RegistrationsController
       :email,
       :password,
       :password_confirmation,
-      :textcaptcha_key,
-      :textcaptcha_answer,
     ])
   end
 
