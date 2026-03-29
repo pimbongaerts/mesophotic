@@ -2,14 +2,16 @@
 <% if contributor %>
   <div class="d-flex align-items-center mb-3">
     <div class="flex-shrink-0">
-      <% if contributor.profile_picture.attached? %>
-        <%= image_tag contributor.profile_picture.variant(resize: "64x64^", crop: "64x64+0+0"),
-                      class: "rounded-3", style: "width: 64px; height: 64px; object-fit: cover;" %>
-      <% else %>
-        <div class="rounded-3 bg-light d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
-          <i class="bi bi-person-fill text-muted"></i>
-        </div>
-      <% end %>
+      <div class="rounded-3" style="width: 64px; height: 64px; background-color: #f0f1f3; overflow: hidden;">
+        <% if contributor.profile_picture.attached? %>
+          <%= image_tag contributor.profile_picture.variant(resize: "64x64^", crop: "64x64+0+0"),
+                        style: "width: 100%; height: 100%; object-fit: cover;" %>
+        <% else %>
+          <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+            <i class="bi bi-person-fill text-muted"></i>
+          </div>
+        <% end %>
+      </div>
     </div>
     <div class="flex-grow-1 ms-2">
       <strong><%= link_to "#{first_name} #{last_name}", member_pages_path(contributor.id), style: "text-decoration: none;" %></strong>
