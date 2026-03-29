@@ -49,7 +49,7 @@
 		<% if @photo.has_place? %>
     <div class="card">
       <div class="card-header"><strong>Image Location/Site</strong></div>
-      <div class="card-body" align="center">
+      <div class="card-body" align="center" style="min-height: 150px;">
         <%= render_async world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1) %>
       </div>
     </div>
