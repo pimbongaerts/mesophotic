@@ -18,21 +18,21 @@
 
   <div class="col-sm-4">
     <div class="card">
-      <div class="card-header"><strong>Featured profile</strong></div>
+      <div class="card-header"><strong>Featured Profile</strong></div>
       <div class="card-body">
         <%= render partial: 'featured_member' %>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header"><strong>Recently updated</strong></div>
+      <div class="card-header"><strong>Recently Updated</strong></div>
       <div class="card-body">
         <%= render partial: 'latest_members' %>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header"><strong>People locations</strong></div>
+      <div class="card-header"><strong>People Locations</strong></div>
       <div class="card-body p-1">
         <% data = count_geographic_occurrences_of_users(@users) %>
         <%= render partial: 'shared/world_map', locals: { title: 'Sites',
@@ -42,7 +42,7 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><strong>Growth of mesophotic community</strong></div>
+      <div class="card-header"><strong>Growth of Mesophotic Community</strong></div>
       <div class="card-body p-1">
         <% cats, occurs = count_first_authors_over_time(@publications, Time.new.year - 1) %>
         <%= render partial: 'shared/area_graph',

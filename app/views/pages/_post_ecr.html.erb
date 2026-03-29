@@ -50,7 +50,7 @@
     <% end %>
 
     <div class="card">
-      <div class="card-header"><strong>Interview keywords</strong></div>
+      <div class="card-header"><strong>Interview Keywords</strong></div>
       <div class="card-body">
         <%= render partial: 'shared/wordcloud',
                    object: @post.word_cloud(20),
@@ -60,7 +60,7 @@
 
     <% if @researcher.publications.count > 0 %>
       <div class="card">
-        <div class="card-header"><strong>Study locations</strong></div>
+        <div class="card-header"><strong>Study Locations</strong></div>
         <div class="card-body">
           <% data = count_geographic_occurrences_of_publications_from_user(@researcher) %>
           <%= render partial: 'shared/world_map', locals: { title: 'Locations',
