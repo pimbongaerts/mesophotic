@@ -1,19 +1,6 @@
-<div id="graph_<%= title %>" style="height:<%= height %>px;">
-  <script type="text/javascript" charset="utf-8">
-    var <%= title %>_categories = <%= raw data[0].map { |d| d[:description] }.to_json %>
-    var <%= title %>_occurrences = <%= raw data[1].to_json %>
-    Highcharts.chart('graph_<%= title %>', {
-        chart: { type: 'bar' },
-        title: { text: '' },
-        credits: { enabled: false },
-        legend: { enabled: false },
-        xAxis: { categories: <%= title %>_categories},
-        yAxis: {
-                  title: { text: ''} },
-        series: [{
-            name: '<%= unit %>',
-            data: <%= title %>_occurrences
-        }]
-    });
-  </script>
+<div data-chart="bar"
+     data-categories="<%= data[0].map { |d| d[:description] }.to_json %>"
+     data-values="<%= data[1].to_json %>"
+     data-unit="<%= unit %>"
+     style="height:<%= height %>px;">
 </div>

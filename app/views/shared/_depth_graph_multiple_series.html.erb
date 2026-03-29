@@ -1,22 +1,6 @@
-<div id="graph_<%= title %>" style="height:<%= height %>px;">
-  <script type="text/javascript" charset="utf-8">
-    var <%= title %>_categories = <%= raw categories.to_json %>
-    <% occurrences.each_with_index do |(series_name, series_values), i| %>
-      var <%= title %>_<%= i %>_occurrences = <%= raw series_values.to_json %>
-    <% end %>
-    Highcharts.chart('graph_<%= title %>', {
-        chart: { type: 'area', inverted: true },
-        credits: { enabled: false },
-        title: { text: '' },
-        legend:{ enabled: true, itemWidth: 150 },
-        xAxis: { categories: <%= title %>_categories},
-        yAxis: { title: { text: '<%= unit %>'} },
-        plotOptions: { area: { stacking: 'percent'} },
-        series: [
-          <% occurrences.each_with_index do |(series_name, series_values), i| %>
-            { name: '<%= series_name %>', data: <%= title %>_<%= i %>_occurrences},
-          <% end %>
-                ]
-    });
-  </script>
+<div data-chart="depth-series"
+     data-categories="<%= categories.to_json %>"
+     data-series="<%= occurrences.map { |name, values| { name: name, data: values } }.to_json %>"
+     data-unit="<%= unit %>"
+     style="height:<%= height %>px;">
 </div>

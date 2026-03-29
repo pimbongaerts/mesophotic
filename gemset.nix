@@ -658,17 +658,6 @@
     };
     version = "1.6.2";
   };
-  jquery-rails = {
-    dependencies = ["rails-dom-testing" "railties" "thor"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1h6rm2ricjhqlhnp22afbms5pi1zmkdm5ynssqgsxsndrnb397v1";
-      type = "gem";
-    };
-    version = "4.6.1";
-  };
   kaminari = {
     dependencies = ["activesupport" "kaminari-actionview" "kaminari-activerecord" "kaminari-core"];
     groups = ["default"];
