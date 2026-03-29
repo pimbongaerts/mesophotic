@@ -10,10 +10,10 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
 //= require rails-ujs
 //= require turbolinks
 //= require bootstrap5
 //= require dual_range
 //= require wordcloud2
 //= require mastodon_avatars
+//= require charts
