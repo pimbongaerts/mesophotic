@@ -176,6 +176,9 @@ GEM
     histogram (0.2.4.1)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
+    image_processing (1.14.0)
+      mini_magick (>= 4.9.5, < 6)
+      ruby-vips (>= 2.0.17, < 3)
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -312,6 +315,9 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-statistics (3.0.2)
+    ruby-vips (2.3.0)
+      ffi (~> 1.12)
+      logger
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -389,6 +395,7 @@ DEPENDENCIES
   flamegraph
   friendly_id
   histogram
+  image_processing (~> 1.2)
   jbuilder
   jquery-rails
   kaminari
