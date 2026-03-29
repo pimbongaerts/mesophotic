@@ -1,7 +1,7 @@
 <%# Profile %>
 <div class="card">
   <div class="card-header">
-    <strong>User profile</h4>
+    <strong>User profile</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -126,7 +126,7 @@
 <%# Affiliations %>
 <div class="card">
   <div class="card-header">
-    <strong>User affiliations</h4>
+    <strong>User affiliations</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -179,7 +179,7 @@
 <%# Contact details %>
 <div class="card">
   <div class="card-header">
-    <strong>Contact details</h4>
+    <strong>Contact details</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -226,7 +226,7 @@
 <%# Research interests %>
 <div class="card">
   <div class="card-header">
-    <strong>Research interests</h4>
+    <strong>Research interests</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -248,7 +248,7 @@
           <% for platform in Platform.find_each %>
             <div class="form-check">
               <%= check_box_tag "user[platform_ids][]", platform.id, @user.platforms.include?(platform), class: "form-check-input" %>
-              <label class="form-check-label fw-normal"><%= platform.description %></label>
+              <label class="form-check-label"><%= platform.description %></label>
             </div>
           <% end %>
         </div>
@@ -270,7 +270,7 @@
     <% for publication in Publication.where("authors LIKE ?", "%#{@user.last_name}%") %>
       <div class="form-check mb-2">
         <%= check_box_tag "user[publication_ids][]", publication.id, @user.publications.include?(publication), class: "form-check-input" %>
-        <label class="form-check-label fw-normal">
+        <label class="form-check-label">
           <%= publication.authors %> (<%= publication.publication_year %>)
           <%= publication.title %>.
           <i><%= publication.journal.name if publication.journal %></i>

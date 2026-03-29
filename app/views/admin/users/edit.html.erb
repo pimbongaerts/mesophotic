@@ -14,26 +14,20 @@
       <div class="card-body">
         <%= form_for [:admin, @user], html: { role: "form" } do |f| %>
 
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <%= f.label :email, class: "form-label fw-bold" %>
-              <%= f.email_field :email, class: "form-control" %>
-            </div>
+          <div class="mb-3">
+            <%= f.label :email, class: "form-label" %>
+            <%= f.email_field :email, class: "form-control" %>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <%= f.label :password, class: "form-label fw-bold" %>
-              <%= f.password_field :password, class: "form-control" %>
-              <small class="form-text text-muted">Leave blank to keep current password</small>
-            </div>
+          <div class="mb-3">
+            <%= f.label :password, class: "form-label" %>
+            <%= f.password_field :password, class: "form-control" %>
+            <small class="form-text text-muted">Leave blank to keep current password</small>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <%= f.label :password_confirmation, class: "form-label fw-bold" %>
-              <%= f.password_field :password_confirmation, class: "form-control" %>
-            </div>
+          <div class="mb-3">
+            <%= f.label :password_confirmation, class: "form-label" %>
+            <%= f.password_field :password_confirmation, class: "form-control" %>
           </div>
 
           <% unless current_user.id == @user.id %>
@@ -41,21 +35,21 @@
             <div class="mb-3">
               <div class="form-check">
                 <%= f.check_box :locked, class: "form-check-input" %>
-                <%= f.label :locked, "Locked", class: "form-check-label fw-normal" %>
+                <%= f.label :locked, "Locked", class: "form-check-label" %>
               </div>
               <div class="form-check">
                 <%= f.check_box :admin, class: "form-check-input" %>
-                <%= f.label :admin, "Admin", class: "form-check-label fw-normal" %>
+                <%= f.label :admin, "Admin", class: "form-check-label" %>
               </div>
               <div class="form-check">
                 <%= f.check_box :editor, class: "form-check-input" %>
-                <%= f.label :editor, "Editor", class: "form-check-label fw-normal" %>
+                <%= f.label :editor, "Editor", class: "form-check-label" %>
               </div>
             </div>
           <% end %>
 
           <div class="mt-4">
-            <%= f.submit "Update", class: "btn btn-primary text-white" %>
+            <%= f.submit "Update", class: "btn btn-primary" %>
           </div>
 
         <% end %>
