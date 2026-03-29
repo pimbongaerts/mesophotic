@@ -9,7 +9,7 @@
   <%= devise_error_messages! %>
   <%= render partial: 'form', locals: {f: f} %>
   <div class="d-flex gap-2 mb-4">
-    <%= f.submit "Save changes", class: "btn btn-primary" %>
+    <%= f.submit "Save Changes", class: "btn btn-primary" %>
     <%= link_to "Cancel", member_pages_path(current_user.id), class: "btn btn-outline-secondary" %>
   </div>
 
