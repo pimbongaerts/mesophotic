@@ -74,7 +74,7 @@ class PostTest < ActiveSupport::TestCase
 
   test "category returns human-readable name" do
     post = posts(:published_post)
-    assert_equal "Behind the science", post.category
+    assert_equal "Behind the Science", post.category
   end
 
   test "requires featured_user for early_career" do
