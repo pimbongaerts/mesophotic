@@ -34,7 +34,7 @@
 <div class="row">
   <div class="col-sm-8">
     <div class="card">
-      <div class="card-header"><strong>Expedition description</strong></div>
+      <div class="card-header"><strong>Expedition Description</strong></div>
       <div class="card-body">
         <p><%= @expedition.description %></p>
       </div>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><strong>Expedition metadata</strong></div>
+      <div class="card-header"><strong>Expedition Metadata</strong></div>
       <div class="card-body">
         <%= render partial: 'shared/metadata',
                    locals: { entity: @expedition } %>
@@ -72,7 +72,7 @@
 
     <% if @expedition.posts.count > 1 %>
       <div class="card">
-        <div class="card-header"><strong>Expedition posts</strong></div>
+        <div class="card-header"><strong>Expedition Posts</strong></div>
         <div class="card-body">
 
         </div>

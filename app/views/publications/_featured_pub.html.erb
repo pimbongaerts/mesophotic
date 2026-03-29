@@ -1,6 +1,6 @@
 <% featured_publication = get_featured_publication(@publications) %>
 <div class="card">
-  <div class="card-header"><strong>Featured publication</strong></div>
+  <div class="card-header"><strong>Featured Publication</strong></div>
   <div class="card-body" align="center">
     <%= image_tag featured_publication.pdf.preview(resize: "450x640>") if featured_publication.pdf.attached? %>
   </div>

@@ -48,7 +48,7 @@
   <div class="col-sm-4">
 		<% if @photo.has_place? %>
     <div class="card">
-      <div class="card-header"><strong>Image location/site</strong></div>
+      <div class="card-header"><strong>Image Location/Site</strong></div>
       <div class="card-body" align="center">
         <%= render_async world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1) %>
       </div>

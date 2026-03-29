@@ -32,7 +32,7 @@
 
     <% if @user.research_interests.present? %>
       <div class="card">
-        <div class="card-header"><strong>Research interests</strong></div>
+        <div class="card-header"><strong>Research Interests</strong></div>
         <div class="card-body">
           <% if @user.last_sign_in_at.nil? %>
             <p class="p-2 rounded" style="background-color: #fff9e6; font-size: 0.85em;">
@@ -77,7 +77,7 @@
 
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-header"><strong>Research keywords</strong></div>
+        <div class="card-header"><strong>Research Keywords</strong></div>
         <div class="card-body" style="min-height: 232px;">
           <%= render_async member_keywords_path(id: @user.id) %>
         </div>
@@ -86,7 +86,7 @@
 
     <% if @user.platforms.count > 0 %>
       <div class="card">
-        <div class="card-header"><strong>Research platforms</strong></div>
+        <div class="card-header"><strong>Research Platforms</strong></div>
         <div class="card-body">
           <% @user.platforms.each do |platform| %>
             <i class="bi bi-check-lg text-success"></i>
@@ -110,7 +110,7 @@
 
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-header"><strong>Research summary</strong></div>
+        <div class="card-header"><strong>Research Summary</strong></div>
         <div class="card-body">
           <%= render_async member_research_summary_path(id: @user.id) %>
         </div>

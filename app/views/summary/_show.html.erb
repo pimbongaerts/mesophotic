@@ -31,7 +31,7 @@
   <div class="col-sm-4">
     <div class="card">
       <div class="card-header">
-        <strong>Research keywords</strong>
+        <strong>Research Keywords</strong>
       </div>
       <div class="card-body" style="min-height: 232px;">
          <%= render_async summary_keywords_path(model: title.downcase, id: object.id) %>
@@ -70,7 +70,7 @@
     <% if publications.count > 0 %>
       <div class="card">
         <div class="card-header">
-          <strong>Publication summary</strong> (top 5 / category)
+          <strong>Publication Summary</strong> (top 5 / category)
         </div>
         <div class="card-body">
           <%= render_async summary_publications_path(model: title.downcase, id: object.id) %>

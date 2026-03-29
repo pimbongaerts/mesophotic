@@ -1,5 +1,5 @@
 <div class="card mb-0 h-100 d-flex flex-column">
-  <div class="card-header"><strong>Featured location</strong></div>
+  <div class="card-header"><strong>Featured Location</strong></div>
   <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f0f1f3;">
     <%= link_to location_path(@featured_location) do %>
       <%= image_tag @featured_photo.image.variant(resize: "400x300^", crop: "400x300+0+0"),
