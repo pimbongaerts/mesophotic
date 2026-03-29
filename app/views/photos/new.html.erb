@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        	   locals: {title: "New photo",
            subtitle: "",
-           backlink: photos_path } %>
+           breadcrumbs: [["Images", photos_path], ["New", nil]] } %>
 
 <%= form_for(@photo) do |f| %>
   <%= render partial: 'form', locals: {f: f} %>

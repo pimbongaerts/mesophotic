@@ -1,6 +1,6 @@
 <%= render partial: 'layouts/page_title', 
 		   locals: {title: 'New publication',
-					backlink: publications_path } %>
+					breadcrumbs: [["Publications", publications_path], ["New", nil]] } %>
 
 <%= form_for(@publication) do |f| %>
 	<%= render partial: 'form_errorheader', locals: {f: f} %>

@@ -29,7 +29,7 @@ class StatsController < ApplicationController
     @status = Status::ALL
     @year = params[:year].to_i
     @title = "All Publications"
-    @stats_subtitle = "Statistics up to #{@year}"
+    @stats_subtitle = "Stats up to #{@year}"
     @publications = Publication.statistics @status, @year
 
     render :index
@@ -40,7 +40,7 @@ class StatsController < ApplicationController
     @status = Status::VALIDATED
     @year = params[:year]
     @title = "Validated Publications"
-    @stats_subtitle = "Statistics up to #{@year}"
+    @stats_subtitle = "Stats up to #{@year}"
     @publications = Publication.statistics @status, @year
 
     render :index

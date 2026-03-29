@@ -1,6 +1,6 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Editing \"#{@publication.title_truncated}\"",
-          backlink: publication_path(@publication) } %>
+          breadcrumbs: [["Publications", publications_path], [@publication.title_truncated, publication_path(@publication)], ["Edit", nil]] } %>
 
 <%= form_for(@publication) do |f| %>
   <%= render partial: 'form_errorheader', locals: {f: f} %>
