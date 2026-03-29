@@ -51,7 +51,7 @@
 
     <div class="card">
       <div class="card-header"><strong>Study Location</strong></div>
-      <div class="card-body">
+      <div class="card-body" style="min-height: 150px;">
         <%= render_async world_map_path(key: "pages_post_behind", model: Location, ids: @publication.locations.map(&:id).join(','), height: 150, z: 1) %>
       </div>
     </div>
