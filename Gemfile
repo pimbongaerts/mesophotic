@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Standard Rails gems
-gem 'rails', '~> 5.2.8'
+gem 'rails', '~> 6.0.0'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'jbuilder'
