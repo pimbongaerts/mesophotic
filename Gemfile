@@ -31,6 +31,7 @@ gem 'switch_user'
 
 # ActiveStorage, wont be required after we migrate to Rails 6+
 gem 'active_storage_validations'
+gem 'image_processing', '~> 1.2'
 gem 'mini_magick'
 
 # Backup
