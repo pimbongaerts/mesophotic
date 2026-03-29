@@ -37,16 +37,16 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  (function() {
     const minInput = document.getElementById('<%= min_id %>');
     const maxInput = document.getElementById('<%= max_id %>');
     const minDisplay = document.getElementById('<%= min_display_id %>');
     const maxDisplay = document.getElementById('<%= max_display_id %>');
     const hiddenInput = document.getElementById('<%= hidden_id %>');
     const rangeHighlight = document.getElementById('<%= highlight_id %>');
-    
+
     if (minInput && maxInput) {
       initDualRange(minInput, maxInput, minDisplay, maxDisplay, hiddenInput, rangeHighlight);
     }
-  });
+  })();
 </script>
