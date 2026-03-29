@@ -44,11 +44,25 @@ class Publication < ApplicationRecord
   PUBLICATION_TYPES = ['scientific', 'technical', 'popular'].freeze
   PUBLICATION_FORMATS = ['article', 'review', 'report', 'thesis', 'book', 'chapter'].freeze
   PUBLICATION_SEARCH_FIELDS = ['title', 'abstract', 'contents', 'authors', 'doi'].freeze
-  PUBLICATION_CHARACTERISTICS = Publication.columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
-  PUBLICATION_LOCATIONS = Location.select(:description).order(:description).map(&:description).uniq.freeze
-  PUBLICATION_FOCUSGROUPS = Focusgroup.select(:description).order(:description).map(&:description).uniq.freeze
-  PUBLICATION_PLATFORMS = Platform.select(:description).order(:description).map(&:description).uniq.freeze
-  PUBLICATION_FIELDS = Field.select(:description).order(:description).map(&:description).uniq.freeze
+  def self.publication_characteristics
+    @publication_characteristics ||= columns.select { |c| c.sql_type =~ /^boolean/ }.map(&:name).sort.freeze
+  end
+
+  def self.publication_locations
+    @publication_locations ||= Location.select(:description).order(:description).map(&:description).uniq.freeze
+  end
+
+  def self.publication_focusgroups
+    @publication_focusgroups ||= Focusgroup.select(:description).order(:description).map(&:description).uniq.freeze
+  end
+
+  def self.publication_platforms
+    @publication_platforms ||= Platform.select(:description).order(:description).map(&:description).uniq.freeze
+  end
+
+  def self.publication_fields
+    @publication_fields ||= Field.select(:description).order(:description).map(&:description).uniq.freeze
+  end
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes

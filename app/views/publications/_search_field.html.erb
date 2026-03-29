@@ -73,25 +73,25 @@
             <%= search_param "Formats", Publication::PUBLICATION_FORMATS, :formats, params %>
           </div>
           <div class="col-sm-3">
-            <%= search_param "Characteristics", Publication::PUBLICATION_CHARACTERISTICS, :characteristics, params %>
+            <%= search_param "Characteristics", Publication.publication_characteristics, :characteristics, params %>
           </div>
         </div>
         <div class="row">
           <hr>
           <div class="col-sm-6">
-            <%= search_param "Locations", Publication::PUBLICATION_LOCATIONS, :locations, params, true %>
+            <%= search_param "Locations", Publication.publication_locations, :locations, params, true %>
           </div>
           <div class="col-sm-6">
-            <%= search_param "Focus Groups", Publication::PUBLICATION_FOCUSGROUPS, :focusgroups, params, true %>
+            <%= search_param "Focus Groups", Publication.publication_focusgroups, :focusgroups, params, true %>
           </div>
         </div>
         <div class="row"><br></div>
         <div class="row">
           <div class="col-sm-6">
-            <%= search_param "Platforms", Publication::PUBLICATION_PLATFORMS, :platforms, params, true %>
+            <%= search_param "Platforms", Publication.publication_platforms, :platforms, params, true %>
           </div>
           <div class="col-sm-6">
-            <%= search_param "Academic Fields", Publication::PUBLICATION_FIELDS, :fields, params, true %>
+            <%= search_param "Academic Fields", Publication.publication_fields, :fields, params, true %>
           </div>
         </div>
       </div>
