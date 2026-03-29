@@ -22,8 +22,8 @@
           </div>
         <% end %>
         <div class="col-sm-4 d-flex align-items-start gap-2">
-          <%= submit_tag "Search", class: "btn btn-outline-secondary" %>
-          <a data-bs-toggle="collapse" href="#collapse1" class="btn btn-link p-0" style="line-height: 2.4;">Advanced...</a>
+          <%= submit_tag "Search", class: "btn btn-primary" %>
+          <%= link_to "Reset", publications_path, class: "btn btn-outline-secondary" %>
         </div>
       </div>
       <div class="row">
@@ -32,6 +32,9 @@
         </div>
       </div>
     </div>
+    <a data-bs-toggle="collapse" href="#collapse1" class="card-footer text-center text-muted d-block" style="text-decoration: none; font-size: 0.85em; cursor: pointer;">
+      <i class="bi bi-sliders me-1"></i>Advanced Filters
+    </a>
     <div id="collapse1" class="<%= (Publication.should_show_advanced params[:search_params]) ? "collapse search" : "collapse search"%>">
       <div class="card-body">
         <div class="row">
