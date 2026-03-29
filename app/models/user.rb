@@ -77,7 +77,7 @@ class User < ApplicationRecord
                              format: { with: URI.regexp(%w(http https)) }
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :profile_picture, content_type: ['image/png', 'image/jpg', 'image/jpeg']
+  validates :profile_picture, content_type: ['image/png', 'image/jpeg']
 
   # callbacks
   before_save :create_organisation_from_name

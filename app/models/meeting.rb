@@ -34,7 +34,7 @@ class Meeting < ApplicationRecord
   # validations
   validates :title, presence: true
   validates :country, presence: true, length: { minimum: 2, maximum: 2 }
-  validates :featured_image, content_type: ['image/jpeg', 'image/jpg']
+  validates :featured_image, content_type: ['image/jpeg']
 
   # callbacks
   # other
