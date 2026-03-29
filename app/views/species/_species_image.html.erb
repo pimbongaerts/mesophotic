@@ -1,11 +1,27 @@
-<% if object.focusgroup_id == 1 && url_exists?(object.img_url)    # Fish %>
+<% if object.focusgroup_id == 1 && url_exists?(object.img_url) %>
   <% species_img = get_fishbase_image(object.img_url) %>
-  <%= link_to image_tag(species_img), object.img_url if species_img %>
-  Photograph from "fishbase.se" - 
-  <%= link_to "Fishbase Factsheet", object.img_url %>
-<% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) # Coral %>
+  <% if species_img %>
+    <div class="card-body p-0" style="background-color: #f0f1f3;">
+      <%= link_to object.img_url, target: "_blank" do %>
+        <%= image_tag species_img, style: "width: 100%; display: block;" %>
+      <% end %>
+    </div>
+    <div class="card-footer text-center">
+      <small class="text-muted">Photograph from "fishbase.se"</small><br>
+      <small><%= link_to "Fishbase Factsheet", object.img_url, target: "_blank", style: "text-decoration: none;" %></small>
+    </div>
+  <% end %>
+<% elsif object.focusgroup_id == 2 && url_exists?(object.img_url) %>
   <% species_img = get_cotw_image(object.img_url) %>
-  <%= link_to image_tag(species_img), object.img_url if species_img %>
-  Photograph from "coralsoftheworld.org" - 
-  <%= link_to "Corals of the World Factsheet", object.img_url %>
+  <% if species_img %>
+    <div class="card-body p-0" style="background-color: #f0f1f3;">
+      <%= link_to object.img_url, target: "_blank" do %>
+        <%= image_tag species_img, style: "width: 100%; display: block;" %>
+      <% end %>
+    </div>
+    <div class="card-footer text-center">
+      <small class="text-muted">Photograph from "coralsoftheworld.org"</small><br>
+      <small><%= link_to "Corals of the World Factsheet", object.img_url, target: "_blank", style: "text-decoration: none;" %></small>
+    </div>
+  <% end %>
 <% end %>

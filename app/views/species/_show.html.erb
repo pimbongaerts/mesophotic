@@ -1,38 +1,28 @@
 <%= render partial: "layouts/page_title",
            locals: {
-             title: title,
-       	     subtitle: subtitle,
+             title: "<i>#{object.name}</i>".html_safe,
              backlink: species_index_path
            } %>
 
 <div class="row">
-  <div class="col-sm-7">
-
+  <div class="col-sm-8">
     <div class="card">
       <div class="card-body">
-	    	<h2><i><%= object.name %></i></h2>
-			</div>
-		</div>
-
-    <div class="card">
-      <div class="card-body">
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
+        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
 
-	      <table class="table table-striped">
+        <table class="table table-striped">
           <%= render partial: 'species/publication', collection: publications, locals: { object: object } %>
-				</table>
-        <%= paginate publications %>[<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
-			</div>
-		</div>
-	</div>
-
-  <div class="col-sm-5">
-    <div class="card">
-      <div class="card-body" style="aspect-ratio: 4/3; background-color: #f0f1f3; text-align: center;">
-        <%= render_async species_image_path(id: object.id) %>
+        </table>
+        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
       </div>
     </div>
+  </div>
 
+  <div class="col-sm-4">
+    <div class="card" style="min-height: 350px; background-color: #f0f1f3;">
+      <div class="card-header"><strong>Species Image</strong></div>
+      <%= render_async species_image_path(id: object.id) %>
+    </div>
   </div>
 </div>
