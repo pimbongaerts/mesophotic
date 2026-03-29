@@ -5,5 +5,5 @@
 
 <%= form_for(@site) do |f| %>
   <%= render partial: 'form', locals: {f: f, site: @site} %>
-  <div class="actions"><%= f.submit %></div>
+  <div class="actions"><%= f.submit "Save Site", class: "btn btn-primary" %></div>
 <% end %>
