@@ -1,10 +1,9 @@
-$(document).on('turbolinks:load', function() {
+document.addEventListener('turbolinks:load', function() {
   var profileCache = {};
 
-  $('.mastodon-avatar').each(function() {
-    var el = $(this);
-    var profileUrl = el.data('profile-url');
-    var contentUrl = el.data('content-url');
+  document.querySelectorAll('.mastodon-avatar').forEach(function(el) {
+    var profileUrl = el.dataset.profileUrl;
+    var contentUrl = el.dataset.contentUrl;
     if (!profileUrl) return;
 
     var statusEl = el.closest('.mastodon-status');
@@ -39,51 +38,62 @@ $(document).on('turbolinks:load', function() {
   });
 
   function fetchAccountLookup(instance, username, cacheKey, el, statusEl) {
-    $.ajax({
-      url: instance + '/api/v1/accounts/lookup',
-      data: { acct: username },
-      dataType: 'json',
-      timeout: 5000,
-      success: function(data) {
+    var url = instance + '/api/v1/accounts/lookup?acct=' + encodeURIComponent(username);
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 5000);
+
+    fetch(url, { signal: controller.signal })
+      .then(function(response) {
+        clearTimeout(timeoutId);
+        if (!response.ok) return;
+        return response.json();
+      })
+      .then(function(data) {
+        if (!data) return;
         var profile = { avatar: data.avatar, display_name: data.display_name };
         profileCache[cacheKey] = profile;
         applyProfile(el, statusEl, profile);
-      }
-    });
+      })
+      .catch(function() { clearTimeout(timeoutId); });
   }
 
   function fetchStatusAccount(instance, statusId, cacheKey, el, statusEl) {
-    $.ajax({
-      url: instance + '/api/v1/statuses/' + statusId,
-      dataType: 'json',
-      timeout: 5000,
-      success: function(data) {
-        if (data && data.account) {
-          var profile = { avatar: data.account.avatar, display_name: data.account.display_name };
-          profileCache[cacheKey] = profile;
-          applyProfile(el, statusEl, profile);
+    var url = instance + '/api/v1/statuses/' + encodeURIComponent(statusId);
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 5000);
 
-          // Also update the handle text
-          if (data.account.acct) {
-            var handleEl = statusEl.find('.mastodon-handle');
-            if (handleEl.length) {
-              handleEl.text('@' + data.account.acct);
-            }
+    fetch(url, { signal: controller.signal })
+      .then(function(response) {
+        clearTimeout(timeoutId);
+        if (!response.ok) return;
+        return response.json();
+      })
+      .then(function(data) {
+        if (!data || !data.account) return;
+        var profile = { avatar: data.account.avatar, display_name: data.account.display_name };
+        profileCache[cacheKey] = profile;
+        applyProfile(el, statusEl, profile);
+
+        // Also update the handle text
+        if (data.account.acct) {
+          var handleEl = statusEl ? statusEl.querySelector('.mastodon-handle') : null;
+          if (handleEl) {
+            handleEl.textContent = '@' + data.account.acct;
           }
         }
-      }
-    });
+      })
+      .catch(function() { clearTimeout(timeoutId); });
   }
 
   function applyProfile(avatarEl, statusEl, profile) {
     if (profile.avatar) {
-      avatarEl.html('<img src="' + profile.avatar + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.3rem;">');
+      avatarEl.innerHTML = '<img src="' + profile.avatar + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.3rem;">';
     }
-    if (profile.display_name && statusEl.length) {
-      var nameEl = statusEl.find('.mastodon-display-name');
-      if (nameEl.length) {
-        nameEl.text(profile.display_name);
-        nameEl.show();
+    if (profile.display_name && statusEl) {
+      var nameEl = statusEl.querySelector('.mastodon-display-name');
+      if (nameEl) {
+        nameEl.textContent = profile.display_name;
+        nameEl.style.display = '';
       }
     }
   }
