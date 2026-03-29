@@ -19,7 +19,6 @@ gem 'kaminari'
 gem 'redcarpet'
 
 # Added Rails gems
-gem 'acts_as_textcaptcha'
 gem 'country_select'
 gem 'figaro'
 gem 'histogram'

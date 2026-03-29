@@ -41,14 +41,9 @@
                              autocomplete: "new-password" %>
       </div>
 
-      <div class="robot">
-      <p><em>Answer the following question, to prove you're not a robot.</em></p>
-      <%= textcaptcha_fields(f) do %>
-        <div class="mb-3">
-          <%= f.label :textcaptcha_answer, resource.textcaptcha_question %>
-          <%= f.text_field :textcaptcha_answer, value: '', class: "form-control" %>
-        </div>
-      <% end %>
+      <div class="mb-3">
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        <div class="cf-turnstile" data-sitekey="<%= Rails.application.credentials.dig(:turnstile, :site_key) %>"></div>
       </div>
 
       <div class="d-flex gap-2">
