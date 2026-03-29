@@ -1,23 +1,18 @@
 <% @publication = @post.featured_publication %>
 
 <%= render partial: "layouts/page_title",
-       locals: {title: "Behind the science",
-          subtitle: @publication.title_truncated,
+       locals: {title: @publication.title,
+          supertitle: "Behind the Science",
           backlink: posts_pages_path } %>
+<p class="text-muted mb-4" style="font-size: 0.85em;">
+  <i class="bi bi-calendar3 me-1"></i><%= @post.created_at.strftime("%B %-d, %Y") %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
+  <% if current_user.try(:editor_or_admin?) %>
+    <%= link_to edit_admin_post_path(@post.slug), class: "text-muted ms-2" do %><i class="bi bi-pencil-fill"></i><% end %>
+  <% end %>
+</p>
 
 <div class="row">
   <div class="col-sm-3">
-    <br>
-    <i class="bi bi-calendar3"></i>&nbsp;&nbsp;
-    <%= @post.created_at.strftime("%Y, %B %-d") %><br>
-    <small>
-      Posted by
-      <%= link_to "#{@post.user.first_name} #{@post.user.last_name}",
-                          member_pages_path(@post.user) %>
-      <% if current_user.try(:editor_or_admin?) %>
-        <br><%= link_to "Edit post", edit_admin_post_path(@post.slug) %>
-      <% end %>
-    </small><br><br>
 
     <% if @post.featured_user.present? %>
       <div class="card">
