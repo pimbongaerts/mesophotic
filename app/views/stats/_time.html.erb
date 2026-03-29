@@ -2,10 +2,10 @@
   <div class="card-header"><strong>Research Interest Over Time</strong></div>
   <div class="card-body">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-6" style="min-height: 300px;">
         <%= render_async time_refuge_path(:status => @status, :year => @year) %>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6" style="min-height: 300px;">
         <%= render_async time_mesophotic_path(:status => @status, :year => @year) %>
       </div>
     </div>
