@@ -1,6 +1,4 @@
-<div class="mb-1">
-  <strong><%= link_to '<<< Back', members_pages_path, style: "text-decoration: none;" %></strong>
-</div>
+<%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["People", members_pages_path], ["#{@user.first_name} #{@user.last_name}", nil]] } %>
 
 <div class="row">
   <div class="col-sm-8">

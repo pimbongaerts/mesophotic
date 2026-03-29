@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Behind the science",
           subtitle: @publication.short_citation,
-          backlink: publications_path } %>
+          breadcrumbs: [["Publications", publications_path], ["Behind the Science", nil]] } %>
 
 <div class="row">
   <div class="col-sm-12">

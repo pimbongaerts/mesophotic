@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
            locals: {
              title: "<i>#{object.name}</i>".html_safe,
-             backlink: species_index_path
+             breadcrumbs: [["Species", species_index_path], [object.name, nil]]
            } %>
 
 <div class="row">

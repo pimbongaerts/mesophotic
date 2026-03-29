@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Edit location",
           subtitle: "#{@location.description}",
-          backlink: locations_path } %>
+          breadcrumbs: [["Locations", locations_path], [@location.description, nil]] } %>
 
 <%= form_for(@location) do |f| %>
   <%= render partial: 'form', locals: {f: f, 

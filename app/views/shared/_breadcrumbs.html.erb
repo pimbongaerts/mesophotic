@@ -1,0 +1,12 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-2" style="font-size: 0.85em;">
+    <li class="breadcrumb-item"><%= link_to "Home", root_path %></li>
+    <% breadcrumbs.each_with_index do |(label, path), index| %>
+      <% if index == breadcrumbs.size - 1 %>
+        <li class="breadcrumb-item active" aria-current="page"><%= label %></li>
+      <% else %>
+        <li class="breadcrumb-item"><%= link_to label, path %></li>
+      <% end %>
+    <% end %>
+  </ol>
+</nav>

@@ -1,6 +1,5 @@
-<%= render partial: "layouts/page_title",
-           locals: {title: "Edit Your Profile",
-           backlink: member_pages_path(current_user.id) } %>
+<% title("Edit Profile") %>
+<%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["People", members_pages_path], [current_user.full_name_normal, member_pages_path(current_user.id)], ["Edit Profile", nil]] } %>
 
 <%= form_for(resource, as: resource_name,
              url: registration_path(resource_name),

@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: @post.title,
           supertitle: "Announcement",
-          backlink: posts_pages_path } %>
+          breadcrumbs: [["News", posts_pages_path], [@post.title, nil]] } %>
 <p class="text-muted mb-4" style="font-size: 0.85em;">
   <%= @post.created_at.strftime("%B %-d, %Y") %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
   <% if current_user.try(:editor_or_admin?) %>

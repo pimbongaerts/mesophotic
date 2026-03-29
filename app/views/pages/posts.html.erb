@@ -1,6 +1,6 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Latest Posts",
-                backlink: root_path } %>
+       locals: {title: "News",
+                breadcrumbs: [["News", nil]] } %>
 
 <%= paginate @posts %>
 <% @posts.each do |post| %>

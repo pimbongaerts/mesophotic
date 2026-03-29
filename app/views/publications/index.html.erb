@@ -4,7 +4,7 @@
        locals: { title: "Publications",
                  subtitle: subtitle,
                  supertitle: supertitle,
-                 backlink: root_path } %>
+                 breadcrumbs: [["Publications", nil]] } %>
 
 <%# Wide screen for search results or editor view %>
 <% sidebar = !(params[:search].present? || current_user.try(:editor_or_admin?)) %>

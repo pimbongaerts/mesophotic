@@ -1,8 +1,6 @@
 <% title("Published Posts") %>
 <h3 class="page-title">Posts <small>Published</small></h3>
-<div class="mb-1">
-  <strong><%= link_to "<<< Back", dashboard_admin_posts_path, style: "text-decoration: none;" %></strong>
-</div>
+<%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", dashboard_admin_posts_path], ["Published", nil]] } %>
 <hr/>
 
 <p class="pagination-summary"><%= page_entries_info @posts %></p>

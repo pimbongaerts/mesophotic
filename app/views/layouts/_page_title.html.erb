@@ -6,10 +6,8 @@
   <% end %>
 </div>
 
-<% if backlink %>
-  <div class="mb-1">
-    <strong><%= link_to '<<< Back', backlink, style: "text-decoration: none;" %></strong>
-  </div>
+<% if defined?(breadcrumbs) && breadcrumbs.present? %>
+  <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: breadcrumbs } %>
 <% end %>
 
 <div class="row">

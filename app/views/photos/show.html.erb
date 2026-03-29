@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
        locals: {title: "Images",
        			subtitle: @photo.description_truncated,
-                backlink: photos_path } %>
+                breadcrumbs: [["Images", photos_path], [@photo.description_truncated, nil]] } %>
 
 <div class="row">
   <div class="col-sm-8">

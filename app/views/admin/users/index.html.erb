@@ -1,8 +1,6 @@
 <% title("Users") %>
 
-<div class="mb-1">
-  <strong><%= link_to "<<< Back", admin_root_path, style: "text-decoration: none;" %></strong>
-</div>
+<%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Users", nil]] } %>
 
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
