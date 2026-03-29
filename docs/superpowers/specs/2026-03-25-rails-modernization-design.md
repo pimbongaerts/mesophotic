@@ -296,6 +296,26 @@ Allow users to specify multiple social handles (Mastodon, BlueSky, Threads, Twit
 - Update member profile page to show all social icons
 - Update the `contact_links` partial to render platform-specific icons (bi-mastodon, bi-twitter-x, custom SVG for BlueSky/Threads)
 
+### 6e: User Role Consolidation
+
+Replace the independent `admin` and `editor` boolean columns with a single `role` string column (`member`, `editor`, `admin`) where admin is a strict superset of editor.
+
+- Add migration: add `role` column (default `"member"`), populate from existing booleans, remove `admin` and `editor` columns
+- Update `User` model: `admin?` checks `role == "admin"`, `editor?` checks `role.in?(["editor", "admin"])`
+- Simplify `require_admin_or_editor!` to just check `editor?` (which now inherently includes admins)
+- Update all views: admin user edit form (single role dropdown instead of two checkboxes), badges, profile forms
+- Update fixtures and tests
+
+### 6f: Breadcrumb Navigation
+
+Replace the `<<< Back` links throughout the app with proper breadcrumb navigation using Bootstrap 5's breadcrumb component.
+
+- Create a shared breadcrumb partial that accepts a trail of label/path pairs
+- Replace `_page_title.html.erb` back link with breadcrumbs (e.g. Home > Publications > "Paper Title")
+- Replace all admin `<<< Back` links with breadcrumbs (e.g. Home > Admin > Users > Edit)
+- Replace summary page back links with breadcrumbs (e.g. Home > Locations > "American Samoa")
+- Handle dynamic titles (publication names, location names, user emails)
+
 ## Future Phases (Out of Scope)
 
 These are noted for future planning but not part of this effort:
