@@ -1,56 +1,61 @@
-<% title("Users Admin") %>
-<h1>Users <small>Admin</small></h1>
+<% title("Users") %>
+
 <div class="mb-1">
   <strong><%= link_to "<<< Back", admin_root_path, style: "text-decoration: none;" %></strong>
 </div>
 
-<div class="text-center">
-  <p><%= page_entries_info @users %></p>
-  <%= paginate @users %>
-</div>
-
-<%= form_tag admin_users_path, method: 'get', html: {role: "form"} do %>
-<p>
-  <%= text_field_tag :search, params[:search] %>
-  <%= submit_tag "Search", :name => nil, class: "btn btn-sm btn-primary" %>
-  <%= link_to "All", admin_users_path, {class: "btn btn-sm btn-link"} %>
-</p>
-<% end %>
-
-<table class="table table-striped">
-  <tr>
-    <th>User ID</th>
-    <th>Admin</th>
-    <th>Locked</th>
-    <th>Email</th>
-    <th>Sign In Count</th>
-    <th>Created At</th>
-    <th>Last Sign In</th>
-    <th>Last Sign In IP</th>
-  </tr>
-
-  <% @users.each do |user| %>
-
-  <tr>
-    <td><%= user.id %></td>
-    <td><%= link_to user.email, admin_user_path(user) %></td>
-    <td><%= user.admin? ? "<b>yes</b>".html_safe : "no" %></td>
-    <td><%= user.locked? ? "<b>yes</b>".html_safe : "no" %></td>
-    <td><%= user.sign_in_count %></td>
-    <td><%= time_ago_in_words(user.created_at) %></td>
-    <% unless user.last_sign_in_at.nil? %>
-    <td><%= time_ago_in_words(user.last_sign_in_at)%> ago</td>
-    <% else %>
-    <td>never</td>
-    <% end %>
-    <td><%= user.last_sign_in_ip %></td>
-  </tr>
-
-  <% end %>
-
-</table>
-
-<div class="text-center">
-  <p><%= page_entries_info @users %></p>
-  <%= paginate @users %>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <strong>Users</strong>
+    <div>
+      <%= form_tag admin_users_path, method: 'get', class: "d-inline-flex align-items-center gap-2" do %>
+        <%= text_field_tag :search, params[:search], class: "form-control form-control-sm", placeholder: "Search users...", style: "width: 200px;" %>
+        <%= submit_tag "Search", name: nil, class: "btn btn-sm btn-primary" %>
+        <% if params[:search].present? %>
+          <%= link_to "Clear", admin_users_path, class: "btn btn-sm btn-outline-secondary" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Sign ins</th>
+          <th>Created</th>
+          <th>Last sign in</th>
+          <th>Last IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= link_to user.email, edit_admin_user_path(user), style: "text-decoration: none;" %></td>
+            <td>
+              <% if user.admin? %><span class="badge bg-danger">Admin</span><% end %>
+              <% if user.editor? %><span class="badge bg-info">Editor</span><% end %>
+              <% if user.locked? %><span class="badge bg-warning text-dark">Locked</span><% end %>
+              <% if !user.admin? && !user.editor? && !user.locked? %><span class="badge bg-secondary">Member</span><% end %>
+            </td>
+            <td><%= user.sign_in_count %></td>
+            <td><%= time_ago_in_words(user.created_at) %> ago</td>
+            <td>
+              <% if user.last_sign_in_at %>
+                <%= time_ago_in_words(user.last_sign_in_at) %> ago
+              <% else %>
+                <span class="text-muted">never</span>
+              <% end %>
+            </td>
+            <td><small class="text-muted"><%= user.last_sign_in_ip %></small></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer text-center">
+    <small><%= page_entries_info @users %></small>
+    <%= paginate @users %>
+  </div>
 </div>
