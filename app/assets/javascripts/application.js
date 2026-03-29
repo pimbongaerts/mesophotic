@@ -17,26 +17,3 @@
 //= require dual_range
 //= require wordcloud2
 //= require mastodon_avatars
-
-(function ($) {
-    $.fn.sizeChanged = function (handleFunction) {
-        var element = this;
-        var lastWidth = element.width();
-        var lastHeight = element.height();
-
-        setInterval(function () {
-            if (lastWidth === element.width() && lastHeight === element.height()) {
-                return;
-            }
-
-            if (typeof (handleFunction) == 'function') {
-                handleFunction({ width: lastWidth, height: lastHeight },
-                               { width: element.width(), height: element.height() });
-                lastWidth = element.width();
-                lastHeight = element.height();
-            }
-        }, 100);
-
-        return element;
-    };
-}(jQuery));
