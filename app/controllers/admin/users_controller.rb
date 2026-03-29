@@ -42,6 +42,16 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  def destroy
+    if current_user.id == @user.id
+      redirect_to admin_users_path, alert: "You cannot delete your own account."
+    else
+      email = @user.email
+      @user.destroy
+      redirect_to admin_users_path, notice: "#{email} has been deleted."
+    end
+  end
+
   private
 
   def set_user

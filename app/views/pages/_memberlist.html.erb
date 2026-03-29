@@ -5,8 +5,8 @@
       <th>Institution</th>
       <th>Country</th>
       <th class="text-center">Pubs</th>
-      <% if current_user.try(:admin?) %>
-        <th></th>
+      <% if current_user.try(:editor_or_admin?) %>
+        <th style="width: 60px;"></th>
       <% end %>
     </tr>
   </thead>
@@ -29,7 +29,20 @@
           <% end %>
         </td>
         <% if current_user.try(:editor_or_admin?) %>
-          <td><%= link_to "Edit", edit_admin_user_path(user.id), class: "text-muted", style: "font-size: 0.8em;" %></td>
+          <td style="white-space: nowrap;">
+            <div class="d-flex gap-2">
+              <%= link_to edit_admin_user_path(user.id), class: "text-muted icon-btn" do %>
+                <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
+              <% end %>
+              <% if current_user.try(:admin?) && current_user.id != user.id %>
+                <%= link_to admin_user_path(user.id), method: :delete,
+                            data: { confirm: "Delete #{user.email}? This cannot be undone." },
+                            class: "text-danger icon-btn" do %>
+                  <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i>
+                <% end %>
+              <% end %>
+            </div>
+          </td>
         <% end %>
       </tr>
     <% end %>
