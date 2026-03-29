@@ -1,6 +1,8 @@
 <% title("Published posts") %>
 <h3 class="page-title">Posts <small>Published</small></h3>
-<p><%= link_to "Back to dashboard", dashboard_admin_posts_path %></p>
+<div class="mb-1">
+  <strong><%= link_to "<<< Back", dashboard_admin_posts_path, style: "text-decoration: none;" %></strong>
+</div>
 <hr/>
 
 <p class="pagination-summary"><%= page_entries_info @posts %></p>
