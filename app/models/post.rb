@@ -83,7 +83,7 @@ class Post < ApplicationRecord
   # instance methods
   def category
     if post_type == 'behind_the_science'
-      "Behind the science"
+      "Behind the Science"
     elsif post_type == 'early_career'
       "Early Career Scientist"
     elsif post_type == 'method_feature'
