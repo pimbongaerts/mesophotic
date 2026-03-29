@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module Mesophotic
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 6.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -21,8 +21,5 @@ module Mesophotic
 
     # Test framework
     config.generators.test_framework false
-
-    # Enforce 1/0 bools in sqlite
-    config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end
