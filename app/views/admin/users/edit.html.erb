@@ -34,10 +34,6 @@
             <hr>
             <div class="mb-3">
               <div class="form-check">
-                <%= f.check_box :locked, class: "form-check-input" %>
-                <%= f.label :locked, "Locked", class: "form-check-label" %>
-              </div>
-              <div class="form-check">
                 <%= f.check_box :admin, class: "form-check-input" %>
                 <%= f.label :admin, "Admin", class: "form-check-label" %>
               </div>
@@ -94,6 +90,20 @@
           <% if @user.locked? %><span class="badge bg-warning text-dark">Locked</span><% end %>
           <% if !@user.admin? && !@user.editor? && !@user.locked? %><span class="badge bg-secondary">Member</span><% end %>
         </div>
+        <% if current_user.id != @user.id %>
+          <hr>
+          <% if @user.locked? %>
+            <%= button_to admin_user_path(@user, user: { locked: false }),
+                          method: :patch, class: "btn btn-sm btn-success" do %>
+              <i class="bi bi-unlock"></i> Unlock Account
+            <% end %>
+          <% else %>
+            <%= button_to admin_user_path(@user, user: { locked: true }),
+                          method: :patch, class: "btn btn-sm btn-warning text-dark" do %>
+              <i class="bi bi-lock"></i> Lock Account
+            <% end %>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
