@@ -2,17 +2,15 @@
   <script type="text/javascript" charset="utf-8">
     var <%= title %>_categories = <%= raw categories.to_json %>
     var <%= title %>_occurrences = <%= raw occurrences.to_json %>
-    $(function () { 
-        $('#graph_<%= title %>').highcharts({
-            chart: { type: 'area', inverted: true },
-            credits: { enabled: false },
-            title: { text: '' },
-            legend:{ enabled: false },
-            xAxis: { categories: <%= title %>_categories},
-            yAxis: { title: { text: '<%= unit %>'} },
-            plotOptions: { area: { stacking: 'normal'} },
-            series: [{ name: '<%= unit %>', data: <%= title %>_occurrences}]
-        });
+    Highcharts.chart('graph_<%= title %>', {
+        chart: { type: 'area', inverted: true },
+        credits: { enabled: false },
+        title: { text: '' },
+        legend:{ enabled: false },
+        xAxis: { categories: <%= title %>_categories},
+        yAxis: { title: { text: '<%= unit %>'} },
+        plotOptions: { area: { stacking: 'normal'} },
+        series: [{ name: '<%= unit %>', data: <%= title %>_occurrences}]
     });
   </script>
 </div>
