@@ -9,7 +9,9 @@
       <div class="card-body" style="background: #CCCCCC;">
         <div class="col-sm-6">
           <% if @expedition.featured_image.attached? %>
-            <%= image_tag @expedition.featured_image.variant(resize: "640x480>") %>
+            <div style="background-color: #f0f1f3;">
+              <%= image_tag @expedition.featured_image.variant(resize: "640x480>"), style: "width: 100%;" %>
+            </div>
             <% if @expedition.featured_image_credits? %>
               <small>
                 (C) <%= @expedition.featured_image_credits %>

@@ -5,37 +5,51 @@
     <table>
       <tr>
       <td>
-      	<%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[0].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
        <td>
-        <%= link_to image_tag(post.photos[1].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[1].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[2].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[2].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
      </tr>
      <tr>
       <td>
-      	<%= link_to image_tag(post.photos[3].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[3].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[4].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[4].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
        <td>
-      	<%= link_to image_tag(post.photos[5].image.variant(resize: "340x227^", crop: "340x227+0+0")),
-                    post_pages_path(post) %>
+        <div style="aspect-ratio: 3/2; overflow: hidden; background-color: #f0f1f3;">
+          <%= link_to image_tag(post.photos[5].image.variant(resize: "340x227^", crop: "340x227+0+0"), style: "width: 100%; height: 100%; object-fit: cover;"),
+                      post_pages_path(post) %>
+        </div>
       </td>
-     	</tr>
+      </tr>
      </table>
   <% elsif style == "full" %>
     <% post.photos.each do |photo| %>
-      <%= link_to image_tag(photo.image.variant(resize: "1024x768>")),
-                            photo_path(photo) %>
+      <div style="background-color: #f0f1f3; margin-bottom: 0.5rem;">
+        <%= link_to image_tag(photo.image.variant(resize: "1024x768>"), style: "width: 100%;"),
+                              photo_path(photo) %>
+      </div>
       <h4>
         <%= photo.description %><br>
         <small>(C) <%= photo.credit %> </small>
