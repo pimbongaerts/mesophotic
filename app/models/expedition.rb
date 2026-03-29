@@ -35,7 +35,7 @@ class Expedition < ApplicationRecord
 
   # validations
   validates :title, presence: true
-  validates :featured_image, content_type: ['image/jpeg', 'imge/jpg']
+  validates :featured_image, content_type: ['image/jpeg']
   
   # callbacks
   # other
