@@ -38,8 +38,8 @@ class Site < ApplicationRecord
   def place_data z
     { 
       name: "#{site_name} (#{location.description})", 
-      lat: latitude,
-      lon: longitude, 
+      lat: latitude.to_f,
+      lon: longitude.to_f,
       z: z.try(:to_i) || publications.count,
       url: site_path(id)
     }
