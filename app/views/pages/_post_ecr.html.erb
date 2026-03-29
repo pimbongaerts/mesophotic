@@ -5,7 +5,7 @@
           supertitle: "Early Career Scientist",
           backlink: posts_pages_path } %>
 <p class="text-muted mb-4" style="font-size: 0.85em;">
-  <i class="bi bi-calendar3 me-1"></i><%= @post.created_at.strftime("%B %-d, %Y") %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
+  <%= @post.created_at.strftime("%B %-d, %Y") %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
   <% if current_user.try(:editor_or_admin?) %>
     <%= link_to edit_admin_post_path(@post.slug), class: "text-muted ms-2" do %><i class="bi bi-pencil-fill"></i><% end %>
   <% end %>

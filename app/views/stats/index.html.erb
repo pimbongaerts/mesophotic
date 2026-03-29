@@ -1,11 +1,9 @@
 <%= render partial: "layouts/page_title", locals: {
       title: @stats_subtitle,
       supertitle: @title,
+      subtitle: raw("<span class=\"badge fw-normal float-end\" style=\"font-size: 0.65em; color: #c7254e; background-color: #f9f2f4;\">#{@latest_update.to_date}</span>"),
       backlink: root_path
     } %>
-<div style="margin-top: -1rem; margin-bottom: 1rem; text-align: right;">
-  <span class="badge fw-normal" style="font-size: 0.8em; color: #c7254e; background-color: #f9f2f4;"><%= @latest_update.to_date %></span>
-</div>
 <div class="row">
   <div class="col-sm-12">
     <%= render partial: "notes" %>
