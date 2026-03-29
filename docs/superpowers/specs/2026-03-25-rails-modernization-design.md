@@ -250,14 +250,55 @@ This is the riskiest phase. It combines a Ruby major version upgrade with a Rail
 - Verify all tests pass.
 - This should be the smoothest upgrade step.
 
+## Phase 6: Feature Work
+
+**Bookmark:** `ryan/features`
+**Parent:** `ryan/rails-7.1`
+**Purpose:** Planned feature additions that were deferred until the modernization is complete.
+
+### 6a: Fix Textcaptcha
+
+The `acts_as_textcaptcha` gem's external API returns nil questions — `User.new.textcaptcha_question` returns `nil`. The sign-up form shows "Answer the following question, to prove you're not a robot." but no actual question appears.
+
+**Options (evaluate in order):**
+1. Replace with a simple custom captcha (lowest dependency risk)
+2. Replace with reCAPTCHA or similar maintained service
+3. Fix the API key if the textcaptcha service is still operational
+
+**Note:** If `acts_as_textcaptcha` doesn't support Rails 7 (flagged in Risk Notes), this must be addressed during Phase 4 instead. Check compatibility before proceeding.
+
+### 6b: Bluesky Feed
+
+Add a Bluesky `#mesophotic` feed alongside the existing Mastodon feed on the home page.
+
+- Bluesky public API: `public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23mesophotic`
+- Add Bluesky logo next to Mastodon logo in the card header
+- Logos act as tab selectors — selected logo coloured, unselected muted
+- Switch feed content based on selected tab
+- Fetch profile pics/names async similar to existing Mastodon implementation
+
+### 6c: Threads Feed
+
+Add a Threads `#mesophotic` feed alongside the Mastodon and Bluesky feeds on the home page.
+
+- Investigate Threads API availability (Meta's Threads API may require app review/approval)
+- Add Threads logo to the tab selector in the card header alongside Mastodon and Bluesky
+- Same tabbed selection pattern — selected logo coloured, unselected muted
+- Fetch and display posts async similar to Mastodon and Bluesky implementations
+
+### 6d: Multiple Social Media Handles
+
+Allow users to specify multiple social handles (Mastodon, BlueSky, Threads, Twitter/X) instead of the single `twitter` field.
+
+- Add a `social_links` table or JSON column to store multiple handles per user
+- Each link has a platform (mastodon, bluesky, threads, twitter) and a handle/URL
+- Update edit profile form to allow adding/removing social links
+- Update member profile page to show all social icons
+- Update the `contact_links` partial to render platform-specific icons (bi-mastodon, bi-twitter-x, custom SVG for BlueSky/Threads)
+
 ## Future Phases (Out of Scope)
 
-These are noted for future planning but not part of this modernization effort:
-
-### Features
-- **Bluesky feed:** Add Bluesky `#mesophotic` feed alongside existing Mastodon feed on home page. Use tabbed logo selection (Mastodon/Bluesky). Bluesky public API: `public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23mesophotic`. Fetch profile pics/names async similar to Mastodon implementation.
-- **Multiple social media handles:** Allow users to specify multiple social handles (Mastodon, BlueSky, Threads, Twitter/X) instead of the single `twitter` field. Likely needs a `social_links` table or JSON column. Update edit profile form, member profile page, and contact_links partial.
-- **Fix textcaptcha:** The `acts_as_textcaptcha` gem's external API returns nil questions. Either fix the API key, replace with a different captcha service (e.g. reCAPTCHA), or implement a simple custom captcha. This gem may also not support Rails 7.
+These are noted for future planning but not part of this effort:
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
