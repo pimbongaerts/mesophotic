@@ -24,8 +24,12 @@
         <div class="card-header"><strong>An interview with:</strong></div>
         <div class="card-body" align="center">
           <% if @post.featured_user.profile_picture.attached? %>
-            <%= link_to image_tag(@post.featured_user.profile_picture.variant(resize: "200x200>")),
-                        member_pages_path(@post.featured_user) %>
+            <div class="rounded-3 d-inline-block" style="width: 200px; height: 200px; background-color: #f0f1f3; overflow: hidden;">
+              <%= link_to member_pages_path(@post.featured_user) do %>
+                <%= image_tag @post.featured_user.profile_picture.variant(resize: "200x200>"),
+                              style: "width: 100%; height: 100%; object-fit: cover;" %>
+              <% end %>
+            </div>
           <% end %>
           <strong>
             <%= link_to "#{@post.featured_user.first_name} #{@post.featured_user.last_name}", member_pages_path(@post.featured_user) %>

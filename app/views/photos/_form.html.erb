@@ -6,7 +6,9 @@
     <% if @photo.image.attached? %>
       <div class="row">
         <div class="col-12">
-          <%= image_tag @photo.image.variant(resize: "640x480>") %>
+          <div style="background-color: #f0f1f3;">
+            <%= image_tag @photo.image.variant(resize: "640x480>"), style: "width: 100%;" %>
+          </div>
           <hr>
         </div>
       </div>
