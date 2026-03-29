@@ -10,14 +10,14 @@
       <% if !publication.user_validations.include? current_user %>
         <%= button_to "Validate",
                       add_validation_publication_path(publication, current_user),
-                      method: "get", class: "btn btn-success btn-sm text-white" %>
+                      method: "get", class: "btn btn-success btn-sm" %>
       <% else %>
         <% if publication.updated_at > publication.validations
                                       .find_by_user_id(current_user.id)
                                       .updated_at %>
           <%= button_to "Revalidate",
                         touch_validation_publication_path(publication, current_user),
-                        method: "get", class: "btn btn-warning btn-sm text-white" %>
+                        method: "get", class: "btn btn-warning btn-sm" %>
         <% else %>
           <%= button_to "Unvalidate",
                         remove_validation_publication_path(publication, current_user),

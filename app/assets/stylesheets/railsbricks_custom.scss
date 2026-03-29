@@ -9,8 +9,9 @@
 // Bootstrap's !default declarations pick up our values.
 
 // Color system
+$min-contrast-ratio: 3;
 $primary: #428bca;
-$success: #5cb85c;
+$success: #449d44;
 $warning: #f0ad4e;
 $danger: #d9534f;
 $info: #5bc0de;
@@ -103,7 +104,8 @@ $text-muted: #bbbbbb;
 
 //***********************************************************
 // APPLICATION-WIDE
-label {
+// Bold field labels but not checkbox/radio labels
+label:not(.form-check-label) {
   font-weight: bold;
 }
 
