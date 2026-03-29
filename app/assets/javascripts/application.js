@@ -15,8 +15,6 @@
 //= require turbolinks
 //= require bootstrap5
 //= require dual_range
-// = require analytics
-// = require owl.carousel
 //= require wordcloud2
 //= require mastodon_avatars
 
