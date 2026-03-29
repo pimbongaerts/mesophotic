@@ -1,73 +1,106 @@
-<% title("Edit User Id: #{@user.id}") %>
+<% title("Edit User: #{@user.email}") %>
+
+<div class="mb-1">
+  <strong><%= link_to "<<< Back", admin_users_path, style: "text-decoration: none;" %></strong>
+</div>
+
 <div class="row">
-  <div class="col-sm-6">
-    <h1>
-      Edit User <small><%= "#{@user.email} - id: #{@user.id}" %></small>
-    </h1>
-    <p><%= link_to "Back to Users", admin_users_path %></p>
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-header">
+        <strong><%= @user.email %></strong>
+        <small class="text-muted ms-1">ID: <%= @user.id %></small>
+      </div>
+      <div class="card-body">
+        <%= form_for [:admin, @user], html: { role: "form" } do |f| %>
 
-    <%= form_for [:admin, @user], :html => { :role => "form" } do |f| %>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <%= f.label :email, class: "form-label fw-bold" %>
+              <%= f.email_field :email, class: "form-control" %>
+            </div>
+          </div>
 
-    <div class="mb-3">
-      <%= f.label :email %>
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.email_field :email, class: "form-control" %>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <%= f.label :password, class: "form-label fw-bold" %>
+              <%= f.password_field :password, class: "form-control" %>
+              <small class="form-text text-muted">Leave blank to keep current password</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <%= f.label :password_confirmation, class: "form-label fw-bold" %>
+              <%= f.password_field :password_confirmation, class: "form-control" %>
+            </div>
+          </div>
+
+          <% unless current_user.id == @user.id %>
+            <hr>
+            <div class="mb-3">
+              <div class="form-check">
+                <%= f.check_box :locked, class: "form-check-input" %>
+                <%= f.label :locked, "Locked", class: "form-check-label fw-normal" %>
+              </div>
+              <div class="form-check">
+                <%= f.check_box :admin, class: "form-check-input" %>
+                <%= f.label :admin, "Admin", class: "form-check-label fw-normal" %>
+              </div>
+              <div class="form-check">
+                <%= f.check_box :editor, class: "form-check-input" %>
+                <%= f.label :editor, "Editor", class: "form-check-label fw-normal" %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="mt-4">
+            <%= f.submit "Update", class: "btn btn-primary text-white" %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header"><strong>Account info</strong></div>
+      <div class="card-body">
+        <div class="mb-2">
+          <small class="text-muted d-block">Name</small>
+          <strong><%= @user.first_name %> <%= @user.last_name %></strong>
+        </div>
+        <div class="mb-2">
+          <small class="text-muted d-block">Sign-in count</small>
+          <%= @user.sign_in_count %>
+        </div>
+        <div class="mb-2">
+          <small class="text-muted d-block">Created</small>
+          <%= time_ago_in_words(@user.created_at) %> ago
+        </div>
+        <div class="mb-2">
+          <small class="text-muted d-block">Last sign in</small>
+          <% if @user.last_sign_in_at %>
+            <%= time_ago_in_words(@user.last_sign_in_at) %> ago
+          <% else %>
+            Never
+          <% end %>
+        </div>
+        <% if @user.last_sign_in_ip %>
+          <div class="mb-2">
+            <small class="text-muted d-block">Last IP</small>
+            <%= @user.last_sign_in_ip %>
+          </div>
+        <% end %>
+        <div class="mb-2">
+          <small class="text-muted d-block">Status</small>
+          <% if @user.admin? %><span class="badge bg-danger">Admin</span><% end %>
+          <% if @user.editor? %><span class="badge bg-info">Editor</span><% end %>
+          <% if @user.locked? %><span class="badge bg-warning text-dark">Locked</span><% end %>
+          <% if !@user.admin? && !@user.editor? && !@user.locked? %><span class="badge bg-secondary">Member</span><% end %>
         </div>
       </div>
     </div>
-
-    <div class="mb-3">
-      <%= f.label :password %>
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.password_field :password, class: "form-control" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :password_confirmation %>
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.password_field :password_confirmation, class: "form-control" %>
-        </div>
-      </div>
-    </div>
-
-    <% unless current_user.id == @user.id %>
-    <div class="mb-3">
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.check_box :locked %> <%= f.label :locked, "Is Locked?" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.check_box :admin %> <%= f.label :admin, "Is Admin?" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <div class="row">
-        <div class="col-sm-6">
-          <%= f.check_box :editor %> <%= f.label :editor, "Is Editor?" %>
-        </div>
-      </div>
-    </div>
-    <% end %>
-
-    <div class="row">
-      <div class="col-sm-6">
-        <%= f.submit "Update User", class: "btn btn-danger" %>
-      </div>
-    </div>
-
-    <% end %>
-
   </div>
 </div>
