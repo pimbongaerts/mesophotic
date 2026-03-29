@@ -121,6 +121,8 @@ class Publication < ApplicationRecord
       .joins(:validations)
       .where("validations.user_id = ? AND validations.updated_at < publications.updated_at", user.id)
       .group("publications.id")
+    else
+      none
     end
   }
 
@@ -159,6 +161,8 @@ class Publication < ApplicationRecord
         joins("INNER JOIN #{name}s_publications ON publications.id = #{name}s_publications.publication_id")
         .joins("INNER JOIN #{name}s ON #{name}s.id = #{name}s_publications.#{name}_id")
         .where("#{name}s.description IN (?)", params)
+      else
+        all
       end
     }
   end
@@ -172,6 +176,8 @@ class Publication < ApplicationRecord
       .where(clause, *terms)
       .base_search(search_params)
       .order(publication_year: :desc)
+    else
+      all
     end
   }
 
@@ -190,6 +196,8 @@ class Publication < ApplicationRecord
       .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
       .base_search(search_params)
       .order(Arel.sql("relevance DESC"), publication_year: :desc, filename: :asc)
+    else
+      all
     end
   }
 
@@ -212,12 +220,12 @@ class Publication < ApplicationRecord
   }
 
   scope :statistics, -> (status, year) {
-    case status
-      when :all
-        all
-      when :validated
-        validated
+    base = case status
+      when :all then all
+      when :validated then validated
+      else all
     end
+    base
     .original
     .where(mesophotic: true)
     .where(publication_format: 'article')
