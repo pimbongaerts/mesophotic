@@ -73,47 +73,50 @@
           <%= f.file_field :profile_picture, class: "form-control", id: "profile-picture-input", style: "display: none;" %>
         </div>
         <script>
-          $(function() {
-            var dropZone = $('#profile-picture-drop');
-            var fileInput = $('#profile-picture-input');
-            var preview = $('#profile-picture-preview');
-            var placeholder = $('#profile-picture-placeholder');
+          (function() {
+            var dropZone = document.getElementById('profile-picture-drop');
+            var fileInput = document.getElementById('profile-picture-input');
+            var preview = document.getElementById('profile-picture-preview');
+            var placeholder = document.getElementById('profile-picture-placeholder');
 
-            dropZone.on('click', function() { fileInput.click(); });
+            dropZone.addEventListener('click', function() { fileInput.click(); });
 
-            dropZone.on('dragover', function(e) {
+            dropZone.addEventListener('dragover', function(e) {
               e.preventDefault();
-              dropZone.css('border-color', '#0d6efd');
-              dropZone.css('background-color', '#e7f1ff');
+              dropZone.style.borderColor = '#0d6efd';
+              dropZone.style.backgroundColor = '#e7f1ff';
             });
 
-            dropZone.on('dragleave drop', function() {
-              dropZone.css('border-color', '#dee2e6');
-              dropZone.css('background-color', '#f8f9fa');
+            dropZone.addEventListener('dragleave', function() {
+              dropZone.style.borderColor = '#dee2e6';
+              dropZone.style.backgroundColor = '#f8f9fa';
             });
 
-            dropZone.on('drop', function(e) {
+            dropZone.addEventListener('drop', function(e) {
               e.preventDefault();
-              var files = e.originalEvent.dataTransfer.files;
+              dropZone.style.borderColor = '#dee2e6';
+              dropZone.style.backgroundColor = '#f8f9fa';
+              var files = e.dataTransfer.files;
               if (files.length > 0 && files[0].type.match('image.*')) {
-                fileInput[0].files = files;
+                fileInput.files = files;
                 showPreview(files[0]);
               }
             });
 
-            fileInput.on('change', function() {
+            fileInput.addEventListener('change', function() {
               if (this.files.length > 0) { showPreview(this.files[0]); }
             });
 
             function showPreview(file) {
               var reader = new FileReader();
               reader.onload = function(e) {
-                preview.attr('src', e.target.result).show();
-                if (placeholder.length) placeholder.hide();
+                preview.src = e.target.result;
+                preview.style.display = '';
+                if (placeholder) placeholder.style.display = 'none';
               };
               reader.readAsDataURL(file);
             }
-          });
+          })();
         </script>
       </div>
     </div>
