@@ -319,21 +319,16 @@ span.bi-link {
   }
 }
 
-/* Publication editor icon buttons */
-.pub-icon-btn {
-  font-size: 1rem;
+/* Icon buttons (outline → fill on hover) */
+.icon-btn {
   text-decoration: none;
 
-  .bi-pencil { display: inline; }
-  .bi-pencil-fill { display: none; }
-  .bi-trash { display: inline; }
-  .bi-trash-fill { display: none; }
+  .bi-pencil, .bi-trash, .bi-lock, .bi-unlock { display: inline; }
+  .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill { display: none; }
 
   &:hover {
-    .bi-pencil { display: none; }
-    .bi-pencil-fill { display: inline; }
-    .bi-trash { display: none; }
-    .bi-trash-fill { display: inline; }
+    .bi-pencil, .bi-trash, .bi-lock, .bi-unlock { display: none; }
+    .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill { display: inline; }
   }
 }
 

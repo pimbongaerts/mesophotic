@@ -92,17 +92,26 @@
         </div>
         <% if current_user.id != @user.id %>
           <hr>
-          <% if @user.locked? %>
-            <%= button_to admin_user_path(@user, user: { locked: false }),
-                          method: :patch, class: "btn btn-sm btn-success" do %>
-              <i class="bi bi-unlock"></i> Unlock Account
+          <div class="d-flex gap-2">
+            <% if @user.locked? %>
+              <%= button_to admin_user_path(@user, user: { locked: false }),
+                            method: :patch, class: "btn btn-sm btn-outline-success icon-btn" do %>
+                <i class="bi bi-unlock"></i><i class="bi bi-unlock-fill"></i> Unlock Account
+              <% end %>
+            <% else %>
+              <%= button_to admin_user_path(@user, user: { locked: true }),
+                            method: :patch, class: "btn btn-sm btn-outline-warning icon-btn" do %>
+                <i class="bi bi-lock"></i><i class="bi bi-lock-fill"></i> Lock Account
+              <% end %>
             <% end %>
-          <% else %>
-            <%= button_to admin_user_path(@user, user: { locked: true }),
-                          method: :patch, class: "btn btn-sm btn-warning text-dark" do %>
-              <i class="bi bi-lock"></i> Lock Account
+            <% if current_user.try(:admin?) %>
+              <%= button_to admin_user_path(@user), method: :delete,
+                            data: { confirm: "Delete #{@user.email}? This cannot be undone." },
+                            class: "btn btn-sm btn-outline-danger icon-btn" do %>
+                <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i> Delete Account
+              <% end %>
             <% end %>
-          <% end %>
+          </div>
         <% end %>
       </div>
     </div>
