@@ -1282,6 +1282,17 @@
     };
     version = "1.5.4";
   };
+  terser = {
+    dependencies = ["execjs"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "06xaqs2gz304x37vmfzi6ns4mzr8i6rqad5cr92arbcxfr4yn4hv";
+      type = "gem";
+    };
+    version = "1.2.7";
+  };
   thor = {
     groups = ["default" "development"];
     platforms = [];
@@ -1354,17 +1365,6 @@
       type = "gem";
     };
     version = "2.0.6";
-  };
-  uglifier = {
-    dependencies = ["execjs"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1apmqsad2y1avffh79f4lfysfppz94fvpyi7lkkj3z8bn60jpm3m";
-      type = "gem";
-    };
-    version = "4.2.1";
   };
   unaccent = {
     groups = ["default"];

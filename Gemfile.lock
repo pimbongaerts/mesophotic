@@ -338,6 +338,8 @@ GEM
     sqlite3 (1.6.9-x86_64-linux)
     stackprof (0.2.28)
     switch_user (1.5.4)
+    terser (1.2.7)
+      execjs (>= 0.3.0, < 3)
     thor (1.5.0)
     tilt (2.7.0)
     timeout (0.6.1)
@@ -349,8 +351,6 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -411,8 +411,8 @@ DEPENDENCIES
   sqlite3 (~> 1.6.9)
   stackprof
   switch_user
+  terser
   turbolinks
-  uglifier
   web-console
   whenever
 

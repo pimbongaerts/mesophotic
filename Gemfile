@@ -9,7 +9,7 @@ gem 'listen'
 gem 'puma'
 gem 'sassc-rails'
 gem 'turbolinks'
-gem 'uglifier'
+gem 'terser'
 
 # RailsBricks gems
 gem 'bootstrap', '~> 5.3'
