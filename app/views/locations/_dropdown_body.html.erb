@@ -1,5 +1,5 @@
-<div class="card-body">
+<div class="card-body" style="min-height: 293px;">
   <% model = object.sites.count > 0 ? Site : Location %>
   <% places = object.sites.count > 0 ? object.sites : [object] %>
-  <%= render_async world_map_path(key: "#{model}_dropdown_body", model: model, ids: places.map(&:id).join(','), height: 300) %>
+  <%= render_async world_map_path(key: "#{model}_dropdown_body", model: model, ids: places.map(&:id).join(','), height: 293) %>
 </div>
