@@ -21,21 +21,21 @@ class Admin::UsersController < Admin::BaseController
   def update
     old_email = @user.email
     new_params = user_params.dup
-    new_params[:email] = new_params[:email].strip
 
-    @user.email = new_params[:email]
-    @user.password = new_params[:password] if new_params[:password].strip.length > 0
-    @user.password_confirmation = new_params[:password_confirmation] if new_params[:password_confirmation].strip.length > 0
+    @user.email = new_params[:email].strip if new_params[:email].present?
+    @user.password = new_params[:password] if new_params[:password].present?
+    @user.password_confirmation = new_params[:password_confirmation] if new_params[:password_confirmation].present?
 
     if current_user.id != @user.id
-      @user.admin = new_params[:admin]=="0" ? false : true
-      @user.locked = new_params[:locked]=="0" ? false : true
+      @user.admin = (new_params[:admin] == "1") if new_params.key?(:admin)
+      @user.editor = (new_params[:editor] == "1") if new_params.key?(:editor)
+      @user.locked = (new_params[:locked] == "1" || new_params[:locked] == "true") if new_params.key?(:locked)
     end
 
     if @user.valid?
       @user.skip_reconfirmation!
       @user.save
-      redirect_to admin_users_path, notice: "#{@user.email} updated."
+      redirect_to edit_admin_user_path(@user), notice: "#{@user.email} updated."
     else
       flash[:alert] = "#{old_email} couldn't be updated."
       render :edit
