@@ -15,26 +15,30 @@ class SummaryController < ApplicationController
   end
 
   def summary_keywords
-    word_cloud = publications.word_cloud(40)
-    
-    if word_cloud.present?
-      render partial: 'shared/wordcloud',  
-             object: word_cloud,
-             locals: { title: "#{params[:model]}_publication_contents" }
+    cached = Rails.cache.fetch(["summary_keywords", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+      word_cloud = publications.word_cloud(40)
+      word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: "#{params[:model]}_publication_contents" }) : ""
     end
+    render html: cached.html_safe
   end
 
   def summary_researchers
-    render partial: 'author', collection: publications.authors
+    cached = Rails.cache.fetch(["summary_researchers", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+      render_to_string partial: 'author', collection: publications.authors
+    end
+    render html: cached.html_safe
   end
 
   def summary_publications
-    render partial: 'shared/item_counts', 
-           collection: { 
-             "Focusgroups": focusgroups, 
-             "Fields": fields, 
-             "Platforms": platforms 
-           }
+    cached = Rails.cache.fetch(["summary_publications", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+      render_to_string partial: 'shared/item_counts',
+             collection: {
+               "Focusgroups": focusgroups,
+               "Fields": fields,
+               "Platforms": platforms
+             }
+    end
+    render html: cached.html_safe
   end
 
   private
