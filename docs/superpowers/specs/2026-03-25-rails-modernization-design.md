@@ -320,6 +320,13 @@ Replace the `<<< Back` links throughout the app with proper breadcrumb navigatio
 
 These are noted for future planning but not part of this effort:
 
+### Performance
+- **N+1 queries in format_authors:** `publications_helper.rb` iterates `publication.users` for every publication in collection views. Fix with eager loading (`Publication.includes(:users)`) in controllers.
+- **word_association / species_association helper:** `application_helper.rb` loads ALL platforms, fields, focusgroups, locations, and species into memory every time it's called (per publication view). Cache per request or memoize.
+- **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
+- **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.
+- **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
+
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
 - **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline.
