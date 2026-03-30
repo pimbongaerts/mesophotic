@@ -2,11 +2,13 @@
 <div class="d-flex align-items-start pb-3 mb-3 mastodon-status border-bottom">
   <div class="flex-shrink-0">
     <a href="<%= status.profile_url %>" target="_blank" rel="noopener">
-      <div class="rounded-3 bg-light d-flex align-items-center justify-content-center overflow-hidden mastodon-avatar"
-           style="width: 36px; height: 36px;"
-           data-profile-url="<%= status.profile_url %>"
-           data-content-url="<%= status.content_url %>">
-        <i class="bi bi-person-fill text-muted" style="font-size: 1.2rem;"></i>
+      <div class="rounded-3 bg-light d-flex align-items-center justify-content-center overflow-hidden"
+           style="width: 36px; height: 36px;">
+        <% if status.avatar_url.present? %>
+          <img src="<%= status.avatar_url %>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.3rem;">
+        <% else %>
+          <i class="bi bi-person-fill text-muted" style="font-size: 1.2rem;"></i>
+        <% end %>
       </div>
     </a>
   </div>
@@ -16,10 +18,10 @@
       <div>
         <% if mastodon_user %>
           <strong><%= link_to mastodon_user.full_name_normal, member_pages_path(mastodon_user), style: "text-decoration: none; color: inherit;" %></strong>
-        <% else %>
-          <strong class="mastodon-display-name" style="display: none;"></strong>
+        <% elsif status.display_name.present? %>
+          <strong><%= status.display_name %></strong>
         <% end %>
-        <%= link_to "@#{status.username}", status.profile_url.to_s, class: "text-muted mastodon-handle", style: "text-decoration: none; font-size: 0.85em;" %>
+        <%= link_to "@#{status.username}", status.profile_url.to_s, class: "text-muted", style: "text-decoration: none; font-size: 0.85em;" %>
         <% if status.published_at %>
           <span class="text-muted" style="font-size: 0.8em;"> · <%= time_ago_in_words(status.published_at) %> ago</span>
         <% end %>

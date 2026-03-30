@@ -40,10 +40,11 @@
         <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;" %>
       </div>
       <div class="card-body">
-        <% @mastodon_statuses.each do |status| %>
-          <% cache ["mastodon_status", status.content_url] do %>
-            <%= render partial: 'status', locals: { users: @mastodon_users, status: status } %>
-          <% end %>
+        <%= render_async mastodon_feed_pages_path do %>
+          <div class="text-center text-muted py-4">
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            Loading feed...
+          </div>
         <% end %>
       </div>
       <div class="card-footer text-muted" style="font-size: 0.85em;">

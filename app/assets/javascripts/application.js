@@ -15,5 +15,4 @@
 //= require bootstrap5
 //= require dual_range
 //= require wordcloud2
-//= require mastodon_avatars
 //= require charts
