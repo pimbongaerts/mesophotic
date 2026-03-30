@@ -953,6 +953,17 @@
     };
     version = "6.6.1";
   };
+  puma_worker_killer = {
+    dependencies = ["bigdecimal" "get_process_mem" "puma"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1s89z5gjl4g2a57dmzkhldm43i932j28hiwz1pvqsxdixkz59p0j";
+      type = "gem";
+    };
+    version = "1.0.0";
+  };
   racc = {
     groups = ["default" "development"];
     platforms = [];
