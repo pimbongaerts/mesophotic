@@ -179,7 +179,7 @@ class PublicationsController < ApplicationController
 
   private
     def set_publication
-      @publication = Publication.find(params[:id])
+      @publication = Publication.includes(:users, :journal, :validations, sites: :location).find(params[:id])
     rescue
       redirect_back fallback_location: publications_path
     end

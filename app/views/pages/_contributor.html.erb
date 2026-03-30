@@ -1,4 +1,4 @@
-<% contributor = User.find_by_first_name_and_last_name(first_name, last_name) %>
+<% contributor = @users_by_name["#{first_name} #{last_name}"] %>
 <% if contributor %>
   <div class="d-flex align-items-center mb-3">
     <div class="flex-shrink-0">
