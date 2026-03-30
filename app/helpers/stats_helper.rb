@@ -140,7 +140,7 @@ module StatsHelper
   # Counts the number of cumulative locations in publications over time (years)
   def count_locations_over_time(publications, last_year)
     # Get a list of locations for each year
-    year_location_list = Hash.new(0)
+    year_location_list = {}
     publications.each do |publication|
       locations = publication.locations
       year_key = publication.publication_year.to_s
@@ -158,7 +158,7 @@ module StatsHelper
     cumulative_locations = Set.new()
     year_range.each do |year|
       categories << year.to_s
-      cumulative_locations.merge(year_location_list[year.to_s])
+      cumulative_locations.merge(year_location_list[year.to_s] || [])
       values << cumulative_locations.count
     end
     return categories, values
