@@ -1,4 +1,4 @@
-<% User.order('updated_at DESC').limit(15).each do |user| %>
+<% @latest_members.each do |user| %>
   <div class="mb-1">
     <% if user.publications.count > 0 or user.research_interests %>
       <%= link_to user.full_name_normal, member_pages_path(user.id), style: "text-decoration: none;" %>

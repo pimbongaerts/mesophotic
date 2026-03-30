@@ -18,6 +18,16 @@ class PagesController < ApplicationController
   def members
     @users = User.all.order(last_name: :asc).includes(:publications, :organisation)
     @publications = Publication.all
+    @latest_members = User.order(updated_at: :desc).includes(:publications).limit(15)
+    @featured_member = User.joins(:publications)
+                           .where.not(publications: { id: nil })
+                           .joins(:profile_picture_blob)
+                           .where.not(active_storage_blobs: { filename: nil })
+                           .where(admin: false)
+                           .includes(:organisation, profile_picture_attachment: :blob)
+                           .distinct
+                           .order(Arel.sql("RANDOM()"))
+                           .first
   end
 
   def show_member
