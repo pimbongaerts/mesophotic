@@ -321,7 +321,12 @@ Replace the `<<< Back` links throughout the app with proper breadcrumb navigatio
 These are noted for future planning but not part of this effort:
 
 ### Performance
-- **N+1 queries in format_authors:** `publications_helper.rb` iterates `publication.users` for every publication in collection views. Fix with eager loading (`Publication.includes(:users)`) in controllers.
+- **~~N+1 queries in format_authors~~:** Fixed — eager loading added to pages and publications controllers.
+- **Fragment caching — About page contributors:** 50+ `User.find_by` queries for contributors. Batch-load users in controller or cache the contributor cards (they rarely change). Cache key: `User.maximum(:updated_at)`.
+- **Fragment caching — Home page publications:** Cache the newsfeed partial keyed on `Publication.maximum(:updated_at)`. Saves 20 PDF preview lookups per page load.
+- **Fragment caching — News post cards:** Cache individual post summary cards keyed on `post.updated_at`. Saves photo variant lookups per card.
+- **Fragment caching — Publications sidebar charts:** Cache the focusgroup/field/platform/location bar charts on publications index. They change infrequently.
+- **Fragment caching — Members list:** Cache the member table keyed on `User.maximum(:updated_at)`. Each row does `user.publications.count`.
 - **word_association / species_association helper:** `application_helper.rb` loads ALL platforms, fields, focusgroups, locations, and species into memory every time it's called (per publication view). Cache per request or memoize.
 - **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
 - **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.

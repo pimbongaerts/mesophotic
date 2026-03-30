@@ -3,8 +3,8 @@ class PagesController < ApplicationController
 
   def home
     @locations = Location.published
-    @posts = Post.latest(2)
-    @publications = Publication.latest(20)
+    @posts = Post.latest(2).includes(photos: { image_attachment: :blob })
+    @publications = Publication.latest(20).includes(:users, :journal)
     @latest_update = Publication.maximum(:updated_at)
   end
 
@@ -16,12 +16,12 @@ class PagesController < ApplicationController
   end
 
   def members
-    @users = User.all.order(last_name: :asc)
+    @users = User.all.order(last_name: :asc).includes(:publications, :organisation)
     @publications = Publication.all
   end
 
   def show_member
-    @user = User.find(params[:id])
+    @user = User.includes(:organisation, :platforms, profile_picture_attachment: :blob).find(params[:id])
   rescue
     redirect_to root_path
   end
@@ -31,10 +31,12 @@ class PagesController < ApplicationController
     @fields = Field.all.order(description: :asc)
     @focusgroups = Focusgroup.all.order(description: :asc)
     @locations = Location.all.order(description: :asc)
+    @users_by_name = User.includes(:organisation, profile_picture_attachment: :blob)
+                         .index_by { |u| "#{u.first_name} #{u.last_name}" }
   end
 
   def posts
-    @posts = Post.published.page(params[:page]).per(20)
+    @posts = Post.published.includes(:user, :featured_user, :featured_publication, photos: { image_attachment: :blob }).page(params[:page]).per(20)
   end
 
   def show_post
