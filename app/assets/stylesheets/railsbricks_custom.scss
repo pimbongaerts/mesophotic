@@ -365,4 +365,12 @@ img {
     padding-top: 20px;
   }
 }
+
+// Newsfeed publication titles: link colour, underline on hover only
+.newsfeed-title {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 //***********************************************************
