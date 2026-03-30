@@ -21,7 +21,7 @@ class PagesController < ApplicationController
   end
 
   def media_gallery
-    @photos = Photo.media_gallery.order(id: :desc).page(params[:page])
+    @photos = Photo.media_gallery.order(id: :desc).includes(image_attachment: :blob).page(params[:page])
   end
 
   def members
@@ -37,10 +37,20 @@ class PagesController < ApplicationController
                            .distinct
                            .order(Arel.sql("RANDOM()"))
                            .first
+    @people_map_data = Rails.cache.fetch(["people_map", User.maximum(:updated_at)]) do
+      helpers.count_geographic_occurrences_of_users(@users)
+    end
+    @author_growth = Rails.cache.fetch(["author_growth", Publication.maximum(:updated_at)]) do
+      helpers.count_first_authors_over_time(@publications, Time.new.year - 1)
+    end
   end
 
   def show_member
-    @user = User.includes(:organisation, :platforms, profile_picture_attachment: :blob).find(params[:id])
+    @user = User.includes(:organisation, :platforms, :photos, profile_picture_attachment: :blob).find(params[:id])
+    @member_publications = @user.publications.includes(:users, :journal, pdf_attachment: :blob).order('publication_year DESC, created_at DESC').page(params[:page]).per(20)
+    @member_map_data = Rails.cache.fetch(["member_map", params[:id], Publication.maximum(:updated_at)]) do
+      helpers.count_geographic_occurrences_of_publications_from_user(@user)
+    end
   rescue
     redirect_to root_path
   end
@@ -101,6 +111,9 @@ class PagesController < ApplicationController
   end
 
   def member_research_summary
-    render partial: 'research_summary', locals: { user: User.find(params[:id]) }
+    cached = Rails.cache.fetch(["member_research_summary", params[:id], Publication.maximum(:updated_at)]) do
+      render_to_string partial: 'research_summary', locals: { user: User.find(params[:id]) }
+    end
+    render html: cached.html_safe
   end
 end

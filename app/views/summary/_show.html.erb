@@ -45,19 +45,22 @@
       </div>
     <% end %>
 
-    <% if object.try(:photos) && object.photos.showcases_location.count > 0 %>
+    <% location_photos = object.try(:photos) ? object.photos.showcases_location.includes(image_attachment: :blob) : [] %>
+    <% if location_photos.any? %>
       <div class="card">
         <div class="card-header">
           <strong>Photographs</strong> (from the field)
         </div>
         <div class="card-body">
-        <% object.photos.showcases_location.each do |photo| %>
+        <% location_photos.each do |photo| %>
+          <% cache photo do %>
           <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f0f1f3; margin-bottom: 0.5rem;">
             <%= link_to photo_path(photo) do %>
               <%= image_tag photo.image.variant(resize: "400x300^", crop: "400x300+0+0"),
                             style: "width: 100%; height: 100%; object-fit: cover;" %>
             <% end %>
           </div>
+          <% end %>
         <% end %>
         </div>
       </div>

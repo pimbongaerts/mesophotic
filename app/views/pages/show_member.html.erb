@@ -45,13 +45,15 @@
 
     <% if @user.publications.count > 0 %>
       <div class="card">
-        <div class="card-header"><strong>Publications</strong></div>
+        <div class="card-header"><strong>Publications</strong> <small class="text-muted">(<%= @user.publications.count %>)</small></div>
         <div class="card-body" style="background-color: #f8f9fa;">
           <p class="p-2 rounded text-muted" style="background-color: #e8f4fd; font-size: 0.85em;">
             Only publications relevant to mesophotic reefs are indexed.
           </p>
+          <%= paginate @member_publications %>
           <%= render partial: 'pages/newsfeed',
-                     locals: { publications: @user.publications.includes(:users, :journal, pdf_attachment: :blob).order('publication_year DESC, created_at DESC') } %>
+                     locals: { publications: @member_publications } %>
+          <%= paginate @member_publications %>
         </div>
       </div>
     <% end %>
@@ -59,15 +61,16 @@
 
   <div class="col-sm-4">
     <% if @user.publications.count > 0 %>
+      <% cache ["member_map_card", @user, Publication.maximum(:updated_at)] do %>
       <div class="card">
         <div class="card-header"><strong>Locations</strong></div>
         <div class="card-body p-1">
-          <% data = count_geographic_occurrences_of_publications_from_user(@user) %>
           <%= render partial: 'shared/world_map', locals: { title: 'Locations',
-                                                            data: data,
+                                                            data: @member_map_data,
                                                             height: 200 } %>
         </div>
       </div>
+      <% end %>
     <% end %>
 
     <% if @user.publications.count > 0 %>
@@ -80,6 +83,7 @@
     <% end %>
 
     <% if @user.platforms.count > 0 %>
+      <% cache ["member_platforms", @user] do %>
       <div class="card">
         <div class="card-header"><strong>Research Platforms</strong></div>
         <div class="card-body">
@@ -89,9 +93,11 @@
           <% end %>
         </div>
       </div>
+      <% end %>
     <% end %>
 
     <% if @user.photos.count > 0 %>
+      <% cache ["member_photos", @user] do %>
       <div class="card">
         <div class="card-header"><strong>Photographs</strong></div>
         <div class="card-body">
@@ -105,6 +111,7 @@
           <% end %>
         </div>
       </div>
+      <% end %>
     <% end %>
 
     <% if @user.publications.count > 0 %>
