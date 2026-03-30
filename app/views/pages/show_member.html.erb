@@ -46,15 +46,12 @@
     <% if @user.publications.count > 0 %>
       <div class="card">
         <div class="card-header"><strong>Publications</strong></div>
-        <div class="card-body">
+        <div class="card-body" style="background-color: #f8f9fa;">
           <p class="p-2 rounded text-muted" style="background-color: #e8f4fd; font-size: 0.85em;">
             Only publications relevant to mesophotic reefs are indexed.
           </p>
-          <table class="table table-sm table-striped">
-            <% @user.publications.each do |publication| %>
-              <%= render publication %>
-            <% end %>
-          </table>
+          <%= render partial: 'pages/newsfeed',
+                     locals: { publications: @user.publications.includes(:users, :journal).order('publication_year DESC, created_at DESC') } %>
         </div>
       </div>
     <% end %>
