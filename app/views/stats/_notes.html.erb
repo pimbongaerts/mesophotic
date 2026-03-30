@@ -1,16 +1,21 @@
-<div class="card">
+<div class="card mb-3" style="background-color: #f8f9fa;">
   <div class="card-body">
-    <p>The following graphs summarize the metadata across the <code><%= @publications.length %></code> scientific articles in this database that are validated and present original data from mesophotic depths. See the <%= link_to "Data Tutorial", tutorial_pages_path %> on how to produce similar figures yourself in R.</p>
-
-    <p>
-      All publications up to:
-      <%= link_to "2008", all_stats_path(2008) %>
-      <%= link_to "2023", all_stats_path(2023) %>
-    </p>
-    <p>
-      Validated publications up to:
-      <%= link_to "2008", validated_stats_path(2008) %>
-      <%= link_to "2023", validated_stats_path(2023) %>
-    </p>
+    <div class="d-flex align-items-center">
+      <div class="flex-shrink-0 me-3 d-flex flex-column gap-1">
+        <div class="btn-group btn-group-sm">
+          <%= link_to "All", all_stats_path(@year || 2023), class: "btn #{@status == :all ? 'btn-secondary' : 'btn-outline-secondary'}", style: "min-width: 70px;" %>
+          <%= link_to "Validated", validated_stats_path(@year || 2023), class: "btn #{@status == :validated ? 'btn-secondary' : 'btn-outline-secondary'}", style: "min-width: 70px;" %>
+        </div>
+        <div class="btn-group btn-group-sm">
+          <%= link_to "2008", @status == :validated ? validated_stats_path(2008) : all_stats_path(2008), class: "btn #{@year.to_i == 2008 ? 'btn-secondary' : 'btn-outline-secondary'}", style: "min-width: 70px;" %>
+          <%= link_to "2023", @status == :validated ? validated_stats_path(2023) : all_stats_path(2023), class: "btn #{@year.to_i == 2023 ? 'btn-secondary' : 'btn-outline-secondary'}", style: "min-width: 70px;" %>
+        </div>
+      </div>
+      <div>
+        <div style="line-height: 1.2;"><span style="font-size: 1.5em; font-weight: bold;"><%= @publications.length %></span> <span class="text-muted" style="font-size: 0.9em;">articles</span></div>
+        <div class="text-muted" style="font-size: 0.9em;">Metadata summary of validated scientific articles with original mesophotic data.</div>
+        <div class="text-muted" style="font-size: 0.9em;">See the <%= link_to "Data Tutorial", tutorial_pages_path %> for how to produce similar figures in R.</div>
+      </div>
+    </div>
   </div>
 </div>
