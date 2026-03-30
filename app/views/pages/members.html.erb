@@ -11,7 +11,9 @@
         </small>
       </div>
       <div class="card-body p-0">
-        <%= render partial: 'memberlist', locals: { users: @users } %>
+        <% cache ["members_list", User.maximum(:updated_at), Publication.maximum(:updated_at)] do %>
+          <%= render partial: 'memberlist', locals: { users: @users } %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -27,7 +29,9 @@
     <div class="card">
       <div class="card-header"><strong>Recently Updated</strong></div>
       <div class="card-body">
-        <%= render partial: 'latest_members' %>
+        <% cache ["latest_members", User.maximum(:updated_at)] do %>
+          <%= render partial: 'latest_members' %>
+        <% end %>
       </div>
     </div>
 
