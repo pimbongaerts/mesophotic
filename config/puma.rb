@@ -29,5 +29,17 @@ workers ENV.fetch("WEB_CONCURRENCY") { 1 }
 # process behavior so workers use less memory.
 preload_app!
 
+# Restart workers that exceed memory limit (in bytes). Checks every 30 seconds.
+before_fork do
+  require 'puma_worker_killer'
+  PumaWorkerKiller.config do |config|
+    config.ram           = 512 # MB - restart worker if total RAM exceeds this
+    config.frequency     = 30  # seconds between checks
+    config.percent_usage = 0.9 # restart at 90% of ram limit
+    config.rolling_restart_frequency = 6 * 3600 # force restart every 6 hours
+  end
+  PumaWorkerKiller.start
+end
+
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
