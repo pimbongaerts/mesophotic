@@ -4,11 +4,11 @@
 <hr/>
 
 <div class="col-sm-12">
-	<%= paginate @publications %>
-	<table class="table table-striped">
-	<% @publications.each do |publication| %>
-  	<%= render "publications/publication", publication: publication %>
-	<% end %>
-	</table>
-	<%= paginate @publications %>
+  <%= paginate @publications %>
+  <div class="card mt-2">
+    <div class="card-body" style="background-color: #f8f9fa;">
+      <%= render partial: 'pages/newsfeed', locals: { publications: @publications } %>
+    </div>
+  </div>
+  <%= paginate @publications %>
 </div>
