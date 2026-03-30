@@ -92,14 +92,12 @@ class PagesController < ApplicationController
   end
 
   def member_keywords
-    publications = Publication.select(:contents).joins(:users).where("users.id == ?", params[:id])
-    word_cloud = publications.word_cloud(40)
-
-    if word_cloud.present?
-      render partial: 'shared/wordcloud',
-             object: word_cloud,
-             locals: { title: 'publication_contents' }
+    cached = Rails.cache.fetch(["member_keywords", params[:id], Publication.maximum(:updated_at)]) do
+      publications = Publication.select(:contents).joins(:users).where("users.id == ?", params[:id])
+      word_cloud = publications.word_cloud(40)
+      word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: 'publication_contents' }) : ""
     end
+    render html: cached.html_safe
   end
 
   def member_research_summary
