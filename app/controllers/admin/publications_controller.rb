@@ -7,7 +7,7 @@ class Admin::PublicationsController < Admin::BaseController
   ]
 
   def dashboard
-	  @publications = Publication.includes(:users, :journal).page(params[:page])
+	  @publications = Publication.includes(:users, :journal, pdf_attachment: :blob).page(params[:page])
   end
 
   def destroy

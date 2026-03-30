@@ -18,7 +18,7 @@
         <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
         <br><br>
         <%= render partial: 'pages/newsfeed',
-                   locals: { publications: publications.includes(:users, :journal).order('publication_year DESC, created_at DESC') } %>
+                   locals: { publications: publications.includes(:users, :journal, pdf_attachment: :blob).order('publication_year DESC, created_at DESC') } %>
         <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
