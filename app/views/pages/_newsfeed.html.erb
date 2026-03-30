@@ -1,5 +1,6 @@
 <% publications.each do |publication| %>
   <div class="d-flex align-items-start<%= ' mb-3 pb-3 border-bottom' unless publication == publications.last %>">
+    <% cache publication do %>
     <div class="flex-shrink-0" style="width: 60px;">
       <% if publication.pdf.attached? %>
         <%= link_to publication do %>
@@ -37,5 +38,6 @@
         <% end %>
       </div>
     </div>
+    <% end %>
   </div>
 <% end %>

@@ -4,7 +4,7 @@ class PagesController < ApplicationController
   def home
     @locations = Location.published
     @posts = Post.latest(2).includes(photos: { image_attachment: :blob })
-    @publications = Publication.latest(20).includes(:users, :journal)
+    @publications = Publication.latest(20).includes(:users, :journal, pdf_attachment: :blob)
     @latest_update = Publication.maximum(:updated_at)
   end
 
