@@ -1,0 +1,5 @@
+<% statuses.each do |status| %>
+  <% cache ["mastodon_status", status.content_url] do %>
+    <%= render partial: 'status', locals: { users: users, status: status } %>
+  <% end %>
+<% end %>

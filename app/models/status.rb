@@ -1,5 +1,6 @@
 class Status
   attr_reader :username, :profile_url, :content, :content_url, :published_at
+  attr_accessor :avatar_url, :display_name
 
   def initialize username, profile_url, content, content_url, published_at = nil
     @username, @profile_url, @content, @content_url, @published_at = username, profile_url, content, content_url, published_at

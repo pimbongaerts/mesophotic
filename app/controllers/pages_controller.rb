@@ -6,11 +6,15 @@ class PagesController < ApplicationController
     @posts = Post.latest(2).includes(photos: { image_attachment: :blob })
     @publications = Publication.latest(20).includes(:users, :journal)
     @latest_update = Publication.maximum(:updated_at)
-    @mastodon_statuses, @mastodon_users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
-      statuses = StatusFeed.new("https://mastodon.social/tags/mesophotic.rss").take(10)
-      users = User.where(twitter: statuses.map(&:username))
-      [statuses, users]
+  end
+
+  def mastodon_feed
+    statuses, users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
+      s = StatusFeed.new("https://mastodon.social/tags/mesophotic.rss").take(10)
+      u = User.where(twitter: s.map(&:username))
+      [s, u]
     end
+    render partial: 'mastodon_feed', locals: { statuses: statuses, users: users }
   end
 
   def inside

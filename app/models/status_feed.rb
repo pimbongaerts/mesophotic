@@ -1,4 +1,7 @@
 require 'rss'
+require 'net/http'
+require 'json'
+
 class StatusFeed
   extend Forwardable
   delegate [
@@ -34,9 +37,55 @@ class StatusFeed
           )
         }
     end
+
+    # Fetch profiles in parallel (all at once, ~5s total instead of ~50s)
+    threads = @feed.map do |status|
+      Thread.new { fetch_profile(status) }
+    end
+    threads.each(&:join)
   end
 
   private
+
+  def fetch_profile(status)
+    profile_url = status.profile_url.to_s
+    content_url = status.content_url.to_s
+
+    # Try Mastodon-style: https://instance/@username
+    if (match = profile_url.match(/^(https?:\/\/[^\/]+)\/@(.+)$/))
+      instance, username = match[1], match[2]
+      data = api_get("#{instance}/api/v1/accounts/lookup", acct: username)
+      if data
+        status.avatar_url = data["avatar"]
+        status.display_name = data["display_name"]
+      end
+    elsif (match = content_url.match(/^(https?:\/\/[^\/]+)\/notes\/(.+)$/))
+      # Non-Mastodon (Misskey/Firefish/etc): fetch status to get account info
+      instance, status_id = match[1], match[2]
+      data = api_get("#{instance}/api/v1/statuses/#{status_id}")
+      if data && data["account"]
+        status.avatar_url = data["account"]["avatar"]
+        status.display_name = data["account"]["display_name"]
+      end
+    end
+  rescue => e
+    # Silently fail — avatar/name just won't be shown
+    Rails.logger.debug "StatusFeed: failed to fetch profile for #{status.username}: #{e.message}"
+  end
+
+  def api_get(url, params = {})
+    uri = URI.parse(url)
+    uri.query = URI.encode_www_form(params) if params.any?
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == "https"
+    http.open_timeout = 5
+    http.read_timeout = 5
+    response = http.get(uri.request_uri)
+    return nil unless response.is_a?(Net::HTTPSuccess)
+    JSON.parse(response.body)
+  rescue
+    nil
+  end
 
   def extract_username(uri)
     case uri.path
