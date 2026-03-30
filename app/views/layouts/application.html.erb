@@ -10,6 +10,7 @@
   <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
 
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= yield :head %>
   <%= javascript_include_tag "proj4" %>
   <%= javascript_include_tag "highcharts" %>
   <%= javascript_include_tag "highcharts-more" %>
