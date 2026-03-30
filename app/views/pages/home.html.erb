@@ -12,7 +12,11 @@
 <!-- Latest news -->
 <h5 class="mt-5"><strong>Latest News</strong></h5>
 <div class="row mb-4">
-  <%= render partial: 'shared/post_summary_small', collection: @posts, as: :post %>
+  <% @posts.each do |post| %>
+    <% cache ["post_card_small", post] do %>
+      <%= render partial: 'shared/post_summary_small', locals: { post: post } %>
+    <% end %>
+  <% end %>
 </div>
 
 <!-- Latest publications -->
@@ -21,8 +25,10 @@
     <div class="card">
       <div class="card-header"><strong>Latest Publications</strong></div>
       <div class="card-body" style="background-color: #f8f9fa;">
-        <%= render partial: 'newsfeed',
-                   locals: { publications: @publications } %>
+        <% cache ["home_publications", @latest_update] do %>
+          <%= render partial: 'newsfeed',
+                     locals: { publications: @publications } %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -34,10 +40,10 @@
         <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;" %>
       </div>
       <div class="card-body">
-        <% cache "mastodon_feed", expires_in: 1.hour do %>
-          <% statuses = (StatusFeed.new "https://mastodon.social/tags/mesophotic.rss").take(10) %>
-          <% users = User.where(twitter: statuses.map(&:username)) %>
-          <%= render partial: 'status', locals: { users: users }, collection: statuses, as: :status %>
+        <% @mastodon_statuses.each do |status| %>
+          <% cache ["mastodon_status", status.content_url] do %>
+            <%= render partial: 'status', locals: { users: @mastodon_users, status: status } %>
+          <% end %>
         <% end %>
       </div>
       <div class="card-footer text-muted" style="font-size: 0.85em;">

@@ -4,7 +4,9 @@
 
 <%= paginate @posts %>
 <% @posts.each do |post| %>
-  <%= render partial: 'shared/post_summary',
-             locals: {post: post } %>
+  <% cache ["post_card", post] do %>
+    <%= render partial: 'shared/post_summary',
+               locals: {post: post } %>
+  <% end %>
 <% end %>
 <%= paginate @posts %>
