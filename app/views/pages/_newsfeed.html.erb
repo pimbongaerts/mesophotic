@@ -1,6 +1,41 @@
 <% publications.each do |publication| %>
-  <table class="table table-striped">
-    <%= render partial: "publications/publication", 
-               locals: { publication: publication } %>
-  </table>
+  <div class="d-flex align-items-start<%= ' mb-3 pb-3 border-bottom' unless publication == publications.last %>">
+    <div class="flex-shrink-0" style="width: 60px;">
+      <% if publication.pdf.attached? %>
+        <%= link_to publication do %>
+          <%= image_tag publication.pdf.preview(resize: "60x84>"), style: "width: 60px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);" %>
+        <% end %>
+      <% else %>
+        <%= link_to publication do %>
+          <div class="d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 84px; background-color: #f0f1f3;">
+            <i class="bi bi-file-earmark-text text-muted"></i>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="flex-grow-1 ms-3">
+      <div>
+        <strong><%= link_to truncate(publication.title, length: 120), publication, class: "newsfeed-title" %></strong>
+      </div>
+      <div style="font-size: 0.9em;">
+        <%= format_authors(publication) %> (<%= publication.publication_year %>)
+      </div>
+      <% if publication.scientific_article? && publication.journal %>
+        <div class="text-muted" style="font-size: 0.9em;">
+          <em><%= publication.journal.name %></em>
+        </div>
+      <% end %>
+      <div class="mt-1 d-flex align-items-center gap-1">
+        <span class="badge border text-secondary" style="font-size: 0.7em; font-weight: normal;"><%= publication.publication_format.titleize %></span>
+        <% if publication.open_access? %>
+          <span class="badge border border-success text-success" style="font-size: 0.7em; font-weight: normal;">Open Access</span>
+        <% end %>
+        <% if publication.DOI.present? %>
+          <%= link_to publication.doi_url, class: "text-muted ms-auto", style: "font-size: 0.85em; text-decoration: none;" do %>
+            <i class="bi bi-link-45deg"></i> DOI
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 <% end %>
