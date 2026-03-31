@@ -16,20 +16,25 @@ class BlueskyFeed
     :take,
   ] => :@feed
 
+  API_HOST = "bsky.social".freeze
+
   attr_reader :feed
 
   def initialize(hashtag = "mesophotic")
-    uri = URI.parse("https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23#{hashtag}&sort=latest&limit=25")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.open_timeout = 10
-    http.read_timeout = 10
-    response = http.get(uri.request_uri)
+    token = authenticate
+    unless token
+      @feed = []
+      return
+    end
+
+    uri = URI.parse("https://#{API_HOST}/xrpc/app.bsky.feed.searchPosts?q=%23#{hashtag}&sort=latest&limit=25")
+    response = api_get(uri, token)
 
     if response.is_a?(Net::HTTPSuccess)
       data = JSON.parse(response.body)
       @feed = (data["posts"] || []).map { |post| parse_post(post) }
     else
+      Rails.logger.debug "BlueskyFeed: search returned #{response.code}: #{response.body[0..200]}"
       @feed = []
     end
   rescue => e
@@ -38,6 +43,53 @@ class BlueskyFeed
   end
 
   private
+
+  def authenticate
+    # Cache the session token for 1 hour (tokens last 2 hours)
+    Rails.cache.fetch("bluesky_session_token", expires_in: 1.hour) do
+      handle = Rails.application.credentials.dig(:bluesky, :handle)
+      app_password = Rails.application.credentials.dig(:bluesky, :app_password)
+
+      unless handle.present? && app_password.present?
+        Rails.logger.debug "BlueskyFeed: bluesky credentials not configured"
+        return nil
+      end
+
+      uri = URI.parse("https://#{API_HOST}/xrpc/com.atproto.server.createSession")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = 5
+      http.read_timeout = 5
+
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request["Content-Type"] = "application/json"
+      request.body = { identifier: handle, password: app_password }.to_json
+
+      response = http.request(request)
+
+      if response.is_a?(Net::HTTPSuccess)
+        data = JSON.parse(response.body)
+        data["accessJwt"]
+      else
+        Rails.logger.debug "BlueskyFeed: auth failed #{response.code}: #{response.body[0..200]}"
+        nil
+      end
+    end
+  rescue => e
+    Rails.logger.debug "BlueskyFeed: auth error: #{e.message}"
+    nil
+  end
+
+  def api_get(uri, token)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.open_timeout = 10
+    http.read_timeout = 10
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request["Authorization"] = "Bearer #{token}"
+    http.request(request)
+  end
 
   def parse_post(post)
     author = post["author"] || {}
@@ -56,7 +108,6 @@ class BlueskyFeed
   end
 
   def post_url(handle, at_uri)
-    # AT URI format: at://did:plc:xxx/app.bsky.feed.post/rkey
     rkey = at_uri.to_s.split("/").last
     "https://bsky.app/profile/#{handle}/post/#{rkey}"
   end
@@ -64,13 +115,10 @@ class BlueskyFeed
   def format_content(text, facets)
     return "" if text.nil?
 
-    # If no facets (links/mentions), just convert newlines to <br> and escape HTML
     if facets.nil? || facets.empty?
       return ERB::Util.html_escape(text).gsub("\n", "<br>")
     end
 
-    # Process facets (links, mentions, tags) - sort by byte position descending
-    # so replacements don't shift positions
     result = text.dup
     sorted_facets = facets.sort_by { |f| -(f.dig("index", "byteStart") || 0) }
 
@@ -101,17 +149,12 @@ class BlueskyFeed
         escaped_text
       end
 
-      # Replace using byte positions on the original text
       result_bytes = result.bytes.to_a
       replacement_bytes = replacement.bytes.to_a
       result_bytes[byte_start...byte_end] = replacement_bytes
       result = result_bytes.pack("C*").force_encoding("UTF-8")
     end
 
-    # The facet processing handles escaping for replaced segments.
-    # Remaining plain text between facets is not HTML-escaped yet,
-    # but since we process the full text with byte replacement,
-    # we need to escape the non-faceted portions separately.
     result.gsub("\n", "<br>")
   end
 end

@@ -1,0 +1,34 @@
+function switchFeed(platform) {
+  var feeds = ['mastodon', 'bluesky'];
+  var colors = { mastodon: '#595aff', bluesky: '#0085ff' };
+
+  feeds.forEach(function(feed) {
+    var container = document.getElementById('feed-' + feed);
+    var logo = document.getElementById('logo-' + feed);
+    if (feed === platform) {
+      container.style.display = 'block';
+      logo.style.opacity = '1';
+    } else {
+      container.style.display = 'none';
+      logo.style.opacity = '0.4';
+    }
+  });
+
+  document.getElementById('feed-hashtag').style.color = colors[platform];
+}
+
+// After Bluesky feed loads via render_async, hide the tab if empty
+document.addEventListener('render_async_load', function() {
+  var blueskyTab = document.getElementById('tab-bluesky');
+  if (!blueskyTab) return;
+
+  var blueskyFeed = document.getElementById('feed-bluesky');
+  if (!blueskyFeed) return;
+
+  // Only act if the Bluesky feed has finished loading (no more spinner)
+  var spinner = blueskyFeed.querySelector('.spinner-border');
+  if (spinner) return;  // Still loading, wait for next event
+
+  var hasContent = blueskyFeed.querySelector('.mastodon-status');
+  blueskyTab.style.display = hasContent ? '' : 'none';
+});
