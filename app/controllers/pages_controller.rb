@@ -32,7 +32,7 @@ class PagesController < ApplicationController
                            .where.not(publications: { id: nil })
                            .joins(:profile_picture_blob)
                            .where.not(active_storage_blobs: { filename: nil })
-                           .where(admin: false)
+                           .where.not(role: "admin")
                            .includes(:organisation, profile_picture_attachment: :blob)
                            .distinct
                            .order(Arel.sql("RANDOM()"))

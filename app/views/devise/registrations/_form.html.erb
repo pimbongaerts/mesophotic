@@ -15,27 +15,6 @@
                            { class: "form-select" } %>
             </div>
           </div>
-          <div class="col-8">
-            <br>
-            <% if current_user.try(:admin?)  %>
-              <%# devise_mapping.confirmable? &&
-                resource.pending_reconfirmation?
-              Currently waiting confirmation for:
-              <%= resource.unconfirmed_email %>
-            <% else %>
-              <div class="mb-3">
-                <% if current_user.try(:admin?) %>
-                  <%= f.label :role %>&nbsp;
-                  <%= f.select :role, [["Member", "member"], ["Editor", "editor"], ["Admin", "admin"]], {}, class: "form-select form-select-sm", style: "width: auto; display: inline-block;" %>
-                <% else %>
-                  <%= f.check_box :editor, disabled: true %>
-                  <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
-                  <%= f.check_box :admin, disabled: true %>
-                  <%= f.label :admin %>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
         </div>
         <div class="mb-3">
           <%= f.label :first_name, class: 'required' %><br>
@@ -209,7 +188,7 @@
         <div class="mb-3">
           <%= f.label :address %>
           <br>
-          <%= f.text_area :address, class: "form-control", rows: 7 %>
+          <%= f.text_area :address, class: "form-control", rows: 7, style: "height: 179px;" %>
         </div>
         <div class="mb-3">
           <%= f.label :phone %>
