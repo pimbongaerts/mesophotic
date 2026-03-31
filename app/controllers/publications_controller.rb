@@ -21,7 +21,7 @@ class PublicationsController < ApplicationController
         .search(params[:search], params[:search_params], is_editor_or_admin)
 
       format.html {
-        @publications = @publications.page(params[:page]).per(is_editor_or_admin ? 100 : 20)
+        @publications = @publications.includes(:users, :journal, pdf_attachment: :blob).page(params[:page]).per(is_editor_or_admin ? 100 : 20)
 
         unless current_user.try(:editor_or_admin?) || params[:search_term].present?
           @locations = Location
