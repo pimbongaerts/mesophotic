@@ -86,11 +86,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :require_admin!
 
-  # Only permits editor users
+  # Only permits editor or admin users
   def require_admin_or_editor!
     authenticate_user!
 
-    if current_user && !current_user.editor? && !@current_user.admin?
+    if current_user && !current_user.editor?
       redirect_to root_path
     end
   end
