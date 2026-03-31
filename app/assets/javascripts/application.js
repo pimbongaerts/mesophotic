@@ -16,3 +16,4 @@
 //= require dual_range
 //= require wordcloud2
 //= require charts
+//= require feed_tabs

@@ -36,16 +36,33 @@
   <div class="col-sm-5">
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><span style="color: #595aff;">#mesophotic</span> on Mastodon</strong>
-        <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;" %>
+        <strong><span id="feed-hashtag" style="color: #595aff;">#mesophotic</span></strong>
+        <div class="d-flex align-items-center gap-2">
+          <a href="#" id="tab-mastodon" onclick="switchFeed('mastodon'); return false;" title="Mastodon">
+            <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;", id: "logo-mastodon" %>
+          </a>
+          <a href="#" id="tab-bluesky" onclick="switchFeed('bluesky'); return false;" title="Bluesky">
+            <%= image_tag "bluesky_logo.svg", style: "height: 16px; vertical-align: middle; opacity: 0.4;", id: "logo-bluesky" %>
+          </a>
+        </div>
       </div>
       <div class="card-body">
-        <%= render_async mastodon_feed_pages_path do %>
-          <div class="text-center text-muted py-4">
-            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-            Loading feed...
-          </div>
-        <% end %>
+        <div id="feed-mastodon">
+          <%= render_async mastodon_feed_pages_path do %>
+            <div class="text-center text-muted py-4">
+              <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+              Loading feed...
+            </div>
+          <% end %>
+        </div>
+        <div id="feed-bluesky" style="display: none;">
+          <%= render_async bluesky_feed_pages_path do %>
+            <div class="text-center text-muted py-4">
+              <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+              Loading feed...
+            </div>
+          <% end %>
+        </div>
       </div>
       <div class="card-footer text-muted" style="font-size: 0.85em;">
         Use the <strong>#mesophotic</strong> hashtag to contribute
