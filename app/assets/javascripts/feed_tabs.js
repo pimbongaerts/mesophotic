@@ -15,6 +15,8 @@ function switchFeed(platform) {
   });
 
   document.getElementById('feed-hashtag').style.color = colors[platform];
+  var names = { mastodon: 'on Mastodon', bluesky: 'on Bluesky' };
+  document.getElementById('feed-platform').textContent = names[platform];
 }
 
 // After Bluesky feed loads via render_async, hide the tab if empty

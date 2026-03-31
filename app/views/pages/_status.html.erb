@@ -13,22 +13,25 @@
     </a>
   </div>
   <div class="flex-grow-1 ms-2">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-start">
       <% mastodon_user = users.find_by(twitter: "@#{status.username}") %>
-      <div>
+      <div style="line-height: 1.1;">
         <% if mastodon_user %>
           <strong><%= link_to mastodon_user.full_name_normal, member_pages_path(mastodon_user), style: "text-decoration: none; color: inherit;" %></strong>
         <% elsif status.display_name.present? %>
           <strong><%= status.display_name %></strong>
         <% end %>
+        <br>
         <%= link_to "@#{status.username}", status.profile_url.to_s, class: "text-muted", style: "text-decoration: none; font-size: 0.85em;" %>
+      </div>
+      <div class="text-end flex-shrink-0 ms-2">
         <% if status.published_at %>
-          <span class="text-muted" style="font-size: 0.8em;"> · <%= time_ago_in_words(status.published_at) %> ago</span>
+          <span class="text-muted" style="font-size: 0.8em;"><%= time_ago_in_words(status.published_at) %> ago</span>
+        <% end %>
+        <%= link_to status.content_url.to_s, class: "text-muted ms-1" do %>
+          <i class="bi bi-box-arrow-up-right" style="font-size: 0.8em;"></i>
         <% end %>
       </div>
-      <%= link_to status.content_url.to_s, class: "text-muted" do %>
-        <i class="bi bi-box-arrow-up-right" style="font-size: 0.8em;"></i>
-      <% end %>
     </div>
     <div class="mt-1 mastodon-content" style="font-size: 0.9em;">
       <%= status.content.html_safe %>

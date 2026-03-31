@@ -36,18 +36,20 @@
   <div class="col-sm-5">
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><span id="feed-hashtag" style="color: #595aff;">#mesophotic</span></strong>
+        <div>
+          <strong><span id="feed-hashtag" style="color: #0085ff;">#mesophotic</span> <span id="feed-platform">on Bluesky</span></strong>
+        </div>
         <div class="d-flex align-items-center gap-2">
-          <a href="#" id="tab-mastodon" onclick="switchFeed('mastodon'); return false;" title="Mastodon">
-            <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle;", id: "logo-mastodon" %>
-          </a>
           <a href="#" id="tab-bluesky" onclick="switchFeed('bluesky'); return false;" title="Bluesky">
-            <%= image_tag "bluesky_logo.svg", style: "height: 16px; vertical-align: middle; opacity: 0.4;", id: "logo-bluesky" %>
+            <%= image_tag "bluesky_logo.svg", style: "height: 16px; vertical-align: middle;", id: "logo-bluesky" %>
+          </a>
+          <a href="#" id="tab-mastodon" onclick="switchFeed('mastodon'); return false;" title="Mastodon">
+            <%= image_tag "mastodon_logo.png", size: "16x16", style: "vertical-align: middle; opacity: 0.4;", id: "logo-mastodon" %>
           </a>
         </div>
       </div>
       <div class="card-body">
-        <div id="feed-mastodon">
+        <div id="feed-mastodon" style="display: none;">
           <%= render_async mastodon_feed_pages_path do %>
             <div class="text-center text-muted py-4">
               <div class="spinner-border spinner-border-sm me-2" role="status"></div>
@@ -55,7 +57,7 @@
             </div>
           <% end %>
         </div>
-        <div id="feed-bluesky" style="display: none;">
+        <div id="feed-bluesky">
           <%= render_async bluesky_feed_pages_path do %>
             <div class="text-center text-muted py-4">
               <div class="spinner-border spinner-border-sm me-2" role="status"></div>
