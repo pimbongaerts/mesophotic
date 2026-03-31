@@ -25,10 +25,8 @@
             <% else %>
               <div class="mb-3">
                 <% if current_user.try(:admin?) %>
-                  <%= f.check_box :editor %>
-                  <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
-                  <%= f.check_box :admin %>
-                  <%= f.label :admin %>
+                  <%= f.label :role %>&nbsp;
+                  <%= f.select :role, [["Member", "member"], ["Editor", "editor"], ["Admin", "admin"]], {}, class: "form-select form-select-sm", style: "width: auto; display: inline-block;" %>
                 <% else %>
                   <%= f.check_box :editor, disabled: true %>
                   <%= f.label :editor %>&nbsp;&nbsp;&nbsp;
