@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_29_051952) do
+ActiveRecord::Schema.define(version: 2026_03_31_102929) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -426,7 +426,6 @@ ActiveRecord::Schema.define(version: 2026_03_29_051952) do
   create_table "users", force: :cascade do |t|
     t.string "email", limit: 255, default: "", null: false
     t.string "encrypted_password", limit: 255, default: "", null: false
-    t.boolean "admin", limit: 1, default: false, null: false
     t.boolean "locked", limit: 1, default: false, null: false
     t.string "reset_password_token", limit: 255
     t.datetime "reset_password_sent_at"
@@ -460,7 +459,7 @@ ActiveRecord::Schema.define(version: 2026_03_29_051952) do
     t.text "research_interests", limit: 65535
     t.integer "organisation_id", limit: 4
     t.string "twitter", limit: 255
-    t.boolean "editor", default: false
+    t.string "role", default: "member", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
