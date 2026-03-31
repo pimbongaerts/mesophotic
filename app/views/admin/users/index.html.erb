@@ -32,10 +32,11 @@
           <tr>
             <td><%= link_to user.email, edit_admin_user_path(user), style: "text-decoration: none;" %></td>
             <td>
-              <% if user.admin? %><span class="badge bg-danger">Admin</span><% end %>
-              <% if user.editor? %><span class="badge bg-info">Editor</span><% end %>
+              <% if user.role == "admin" %><span class="badge bg-danger">Admin</span>
+              <% elsif user.role == "editor" %><span class="badge bg-info">Editor</span>
+              <% else %><span class="badge bg-secondary">Member</span>
+              <% end %>
               <% if user.locked? %><span class="badge bg-warning text-dark">Locked</span><% end %>
-              <% if !user.admin? && !user.editor? && !user.locked? %><span class="badge bg-secondary">Member</span><% end %>
             </td>
             <td><%= user.sign_in_count %></td>
             <td><%= time_ago_in_words(user.created_at) %> ago</td>

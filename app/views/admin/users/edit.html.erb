@@ -28,19 +28,14 @@
             <%= f.password_field :password_confirmation, class: "form-control" %>
           </div>
 
-          <% unless current_user.id == @user.id %>
-            <hr>
-            <div class="mb-3">
-              <div class="form-check">
-                <%= f.check_box :admin, class: "form-check-input" %>
-                <%= f.label :admin, "Admin", class: "form-check-label" %>
-              </div>
-              <div class="form-check">
-                <%= f.check_box :editor, class: "form-check-input" %>
-                <%= f.label :editor, "Editor", class: "form-check-label" %>
-              </div>
-            </div>
-          <% end %>
+          <div class="mb-3">
+            <% disabled = current_user.id == @user.id %>
+            <%= f.label :role, class: "form-label" %>
+            <%= f.select :role, [["Member", "member"], ["Editor", "editor"], ["Admin", "admin"]], {}, class: "form-select", style: "width: auto;", disabled: disabled %>
+            <% if disabled %>
+              <small class="form-text text-muted">You cannot change your own role.</small>
+            <% end %>
+          </div>
 
           <div class="mt-4">
             <%= f.submit "Save User", class: "btn btn-primary" %>
@@ -83,10 +78,11 @@
         <% end %>
         <div class="mb-2">
           <small class="text-muted d-block">Status</small>
-          <% if @user.admin? %><span class="badge bg-danger">Admin</span><% end %>
-          <% if @user.editor? %><span class="badge bg-info">Editor</span><% end %>
+          <% if @user.role == "admin" %><span class="badge bg-danger">Admin</span>
+          <% elsif @user.role == "editor" %><span class="badge bg-info">Editor</span>
+          <% else %><span class="badge bg-secondary">Member</span>
+          <% end %>
           <% if @user.locked? %><span class="badge bg-warning text-dark">Locked</span><% end %>
-          <% if !@user.admin? && !@user.editor? && !@user.locked? %><span class="badge bg-secondary">Member</span><% end %>
         </div>
         <% if current_user.id != @user.id %>
           <hr>

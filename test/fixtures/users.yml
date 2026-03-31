@@ -3,8 +3,7 @@ admin_user:
   encrypted_password: "$2a$10$qtbdzaGgpA2uZTngMjo1eudRHECv33iprWF7NWWL.gTMQ.V4/q3ey"
   first_name: "Admin"
   last_name: "User"
-  admin: true
-  editor: false
+  role: "admin"
   locked: false
   confirmed_at: "2024-01-01 00:00:00"
   organisation: csiro
@@ -14,8 +13,7 @@ editor_user:
   encrypted_password: "$2a$10$qtbdzaGgpA2uZTngMjo1eudRHECv33iprWF7NWWL.gTMQ.V4/q3ey"
   first_name: "Editor"
   last_name: "User"
-  admin: false
-  editor: true
+  role: "editor"
   locked: false
   confirmed_at: "2024-01-01 00:00:00"
 
@@ -24,8 +22,7 @@ regular_user:
   encrypted_password: "$2a$10$qtbdzaGgpA2uZTngMjo1eudRHECv33iprWF7NWWL.gTMQ.V4/q3ey"
   first_name: "Regular"
   last_name: "User"
-  admin: false
-  editor: false
+  role: "member"
   locked: false
   confirmed_at: "2024-01-01 00:00:00"
 
@@ -34,7 +31,6 @@ locked_user:
   encrypted_password: "$2a$10$qtbdzaGgpA2uZTngMjo1eudRHECv33iprWF7NWWL.gTMQ.V4/q3ey"
   first_name: "Locked"
   last_name: "User"
-  admin: false
-  editor: false
+  role: "member"
   locked: true
   confirmed_at: "2024-01-01 00:00:00"
