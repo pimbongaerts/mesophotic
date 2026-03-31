@@ -31,16 +31,39 @@ class UserTest < ActiveSupport::TestCase
     assert user.valid?
   end
 
-  test "editor_or_admin? true for admin" do
+  test "admin? true for admin" do
+    assert users(:admin_user).admin?
+  end
+
+  test "admin? false for editor" do
+    assert_not users(:editor_user).admin?
+  end
+
+  test "admin? false for regular user" do
+    assert_not users(:regular_user).admin?
+  end
+
+  test "editor? true for admin (admin inherits editor)" do
+    assert users(:admin_user).editor?
+  end
+
+  test "editor? true for editor" do
+    assert users(:editor_user).editor?
+  end
+
+  test "editor? false for regular user" do
+    assert_not users(:regular_user).editor?
+  end
+
+  test "editor_or_admin? delegates to editor?" do
     assert users(:admin_user).editor_or_admin?
-  end
-
-  test "editor_or_admin? true for editor" do
     assert users(:editor_user).editor_or_admin?
+    assert_not users(:regular_user).editor_or_admin?
   end
 
-  test "editor_or_admin? false for regular user" do
-    assert_not users(:regular_user).editor_or_admin?
+  test "role defaults to member" do
+    user = User.new
+    assert_equal "member", user.role
   end
 
   test "full_name returns last, first" do

@@ -27,8 +27,7 @@ class Admin::UsersController < Admin::BaseController
     @user.password_confirmation = new_params[:password_confirmation] if new_params[:password_confirmation].present?
 
     if current_user.id != @user.id
-      @user.admin = (new_params[:admin] == "1") if new_params.key?(:admin)
-      @user.editor = (new_params[:editor] == "1") if new_params.key?(:editor)
+      @user.role = new_params[:role] if new_params.key?(:role) && new_params[:role].in?(["member", "editor", "admin"])
       @user.locked = (new_params[:locked] == "1" || new_params[:locked] == "true") if new_params.key?(:locked)
     end
 
@@ -66,7 +65,7 @@ class Admin::UsersController < Admin::BaseController
     :email,
     :password,
     :password_confirmation,
-    :admin,
+    :role,
     :locked,
     :twitter,
     :title,
