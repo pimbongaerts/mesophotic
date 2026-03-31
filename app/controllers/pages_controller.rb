@@ -17,6 +17,15 @@ class PagesController < ApplicationController
     render partial: 'mastodon_feed', locals: { statuses: statuses, users: users }
   end
 
+  def bluesky_feed
+    statuses, users = Rails.cache.fetch(["bluesky_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
+      s = BlueskyFeed.new.take(10)
+      u = User.none  # No bluesky handle matching yet
+      [s, u]
+    end
+    render partial: 'bluesky_feed', locals: { statuses: statuses, users: users }
+  end
+
   def inside
   end
 
