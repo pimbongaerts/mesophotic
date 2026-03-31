@@ -21,7 +21,7 @@ class PagesController < ApplicationController
   end
 
   def media_gallery
-    @photos = Photo.media_gallery.order(id: :desc).page(params[:page])
+    @photos = Photo.media_gallery.order(id: :desc).includes(image_attachment: :blob).page(params[:page])
   end
 
   def members
