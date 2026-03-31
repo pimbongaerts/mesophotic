@@ -5,7 +5,7 @@
 #  id                           :integer          not null, primary key
 #  email                        :string(255)      default(""), not null
 #  encrypted_password           :string(255)      default(""), not null
-#  admin                        :boolean          default(FALSE), not null
+#  role                         :string           default("member"), not null
 #  locked                       :boolean          default(FALSE), not null
 #  reset_password_token         :string(255)
 #  reset_password_sent_at       :datetime
@@ -39,7 +39,6 @@
 #  research_interests           :text(65535)
 #  organisation_id              :integer
 #  twitter                      :string(255)
-#  editor                       :boolean          default(FALSE)
 #
 
 class User < ApplicationRecord
@@ -89,15 +88,15 @@ class User < ApplicationRecord
 
   # class methods
   def self.paged(page_number)
-    order(admin: :desc, email: :asc).page page_number
+    order(Arel.sql("CASE role WHEN 'admin' THEN 0 WHEN 'editor' THEN 1 ELSE 2 END"), email: :asc).page page_number
   end
 
   def self.search_and_order(search, page_number)
     if search
       where('email LIKE ?', '%#{search.downcase}%')
-        .order(admin: :desc, email: :asc).page page_number
+        .order(Arel.sql("CASE role WHEN 'admin' THEN 0 WHEN 'editor' THEN 1 ELSE 2 END"), email: :asc).page page_number
     else
-      order(admin: :desc, email: :asc).page page_number
+      order(Arel.sql("CASE role WHEN 'admin' THEN 0 WHEN 'editor' THEN 1 ELSE 2 END"), email: :asc).page page_number
     end
   end
 
@@ -111,12 +110,20 @@ class User < ApplicationRecord
   end
 
   def self.users_count
-    where('admin = ? AND locked = ?', false, false).count
+    where.not(role: "admin").where(locked: false).count
   end
 
   # instance methods
+  def admin?
+    role == "admin"
+  end
+
+  def editor?
+    role.in?(["editor", "admin"])
+  end
+
   def editor_or_admin?
-    editor || admin
+    editor?
   end
 
   def full_name
