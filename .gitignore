@@ -29,6 +29,7 @@ storage/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/config/credentials/development.key
 .secret
 
 # direnv
@@ -38,5 +39,3 @@ backup/
 # Worksheet
 publications.tsv
 titles.txt
-
-/config/credentials/development.key
