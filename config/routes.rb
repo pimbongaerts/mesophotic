@@ -35,6 +35,7 @@ Mesophotic::Application.routes.draw do
       get :posts
       get :media_gallery
       get :mastodon_feed
+      get :bluesky_feed
       get "members/:id", action: :show_member, as: :member
       get "posts/:id", action: :show_post, as: :post
       post :emailconfirmation, action: :email, as: :email_confirmation
