@@ -74,7 +74,7 @@
 <%= render partial: 'form_initial_specific', locals: {f: f } %>
 
 <%# Contents container for admins %>
-<% if current_user.try(:admin?) || current_user.try(:editor?) %>
+<% if current_user.try(:editor_or_admin?) %>
   <div class="card">
     <div class="card-header">
       <strong>Publication Contents</strong>
