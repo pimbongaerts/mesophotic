@@ -29,7 +29,7 @@
       <div class="mt-1 d-flex align-items-center gap-1">
         <span class="badge border text-secondary" style="font-size: 0.7em; font-weight: normal;"><%= publication.publication_format.titleize %></span>
         <% if publication.open_access? %>
-          <span class="badge border border-success text-success" style="font-size: 0.7em; font-weight: normal;">Open Access</span>
+          <span class="badge border" style="font-size: 0.7em; font-weight: normal; color: #f68212; border-color: #f68212 !important;"><%= image_tag "open_access.svg", style: "height: 0.9em; vertical-align: -0.1em;", alt: "" %> Open Access</span>
         <% end %>
         <% if publication.DOI.present? %>
           <%= link_to publication.doi_url, class: "text-muted ms-auto", style: "font-size: 0.85em; text-decoration: none;" do %>
