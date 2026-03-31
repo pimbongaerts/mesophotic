@@ -37,6 +37,12 @@ class PagesController < ApplicationController
                            .distinct
                            .order(Arel.sql("RANDOM()"))
                            .first
+    @people_map_data = Rails.cache.fetch(["people_map", User.maximum(:updated_at)]) do
+      helpers.count_geographic_occurrences_of_users(@users)
+    end
+    @author_growth = Rails.cache.fetch(["author_growth", Publication.maximum(:updated_at)]) do
+      helpers.count_first_authors_over_time(@publications, Time.new.year - 1)
+    end
   end
 
   def show_member
