@@ -10,7 +10,7 @@ class PagesController < ApplicationController
 
   def mastodon_feed
     statuses, users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
-      s = StatusFeed.new("https://mastodon.social/tags/mesophotic.rss").take(10)
+      s = MastodonFeed.new("https://mastodon.social/tags/mesophotic.rss").take(10)
       u = User.where(twitter: s.map(&:username))
       [s, u]
     end

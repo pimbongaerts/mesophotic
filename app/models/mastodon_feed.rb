@@ -2,7 +2,7 @@ require 'rss'
 require 'net/http'
 require 'json'
 
-class StatusFeed
+class MastodonFeed
   extend Forwardable
   delegate [
     :each,
@@ -70,7 +70,7 @@ class StatusFeed
     end
   rescue => e
     # Silently fail — avatar/name just won't be shown
-    Rails.logger.debug "StatusFeed: failed to fetch profile for #{status.username}: #{e.message}"
+    Rails.logger.debug "MastodonFeed: failed to fetch profile for #{status.username}: #{e.message}"
   end
 
   def api_get(url, params = {})
