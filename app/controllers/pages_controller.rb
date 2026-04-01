@@ -11,7 +11,7 @@ class PagesController < ApplicationController
   def mastodon_feed
     statuses, users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
       s = MastodonFeed.new("https://mastodon.social/tags/mesophotic.rss").take(15)
-      u = User.where(twitter: s.map(&:username))
+      u = User.where(mastodon_handle: s.map { |status| ["@#{status.username}", status.username] }.flatten)
       [s, u]
     end
     render partial: 'mastodon_feed', locals: { statuses: statuses, users: users }
@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   def bluesky_feed
     statuses, users = Rails.cache.fetch(["bluesky_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
       s = BlueskyFeed.new.take(15)
-      u = User.none  # No bluesky handle matching yet
+      u = User.where(bluesky_handle: s.map(&:username))
       [s, u]
     end
     render partial: 'bluesky_feed', locals: { statuses: statuses, users: users }
