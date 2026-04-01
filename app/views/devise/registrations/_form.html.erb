@@ -168,11 +168,6 @@
           <%= f.text_field :google_scholar, class: "form-control" %>
         </div>
         <div class="mb-3">
-          <%= f.label :twitter %>
-          <small>(e.g. @mesophotic)</small><br>
-          <%= f.text_field :twitter, class: "form-control" %>
-        </div>
-        <div class="mb-3">
           <%= f.label :website %>
           <small>(e.g. http://www.mesophotic.org)</small><br>
           <%= f.text_field :website, class: "form-control" %>
@@ -194,6 +189,41 @@
           <%= f.label :phone %>
           <br>
           <%= f.text_field :phone, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Social media %>
+<div class="card">
+  <div class="card-header">
+    <strong>Social Media</strong>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label :mastodon_handle, "Mastodon" %>
+          <small>(e.g. @mesophotic)</small><br>
+          <%= f.text_field :mastodon_handle, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :bluesky_handle, "Bluesky" %>
+          <small>(e.g. mesophotic.bsky.social)</small><br>
+          <%= f.text_field :bluesky_handle, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label :threads_handle, "Threads" %>
+          <small>(e.g. @mesophotic)</small><br>
+          <%= f.text_field :threads_handle, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :twitter_handle, "Twitter / X" %>
+          <small>(e.g. @mesophotic)</small><br>
+          <%= f.text_field :twitter_handle, class: "form-control" %>
         </div>
       </div>
     </div>
