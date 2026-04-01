@@ -38,7 +38,10 @@
 #  country                      :string(255)
 #  research_interests           :text(65535)
 #  organisation_id              :integer
-#  twitter                      :string(255)
+#  twitter_handle               :string(255)
+#  mastodon_handle              :string
+#  bluesky_handle               :string
+#  threads_handle               :string
 #
 
 class User < ApplicationRecord
@@ -140,8 +143,19 @@ class User < ApplicationRecord
   end
 
   def twitter_url
-    twitter_name = twitter.tr("@", "")
-    "http://www.twitter.com/#{twitter_name}"
+    "https://x.com/#{twitter_handle.to_s.tr('@', '')}" if twitter_handle.present?
+  end
+
+  def mastodon_url
+    "https://mastodon.social/@#{mastodon_handle.to_s.tr('@', '')}" if mastodon_handle.present?
+  end
+
+  def bluesky_url
+    "https://bsky.app/profile/#{bluesky_handle}" if bluesky_handle.present?
+  end
+
+  def threads_url
+    "https://threads.net/@#{threads_handle.to_s.tr('@', '')}" if threads_handle.present?
   end
 
   def organisation_name
