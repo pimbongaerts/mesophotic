@@ -1,6 +1,6 @@
 <% title("Edit #{@post.title}") %>
-<h3 class="page-title">Edit Post <small><%= @post.title %></small></h3>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", dashboard_admin_posts_path], [@post.title, nil]] } %>
+<h3 class="page-title">Edit Post <small><%= @post.title %></small></h3>
 <hr/>
 
 <%= render 'form' %>

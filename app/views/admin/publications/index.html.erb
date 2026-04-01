@@ -1,6 +1,6 @@
 <% title("Published Posts") %>
-<h3 class="page-title">Posts <small>Published</small></h3>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Publications", dashboard_admin_publications_path], ["All", nil]] } %>
+<h3 class="page-title">Posts <small>Published</small></h3>
 <hr/>
 
 <%= paginate @publications %>

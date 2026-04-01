@@ -2,21 +2,22 @@
        locals: {title: "Locations",
                 breadcrumbs: [["Locations", nil]] } %>
 
+<div class="mb-3">
+  <select onchange="window.location=this.value" class="fw-bold" style="width: auto; display: inline-block; border: none; background-color: #dfe3e7; padding: 2px 8px; border-radius: 4px;">
+    <option>Select a location</option>
+    <% @locations.each do |location| %>
+      <option value="<%= summary_path(model: "locations", id: location.id) %>">
+        <%= location.description %>
+      </option>
+    <% end %>
+  </select>
+</div>
+
 <div class="row">
   <div class="col-sm-8">
-    <div class="card mb-0">
-      <div class="card-header px-2" style="padding-top: 7px; padding-bottom: 7px;">
-        <select onchange="window.location=this.value" class="fw-bold" style="width: auto; display: inline-block; border: none; background-color: #dfe3e7; padding: 2px 8px; border-radius: 4px;">
-          <option>Select a location</option>
-          <% @locations.each do |location| %>
-            <option value="<%= summary_path(model: "locations", id: location.id) %>">
-              <%= location.description %>
-            </option>
-          <% end %>
-        </select>
-      </div>
-      <div class="card-body p-1" style="min-height: 358px;">
-        <%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 350) %>
+    <div class="card mb-0 h-100">
+      <div class="card-body p-0">
+        <%= render_async world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 380) %>
       </div>
     </div>
   </div>
