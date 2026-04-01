@@ -31,7 +31,7 @@
   <% end %>
   <% if @user.bluesky_handle.present? %>
     <%= link_to @user.bluesky_url, target: "_blank", rel: "noopener", class: "text-muted" do %>
-      <%= image_tag "bluesky_logo.svg", style: "height: 1.2rem; vertical-align: -0.15em; opacity: 0.55;" %>
+      <i class="bi bi-bluesky" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if @user.threads_handle.present? %>

@@ -1,16 +1,17 @@
 function switchFeed(platform) {
   var feeds = ['mastodon', 'bluesky'];
   var colors = { mastodon: '#595aff', bluesky: '#0085ff' };
+  var muted = '#adb5bd';
 
   feeds.forEach(function(feed) {
     var container = document.getElementById('feed-' + feed);
     var logo = document.getElementById('logo-' + feed);
     if (feed === platform) {
       container.style.display = 'block';
-      logo.style.opacity = '1';
+      logo.style.color = colors[feed];
     } else {
       container.style.display = 'none';
-      logo.style.opacity = '0.4';
+      logo.style.color = muted;
     }
   });
 
