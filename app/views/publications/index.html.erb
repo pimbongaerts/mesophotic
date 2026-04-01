@@ -1,8 +1,6 @@
 <% supertitle = "Editor Mode" if current_user.try(:editor_or_admin?) %>
-<% subtitle = "Search results for: '#{params[:search]}'" if params[:search] %>
 <%= render partial: "layouts/page_title",
        locals: { title: "Publications",
-                 subtitle: subtitle,
                  supertitle: supertitle,
                  breadcrumbs: [["Publications", nil]] } %>
 
