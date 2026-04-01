@@ -1,6 +1,6 @@
 <% title("Posts Dashboard") %>
-<h3 class="page-title">Posts <small>Dashboard</small></h3>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", nil]] } %>
+<h3 class="page-title">Posts <small>Dashboard</small></h3>
 <hr/>
 <div class="row">
   <div class="col-sm-4">Published: <%= link_to "#{pluralize(@published_post_count, 'post')}", admin_posts_path %></div>
