@@ -147,7 +147,15 @@ class User < ApplicationRecord
   end
 
   def mastodon_url
-    "https://mastodon.social/@#{mastodon_handle.to_s.tr('@', '')}" if mastodon_handle.present?
+    return unless mastodon_handle.present?
+    # Handle format: @user@server or user@server or @user (defaults to mastodon.social)
+    handle = mastodon_handle.to_s.gsub(/^@/, '')
+    if handle.include?('@')
+      user, server = handle.split('@', 2)
+      "https://#{server}/@#{user}"
+    else
+      "https://mastodon.social/@#{handle}"
+    end
   end
 
   def bluesky_url

@@ -14,7 +14,10 @@
   </div>
   <div class="flex-grow-1 ms-2">
     <div class="d-flex justify-content-between align-items-start">
-      <% matched_user = users.detect { |u| u.mastodon_handle&.tr('@', '') == status.username || u.bluesky_handle == status.username } %>
+      <% matched_user = users.detect { |u|
+        mastodon_user = u.mastodon_handle&.gsub(/^@/, '')&.split('@')&.first
+        mastodon_user == status.username || u.bluesky_handle == status.username
+      } %>
       <div style="line-height: 1.1;">
         <% if matched_user %>
           <strong><%= link_to matched_user.full_name_normal, member_pages_path(matched_user), style: "text-decoration: none; color: inherit;" %></strong>
@@ -22,7 +25,19 @@
           <strong><%= status.display_name %></strong>
         <% end %>
         <br>
-        <%= link_to "@#{status.username}", status.profile_url.to_s, class: "text-muted", style: "text-decoration: none; font-size: 0.85em;" %>
+        <%
+          profile = status.profile_url.to_s
+          if profile =~ /https?:\/\/([^\/]+)\/@/
+            # Mastodon/ActivityPub: show @user@server
+            handle = "@#{status.username}@#{$1}"
+          elsif profile.include?('bsky.app')
+            # Bluesky: strip .bsky.social suffix
+            handle = "@#{status.username.to_s.sub(/\.bsky\.social$/, '')}"
+          else
+            handle = "@#{status.username}"
+          end
+        %>
+        <%= link_to handle, status.profile_url.to_s, class: "text-muted", style: "text-decoration: none; font-size: 0.85em;" %>
       </div>
       <div class="text-end flex-shrink-0 ms-2">
         <% if status.published_at %>
