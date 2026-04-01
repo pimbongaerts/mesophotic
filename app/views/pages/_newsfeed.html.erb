@@ -1,43 +1,56 @@
 <% publications.each do |publication| %>
-  <div class="d-flex align-items-start<%= ' mb-3 pb-3 border-bottom' unless publication == publications.last %>">
-    <% cache publication do %>
-    <div class="flex-shrink-0" style="width: 60px;">
-      <% if publication.pdf.attached? %>
-        <%= link_to publication do %>
-          <%= image_tag publication.pdf.preview(resize: "60x84>"), style: "width: 60px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);" %>
-        <% end %>
-      <% else %>
-        <%= link_to publication do %>
-          <div class="d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 84px; background-color: #f0f1f3;">
-            <i class="bi bi-file-earmark-text text-muted"></i>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-    <div class="flex-grow-1 ms-3">
-      <div>
-        <strong><%= link_to truncate(publication.title, length: 120), publication, class: "newsfeed-title" %></strong>
-      </div>
-      <div style="font-size: 0.9em;">
-        <%= format_authors(publication) %> (<%= publication.publication_year %>)
-      </div>
-      <% if publication.scientific_article? && publication.journal %>
-        <div class="text-muted" style="font-size: 0.9em;">
-          <em><%= publication.journal.name %></em>
-        </div>
-      <% end %>
-      <div class="mt-1 d-flex align-items-center gap-1">
-        <span class="badge border text-secondary" style="font-size: 0.7em; font-weight: normal;"><%= publication.publication_format.titleize %></span>
-        <% if publication.open_access? %>
-          <span class="badge border" style="font-size: 0.7em; font-weight: normal; color: #f68212; border-color: #f68212 !important;"><%= image_tag "open_access.svg", style: "height: 0.9em; vertical-align: -0.1em;", alt: "" %> Open Access</span>
-        <% end %>
-        <% if publication.DOI.present? %>
-          <%= link_to publication.doi_url, class: "text-muted ms-auto", style: "font-size: 0.85em; text-decoration: none;" do %>
-            <i class="bi bi-link-45deg"></i> DOI
+  <% show_relevance = params[:search].present? && publication.respond_to?(:relevance) && defined?(params[:search_params]) && Publication.should_show_relevance(params[:search_params][:search_fields]) %>
+  <div class="<%= 'mb-3 pb-3 border-bottom' unless publication == publications.last %>">
+    <div class="d-flex align-items-start">
+      <% cache publication do %>
+      <div class="flex-shrink-0" style="width: 60px;">
+        <% if publication.pdf.attached? %>
+          <%= link_to publication do %>
+            <%= image_tag publication.pdf.preview(resize: "60x84>"), style: "width: 60px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);" %>
+          <% end %>
+        <% else %>
+          <%= link_to publication do %>
+            <div class="d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 84px; background-color: #f0f1f3;">
+              <i class="bi bi-file-earmark-text text-muted"></i>
+            </div>
           <% end %>
         <% end %>
       </div>
+      <div class="flex-grow-1 ms-3">
+        <div>
+          <strong><%= link_to truncate(publication.title, length: 120), publication, class: "newsfeed-title" %></strong>
+        </div>
+        <div style="font-size: 0.9em;">
+          <%= format_authors(publication) %> (<%= publication.publication_year %>)
+        </div>
+        <% if publication.scientific_article? && publication.journal %>
+          <div class="text-muted" style="font-size: 0.9em;">
+            <em><%= publication.journal.name %></em>
+          </div>
+        <% end %>
+        <div class="mt-1 d-flex align-items-center gap-1">
+          <span class="badge border text-secondary" style="font-size: 0.7em; font-weight: normal;"><%= publication.publication_format.titleize %></span>
+          <% if publication.open_access? %>
+            <span class="badge border" style="font-size: 0.7em; font-weight: normal; color: #f68212; border-color: #f68212 !important;"><%= image_tag "open_access.svg", style: "height: 0.9em; vertical-align: -0.1em;", alt: "" %> Open Access</span>
+          <% end %>
+          <% if publication.DOI.present? %>
+            <%= link_to publication.doi_url, class: "text-muted ms-auto", style: "font-size: 0.85em; text-decoration: none;" do %>
+              <i class="bi bi-link-45deg"></i> DOI
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
     </div>
+    <% if show_relevance %>
+      <div class="d-flex align-items-start mt-2" style="font-size: 0.85em;">
+        <div class="flex-shrink-0 text-end text-muted" style="width: 60px;">
+          <strong style="font-size: 1.3em;"><%= publication.relevance %></strong>
+        </div>
+        <div class="flex-grow-1 ms-3 text-muted" style="border-left: 3px solid #dee2e6; padding-left: 0.75rem;">
+          <%= obtain_snippet((publication.relevance_content params[:search_params][:search_fields]), params[:search]) %>
+        </div>
+      </div>
     <% end %>
   </div>
 <% end %>

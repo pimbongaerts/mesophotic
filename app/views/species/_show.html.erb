@@ -8,7 +8,7 @@
   <div class="col-sm-8">
     <%= paginate publications %>
     <div class="mb-3" style="margin-top: -0.5rem;">
-      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small class="text-muted"><%= page_entries_info publications %></small>
       <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
     </div>
 
@@ -20,7 +20,7 @@
     </div>
 
     <div class="mt-2 mb-2">
-      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small class="text-muted"><%= page_entries_info publications %></small>
       <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
     </div>
     <%= paginate publications %>

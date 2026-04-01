@@ -3,10 +3,12 @@
                 breadcrumbs: [["News", nil]] } %>
 
 <%= paginate @posts %>
+<div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= page_entries_info @posts %></small></div>
 <% @posts.each do |post| %>
   <% cache ["post_card", post] do %>
     <%= render partial: 'shared/post_summary',
                locals: {post: post } %>
   <% end %>
 <% end %>
+<div class="mt-2 mb-2"><small class="text-muted"><%= page_entries_info @posts %></small></div>
 <%= paginate @posts %>
