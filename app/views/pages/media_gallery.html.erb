@@ -5,14 +5,14 @@
 <div class="row">
   <div class="col-sm-12">
 
-    These images are available for free use by news media, educators and scientists to communicate about mesophotic coral ecosystems (under a Creative Commons license 
+    These images are available for free use by news media, educators and scientists to communicate about mesophotic coral ecosystems (under a Creative Commons license
     (<a href="https://creativecommons.org/licenses/by-nc/4.0/">
       CC BY-CE 4.0
     </a>). Please credit the photographer when using any of these photographs.
     <br><br>
 
-	  <%= paginate @photos %>[<%= @photos.total_count %> results]
-    <br><br>
+	  <%= paginate @photos %>
+    <div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= @photos.total_count %> results</small></div>
 	  <table class="table table-striped">
 	    <tr>
 		    <% @photos.each_with_index do |photo, i| %>
@@ -21,5 +21,7 @@
 		    <% end %>
 		   </tr>
 	  </table>
+    <div class="mb-2"><small class="text-muted"><%= @photos.total_count %> results</small></div>
+    <%= paginate @photos %>
 	</div>
 </div>
