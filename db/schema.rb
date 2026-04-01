@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_31_102929) do
+ActiveRecord::Schema.define(version: 2026_04_01_111651) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -458,8 +458,11 @@ ActiveRecord::Schema.define(version: 2026_03_31_102929) do
     t.string "country", limit: 255
     t.text "research_interests", limit: 65535
     t.integer "organisation_id", limit: 4
-    t.string "twitter", limit: 255
+    t.string "twitter_handle", limit: 255
     t.string "role", default: "member", null: false
+    t.string "mastodon_handle"
+    t.string "bluesky_handle"
+    t.string "threads_handle"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
