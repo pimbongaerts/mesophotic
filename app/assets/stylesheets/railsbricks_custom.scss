@@ -373,4 +373,17 @@ img {
     text-decoration: underline;
   }
 }
+
+// Contact link icons: brand colour on hover
+.contact-link {
+  transition: color 0.15s;
+  &.contact-mastodon:hover { color: #595aff !important; }
+  &.contact-bluesky:hover { color: #0085ff !important; }
+  &.contact-threads:hover { color: #000000 !important; }
+  &.contact-twitter:hover { color: #000000 !important; }
+  &.contact-email:hover { color: #0d6efd !important; }
+  &.contact-phone:hover { color: #198754 !important; }
+  &.contact-web:hover { color: #0d6efd !important; }
+  &.contact-scholar:hover { color: #4285f4 !important; }
+}
 //***********************************************************

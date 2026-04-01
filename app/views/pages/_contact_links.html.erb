@@ -1,46 +1,46 @@
 <div class="d-flex gap-3">
   <% if !@user.email.blank? %>
-    <%= mail_to @user.email, class: "text-muted" do %>
+    <%= mail_to @user.email, class: "text-muted contact-link contact-email" do %>
       <i class="bi bi-envelope" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if !@user.phone.blank? %>
-    <a href="tel:<%= @user.phone %>" class="text-muted">
+    <a href="tel:<%= @user.phone %>" class="text-muted contact-link contact-phone">
       <i class="bi bi-phone" style="font-size: 1.2rem;"></i>
     </a>
   <% end %>
   <% if !@user.website.blank? %>
-    <%= link_to @user.website, class: "text-muted" do %>
+    <%= link_to @user.website, class: "text-muted contact-link contact-web" do %>
       <i class="bi bi-globe" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if !@user.alt_website.blank? %>
-    <%= link_to @user.alt_website, class: "text-muted" do %>
+    <%= link_to @user.alt_website, class: "text-muted contact-link contact-web" do %>
       <i class="bi bi-globe2" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if !@user.google_scholar.blank? %>
-    <%= link_to @user.google_scholar, class: "text-muted" do %>
+    <%= link_to @user.google_scholar, class: "text-muted contact-link contact-scholar" do %>
       <i class="bi bi-mortarboard-fill" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if @user.mastodon_handle.present? %>
-    <%= link_to @user.mastodon_url, target: "_blank", rel: "noopener", class: "text-muted" do %>
+    <%= link_to @user.mastodon_url, target: "_blank", rel: "noopener", class: "text-muted contact-link contact-mastodon" do %>
       <i class="bi bi-mastodon" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if @user.bluesky_handle.present? %>
-    <%= link_to @user.bluesky_url, target: "_blank", rel: "noopener", class: "text-muted" do %>
+    <%= link_to @user.bluesky_url, target: "_blank", rel: "noopener", class: "text-muted contact-link contact-bluesky" do %>
       <i class="bi bi-bluesky" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if @user.threads_handle.present? %>
-    <%= link_to @user.threads_url, target: "_blank", rel: "noopener", class: "text-muted" do %>
+    <%= link_to @user.threads_url, target: "_blank", rel: "noopener", class: "text-muted contact-link contact-threads" do %>
       <i class="bi bi-threads" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>
   <% if @user.twitter_handle.present? %>
-    <%= link_to @user.twitter_url, target: "_blank", rel: "noopener", class: "text-muted" do %>
+    <%= link_to @user.twitter_url, target: "_blank", rel: "noopener", class: "text-muted contact-link contact-twitter" do %>
       <i class="bi bi-twitter-x" style="font-size: 1.2rem;"></i>
     <% end %>
   <% end %>

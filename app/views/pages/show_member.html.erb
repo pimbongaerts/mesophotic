@@ -18,7 +18,18 @@
             </div>
           </div>
           <div class="flex-grow-1 ms-4">
-            <h4 class="mb-1"><%= @user.first_name %> <%= @user.last_name %></h4>
+            <div class="d-flex justify-content-between align-items-start">
+              <h4 class="mb-1"><%= @user.first_name %> <%= @user.last_name %></h4>
+              <% if current_user&.id == @user.id %>
+                <%= link_to edit_user_registration_path, class: "text-muted icon-btn" do %>
+                  <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
+                <% end %>
+              <% elsif current_user&.admin? %>
+                <%= link_to edit_admin_user_path(@user), class: "text-muted icon-btn" do %>
+                  <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
+                <% end %>
+              <% end %>
+            </div>
             <%= render partial: 'contact_details', locals: { user: @user } %>
             <div class="mt-2">
               <%= render partial: 'contact_links', locals: { user: @user } %>
