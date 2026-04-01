@@ -5,6 +5,7 @@
 <div class="row">
   <div class="col-sm-8">
 	  <%= paginate @photos %>
+    <div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= page_entries_info @photos %></small></div>
 
 	  <table class="table table-striped">
 	    <tr>
@@ -14,6 +15,7 @@
 		    <% end %>
 		   </tr>
 	  </table>
+    <div class="mt-2 mb-2"><small class="text-muted"><%= page_entries_info @photos %></small></div>
     <%= paginate @photos %>
 
 	  <% if current_user.try(:editor_or_admin?) %>

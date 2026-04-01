@@ -12,7 +12,7 @@
     <br><br>
 
 	  <%= paginate @photos %>
-    <div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= @photos.total_count %> results</small></div>
+    <div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= page_entries_info @photos %></small></div>
 	  <table class="table table-striped">
 	    <tr>
 		    <% @photos.each_with_index do |photo, i| %>
@@ -21,7 +21,7 @@
 		    <% end %>
 		   </tr>
 	  </table>
-    <div class="mb-2"><small class="text-muted"><%= @photos.total_count %> results</small></div>
+    <div class="mb-2"><small class="text-muted"><%= page_entries_info @photos %></small></div>
     <%= paginate @photos %>
 	</div>
 </div>

@@ -62,8 +62,10 @@
             Only publications relevant to mesophotic reefs are indexed.
           </p>
           <%= paginate @member_publications %>
+          <div class="mb-3" style="margin-top: -0.5rem;"><small class="text-muted"><%= page_entries_info @member_publications %></small></div>
           <%= render partial: 'pages/newsfeed',
                      locals: { publications: @member_publications } %>
+          <div class="mt-2 mb-2"><small class="text-muted"><%= page_entries_info @member_publications %></small></div>
           <%= paginate @member_publications %>
         </div>
       </div>

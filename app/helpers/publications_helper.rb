@@ -4,10 +4,10 @@ module PublicationsHelper
     return "…" if contents.blank?
 
     start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
-    snippet = contents.force_encoding("UTF-8")[start, 600]
+    snippet = contents.force_encoding("UTF-8")[start, 400]
                       .squish
                       .gsub(/(#{search_term})/i, '<strong>\1</strong>')
-    simple_format "…#{snippet}…"
+    "…#{snippet}…".html_safe
   end
 
   # Count occurrence of word in contents
