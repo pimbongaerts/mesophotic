@@ -9,19 +9,29 @@
 
     <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
 
+    <div class="mb-3">
+      <%= render partial: 'dropdown',
+                 locals: { objects: objects, object: object, model: title.downcase } %>
+    </div>
+
+    <%= paginate publications %>
+    <div class="mb-3" style="margin-top: -0.5rem;">
+      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+    </div>
+
     <div class="card">
-      <div class="card-header px-2" style="padding-top: 7px; padding-bottom: 7px;">
-        <%= render partial: 'dropdown',
-                   locals: { objects: objects, object: object, model: title.downcase } %>
-      </div>
       <div class="card-body" style="background-color: #f8f9fa;">
-        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
-        <br><br>
         <%= render partial: 'pages/newsfeed',
                    locals: { publications: publications.includes(:users, :journal, pdf_attachment: :blob).order('publication_year DESC, created_at DESC') } %>
-        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
 			</div>
 		</div>
+
+    <div class="mt-2 mb-2">
+      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+    </div>
+    <%= paginate publications %>
 	</div>
 
   <div class="col-sm-4">

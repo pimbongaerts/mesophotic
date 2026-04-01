@@ -6,17 +6,24 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <div class="card">
-      <div class="card-body">
-        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
-        <br><br>
+    <%= paginate publications %>
+    <div class="mb-3" style="margin-top: -0.5rem;">
+      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+    </div>
 
-        <table class="table table-striped">
-          <%= render partial: 'species/publication', collection: publications, locals: { object: object } %>
-        </table>
-        <%= paginate publications %> [<%= publications.total_count %> results] &bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %>
+    <div class="card">
+      <div class="card-body" style="background-color: #f8f9fa;">
+        <%= render partial: 'pages/newsfeed',
+                   locals: { publications: publications.includes(:users, :journal, pdf_attachment: :blob) } %>
       </div>
     </div>
+
+    <div class="mt-2 mb-2">
+      <small class="text-muted"><%= publications.total_count %> results</small>
+      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+    </div>
+    <%= paginate publications %>
   </div>
 
   <div class="col-sm-4">
