@@ -1,22 +1,35 @@
 <% title("Published Posts") %>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", dashboard_admin_posts_path], ["Published", nil]] } %>
 <h3 class="page-title">Posts <small>Published</small></h3>
-<hr/>
 
-<p class="pagination-summary"><%= page_entries_info @posts %></p>
 <%= paginate @posts %>
+<div class="mb-3" style="margin-top: -0.5rem;">
+  <small class="text-muted"><%= page_entries_info @posts %></small>
+</div>
 
-<hr/>
+<div class="card">
+  <div class="card-body" style="background-color: #f8f9fa;">
+    <% @posts.each do |post| %>
+      <div class="d-flex justify-content-between align-items-start<%= ' mb-3 pb-3 border-bottom' unless post == @posts.last %>">
+        <div>
+          <strong><%= link_to post.title, edit_admin_post_path(post.slug), class: "newsfeed-title" %></strong>
+          <% if post.draft? %>
+            <span class="badge bg-warning text-dark" style="font-size: 0.7em;">Draft</span>
+          <% end %>
+          <br>
+          <small class="text-muted"><%= post.category %> · Updated <%= time_ago_in_words(post.updated_at) %> ago</small>
+        </div>
+        <div class="d-flex gap-2">
+          <%= link_to edit_admin_post_path(post.slug), class: "text-muted icon-btn" do %>
+            <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-<ul class="bi">
-  <% @posts.each do |post| %>
-  <li class="margin-md-down">
-    <%= link_to post.title, edit_admin_post_path(post.slug) %><br/>
-    <small class="x-small-text">about <%= time_ago_in_words(post.updated_at) %> ago</small>
-  </li>
-  <% end %>
-</ul>
-
-<hr/>
-
+<div class="mt-2 mb-2">
+  <small class="text-muted"><%= page_entries_info @posts %></small>
+</div>
 <%= paginate @posts %>

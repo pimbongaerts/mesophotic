@@ -1,9 +1,27 @@
 <% title("Posts Dashboard") %>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", nil]] } %>
-<h3 class="page-title">Posts <small>Dashboard</small></h3>
-<hr/>
-<div class="row">
-  <div class="col-sm-4">Published: <%= link_to "#{pluralize(@published_post_count, 'post')}", admin_posts_path %></div>
-  <div class="col-sm-4">Drafts: <%= link_to "#{pluralize(@draft_post_count, 'draft')}", drafts_admin_posts_path %></div>
-  <div class="col-sm-4"><%= link_to "New post", new_admin_post_path %></div>
+<h3 class="page-title">Posts</h3>
+
+<div class="d-flex gap-3 mb-3">
+  <div class="card flex-fill">
+    <div class="card-body text-center">
+      <div style="font-size: 1.5em; font-weight: bold;"><%= @published_post_count %></div>
+      <small class="text-muted">Published</small>
+      <div class="mt-2"><%= link_to "View", admin_posts_path, class: "btn btn-sm btn-outline-secondary" %></div>
+    </div>
+  </div>
+  <div class="card flex-fill">
+    <div class="card-body text-center">
+      <div style="font-size: 1.5em; font-weight: bold;"><%= @draft_post_count %></div>
+      <small class="text-muted">Drafts</small>
+      <div class="mt-2"><%= link_to "View", drafts_admin_posts_path, class: "btn btn-sm btn-outline-secondary" %></div>
+    </div>
+  </div>
+  <div class="card flex-fill">
+    <div class="card-body text-center d-flex flex-column justify-content-center">
+      <%= link_to new_admin_post_path, class: "btn btn-primary" do %>
+        <i class="bi bi-plus-lg"></i> New Post
+      <% end %>
+    </div>
+  </div>
 </div>
