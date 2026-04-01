@@ -66,10 +66,10 @@
   <td width="60px" align="center">
     <% if user_signed_in? %>
       <% if publication.pdf.attached? %>
-        <%= link_to image_tag("adobe_pdf.png"), url_for(publication.pdf) %>
+        <%= link_to url_for(publication.pdf), class: "text-danger" do %><i class="bi bi-file-earmark-pdf" style="font-size: 1.2rem;"></i><% end %>
       <% end %>
     <% else %>
-      <%= image_tag "adobe_pdf_disabled.png",:title => 'PDFs only available when logged in' %>
+      <i class="bi bi-file-earmark-pdf text-muted" style="font-size: 1.2rem;" title="PDFs only available when logged in"></i>
     <% end %>
     <br >
     <% if not publication.DOI.blank? %>

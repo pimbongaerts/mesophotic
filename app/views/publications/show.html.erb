@@ -19,8 +19,7 @@
                 <font color="red">
                   open access
                 </font>
-                <%= image_tag('open_access.png',
-                              style: 'float: right;') %>
+                <%= image_tag 'open_access.svg', style: 'float: right; height: 1.5rem;', alt: 'Open Access' %>
               <% end %>
             </strong>
             <% if current_user.try(:editor_or_admin?) %>
