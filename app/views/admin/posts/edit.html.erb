@@ -1,8 +1,11 @@
 <% title("Edit #{@post.title}") %>
 <%= render partial: 'shared/breadcrumbs', locals: { breadcrumbs: [["Admin", admin_root_path], ["Posts", dashboard_admin_posts_path], [@post.title, nil]] } %>
 <h3 class="page-title">Edit Post <small><%= @post.title %></small></h3>
-<hr/>
 
 <%= render 'form' %>
-<hr/>
-<%= link_to "<i class='bi bi-dash-square'></i> Delete post".html_safe, admin_post_path(@post), method: :delete, data:{confirm: "Are you sure?"}, class: "btn btn-small btn-danger" %>
+
+<div class="mt-3">
+  <%= link_to admin_post_path(@post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger icon-btn" do %>
+    <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i> Delete Post
+  <% end %>
+</div>
