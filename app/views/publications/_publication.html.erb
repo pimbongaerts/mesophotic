@@ -8,7 +8,7 @@
         <%= image_tag publication.pdf.preview(resize: "100x140>") %>
       <% end %>
     <% else %>
-      <%= image_tag "no_pdf.png" %>
+      <i class="bi bi-file-earmark text-muted" style="font-size: 2rem;"></i>
     <% end %>
   </td>
 
@@ -20,11 +20,11 @@
   <%# Publication links %>
   <td width="60px" align="center">
     <% if user_signed_in? && publication.pdf.attached? %>
-      <% link_to image_tag('adobe_pdf.png'), url_for(publication.pdf) %>
+      <%= link_to url_for(publication.pdf), class: "text-danger" do %><i class="bi bi-file-earmark-pdf" style="font-size: 1.2rem;"></i><% end %>
     <% end %>
     <% if not publication.DOI.blank? %>
       <% if publication.open_access? %>
-        <%= link_to image_tag('open_access.png'), publication.doi_url %>
+        <%= link_to publication.doi_url do %><%= image_tag "open_access.svg", style: "height: 1.2rem;", alt: "Open Access" %><% end %>
       <% else %>
         <%= link_to publication.doi_url do %>
           <i class="bi bi-link-45deg" aria-hidden="true"></i>
