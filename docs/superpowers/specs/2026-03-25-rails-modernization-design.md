@@ -192,14 +192,11 @@ Commits grouped by component type:
 
 This is expected to be a smooth step aside from the boolean config removal.
 
-## Phase 4: Ruby 3.2 + Rails 7.0
+## Phase 4a: Ruby 2.7 → 3.2
 
-**Bookmark:** `ryan/rails-7.0`
+**Bookmark:** `ryan/ruby-3.2`
 **Parent:** `ryan/rails-6.1`
-
-This is the riskiest phase. It combines a Ruby major version upgrade with a Rails major version upgrade. To keep commits bisectable, work in this order:
-
-### 4a: Ruby 2.7 → 3.2 (on Rails 6.1)
+**Ships independently.**
 
 - Update `.ruby-version` to `3.2`.
 - Update Nix flake: change Ruby overlay version.
@@ -209,38 +206,49 @@ This is the riskiest phase. It combines a Ruby major version upgrade with a Rail
 - **Frozen string literals:** Not enforced by default but good to note.
 - Run full test suite. Fix all failures before proceeding.
 
-### 4b: CoffeeScript Removal (on Rails 6.1 + Ruby 3.2)
+### 4b: CoffeeScript Removal — DONE (completed in Phase 2)
 
-- `coffee-rails` doesn't work well on Rails 7. Remove it now while the rest of the stack is stable.
-- Currently `analytics.js.coffee` exists but is commented out in `application.js`. Delete it.
-- Audit for any other CoffeeScript files.
-- Remove `coffee-rails` from Gemfile.
+## Phase 4d+4e: rails_admin 3.x + Turbolinks → Turbo
 
-### 4c: Rails 6.1 → 7.0
+**Bookmark:** `ryan/turbo`
+**Parent:** `ryan/ruby-3.2`
+**Ruby:** 3.2, **Rails:** 6.1
+**Ships independently.** rails_admin 3.x requires `turbo-rails`, so these must be done together. Both work on Rails 6.1 (`rails_admin` 3.x supports `rails >= 6.0, < 9`).
+
+### rails_admin 2.x → 3.x
+
+- `rails_admin` 3.x is a major rewrite: drops `haml`, `jquery-ui-rails`, `nested_form`, `rack-pjax`, and `remotipart` as dependencies. Adds `turbo-rails` dependency.
+- The `config/initializers/rails_admin.rb` configuration API changes. Review and update.
+- Remove `jquery-rails` gem (no longer needed — rails_admin was the last consumer).
+- Test the admin interface manually after upgrade.
+
+### Turbolinks → Turbo
+
+- Remove `turbolinks` gem, add `turbo-rails` (pulled in by rails_admin 3.x).
+- `Turbolinks.visit()` → `Turbo.visit()`. `data-turbolinks-*` → `data-turbo-*`.
+- Update `turbolinks:load` event listeners → `turbo:load`.
+- Update `turbolinks:before-cache` → `turbo:before-cache`.
+- `no-preview` meta tag → `turbo-cache-control`.
+- Replace `render_async` with Turbo Frames where appropriate (fixes stats caching issue).
+- The app's JavaScript is relatively simple so this should be manageable.
+
+## Phase 4c: Rails 6.1 → 7.0
+
+**Bookmark:** `ryan/rails-7.0`
+**Parent:** `ryan/turbo`
+**Ruby:** 3.2
+**Ships independently.** No more blockers — rails_admin 3.x and Turbo are already in place.
 
 - `config.load_defaults '7.0'`.
 - `rails app:update` — resolve config diffs.
 - `button_to` default method changes from POST to PATCH in some contexts — audit forms.
 - `Rails.application.credentials` changes — verify Figaro still works.
 
-### 4d: `rails_admin` 2.x → 3.x
-
-- `rails_admin` 2.3.1 has a hard dependency of `rails (>= 5.0, < 7)`. It **will not install** on Rails 7.
-- `rails_admin` 3.x is a major rewrite: drops `haml`, `jquery-ui-rails`, `nested_form`, `rack-pjax`, and `remotipart` as dependencies.
-- The `config/initializers/rails_admin.rb` configuration API changes. Review and update.
-- Test the admin interface manually after upgrade.
-
-### 4e: Turbolinks → Turbo
-
-- Remove `turbolinks` gem, add `turbo-rails`.
-- Or: use `turbolinks` compatibility shim if Turbo migration is too disruptive.
-- `Turbolinks.visit()` → `Turbo.visit()`. `data-turbolinks-*` → `data-turbo-*`.
-- The app's JavaScript is relatively simple so this should be manageable.
-
 ## Phase 5: Rails 7.0 → 7.1
 
 **Bookmark:** `ryan/rails-7.1`
 **Parent:** `ryan/rails-7.0`
+**Ruby:** 3.2
 
 ### Key Changes
 
@@ -249,6 +257,52 @@ This is the riskiest phase. It combines a Ruby major version upgrade with a Rail
 - `rails app:update`.
 - Verify all tests pass.
 - This should be the smoothest upgrade step.
+
+## Phase 6: Rails 7.1 → 7.2
+
+**Bookmark:** `ryan/rails-7.2`
+**Parent:** `ryan/rails-7.1`
+**Ruby:** 3.2
+
+### Key Changes
+
+- `config.load_defaults '7.2'`.
+- `rails app:update`.
+- Progressive job enqueuing, default health check endpoint, dev containers.
+- Verify all tests pass.
+- Should be a smooth step.
+
+## Phase 7: Ruby 3.2 → 3.4
+
+**Bookmark:** `ryan/ruby-3.4`
+**Parent:** `ryan/rails-7.2`
+
+### Key Changes
+
+- Update `.ruby-version` to `3.4`.
+- Update Nix flake: change Ruby version.
+- Ruby 3.3 changes: `it` as a block parameter name, Prism parser default.
+- Ruby 3.4 changes: `frozen_string_literal` warning by default, `it` fully available.
+- Run `bundle lock && bundix`.
+- Run full test suite. Fix all failures.
+- This prepares for Rails 8.0 which requires Ruby 3.2+ (3.4 gives us headroom).
+
+## Phase 8: Rails 7.2 → 8.0
+
+**Bookmark:** `ryan/rails-8.0`
+**Parent:** `ryan/ruby-3.4`
+**Ruby:** 3.4
+
+### Key Changes
+
+- `config.load_defaults '8.0'`.
+- `rails app:update`.
+- Kamal 2 for deployment, Thruster as default proxy, Propshaft replaces Sprockets as default (but Sprockets still works).
+- Solid Cable, Solid Cache, Solid Queue — new defaults but optional.
+- Authentication generator available.
+- `rails_admin` compatibility — verify 3.x works on Rails 8.0.
+- Verify all tests pass.
+- **Note:** Sprockets → Propshaft migration is optional at this point but recommended.
 
 ## Phase 6: Feature Work
 
@@ -334,7 +388,9 @@ These are noted for future planning but not part of this effort:
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
-- **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline.
+- **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline. (Recommended during or after Phase 8.)
+- **Rails 8.1+:** Continue the upgrade path as new versions release.
+- **Ruby 3.5+:** Continue Ruby upgrades as new versions release.
 - **`owlcarousel-rails` → modern alternative:** The gem is unmaintained. Replace with a vanilla JS carousel or CSS-only solution.
 - **`nested_form` / `remotipart` → Turbo Streams:** Replace legacy remote form gems with Hotwire patterns.
 - **System tests:** Add Capybara-based browser tests for full user flow coverage.
