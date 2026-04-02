@@ -192,59 +192,49 @@ Commits grouped by component type:
 
 This is expected to be a smooth step aside from the boolean config removal.
 
-## Phase 4a: Ruby 2.7 → 3.2
+## Phase 4: Ruby 2.7 → 3.2 — DONE
 
-**Bookmark:** `ryan/ruby-3.2`
-**Parent:** `ryan/rails-6.1`
-**Ships independently.**
+## Phase 5: CoffeeScript Removal — DONE (completed in Phase 2)
 
-- Update `.ruby-version` to `3.2`.
-- Update Nix flake: change Ruby overlay version.
-- Update Bundler version if needed.
-- Run `bundle lock && bundix`.
-- **Keyword arguments:** Ruby 3 is strict. `method(opts)` where `opts` is a hash no longer auto-splats into keyword args. Grep for patterns like `method(**options)` and hash-to-kwargs calls.
-- **Frozen string literals:** Not enforced by default but good to note.
-- Run full test suite. Fix all failures before proceeding.
+## Phase 6: rails_admin 2.x → 3.x, remove jQuery — DONE
 
-### 4b: CoffeeScript Removal — DONE (completed in Phase 2)
-
-## Phase 4d+4e: rails_admin 3.x + Turbolinks → Turbo
+## Phase 7: Turbolinks → Turbo
 
 **Bookmark:** `ryan/turbo`
 **Parent:** `ryan/ruby-3.2`
 **Ruby:** 3.2, **Rails:** 6.1
-**Ships independently.** rails_admin 3.x requires `turbo-rails`, so these must be done together. Both work on Rails 6.1 (`rails_admin` 3.x supports `rails >= 6.0, < 9`).
 
-### rails_admin 2.x → 3.x
-
-- `rails_admin` 3.x is a major rewrite: drops `haml`, `jquery-ui-rails`, `nested_form`, `rack-pjax`, and `remotipart` as dependencies. Adds `turbo-rails` dependency.
-- The `config/initializers/rails_admin.rb` configuration API changes. Review and update.
-- Remove `jquery-rails` gem (no longer needed — rails_admin was the last consumer).
-- Test the admin interface manually after upgrade.
-
-### Turbolinks → Turbo
-
-- Remove `turbolinks` gem, add `turbo-rails` (pulled in by rails_admin 3.x).
-- `Turbolinks.visit()` → `Turbo.visit()`. `data-turbolinks-*` → `data-turbo-*`.
+- Remove `turbolinks` gem, use `turbo-rails` (pulled in by rails_admin 3.x).
+- `data-turbolinks-*` → `data-turbo-*`.
 - Update `turbolinks:load` event listeners → `turbo:load`.
-- Update `turbolinks:before-cache` → `turbo:before-cache`.
-- `no-preview` meta tag → `turbo-cache-control`.
-- Replace `render_async` with Turbo Frames where appropriate (fixes stats caching issue).
-- The app's JavaScript is relatively simple so this should be manageable.
+- `turbolinks-cache-control` → `turbo-cache-control`.
+- Update render_async config: `turbolinks` → `turbo`.
 
-## Phase 4c: Rails 6.1 → 7.0
+## Phase 8: Turbo Frames (replace render_async)
 
-**Bookmark:** `ryan/rails-7.0`
+**Bookmark:** `ryan/turbo-frames`
 **Parent:** `ryan/turbo`
 **Ruby:** 3.2
-**Ships independently.** No more blockers — rails_admin 3.x and Turbo are already in place.
+
+Replace `render_async` with Turbo Frames across the app (~30 call sites). This enables proper caching behaviour (fixes the stats page caching issue) and removes the render_async gem dependency.
+
+- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute
+- Move async controller actions to return Turbo Frame responses
+- Remove `render_async` gem from Gemfile
+- Fix stats page caching (Turbo Frames handle this natively)
+
+## Phase 9: Rails 6.1 → 7.0
+
+**Bookmark:** `ryan/rails-7.0`
+**Parent:** `ryan/turbo-frames`
+**Ruby:** 3.2
 
 - `config.load_defaults '7.0'`.
 - `rails app:update` — resolve config diffs.
 - `button_to` default method changes from POST to PATCH in some contexts — audit forms.
 - `Rails.application.credentials` changes — verify Figaro still works.
 
-## Phase 5: Rails 7.0 → 7.1
+## Phase 10: Rails 7.0 → 7.1
 
 **Bookmark:** `ryan/rails-7.1`
 **Parent:** `ryan/rails-7.0`
@@ -258,7 +248,7 @@ This is expected to be a smooth step aside from the boolean config removal.
 - Verify all tests pass.
 - This should be the smoothest upgrade step.
 
-## Phase 6: Rails 7.1 → 7.2
+## Phase 11: Rails 7.1 → 7.2
 
 **Bookmark:** `ryan/rails-7.2`
 **Parent:** `ryan/rails-7.1`
@@ -272,7 +262,7 @@ This is expected to be a smooth step aside from the boolean config removal.
 - Verify all tests pass.
 - Should be a smooth step.
 
-## Phase 7: Ruby 3.2 → 3.4
+## Phase 12: Ruby 3.2 → 3.4
 
 **Bookmark:** `ryan/ruby-3.4`
 **Parent:** `ryan/rails-7.2`
@@ -287,7 +277,7 @@ This is expected to be a smooth step aside from the boolean config removal.
 - Run full test suite. Fix all failures.
 - This prepares for Rails 8.0 which requires Ruby 3.2+ (3.4 gives us headroom).
 
-## Phase 8: Rails 7.2 → 8.0
+## Phase 13: Rails 7.2 → 8.0
 
 **Bookmark:** `ryan/rails-8.0`
 **Parent:** `ryan/ruby-3.4`
@@ -304,7 +294,20 @@ This is expected to be a smooth step aside from the boolean config removal.
 - Verify all tests pass.
 - **Note:** Sprockets → Propshaft migration is optional at this point but recommended.
 
-## Phase 6: Feature Work
+## Phase 14: Rails 8.0 → 8.1
+
+**Bookmark:** `ryan/rails-8.1`
+**Parent:** `ryan/rails-8.0`
+**Ruby:** 3.4
+
+### Key Changes
+
+- `config.load_defaults '8.1'`.
+- `rails app:update`.
+- Job continuations, structured events, local CI.
+- Verify all tests pass.
+
+## Feature Work
 
 **Bookmark:** `ryan/features`
 **Parent:** `ryan/rails-7.1`
@@ -369,6 +372,19 @@ Replace the `<<< Back` links throughout the app with proper breadcrumb navigatio
 - Replace all admin `<<< Back` links with breadcrumbs (e.g. Home > Admin > Users > Edit)
 - Replace summary page back links with breadcrumbs (e.g. Home > Locations > "American Samoa")
 - Handle dynamic titles (publication names, location names, user emails)
+
+## Phase 4f: Turbo Frames (replace render_async)
+
+**Bookmark:** `ryan/turbo-frames`
+**Parent:** `ryan/turbo`
+**Ruby:** 3.2
+
+Replace `render_async` with Turbo Frames across the app (~30 call sites). This enables proper caching behaviour (fixes the stats page caching issue) and removes the render_async gem dependency.
+
+- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute
+- Move async controller actions to return Turbo Frame responses
+- Remove `render_async` gem from Gemfile
+- Fix stats page caching (Turbo Frames handle this natively)
 
 ## Future Phases (Out of Scope)
 
