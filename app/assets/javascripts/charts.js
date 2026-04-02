@@ -143,6 +143,6 @@
 
   // --- Event listeners ---
 
-  document.addEventListener('turbolinks:load', initAll);
+  document.addEventListener('turbo:load', initAll);
   document.addEventListener('render_async_load', initAll);
 })();
