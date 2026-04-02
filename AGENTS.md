@@ -4,7 +4,7 @@ A Ruby on Rails application that serves as a curated database of scientific publ
 
 ## Stack
 
-- **Ruby** 2.7 / **Rails** 5.2.8
+- **Ruby** 3.2 / **Rails** 6.1
 - **Database**: SQLite3 (all environments)
 - **Frontend**: Sprockets, Bootstrap 3 (bootstrap-sass), jQuery, Turbolinks, CoffeeScript, SCSS
 - **Auth**: Devise
