@@ -41,6 +41,7 @@
             platformSuffix = if system == "aarch64-darwin" then "arm64-darwin" else system;
             withPlatformSuffix = attrs: { version = "${attrs.version}-${platformSuffix}"; };
           in {
+            ffi = withPlatformSuffix;
             nokogiri = withPlatformSuffix;
             sqlite3 = withPlatformSuffix;
           };
