@@ -264,8 +264,8 @@ class Publication < ApplicationRecord
   end
 
   # class methods
-  scope :csv, -> (options = {}) {
-    CSV.generate(options) do |csv|
+  scope :csv, -> (**options) {
+    CSV.generate(**options) do |csv|
       csv << csv_header
 
       validated = Publication.validated.map(&:id)
