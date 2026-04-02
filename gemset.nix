@@ -1166,6 +1166,17 @@
     };
     version = "3.4.4";
   };
+  rss = {
+    dependencies = ["rexml"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1yhya0dfd3ghy70amzd15ssh7y81jhblnzx01fhcscnq69nl9l1v";
+      type = "gem";
+    };
+    version = "0.3.2";
+  };
   ruby-graphviz = {
     dependencies = ["rexml"];
     groups = ["default" "development" "test"];

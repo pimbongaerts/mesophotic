@@ -11,6 +11,7 @@ gem 'puma_worker_killer'
 gem 'sassc-rails'
 gem 'turbolinks'
 gem 'terser'
+gem 'rss'  # extracted from stdlib in Ruby 3.1+
 
 # RailsBricks gems
 gem 'bootstrap', '~> 5.3'
