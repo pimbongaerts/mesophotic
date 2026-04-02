@@ -1335,27 +1335,6 @@
     };
     version = "2.0.12";
   };
-  turbolinks = {
-    dependencies = ["turbolinks-source"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "176fbkhhi2jmsnbkcng2qr82nd35qmh3inmbv5dqm9z2qj4misjz";
-      type = "gem";
-    };
-    version = "5.2.1";
-  };
-  turbolinks-source = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1m45pk1jbfvqaki1mxn1bmj8yy65qyv49ygqbkqv08hshpx42ain";
-      type = "gem";
-    };
-    version = "5.2.0";
-  };
   tzinfo = {
     dependencies = ["concurrent-ruby"];
     groups = ["default" "development" "test"];
