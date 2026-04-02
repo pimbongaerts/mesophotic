@@ -9,7 +9,6 @@ gem 'listen'
 gem 'puma'
 gem 'puma_worker_killer'
 gem 'sassc-rails'
-gem 'turbolinks'
 gem 'terser'
 
 # RailsBricks gems
