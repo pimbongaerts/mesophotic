@@ -20,6 +20,8 @@ module Mesophotic
     # config.encoding = "utf-8"
 
     # Test framework
-    config.generators.test_framework false
+    config.generators do |g|
+      g.test_framework nil
+    end
   end
 end
