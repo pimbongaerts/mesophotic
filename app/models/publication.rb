@@ -483,7 +483,7 @@ class Publication < ApplicationRecord
   end
 
   def scholar_url
-    "http://scholar.google.com/scholar?q=#{self.DOI}"
+    "https://scholar.google.com/scholar?q=#{self.DOI}"
   end
 
   def short_citation

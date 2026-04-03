@@ -65,9 +65,9 @@ class Species < ApplicationRecord
 
   def img_url
     if focusgroup_id == 1 # Fish
-      "http://www.fishbase.org/summary/#{species_code}"
+      "https://www.fishbase.org/summary/#{species_code}"
     elsif focusgroup_id == 2 # Coral
-      "http://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/#{species_code}/"
+      "https://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/#{species_code}/"
     end
   end
 
