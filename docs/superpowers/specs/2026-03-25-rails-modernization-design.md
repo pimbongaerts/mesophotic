@@ -26,39 +26,66 @@
 
 ---
 
-## Progress
+## Core Upgrades
 
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 0 | Safety net tests | Done |
-| 1 | Bootstrap 3 → 5 | Done |
-| 2 | Rails 5.2 → 6.0 (Zeitwerk, rails-ujs) | Done |
-| 3 | Rails 6.0 → 6.1 | Done |
-| 4 | Ruby 2.7 → 3.2 | Done |
-| 5 | CoffeeScript removal | Done |
-| 6 | rails_admin 3.x, remove jQuery | Done |
-| 6a | CAPTCHA (Cloudflare Turnstile) | Done |
-| 6b | Bluesky feed | Done |
-| 6c | Threads feed | Blocked (Meta API) |
-| 6d | Social media handles | Done |
-| 6e | User role consolidation | Done |
-| 6f | Breadcrumb navigation | Todo |
-| — | HTTPS / Let's Encrypt | Done |
-| — | Memory management (file_store, puma_worker_killer) | Done |
-| — | Rack::Attack (throttles, CJK block, spam patterns, logging) | Done |
-| — | robots.txt (crawl-delay, disallow storage/csv/pdf) | Done |
-| — | CSV exports require auth, links hidden | Done |
-| — | N+1 query fixes, eager loading | Done |
-| — | UI polish (Bootstrap Icons, cards, fonts) | Done |
-| — | Canonical URL (www → mesophotic.org) | Todo |
-| **7** | **Rails 6.1 → 7.0** | **Next** |
-| 8 | Turbolinks → Turbo (requires 7.0) | Todo |
-| 9 | Turbo Frames (replace render_async) | Todo |
-| 10 | Rails 7.0 → 7.1 | Todo |
-| 11 | Rails 7.1 → 7.2 | Todo |
-| 12 | Ruby 3.2 → 3.4 | Todo |
-| 13 | Rails 7.2 → 8.0 | Todo |
-| 14 | Rails 8.0 → 8.1 | Todo |
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | Safety net tests | Done |
+| 2 | Bootstrap 3 → 5 | Done |
+| 3 | Rails 5.2 → 6.0 (Zeitwerk, rails-ujs) | Done |
+| 4 | Rails 6.0 → 6.1 | Done |
+| 5 | Ruby 2.7 → 3.2 | Done |
+| 6 | CoffeeScript removal | Done |
+| 7 | rails_admin 3.x, remove jQuery | Done |
+| **8** | **Rails 6.1 → 7.0** | **Next** |
+| 9 | Turbolinks → Turbo (requires 7.0) | Todo |
+| 10 | Turbo Frames (replace render_async) | Todo |
+| 11 | Rails 7.0 → 7.1 | Todo |
+| 12 | Rails 7.1 → 7.2 | Todo |
+| 13 | Ruby 3.2 → 3.4 | Todo |
+| 14 | Rails 7.2 → 8.0 | Todo |
+| 15 | Rails 8.0 → 8.1 | Todo |
+
+## Features
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | CAPTCHA (Cloudflare Turnstile) | Done |
+| 2 | Bluesky feed | Done |
+| 3 | Threads feed | Blocked (Meta API) |
+| 4 | Social media handles | Done |
+| 5 | User role consolidation | Done |
+| 6 | Breadcrumb navigation | Todo |
+
+## Infrastructure
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | HTTPS / Let's Encrypt | Done |
+| 2 | Memory management (file_store, puma_worker_killer) | Done |
+| 3 | Rack::Attack (throttles, CJK block, spam patterns, logging) | Done |
+| 4 | robots.txt (crawl-delay, disallow storage/csv/pdf) | Done |
+| 5 | CSV exports require auth, links hidden | Done |
+| 6 | Canonical URL (www → mesophotic.org) | Todo |
+
+## Performance
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | N+1 query fixes, eager loading | Done |
+| 2 | word_association / species_association memoization | Todo |
+| 3 | CSV export streaming | Todo |
+| 4 | MiniMagick → VIPS | Todo |
+| 5 | Fragment caching (about, home, posts, sidebar, members) | Todo |
+
+## UI
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | Bootstrap Icons 1.13.1 | Done |
+| 2 | Publication card restyling | Done |
+| 3 | Open Access SVG icon | Done |
+| 4 | Google Fonts HTTPS | Done |
 
 ---
 
