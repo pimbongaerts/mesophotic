@@ -323,12 +323,12 @@ span.bi-link {
 .icon-btn {
   text-decoration: none;
 
-  .bi-pencil, .bi-trash, .bi-lock, .bi-unlock { display: inline; }
-  .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill { display: none; }
+  .bi-pencil, .bi-trash, .bi-lock, .bi-unlock, .bi-file-earmark-pdf, .bi-mortarboard { display: inline; }
+  .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill, .bi-file-earmark-pdf-fill, .bi-mortarboard-fill { display: none; }
 
   &:hover {
-    .bi-pencil, .bi-trash, .bi-lock, .bi-unlock { display: none; }
-    .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill { display: inline; }
+    .bi-pencil, .bi-trash, .bi-lock, .bi-unlock, .bi-file-earmark-pdf, .bi-mortarboard { display: none; }
+    .bi-pencil-fill, .bi-trash-fill, .bi-lock-fill, .bi-unlock-fill, .bi-file-earmark-pdf-fill, .bi-mortarboard-fill { display: inline; }
   }
 }
 
