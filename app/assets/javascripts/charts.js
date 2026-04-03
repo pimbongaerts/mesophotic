@@ -2,6 +2,13 @@
 // Works with both direct rendering and render_async injection (no inline scripts needed).
 
 (function() {
+  var resizeObservers = [];
+
+  function cleanupObservers() {
+    resizeObservers.forEach(function(observer) { observer.disconnect(); });
+    resizeObservers = [];
+  }
+
   function initAll(scope) {
     var root = (scope && scope.target instanceof HTMLElement) ? scope.target : document;
     root.querySelectorAll('[data-chart]:not([data-chart-init])').forEach(initChart);
@@ -137,7 +144,9 @@
     };
 
     render();
-    new ResizeObserver(render).observe(el);
+    var observer = new ResizeObserver(render);
+    observer.observe(el);
+    resizeObservers.push(observer);
     el.dataset.chartInit = 'true';
   }
 
@@ -145,4 +154,5 @@
 
   document.addEventListener('turbolinks:load', initAll);
   document.addEventListener('render_async_load', initAll);
+  document.addEventListener('turbolinks:before-cache', cleanupObservers);
 })();
