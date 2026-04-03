@@ -17,11 +17,14 @@ module ApplicationHelper
 
   def url_exists?(url_string)
     url = URI.parse(url_string)
-    req = Net::HTTP.new(url.host, url.port)
-    res = req.request_head(url.path)
-    res.code != "404" && res.code != "500" # false if returns 404 or 500
-  rescue Errno::ENOENT
-    false # false if can't find the server
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = (url.scheme == "https")
+    http.open_timeout = 5
+    http.read_timeout = 5
+    res = http.request_head(url.path)
+    res.code != "404" && res.code != "500"
+  rescue Errno::ENOENT, Errno::ECONNREFUSED, SocketError, Timeout::Error, Net::OpenTimeout
+    false
   end
 
   def word_association
