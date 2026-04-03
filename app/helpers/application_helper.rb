@@ -30,10 +30,10 @@ module ApplicationHelper
   def word_association
     cache_key = [
       "word_association",
-      Platform.maximum(:updated_at),
-      Field.maximum(:updated_at),
-      Focusgroup.maximum(:updated_at),
-      Location.maximum(:updated_at)
+      Platform.maximum(:updated_at).to_i,
+      Field.maximum(:updated_at).to_i,
+      Focusgroup.maximum(:updated_at).to_i,
+      Location.maximum(:updated_at).to_i
     ]
     Rails.cache.fetch(cache_key) do
       [Platform, Field, Focusgroup, Location].reduce({}) { |r, model|
@@ -48,7 +48,7 @@ module ApplicationHelper
   end
 
   def species_association
-    Rails.cache.fetch(["species_association", Species.maximum(:updated_at)]) do
+    Rails.cache.fetch(["species_association", Species.maximum(:updated_at).to_i]) do
       Species.all.reduce([]) { |r, s|
         words = s.short_description.split(';').map(&:strip) rescue []
         r << words.reduce({}) { |r, w|

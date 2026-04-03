@@ -76,7 +76,7 @@
         <%= render_async world_map_path(key: "publications_index", model: Location, ids: @locations, height: 150) %>
       </div>
     </div>
-    <% cache ["publications_sidebar_focus", Publication.maximum(:updated_at)] do %>
+    <% cache ["publications_sidebar_focus", Publication.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>Research Focus</strong></div>
       <div class="card-body" align="center">
@@ -89,7 +89,7 @@
       </div>
     </div>
     <% end %>
-    <% cache ["publications_sidebar_fields", Publication.maximum(:updated_at)] do %>
+    <% cache ["publications_sidebar_fields", Publication.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>Fields</strong></div>
       <div class="card-body" align="center">
@@ -102,7 +102,7 @@
       </div>
     </div>
     <% end %>
-    <% cache ["publications_sidebar_platforms", Publication.maximum(:updated_at)] do %>
+    <% cache ["publications_sidebar_platforms", Publication.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>Research Platforms</strong></div>
       <div class="card-body" align="center">
