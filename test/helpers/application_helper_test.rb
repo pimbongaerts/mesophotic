@@ -49,13 +49,27 @@ class ApplicationHelperTest < ActionView::TestCase
   test "word_association returns hash of model associations" do
     result = word_association
     assert result.is_a?(Hash)
-    # Should contain entries from Platform, Field, Focusgroup, Location
-    assert result.keys.any?
+    assert_includes result.keys, "platforms"
+    assert_includes result.keys, "fields"
+    assert_includes result.keys, "focusgroups"
+    assert_includes result.keys, "locations"
   end
 
   test "species_association returns array of species data" do
     result = species_association
     assert result.is_a?(Array)
+  end
+
+  test "word_association returns same result on second call (cached)" do
+    first = word_association
+    second = word_association
+    assert_equal first, second
+  end
+
+  test "species_association returns same result on second call (cached)" do
+    first = species_association
+    second = species_association
+    assert_equal first, second
   end
 
   # linkify depends on word_association, species_association, and generates

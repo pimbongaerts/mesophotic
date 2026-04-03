@@ -28,23 +28,34 @@ module ApplicationHelper
   end
 
   def word_association
-    [Platform, Field, Focusgroup, Location].reduce({}) { |r, model|
-      r.merge model.model_name.plural => model.all.reduce({}) { |r, m|
-        words = m.short_description.split(';').map(&:strip) rescue []
-        r.merge words.reduce({}) { |r, w|
-          r.merge w.downcase => m.id
+    cache_key = [
+      "word_association",
+      Platform.maximum(:updated_at),
+      Field.maximum(:updated_at),
+      Focusgroup.maximum(:updated_at),
+      Location.maximum(:updated_at)
+    ]
+    Rails.cache.fetch(cache_key) do
+      [Platform, Field, Focusgroup, Location].reduce({}) { |r, model|
+        r.merge model.model_name.plural => model.all.reduce({}) { |r, m|
+          words = m.short_description.split(';').map(&:strip) rescue []
+          r.merge words.reduce({}) { |r, w|
+            r.merge w.downcase => m.id
+          }
         }
       }
-    }
+    end
   end
 
   def species_association
-    Species.all.reduce([]) { |r, s|
-      words = s.short_description.split(';').map(&:strip) rescue []
-      r << words.reduce({}) { |r, w|
-        r.merge w.downcase => s.id
+    Rails.cache.fetch(["species_association", Species.maximum(:updated_at)]) do
+      Species.all.reduce([]) { |r, s|
+        words = s.short_description.split(';').map(&:strip) rescue []
+        r << words.reduce({}) { |r, w|
+          r.merge w.downcase => s.id
+        }
       }
-    }
+    end
   end
 
   def linkify content
