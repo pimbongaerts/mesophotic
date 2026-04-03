@@ -73,7 +73,13 @@ class PublicationsControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   # CSV export
-  test "index responds to CSV format" do
+  test "CSV redirects unauthenticated user" do
+    get publications_path(format: :csv)
+    assert_response :unauthorized
+  end
+
+  test "CSV accessible to authenticated user" do
+    sign_in users(:regular_user)
     get publications_path(format: :csv)
     assert_response :success
   end
