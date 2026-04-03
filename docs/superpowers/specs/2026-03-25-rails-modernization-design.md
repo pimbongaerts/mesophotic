@@ -251,7 +251,7 @@ Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redir
 
 ### Automated Deployment
 
-Replace manual SSH + git pull + restart workflow with automated deployment. Current process: SSH into Dreamhost VPS, `git pull`, `bundle install`, `rails assets:precompile`, `sudo systemctl restart puma`.
+Replace manual SSH + `scripts/update_and_restart.sh` workflow with automated deployment. Current script does: `git pull`, `bundle install`, `db:migrate`, clear cache, `assets:precompile`, update crontab, `touch tmp/restart.txt`.
 
 **Options (evaluate based on Dreamhost VPS constraints):**
 1. **Kamal** — Rails 8 default. Docker-based, zero-downtime deploys, built-in SSL. May not suit Dreamhost VPS if Docker isn't available or RAM is too tight (1GB).
