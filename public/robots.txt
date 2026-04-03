@@ -3,7 +3,9 @@
 # General rules for all bots
 User-agent: *
 Disallow: /*.pdf
+Disallow: /*.csv
 Disallow: /publications?*search=*
+Disallow: /rails/active_storage/
 Disallow: /admin/
 Crawl-delay: 2
 
