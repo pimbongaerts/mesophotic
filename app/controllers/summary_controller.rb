@@ -10,7 +10,9 @@ class SummaryController < ApplicationController
 
       format.csv {
         authenticate_user!
-        send_data publications.reorder(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv"
+        headers["Content-Disposition"] = "attachment; filename=\"#{@model} #{@object.id}, #{@object.description}.csv\""
+        headers["Content-Type"] = "text/csv"
+        self.response_body = Publication.csv_enumerator(publications.reorder(:id))
       }
     end
   end
