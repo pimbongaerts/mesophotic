@@ -838,15 +838,14 @@
     version = "2.8.9";
   };
   minitest = {
-    dependencies = ["drb" "prism"];
-    groups = ["default" "development" "test"];
+    groups = ["development" "test"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "048ls6kn009jkwj1rvka2b5vnwq73b0krjz740j6j03cwcfqmb48";
+      sha256 = "1mbpz92ml19rcxxfjrj91gmkif9khb1xpzyw38f81rvglgw1ffrd";
       type = "gem";
     };
-    version = "6.0.3";
+    version = "5.27.0";
   };
   msgpack = {
     groups = ["default"];
@@ -944,12 +943,12 @@
     version = "2.7.5";
   };
   nokogiri = {
-    dependencies = ["mini_portile2" "racc"];
+    dependencies = ["racc"];
     groups = ["default" "development"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0mhp90nf3g3yy5vgjnwd34czi6rbi0p7057vgngfmmdkknsxiz9q";
+      sha256 = "01g2vr1ippyvx6dxmfd1v9k1ifn82i6a91q4nx1vhrx964pfmn2q";
       type = "gem";
     };
     version = "1.19.2";
@@ -994,16 +993,6 @@
       type = "gem";
     };
     version = "2.11.8";
-  };
-  prism = {
-    groups = ["default" "development" "test"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "11ggfikcs1lv17nhmhqyyp6z8nq5pkfcj6a904047hljkxm0qlvv";
-      type = "gem";
-    };
-    version = "1.9.0";
   };
   puma = {
     dependencies = ["nio4r"];
