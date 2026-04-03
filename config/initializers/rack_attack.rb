@@ -1,5 +1,5 @@
 class Rack::Attack
-  SPAM_SEARCH_PATTERN = /[\u4e00-\u9fff]|[\u3040-\u309f]|[\u30a0-\u30ff]|https?:\/\/|\.cc\b|\.lol\b|\.shop\b|\.xyz\b|\.top\b|\.vip\b|\.club\b|hkcash|sgbot|tf88|bet365|miyao|qqwechat|spiderpools|usdtcard|1024dhz|666bit|777bd/i
+  SPAM_SEARCH_PATTERN = /[\u4e00-\u9fff]|[\u3040-\u309f]|[\u30a0-\u30ff]|[\uac00-\ud7af]|https?:\/\/|\.cc\b|\.lol\b|\.shop\b|\.xyz\b|\.top\b|\.vip\b|\.club\b|hkcash|sgbot|tf88|bet365|miyao|qqwechat|spiderpools|usdtcard|1024dhz|666bit|777bd/i
 
   # Throttle search requests: 20 per minute per IP
   throttle("search/ip", limit: 20, period: 60) do |req|
