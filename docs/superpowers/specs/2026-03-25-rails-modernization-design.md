@@ -1,18 +1,21 @@
 # Mesophotic.org Modernization Design
 
-**Date:** 2026-03-25
-**Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 7.1 / Ruby 3.2 / Bootstrap 5, with a baseline test suite as a safety net.
+**Date:** 2026-03-25 (last updated 2026-04-03)
+**Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 8.1 / Ruby 3.4, with a baseline test suite as a safety net.
 
 ## Current State
 
-- **Rails** 5.2.8, **Ruby** 2.7, **Bootstrap** 3.4.1 (via `bootstrap-sass` gem)
-- **Frontend:** Sprockets, jQuery, CoffeeScript, Turbolinks, SCSS
+- **Rails** 6.1, **Ruby** 3.2, **Bootstrap** 5.3 (via `bootstrap` gem)
+- **Frontend:** Sprockets, Bootstrap Icons 1.13.1, vanilla JS + jQuery, Turbolinks, SCSS
 - **Database:** SQLite3 (all environments)
-- **Test coverage:** ~3.8% — 17 tests across 2 files (Publication model search scopes, PublicationsController `search_params` helper)
+- **Auth:** Devise with Cloudflare Turnstile CAPTCHA on registration
+- **Admin:** rails_admin (mounted at `/admin/db`)
+- **Cache:** `:file_store` (256 MB) in production
+- **Process:** Puma (2 workers, 1–3 threads) with `puma_worker_killer`
+- **Security:** Rack::Attack (throttling, spam blocklists, Fail2Ban), `force_ssl = true`
+- **Test coverage:** ~3.8% — Minitest with fixtures
 - **Dev environment:** Nix flake + direnv
 - **VCS:** jj (colocated with git)
-- **Models:** 22, **Controllers:** 23, **Views:** 171 ERB files
-- **Custom component:** Dual range slider in `app/helpers/dual_range_helper.rb`, `app/views/shared/_dual_range_slider.html.erb`, `app/assets/javascripts/dual_range.js`, and inline SCSS (recent replacement for `bootstrap-rails-slider` gem)
 
 ## Principles
 
@@ -21,196 +24,91 @@
 - **Test-first:** Baseline tests written before any changes to catch regressions.
 - **Tight scope:** Only change what's required for the target upgrade. Don't modernize what still works.
 
-## Phase 0: Safety Net Tests
+---
 
-**Bookmark:** `ryan/test-safety-net`
-**Purpose:** Establish regression tests that describe current behaviour before any changes.
+## Completed Phases
 
-### Model Tests
+### Phase 0: Safety Net Tests — DONE
 
-Priority models (those with real logic beyond simple associations):
+Established regression tests covering critical paths before any changes.
 
-| Model | What to test |
-|-------|-------------|
-| Publication | Validations (required: title, authors, year). Associations (journal, users, platforms, fields, focusgroups, locations, sites, species). Callbacks (`before_save :create_journal_from_name`). Instance methods (`open_access?`, `scientific_article?`, `chapter?`, `doi_url`, `scholar_url`, `short_citation`). Scopes (`validated`, `unvalidated`, `expired`, `latest`, `statistics`). CSV export. Existing search tests already cover `search`, `sift`, `relevance`, `depth_search`. |
-| User | Validations (Devise fields). Associations (organisation, publications, platforms, photos). Role methods (admin/editor checks). `paginates_per 100`. |
-| Post | Validations. Markdown-to-HTML conversion (`before_save`). FriendlyId slug generation. Scopes (`published`, `drafted`). Polymorphic `postable` association. |
-| Photo | Validations. Associations (photographer, location, site, expedition, etc.). Scopes (`media_gallery`, `showcases_location`). |
-| Species | Associations (focusgroup, observations, publications). `after_create` speciation callback (note: runs `SpeciationJob.perform_now` which is heavy — stub this in tests). Abbreviation generation. |
-| Location | `place_data` method for map rendering. `published` scope. |
-| Journal | `open_access` flag. Association with publications. |
-| Validation (model) | Polymorphic validatable. The 2-validation-threshold logic. |
+### Phase 1: Bootstrap 3 → 5 — DONE
 
-### Controller Integration Tests
+Migrated from `bootstrap-sass` (3.4) to `bootstrap` (5.3). Panels → cards, grid updates, form class migration (~136 occurrences across 21 views), data attributes, labels → badges, Kaminari Bootstrap 5 views.
 
-| Controller | What to test |
-|-----------|-------------|
-| PublicationsController | `index` (with and without search params, pagination, CSV export). `show`. Auth gates on `new`, `create`, `edit`, `update`, `destroy`. Validation add/remove/touch actions. |
-| PagesController | `home`, `about`, `members`, `show_member`, `media_gallery`, `contact`/`email`. |
-| StatsController | `all` and `validated` with year param. Key chart endpoints return 200. |
-| Admin::* | Auth gate — unauthenticated users get redirected. Admin users can access dashboard. |
-| ApplicationController | `require_admin!` and `require_admin_or_editor!` helpers (note: `require_admin_or_editor!` uses `@current_user` instead of `current_user` — verify this works consistently). `reject_locked!` behaviour. |
+### Phase 2: Rails 5.2 → 6.0 — DONE
 
-### Helper Tests
+Zeitwerk autoloader, `rails-ujs` (replaced `jquery_ujs`), class-level DB query constants converted to memoized class methods, `config.load_defaults '6.0'`.
 
-| Helper | What to test |
-|--------|-------------|
-| ApplicationHelper | `linkify`, `mesophotic_score`, `word_association`, `species_association`. |
-| PublicationsHelper | `format_authors`, `format_publication_citation`, `search_param`. |
-| DualRangeHelper | `dual_range_slider` generates correct HTML structure with expected IDs and values. |
+### Phase 3: Rails 6.0 → 6.1 — DONE
 
-### Fixtures
+Removed `represent_boolean_as_integer` config, converted raw SQL boolean scopes to `where(draft: false)`, `config.load_defaults '6.1'`.
 
-Expand from the current 3 publication fixtures to cover:
-- Users (admin, editor, regular, locked)
-- Publications (with various types, depths, years, associations)
-- Journals (open access and not)
-- Locations, Sites, Species, Focusgroups, Fields, Platforms
-- Posts (published and drafted, different types)
-- Photos (with and without creative commons)
-- Validations (enough to test the 2-threshold)
+### Phase 4: Ruby 2.7 → 3.2 — DONE
 
-**Target:** ~60–80 tests covering critical paths. Not exhaustive — just enough that a broken upgrade shows up as a test failure.
+CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd service updated to Ruby 3.2 path.
 
-## Phase 1: Bootstrap 3 → 5
+### Phase 5: CoffeeScript Removal — DONE (completed in Phase 2)
 
-**Bookmark:** `ryan/bootstrap-5`
-**Parent:** `ryan/test-safety-net`
+### Phase 6: rails_admin 2.x → 3.x, remove jQuery — DONE
 
-### Gem Changes
+### Feature Work (completed)
 
-- Remove: `bootstrap-sass` (~3.4.1), `sass` (deprecated Ruby Sass gem — unused, `sass-rails` delegates to `sassc` internally)
-- Add: `bootstrap` (~5.3)
-- May need: `sassc-rails` or update sass compilation pipeline
+- **6a: CAPTCHA** — DONE. Replaced broken `acts_as_textcaptcha` with Cloudflare Turnstile. Direct API integration, no gem dependency. Keys in Rails encrypted credentials.
+- **6b: Bluesky Feed** — DONE. `BlueskyFeed` model fetches from AT Protocol API with session auth. Tabbed UI on home page with Mastodon/Bluesky toggle, colour-switching icons.
+- **6c: Threads Feed** — BLOCKED. Meta's Threads API requires OAuth app review for `threads_keyword_search` permission. Parked until API access is more accessible. UI is ready to add the tab.
+- **6d: Social Media Handles** — DONE. Users have `mastodon_handle`, `bluesky_handle`, `threads_handle`, `twitter_handle` columns. Profile form updated, member page shows platform-specific icons.
+- **6e: User Role Consolidation** — DONE. Single `role` column (`member`, `editor`, `admin`). `admin?` and `editor?` methods, `editor_or_admin?` helper.
 
-### SCSS Migration
+### Infrastructure (completed)
 
-`railsbricks_custom.scss` is the primary file. Key changes:
+- **HTTPS** — DONE. Let's Encrypt via Dreamhost panel for mesophotic.org, www, assets subdomain, and mesophotic.com. `force_ssl = true`, mailer protocol updated, hardcoded http:// URLs fixed.
+- **Memory management** — DONE. Production cache switched from `:memory_store` to `:file_store` (256 MB cap). Added `puma_worker_killer` (768 MB RAM limit, 90% threshold, 6hr rolling restart).
+- **Rack::Attack** — DONE. Search throttle (20/min), global throttle (120/min), spam pattern blocklist (URLs, spam TLDs, gambling/scam keywords, CJK fake document spam), IP blocklist (85.208.96.*), empty user-agent blocking, Fail2Ban auto-ban (2 strikes in 5min = 1hr ban).
+- **robots.txt** — DONE. Crawl-delay for all bots (2s), aggressive delay for bingbot (10s), block SEO scrapers (AhrefsBot, SemrushBot, MJ12bot), disallow search URLs and /admin/.
 
-**Critical: File restructuring required.** Currently `@import "bootstrap"` is at the top of the file (line 2), before all variable overrides. In Bootstrap 3's `bootstrap-sass`, this happened to work. In Bootstrap 5, variables use `!default` flags and **must be declared before the `@import "bootstrap"` line** or they will be silently ignored. The file must be restructured to: variable overrides first, then `@import "bootstrap"`.
+### Performance (completed)
 
-**Variable name changes:**
+- **N+1 queries** — DONE. Eager loading across pages, publications, and admin controllers. About page contributors batch-loaded via `@users_by_name` hash.
 
-| Bootstrap 3 | Bootstrap 5 |
-|-------------|-------------|
-| `$brand-primary`, `$brand-success`, etc. | `$primary`, `$success`, etc. |
-| `@import "bootstrap"` (from bootstrap-sass) | `@import "bootstrap"` (from bootstrap gem, different path) |
-| Panel variables | Card variables |
-| Navbar variables (`$navbar-default-*`) | Navbar variables (`$navbar-light-*` or `$navbar-dark-*`) |
-| `$btn-default-*` | `$btn-secondary-*` (no "default" variant in BS5) |
-| `$font-size-base: 14px` | `$font-size-base: 0.875rem` (BS5 uses `rem` units — `14px` will compile but causes calculation issues in BS5's `rem`-based math) |
+### UI Polish (completed)
 
-**SCSS `@extend` breakage:** `railsbricks_custom.scss` uses `@extend .img-responsive` which will cause a Sass **compilation error** — Bootstrap 5 renamed this to `.img-fluid`. This is not just a visual bug; the build will fail.
+- Bootstrap Icons 1.13.1 (replaced glyphicons and Font Awesome)
+- Publication card restyling (outline badges, title link hover, font sizing)
+- Open Access SVG icon restored
+- Google Fonts URLs updated to HTTPS
 
-### View Class Migration
+---
 
-Commits grouped by component type:
+## Remaining Phases
 
-1. **Navbar:** `navbar-default` → `navbar-light bg-light`. `navbar-fixed-top` → `fixed-top`. `navbar-toggle` → `navbar-toggler`. `icon-bar` spans → `navbar-toggler-icon`. `navbar-right` → `ms-auto`.
-2. **Panels → Cards:** `panel` → `card`. `panel-heading` → `card-header`. `panel-body` → `card-body`. `panel-footer` → `card-footer`. `panel-default` → (just `card`).
-3. **Grid:** `col-xs-*` → `col-*`. `col-*-offset-*` → `offset-*-*`.
-4. **Responsive utilities:** `hidden-xs` → `d-none d-sm-block`. `hidden-sm hidden-md` → appropriate `d-*-none d-*-block` combos.
-5. **Forms:** `form-group` → `mb-3` (removed in BS5, use margin utilities). `form-horizontal` → removed (use grid directly). `form-inline` → removed (use flex utilities). `control-label` → `form-label`. `help-block` → `form-text`. ~136 occurrences across 21 view files including Devise, publication, admin, and contact forms.
-6. **Data attributes:** `data-toggle` → `data-bs-toggle`. `data-dismiss` → `data-bs-dismiss`. `data-target` → `data-bs-target`. `data-parent` → `data-bs-parent`.
-7. **Buttons:** `btn-default` → `btn-secondary`. Verify `btn-basic` custom class still works.
-8. **Labels → Badges:** BS3 `label label-success`, `label-info`, `label-primary`, `label-warning`, `label-danger` → BS5 `badge bg-success`, `badge bg-info`, etc. (~10 occurrences in publication validation views). The `label` component was removed in BS5; all become badges.
-9. **Badges:** Existing bare `badge` class → `badge bg-secondary` (BS5 badges have no default background — contextual class required). ~14 view files affected.
-10. **Misc:** `caret` class (remove — BS5 dropdowns handle this with CSS). `sr-only` → `visually-hidden`.
+### Phase 7: Rails 6.1 → 7.0
 
-### JavaScript
+**Bookmark:** `ryan/rails-7.0`
+**Parent:** main
+**Ruby:** 3.2
 
-- Bootstrap 5 JS no longer requires jQuery. But we keep jQuery for now (the app uses it elsewhere).
-- Update `application.js` — the `bootstrap` require may need to change depending on how the new gem exposes JS.
-- Verify collapse, dropdown, and alert dismiss still work.
-
-### Dual Range Slider
-
-- Already uses BS5-compatible colours (#0d6efd). Likely needs no changes.
-- Verify it still renders and functions after Bootstrap 5 CSS is loaded.
-- Fix any z-index or layout issues from Bootstrap 5's different base styles.
-
-### Kaminari
-
-- No custom Kaminari views exist (no `app/views/kaminari/` directory). Kaminari uses its default theme.
-- Generate Bootstrap 5-compatible views: `rails g kaminari:views bootstrap5`.
-
-### Devise Views
-
-- Devise views in `app/views/devise/` use Bootstrap form classes (`form-group`, `control-label`, etc.). These need the same form class migration as step 5 above.
-
-## Phase 2: Rails 5.2 → 6.0
-
-**Bookmark:** `ryan/rails-6.0`
-**Parent:** `ryan/bootstrap-5`
-**Ruby:** 2.7 (no change)
-
-### Key Changes
-
-- **Zeitwerk autoloader:** Replace classic autoloader. Run `bin/rails zeitwerk:check` to identify issues. Most common problem: files that don't match the expected naming convention.
-- **Zeitwerk hazard — class-level DB queries:** `Publication` model has constants (`PUBLICATION_CHARACTERISTICS`, `PUBLICATION_LOCATIONS`, `PUBLICATION_FOCUSGROUPS`, `PUBLICATION_PLATFORMS`, `PUBLICATION_FIELDS`) that execute database queries at class load time. Under Zeitwerk's lazy loading, if `Publication` is loaded before the database is ready (during `db:migrate`, `assets:precompile`, etc.), these will raise errors. Fix: convert to class methods with memoization.
-- **`jquery_ujs` → `rails-ujs`:** Rails 5.1+ ships `rails-ujs` as the default UJS driver. While `jquery_ujs` still works on Rails 6, it will be dropped in Rails 7. Begin the transition here: replace `//= require jquery_ujs` with `//= require rails-ujs` in `application.js`. This affects `data-method`, `data-confirm`, and `data-remote` attributes in views (should work identically).
-- **`config/application.rb`:** Update `config.load_defaults` from `5.2` to `6.0`.
-- **`rails app:update`:** Generate config diffs and resolve each one.
-- **Credentials:** Rails 6 encourages `credentials.yml.enc` over Figaro. No need to migrate immediately — Figaro still works.
-- **Action Text / Action Mailbox:** New frameworks, but optional. Don't add unless needed.
-- **Active Storage:** Direct upload support improved. Existing setup should work.
-
-### Gem Compatibility
-
-| Gem | Action needed |
-|-----|--------------|
-| `coffee-rails` | Still works on Rails 6.0 but deprecated. Keep for now. |
-| `turbolinks` | Still works. Keep. |
-| `rails_admin` | Verify version supports Rails 6. May need bump. |
-| `paper_trail` | Verify version. May need bump. |
-| `acts_as_textcaptcha` | Check maintenance status. May need fork or replacement. |
-| `switch_user` | Check compatibility. |
-| `render_async` | Check compatibility. |
-| `aws-sessionstore-dynamodb` | Check compatibility. |
-
-### Nix Flake
-
-- Ruby 2.7 stays the same.
-- Bundler version may need updating if new gems require it.
-- Run `bundle lock && bundix` after Gemfile changes.
-
-## Phase 3: Rails 6.0 → 6.1
-
-**Bookmark:** `ryan/rails-6.1`
-**Parent:** `ryan/rails-6.0`
-**Ruby:** 2.7 (no change)
-
-### Key Changes
-
-- Mostly additive: `where.associated`, `destroy_async`, strict loading.
-- `config.load_defaults '6.1'`.
+- `config.load_defaults '7.0'`.
 - `rails app:update` — resolve config diffs.
-- Fix any deprecation warnings introduced in 6.0.
-- `ActiveRecord::Base` → may see deprecation warnings about `connection` usage.
-- **Remove `represent_boolean_as_integer`:** The config line `config.active_record.sqlite3.represent_boolean_as_integer = true` in `config/application.rb` was deprecated in Rails 6.0 and **removed in Rails 6.1** — it will cause a startup error if not deleted.
-- **Verify boolean scopes:** The `Post` model uses raw SQL boolean comparisons (`where("draft = 0 OR draft = 'f'")`). After removing the boolean config, verify these still work. Ideally convert to `where(draft: false)` / `where(draft: true)`.
+- `button_to` default method changes from POST to PATCH in some contexts — audit forms.
+- `Rails.application.credentials` changes — verify Figaro still works.
+- `rails_admin` compatibility — verify current version works on Rails 7.0.
 
-This is expected to be a smooth step aside from the boolean config removal.
-
-## Phase 4: Ruby 2.7 → 3.2 — DONE
-
-## Phase 5: CoffeeScript Removal — DONE (completed in Phase 2)
-
-## Phase 6: rails_admin 2.x → 3.x, remove jQuery — DONE
-
-## Phase 7: Turbolinks → Turbo
+### Phase 8: Turbolinks → Turbo
 
 **Bookmark:** `ryan/turbo`
-**Parent:** `ryan/ruby-3.2`
-**Ruby:** 3.2, **Rails:** 6.1
+**Parent:** `ryan/rails-7.0`
+**Ruby:** 3.2, **Rails:** 7.0+
 
-- Remove `turbolinks` gem, use `turbo-rails` (pulled in by rails_admin 3.x).
+**IMPORTANT:** Turbo migration requires Rails 7.0 first. The `turbo-rails` 2.x gem's JavaScript does not compile through Sprockets on Rails 6.1 — `//= require turbo` silently fails and breaks all subsequent `//= require` directives. This was attempted and fully reverted.
+
+- Remove `turbolinks` gem, add `turbo-rails`.
 - `data-turbolinks-*` → `data-turbo-*`.
-- Update `turbolinks:load` event listeners → `turbo:load`.
+- Update `turbolinks:load` event listeners → `turbo:load` (in `charts.js`, `feed_tabs.js`, etc.).
 - `turbolinks-cache-control` → `turbo-cache-control`.
 - Update render_async config: `turbolinks` → `turbo`.
 
-## Phase 8: Turbo Frames (replace render_async)
+### Phase 9: Turbo Frames (replace render_async)
 
 **Bookmark:** `ryan/turbo-frames`
 **Parent:** `ryan/turbo`
@@ -218,56 +116,40 @@ This is expected to be a smooth step aside from the boolean config removal.
 
 Replace `render_async` with Turbo Frames across the app (~30 call sites). This enables proper caching behaviour (fixes the stats page caching issue) and removes the render_async gem dependency.
 
-- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute
-- Move async controller actions to return Turbo Frame responses
-- Remove `render_async` gem from Gemfile
-- Fix stats page caching (Turbo Frames handle this natively)
+- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute.
+- Move async controller actions to return Turbo Frame responses.
+- Remove `render_async` gem from Gemfile.
+- Fix stats page caching (Turbo Frames handle this natively).
 
-## Phase 9: Rails 6.1 → 7.0
+**Note:** Do NOT attempt to cache stats graphs until this phase is complete. Fragment caching + render_async don't mix (cached placeholder HTML loses the JavaScript that triggers async loading).
 
-**Bookmark:** `ryan/rails-7.0`
-**Parent:** `ryan/turbo-frames`
-**Ruby:** 3.2
-
-- `config.load_defaults '7.0'`.
-- `rails app:update` — resolve config diffs.
-- `button_to` default method changes from POST to PATCH in some contexts — audit forms.
-- `Rails.application.credentials` changes — verify Figaro still works.
-
-## Phase 10: Rails 7.0 → 7.1
+### Phase 10: Rails 7.0 → 7.1
 
 **Bookmark:** `ryan/rails-7.1`
-**Parent:** `ryan/rails-7.0`
+**Parent:** `ryan/turbo-frames`
 **Ruby:** 3.2
-
-### Key Changes
 
 - Mostly additive: async queries, `normalizes`, Trilogy adapter, BYO auth generator.
 - `config.load_defaults '7.1'`.
 - `rails app:update`.
 - Verify all tests pass.
-- This should be the smoothest upgrade step.
+- Expected to be a smooth step.
 
-## Phase 11: Rails 7.1 → 7.2
+### Phase 11: Rails 7.1 → 7.2
 
 **Bookmark:** `ryan/rails-7.2`
 **Parent:** `ryan/rails-7.1`
 **Ruby:** 3.2
 
-### Key Changes
-
 - `config.load_defaults '7.2'`.
 - `rails app:update`.
 - Progressive job enqueuing, default health check endpoint, dev containers.
 - Verify all tests pass.
-- Should be a smooth step.
 
-## Phase 12: Ruby 3.2 → 3.4
+### Phase 12: Ruby 3.2 → 3.4
 
 **Bookmark:** `ryan/ruby-3.4`
 **Parent:** `ryan/rails-7.2`
-
-### Key Changes
 
 - Update `.ruby-version` to `3.4`.
 - Update Nix flake: change Ruby version.
@@ -275,161 +157,85 @@ Replace `render_async` with Turbo Frames across the app (~30 call sites). This e
 - Ruby 3.4 changes: `frozen_string_literal` warning by default, `it` fully available.
 - Run `bundle lock && bundix`.
 - Run full test suite. Fix all failures.
-- This prepares for Rails 8.0 which requires Ruby 3.2+ (3.4 gives us headroom).
 
-## Phase 13: Rails 7.2 → 8.0
+### Phase 13: Rails 7.2 → 8.0
 
 **Bookmark:** `ryan/rails-8.0`
 **Parent:** `ryan/ruby-3.4`
 **Ruby:** 3.4
-
-### Key Changes
 
 - `config.load_defaults '8.0'`.
 - `rails app:update`.
 - Kamal 2 for deployment, Thruster as default proxy, Propshaft replaces Sprockets as default (but Sprockets still works).
 - Solid Cable, Solid Cache, Solid Queue — new defaults but optional.
 - Authentication generator available.
-- `rails_admin` compatibility — verify 3.x works on Rails 8.0.
-- Verify all tests pass.
-- **Note:** Sprockets → Propshaft migration is optional at this point but recommended.
+- `rails_admin` compatibility — verify works on Rails 8.0.
+- **Note:** Sprockets → Propshaft migration is optional but recommended.
 
-## Phase 14: Rails 8.0 → 8.1
+### Phase 14: Rails 8.0 → 8.1
 
 **Bookmark:** `ryan/rails-8.1`
 **Parent:** `ryan/rails-8.0`
 **Ruby:** 3.4
-
-### Key Changes
 
 - `config.load_defaults '8.1'`.
 - `rails app:update`.
 - Job continuations, structured events, local CI.
 - Verify all tests pass.
 
-## Feature Work
+---
 
-**Bookmark:** `ryan/features`
-**Parent:** `ryan/rails-7.1`
-**Purpose:** Planned feature additions that were deferred until the modernization is complete.
+## Remaining Feature Work
 
-### 6a: Fix Textcaptcha
+### 6c: Threads Feed (blocked)
 
-The `acts_as_textcaptcha` gem's external API returns nil questions — `User.new.textcaptcha_question` returns `nil`. The sign-up form shows "Answer the following question, to prove you're not a robot." but no actual question appears.
-
-**Options (evaluate in order):**
-1. Replace with a simple custom captcha (lowest dependency risk)
-2. Replace with reCAPTCHA or similar maintained service
-3. Fix the API key if the textcaptcha service is still operational
-
-**Note:** If `acts_as_textcaptcha` doesn't support Rails 7 (flagged in Risk Notes), this must be addressed during Phase 4 instead. Check compatibility before proceeding.
-
-### 6b: Bluesky Feed
-
-Add a Bluesky `#mesophotic` feed alongside the existing Mastodon feed on the home page.
-
-- Bluesky public API: `public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23mesophotic`
-- Add Bluesky logo next to Mastodon logo in the card header
-- Logos act as tab selectors — selected logo coloured, unselected muted
-- Switch feed content based on selected tab
-- Fetch profile pics/names async similar to existing Mastodon implementation
-
-### 6c: Threads Feed
-
-Add a Threads `#mesophotic` feed alongside the Mastodon and Bluesky feeds on the home page.
-
-- Investigate Threads API availability (Meta's Threads API may require app review/approval)
-- Add Threads logo to the tab selector in the card header alongside Mastodon and Bluesky
-- Same tabbed selection pattern — selected logo coloured, unselected muted
-- Fetch and display posts async similar to Mastodon and Bluesky implementations
-
-### 6d: Multiple Social Media Handles
-
-Allow users to specify multiple social handles (Mastodon, BlueSky, Threads, Twitter/X) instead of the single `twitter` field.
-
-- Add a `social_links` table or JSON column to store multiple handles per user
-- Each link has a platform (mastodon, bluesky, threads, twitter) and a handle/URL
-- Update edit profile form to allow adding/removing social links
-- Update member profile page to show all social icons
-- Update the `contact_links` partial to render platform-specific icons (bi-mastodon, bi-twitter-x, custom SVG for BlueSky/Threads)
-
-### 6e: User Role Consolidation
-
-Replace the independent `admin` and `editor` boolean columns with a single `role` string column (`member`, `editor`, `admin`) where admin is a strict superset of editor.
-
-- Add migration: add `role` column (default `"member"`), populate from existing booleans, remove `admin` and `editor` columns
-- Update `User` model: `admin?` checks `role == "admin"`, `editor?` checks `role.in?(["editor", "admin"])`
-- Simplify `require_admin_or_editor!` to just check `editor?` (which now inherently includes admins)
-- Update all views: admin user edit form (single role dropdown instead of two checkboxes), badges, profile forms
-- Update fixtures and tests
+Add a Threads `#mesophotic` feed alongside Mastodon and Bluesky feeds on the home page. Blocked by Meta's Threads API requiring OAuth app review for `threads_keyword_search` permission. Parked until API access improves. The tabbed UI is designed to accommodate additional feeds.
 
 ### 6f: Breadcrumb Navigation
 
 Replace the `<<< Back` links throughout the app with proper breadcrumb navigation using Bootstrap 5's breadcrumb component.
 
-- Create a shared breadcrumb partial that accepts a trail of label/path pairs
-- Replace `_page_title.html.erb` back link with breadcrumbs (e.g. Home > Publications > "Paper Title")
-- Replace all admin `<<< Back` links with breadcrumbs (e.g. Home > Admin > Users > Edit)
-- Replace summary page back links with breadcrumbs (e.g. Home > Locations > "American Samoa")
-- Handle dynamic titles (publication names, location names, user emails)
+- Create a shared breadcrumb partial that accepts a trail of label/path pairs.
+- Replace `_page_title.html.erb` back link with breadcrumbs (e.g. Home > Publications > "Paper Title").
+- Replace all admin `<<< Back` links with breadcrumbs (e.g. Home > Admin > Users > Edit).
+- Replace summary page back links with breadcrumbs (e.g. Home > Locations > "American Samoa").
+- Handle dynamic titles (publication names, location names, user emails).
 
-## Phase 4f: Turbo Frames (replace render_async)
+### Canonical URL
 
-**Bookmark:** `ryan/turbo-frames`
-**Parent:** `ryan/turbo`
-**Ruby:** 3.2
+Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redirect `www.mesophotic.org` → `mesophotic.org` instead. Investigate where the current redirect is configured (Dreamhost panel, Apache config, or `.htaccess`).
 
-Replace `render_async` with Turbo Frames across the app (~30 call sites). This enables proper caching behaviour (fixes the stats page caching issue) and removes the render_async gem dependency.
+---
 
-- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute
-- Move async controller actions to return Turbo Frame responses
-- Remove `render_async` gem from Gemfile
-- Fix stats page caching (Turbo Frames handle this natively)
-
-## Future Phases (Out of Scope)
+## Future Work (Out of Scope)
 
 These are noted for future planning but not part of this effort:
 
 ### Performance
-- **~~N+1 queries in format_authors~~:** Fixed — eager loading added to pages and publications controllers.
-- **Fragment caching — About page contributors:** 50+ `User.find_by` queries for contributors. Batch-load users in controller or cache the contributor cards (they rarely change). Cache key: `User.maximum(:updated_at)`.
-- **Fragment caching — Home page publications:** Cache the newsfeed partial keyed on `Publication.maximum(:updated_at)`. Saves 20 PDF preview lookups per page load.
-- **Fragment caching — News post cards:** Cache individual post summary cards keyed on `post.updated_at`. Saves photo variant lookups per card.
-- **Fragment caching — Publications sidebar charts:** Cache the focusgroup/field/platform/location bar charts on publications index. They change infrequently.
-- **Fragment caching — Members list:** Cache the member table keyed on `User.maximum(:updated_at)`. Each row does `user.publications.count`.
 - **word_association / species_association helper:** `application_helper.rb` loads ALL platforms, fields, focusgroups, locations, and species into memory every time it's called (per publication view). Cache per request or memoize.
 - **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
 - **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.
 - **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
-
-### Infrastructure
-- **HTTPS via Let's Encrypt:** Enable HTTPS for mesophotic.org.
-  - **Dreamhost:** Install certbot, configure Apache to use Let's Encrypt certificates, set up auto-renewal cron.
-  - **Rails:** Set `config.force_ssl = true` in production, update `config.action_mailer.default_url_options` to use `https`, update any hardcoded `http://` URLs in views/models, ensure Active Storage serves via HTTPS.
-  - **Mixed content:** Audit all external resources (CDNs, APIs, images) to ensure they use HTTPS.
-- **Canonical URL:** `mesophotic.org` currently redirects to `www.mesophotic.org`. Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redirect `www.mesophotic.org` → `mesophotic.org` instead. Investigate where the current redirect is configured (Dreamhost panel, Apache config, or `.htaccess`).
+- **Fragment caching — About page contributors:** 50+ `User.find_by` queries for contributors. Batch-load users in controller or cache the contributor cards.
+- **Fragment caching — Home page publications:** Cache the newsfeed partial keyed on `Publication.maximum(:updated_at)`.
+- **Fragment caching — News post cards:** Cache individual post summary cards keyed on `post.updated_at`.
+- **Fragment caching — Publications sidebar charts:** Cache the focusgroup/field/platform/location bar charts on publications index.
+- **Fragment caching — Members list:** Cache the member table keyed on `User.maximum(:updated_at)`.
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
-- **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline. (Recommended during or after Phase 8.)
-- **Rails 8.1+:** Continue the upgrade path as new versions release.
-- **Ruby 3.5+:** Continue Ruby upgrades as new versions release.
+- **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline. (Recommended during or after Rails 8.0.)
 - **`owlcarousel-rails` → modern alternative:** The gem is unmaintained. Replace with a vanilla JS carousel or CSS-only solution.
 - **`nested_form` / `remotipart` → Turbo Streams:** Replace legacy remote form gems with Hotwire patterns.
 - **System tests:** Add Capybara-based browser tests for full user flow coverage.
-- **Ruby 3.3+, Rails 7.2 / 8.0:** Continue the upgrade path.
 - **HABTM → `has_many :through`:** Convert join tables for better auditability and flexibility.
 - **Figaro → Rails credentials:** Migrate environment variable management.
 
 ## Risk Notes
 
-- **`bootstrap-sass` → `bootstrap` gem:** The SCSS import paths change completely. This will touch every stylesheet. The file structure of `railsbricks_custom.scss` must be restructured (variables before imports).
-- **SCSS compilation errors:** `@extend .img-responsive` will cause a build failure (BS5 renames to `.img-fluid`). Must be caught before the form class migration.
-- **Form class volume:** ~136 form class occurrences across 21 view files. This is the most tedious part of the Bootstrap migration.
-- **Zeitwerk (Rails 6.0):** If any models/controllers don't follow naming conventions, autoloading will break. `bin/rails zeitwerk:check` is the diagnostic tool. The `Publication` model's class-level DB queries are a known hazard.
-- **`represent_boolean_as_integer` (Rails 6.1):** Must be removed before upgrading to 6.1 or the app won't start.
-- **Ruby 3.2 kwargs:** This is historically the most labor-intensive part of a Ruby 2 → 3 migration. The test suite from Phase 0 is critical here.
-- **`rails_admin` 3.x (Rails 7.0):** Major rewrite required. Config API changes, transitive dependencies removed. Cannot be deferred — `rails_admin` 2.x won't install on Rails 7.
-- **`acts_as_textcaptcha`:** This gem may be abandoned. If it doesn't support Rails 7, we'll need to fork it or replace it with a simple custom implementation.
+- **Turbo migration (Phase 8):** `turbo-rails` 2.x JS does NOT compile through Sprockets on Rails 6.1. Must upgrade to Rails 7.0 first. Attempted and fully reverted — see Phase 8 notes.
+- **Stats page caching:** Do NOT attempt to cache stats graphs until Turbo Frames migration (Phase 9). Fragment caching + render_async don't mix. Multiple approaches tried and all caused worse issues.
+- **`rails_admin` 3.x (Rails 7.0):** Major rewrite. Config API changes, transitive dependencies removed. Cannot be deferred — `rails_admin` 2.x won't install on Rails 7.
+- **Ruby 3.2 kwargs:** Already handled in Phase 4. Test suite is critical for catching remaining issues.
 - **SQLite3 gem:** Version constraints may shift. The `~> 1.6.9` pin may need updating.
-- **`owlcarousel-rails`:** Currently commented out in `application.js` and `application.scss`. Not actively breaking anything, but if re-enabled it may conflict with BS5 styles.
+- **`owlcarousel-rails`:** Currently commented out in `application.js` and `application.scss`. Not actively breaking anything.

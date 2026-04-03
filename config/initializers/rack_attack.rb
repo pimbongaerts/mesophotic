@@ -16,11 +16,6 @@ class Rack::Attack
     req.ip.start_with?("85.208.96.")
   end
 
-  # Block requests with empty or missing user agents (almost always bots)
-  blocklist("no-user-agent") do |req|
-    req.user_agent.nil? || req.user_agent.strip.empty?
-  end
-
   # Auto-ban IPs that send spam searches — banned for 1 hour after 2 strikes
   blocklist("fail2ban-spam") do |req|
     Rack::Attack::Fail2Ban.filter("spam-#{req.ip}", maxretry: 2, findtime: 300, bantime: 3600) do
