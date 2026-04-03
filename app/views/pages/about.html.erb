@@ -174,7 +174,7 @@
     </ul>
   </div>
   <div class="col-sm-4">
-    <% cache ["about_contributors", User.maximum(:updated_at)] do %>
+    <% cache ["about_contributors", User.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>Current Contributors</strong></div>
       <div class="card-body">

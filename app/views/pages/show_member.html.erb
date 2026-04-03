@@ -74,7 +74,7 @@
 
   <div class="col-sm-4">
     <% if @user.publications.count > 0 %>
-      <% cache ["member_map_card", @user, Publication.maximum(:updated_at)] do %>
+      <% cache ["member_map_card", @user, Publication.maximum(:updated_at).to_i] do %>
       <div class="card">
         <div class="card-header"><strong>Locations</strong></div>
         <div class="card-body p-1">

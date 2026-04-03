@@ -11,7 +11,7 @@
         </small>
       </div>
       <div class="card-body p-0">
-        <% cache ["members_list", User.maximum(:updated_at), Publication.maximum(:updated_at)] do %>
+        <% cache ["members_list", User.maximum(:updated_at).to_i, Publication.maximum(:updated_at).to_i] do %>
           <%= render partial: 'memberlist', locals: { users: @users } %>
         <% end %>
       </div>
@@ -29,13 +29,13 @@
     <div class="card">
       <div class="card-header"><strong>Recently Updated</strong></div>
       <div class="card-body">
-        <% cache ["latest_members", User.maximum(:updated_at)] do %>
+        <% cache ["latest_members", User.maximum(:updated_at).to_i] do %>
           <%= render partial: 'latest_members' %>
         <% end %>
       </div>
     </div>
 
-    <% cache ["people_map_card", User.maximum(:updated_at)] do %>
+    <% cache ["people_map_card", User.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>People Locations</strong></div>
       <div class="card-body p-1">
@@ -46,7 +46,7 @@
     </div>
     <% end %>
 
-    <% cache ["author_growth_card", Publication.maximum(:updated_at)] do %>
+    <% cache ["author_growth_card", Publication.maximum(:updated_at).to_i] do %>
     <div class="card">
       <div class="card-header"><strong>Growth of Mesophotic Community</strong></div>
       <div class="card-body p-1">

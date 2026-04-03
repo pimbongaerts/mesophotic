@@ -9,7 +9,7 @@ class PagesController < ApplicationController
   end
 
   def mastodon_feed
-    statuses, users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
+    statuses, users = Rails.cache.fetch(["mastodon_feed", User.maximum(:updated_at).to_i], expires_in: 1.hour) do
       s = MastodonFeed.new("https://mastodon.social/tags/mesophotic.rss").take(15)
       u = User.where(mastodon_handle: s.map { |status| ["@#{status.username}", status.username] }.flatten)
       [s, u]
@@ -18,7 +18,7 @@ class PagesController < ApplicationController
   end
 
   def bluesky_feed
-    statuses, users = Rails.cache.fetch(["bluesky_feed", User.maximum(:updated_at)], expires_in: 1.hour) do
+    statuses, users = Rails.cache.fetch(["bluesky_feed", User.maximum(:updated_at).to_i], expires_in: 1.hour) do
       s = BlueskyFeed.new.take(15)
       u = User.where(bluesky_handle: s.map(&:username))
       [s, u]
@@ -46,10 +46,10 @@ class PagesController < ApplicationController
                            .distinct
                            .order(Arel.sql("RANDOM()"))
                            .first
-    @people_map_data = Rails.cache.fetch(["people_map", User.maximum(:updated_at)]) do
+    @people_map_data = Rails.cache.fetch(["people_map", User.maximum(:updated_at).to_i]) do
       helpers.count_geographic_occurrences_of_users(@users)
     end
-    @author_growth = Rails.cache.fetch(["author_growth", Publication.maximum(:updated_at)]) do
+    @author_growth = Rails.cache.fetch(["author_growth", Publication.maximum(:updated_at).to_i]) do
       helpers.count_first_authors_over_time(@publications, Time.new.year - 1)
     end
   end
@@ -57,7 +57,7 @@ class PagesController < ApplicationController
   def show_member
     @user = User.includes(:organisation, :platforms, :photos, profile_picture_attachment: :blob).find(params[:id])
     @member_publications = @user.publications.includes(:users, :journal, pdf_attachment: :blob).order('publication_year DESC, created_at DESC').page(params[:page]).per(20)
-    @member_map_data = Rails.cache.fetch(["member_map", params[:id], Publication.maximum(:updated_at)]) do
+    @member_map_data = Rails.cache.fetch(["member_map", params[:id], Publication.maximum(:updated_at).to_i]) do
       helpers.count_geographic_occurrences_of_publications_from_user(@user)
     end
   rescue
@@ -111,7 +111,7 @@ class PagesController < ApplicationController
   end
 
   def member_keywords
-    cached = Rails.cache.fetch(["member_keywords", params[:id], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["member_keywords", params[:id], Publication.maximum(:updated_at).to_i]) do
       publications = Publication.select(:contents).joins(:users).where("users.id == ?", params[:id])
       word_cloud = publications.word_cloud(40)
       word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: 'publication_contents' }) : ""
@@ -120,7 +120,7 @@ class PagesController < ApplicationController
   end
 
   def member_research_summary
-    cached = Rails.cache.fetch(["member_research_summary", params[:id], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["member_research_summary", params[:id], Publication.maximum(:updated_at).to_i]) do
       render_to_string partial: 'research_summary', locals: { user: User.find(params[:id]) }
     end
     render html: cached.html_safe

@@ -1,6 +1,6 @@
 class MapsController < ApplicationController
   def world_map
-    cached = Rails.cache.fetch(["world_map", params[:model], params[:ids], params[:z], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["world_map", params[:model], params[:ids], params[:z], Publication.maximum(:updated_at).to_i]) do
       data = params[:model].singularize.classify.constantize.where(id: params[:ids].split(','))
       render_to_string partial: 'shared/world_map_clickable',
              locals: { title: params[:model].pluralize.titleize,

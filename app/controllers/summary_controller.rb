@@ -18,7 +18,7 @@ class SummaryController < ApplicationController
   end
 
   def summary_keywords
-    cached = Rails.cache.fetch(["summary_keywords", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["summary_keywords", params[:model], params[:id], Publication.maximum(:updated_at).to_i]) do
       word_cloud = publications.word_cloud(40)
       word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: "#{params[:model]}_publication_contents" }) : ""
     end
@@ -26,14 +26,14 @@ class SummaryController < ApplicationController
   end
 
   def summary_researchers
-    cached = Rails.cache.fetch(["summary_researchers", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["summary_researchers", params[:model], params[:id], Publication.maximum(:updated_at).to_i]) do
       render_to_string partial: 'author', collection: publications.authors
     end
     render html: cached.html_safe
   end
 
   def summary_publications
-    cached = Rails.cache.fetch(["summary_publications", params[:model], params[:id], Publication.maximum(:updated_at)]) do
+    cached = Rails.cache.fetch(["summary_publications", params[:model], params[:id], Publication.maximum(:updated_at).to_i]) do
       render_to_string partial: 'shared/item_counts',
              collection: {
                "Focusgroups": focusgroups,
