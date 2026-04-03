@@ -253,13 +253,13 @@ Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redir
 
 Replace manual SSH + `scripts/update_and_restart.sh` workflow with automated deployment. Current script does: `git pull`, `bundle install`, `db:migrate`, clear cache, `assets:precompile`, update crontab, `touch tmp/restart.txt`.
 
-**Options (evaluate based on Dreamhost VPS constraints):**
-1. **Kamal** — Rails 8 default. Docker-based, zero-downtime deploys, built-in SSL. May not suit Dreamhost VPS if Docker isn't available or RAM is too tight (1GB).
-2. **Capistrano** — Battle-tested for traditional VPS deploys. SSH-based, no Docker needed. Handles releases, rollbacks, asset compilation, restart. Good fit for current Dreamhost setup.
-3. **GitHub Actions + SSH** — Lightweight: push to main triggers a workflow that SSHs in and runs deploy commands. No new gem dependencies. Easiest to set up.
-4. **Thruster** — Rails 8 proxy, pairs with Kamal. Not standalone.
+**Plan:** Capistrano. Manually triggered (`cap production deploy`), not auto-deploy on merge. Provides versioned releases, instant rollback (`cap production deploy:rollback`), and replaces the current `scripts/update_and_restart.sh` steps with a structured deploy process.
 
-Capistrano or GitHub Actions are the most practical given the Dreamhost VPS. Kamal becomes viable if/when moving to a Docker-capable host or after the Rails 8 upgrade (Phase 14).
+- Add `capistrano`, `capistrano-rails`, `capistrano-bundler`, `capistrano-rbenv` (or similar for Nix Ruby) to Gemfile
+- Configure `config/deploy.rb` and `config/deploy/production.rb` for Dreamhost VPS
+- Map current script steps to Capistrano tasks: git pull → checkout release, bundle install, db:migrate, assets:precompile, cache clear, crontab update, restart
+- Symlink shared config (application.yml, master.key, storage, etc.)
+- Test rollback works cleanly
 
 ---
 
