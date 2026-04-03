@@ -32,4 +32,20 @@ class Rack::Attack
   self.blocklisted_responder = lambda do |env|
     [403, { "Content-Type" => "text/plain" }, ["Forbidden.\n"]]
   end
+
+  # Log all Rack::Attack actions
+  ActiveSupport::Notifications.subscribe("rack.attack") do |_name, _start, _finish, _id, payload|
+    req = payload[:request]
+    match_type = req.env["rack.attack.match_type"]
+    rule = req.env["rack.attack.matched"]
+    ip = req.ip
+
+    case match_type
+    when :blocklist
+      Rails.logger.warn("[Rack::Attack] Blocked #{ip} (#{rule}) #{req.request_method} #{req.fullpath}")
+    when :throttle
+      data = req.env["rack.attack.match_data"]
+      Rails.logger.warn("[Rack::Attack] Throttled #{ip} (#{rule}) #{data[:count]}/#{data[:limit]} #{req.request_method} #{req.fullpath}")
+    end
+  end
 end
