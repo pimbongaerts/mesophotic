@@ -26,7 +26,7 @@
     <%= paginate @publications %>
     <div style="margin-top: -0.5rem;">
       <small class="text-muted">Displaying publications <b><%= @publications.offset_value + 1 %>&ndash;<%= @publications.offset_value + @publications.length %></b> of <b><%= @publications.total_count %></b> in total</small>
-      <small>&bullet; <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %></small>
+      <% if current_user %><small>&bullet; <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %></small><% end %>
       <% if current_user.try(:editor_or_admin?) %>
         <small class="text-muted">· sorted by ID desc</small>
       <% end %>
@@ -58,7 +58,7 @@
   <div>
     <div class="mb-2">
       <small class="text-muted">Displaying publications <b><%= @publications.offset_value + 1 %>&ndash;<%= @publications.offset_value + @publications.length %></b> of <b><%= @publications.total_count %></b> in total</small>
-      <small>&bullet; <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %></small>
+      <% if current_user %><small>&bullet; <%= link_to "Download as CSV", publications_path(format: :csv, params: params.permit!) %></small><% end %>
     </div>
     <%= paginate @publications %>
   </div>

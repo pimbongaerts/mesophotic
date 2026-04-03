@@ -9,7 +9,7 @@
     <%= paginate publications %>
     <div class="mb-3" style="margin-top: -0.5rem;">
       <small class="text-muted"><%= page_entries_info publications %></small>
-      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+      <% if current_user %><small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small><% end %>
     </div>
 
     <div class="card">
@@ -21,7 +21,7 @@
 
     <div class="mt-2 mb-2">
       <small class="text-muted"><%= page_entries_info publications %></small>
-      <small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small>
+      <% if current_user %><small>&bullet; <%= link_to "Download as CSV", summary_path(title.downcase, object.id, format: :csv) %></small><% end %>
     </div>
     <%= paginate publications %>
   </div>
