@@ -12,7 +12,7 @@
 - **Admin:** rails_admin (mounted at `/admin/db`)
 - **Cache:** `:file_store` (256 MB) in production
 - **Process:** Puma (2 workers, 1–3 threads) with `puma_worker_killer`
-- **Security:** Rack::Attack (throttling, spam blocklists, Fail2Ban), `force_ssl = true`
+- **Security:** Rack::Attack (throttling, spam blocklists, CJK blocking, notification logging), `force_ssl = true`
 - **Test coverage:** ~3.8% — Minitest with fixtures
 - **Dev environment:** Nix flake + direnv
 - **VCS:** jj (colocated with git)
@@ -64,8 +64,9 @@ CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd servic
 
 - **HTTPS** — DONE. Let's Encrypt via Dreamhost panel for mesophotic.org, www, assets subdomain, and mesophotic.com. `force_ssl = true`, mailer protocol updated, hardcoded http:// URLs fixed.
 - **Memory management** — DONE. Production cache switched from `:memory_store` to `:file_store` (256 MB cap). Added `puma_worker_killer` (768 MB RAM limit, 90% threshold, 6hr rolling restart).
-- **Rack::Attack** — DONE. Search throttle (20/min), global throttle (120/min), spam pattern blocklist (URLs, spam TLDs, gambling/scam keywords, CJK fake document spam), IP blocklist (85.208.96.*), empty user-agent blocking, Fail2Ban auto-ban (2 strikes in 5min = 1hr ban).
-- **robots.txt** — DONE. Crawl-delay for all bots (2s), aggressive delay for bingbot (10s), block SEO scrapers (AhrefsBot, SemrushBot, MJ12bot), disallow search URLs and /admin/.
+- **Rack::Attack** — DONE. Search throttle (20/min), page throttle (300/min, excludes assets), spam pattern blocklist (URLs, spam TLDs, gambling/scam domains, CJK Unicode range blocks all Chinese/Japanese/Korean spam), IP blocklist (85.208.96.*), ActiveSupport::Notifications logging for all blocks and throttles. Note: Fail2Ban is incompatible with `:file_store` cache (increments on all requests regardless of block result) — needs Redis.
+- **robots.txt** — DONE. Served via Rails route (Apache doesn't serve static files). Crawl-delay for all bots (2s), aggressive delay for bingbot (10s), block SEO scrapers (AhrefsBot, SemrushBot, MJ12bot), disallow search URLs, /admin/, /rails/active_storage/, *.csv, *.pdf.
+- **CSV exports** — DONE. Require authentication. Download links hidden from anonymous visitors. Prevents bots from triggering expensive CSV generation queries (500-600ms each).
 
 ### Performance (completed)
 
