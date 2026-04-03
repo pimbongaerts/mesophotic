@@ -296,6 +296,41 @@ class Publication < ApplicationRecord
     end
   }
 
+  def self.csv_association_data
+    validated = Publication.validated.map(&:id)
+    fields = Field
+      .select("publications.id, GROUP_CONCAT(description, '; ') AS description")
+      .joins(:publications)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.description) }
+    focusgroups = Focusgroup
+      .select("publications.id, GROUP_CONCAT(description, '; ') AS description")
+      .joins(:publications)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.description) }
+    platforms = Platform
+      .select("publications.id, GROUP_CONCAT(description, '; ') AS description")
+      .joins(:publications)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.description) }
+    locations = Location
+      .select("publications.id, GROUP_CONCAT(description, '; ') AS description")
+      .joins(:publications)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.description) }
+    [validated, fields, focusgroups, platforms, locations]
+  end
+
+  def self.csv_enumerator(scope)
+    Enumerator.new do |yielder|
+      yielder << CSV.generate_line(csv_header)
+      validated, fields, focusgroups, platforms, locations = csv_association_data
+      scope.csv_rows.find_each(batch_size: 100) do |publication|
+        yielder << CSV.generate_line(csv_row(publication, validated, fields, focusgroups, platforms, locations))
+      end
+    end
+  end
+
   scope :csv_rows, -> {
     select(
       """
