@@ -55,7 +55,7 @@
 | 3 | Threads feed | Blocked (Meta API) |
 | 4 | Social media handles | Done |
 | 5 | User role consolidation | Done |
-| 6 | Breadcrumb navigation | Todo |
+| 6 | Breadcrumb navigation | Done |
 
 ## Infrastructure
 
@@ -73,10 +73,12 @@
 | # | Description | Status |
 |---|-------------|--------|
 | 1 | N+1 query fixes, eager loading | Done |
-| 2 | word_association / species_association memoization | Todo |
-| 3 | CSV export streaming | Todo |
-| 4 | MiniMagick → VIPS | Todo |
-| 5 | Fragment caching (about, home, posts, sidebar, members) | Todo |
+| 2 | Fragment caching (about, home, posts, sidebar, members) | Done |
+| 3 | word_association / species_association memoization | Todo |
+| 4 | CSV export streaming | Todo |
+| 5 | MiniMagick → VIPS | Todo |
+| 6 | ResizeObserver cleanup in charts.js | Todo |
+| 7 | Species image bug (open() on URLs) | Todo |
 
 ## UI
 
@@ -120,6 +122,7 @@
 ### Performance
 
 - **N+1 queries** — Eager loading across pages, publications, and admin controllers. About page contributors batch-loaded via `@users_by_name` hash.
+- **Fragment caching** — Cache blocks on about page contributors, home page publications, news post cards, publications sidebar charts, and members list.
 
 ### UI Polish
 
@@ -237,19 +240,9 @@ Replace `render_async` with Turbo Frames across the app (~30 call sites). This e
 
 ## Remaining Feature Work
 
-### 6c: Threads Feed (blocked)
+### Threads Feed (blocked)
 
 Add a Threads `#mesophotic` feed alongside Mastodon and Bluesky feeds on the home page. Blocked by Meta's Threads API requiring OAuth app review for `threads_keyword_search` permission. Parked until API access improves. The tabbed UI is designed to accommodate additional feeds.
-
-### 6f: Breadcrumb Navigation
-
-Replace the `<<< Back` links throughout the app with proper breadcrumb navigation using Bootstrap 5's breadcrumb component.
-
-- Create a shared breadcrumb partial that accepts a trail of label/path pairs.
-- Replace `_page_title.html.erb` back link with breadcrumbs (e.g. Home > Publications > "Paper Title").
-- Replace all admin `<<< Back` links with breadcrumbs (e.g. Home > Admin > Users > Edit).
-- Replace summary page back links with breadcrumbs (e.g. Home > Locations > "American Samoa").
-- Handle dynamic titles (publication names, location names, user emails).
 
 ### Canonical URL
 
@@ -266,11 +259,9 @@ These are noted for future planning but not part of this effort:
 - **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
 - **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.
 - **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
-- **Fragment caching — About page contributors:** 50+ `User.find_by` queries for contributors. Batch-load users in controller or cache the contributor cards.
-- **Fragment caching — Home page publications:** Cache the newsfeed partial keyed on `Publication.maximum(:updated_at)`.
-- **Fragment caching — News post cards:** Cache individual post summary cards keyed on `post.updated_at`.
-- **Fragment caching — Publications sidebar charts:** Cache the focusgroup/field/platform/location bar charts on publications index.
-- **Fragment caching — Members list:** Cache the member table keyed on `User.maximum(:updated_at)`.
+
+### Bugs
+- **Species image helper:** `species_helper.rb` uses `open(url)` on URLs as if they were local file paths, causing `No such file or directory` errors. Needs `URI.open` or `Net::HTTP`.
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
