@@ -8,8 +8,9 @@ class SummaryController < ApplicationController
         @objects = @model.joins(:publications).group("#{params[:model]}.id").order(description: :asc)
       }
 
-      format.csv { 
-        send_data publications.reorder(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv" 
+      format.csv {
+        authenticate_user!
+        send_data publications.reorder(:id).csv, filename: "#{@model} #{@object.id}, #{@object.description}.csv"
       }
     end
   end

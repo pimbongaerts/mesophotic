@@ -53,6 +53,7 @@ class PublicationsController < ApplicationController
       }
 
       format.csv {
+        authenticate_user!
         send_data @publications.reorder(:id).csv
       }
     end
