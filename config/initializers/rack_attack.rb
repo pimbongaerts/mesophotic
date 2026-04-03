@@ -11,20 +11,6 @@ class Rack::Attack
     req.ip
   end
 
-  # Block known spam source IPs
-  blocklist("spam-ips") do |req|
-    req.ip.start_with?("85.208.96.")
-  end
-
-  # Auto-ban IPs that send spam searches — banned for 1 hour after 2 strikes
-  blocklist("fail2ban-spam") do |req|
-    Rack::Attack::Fail2Ban.filter("spam-#{req.ip}", maxretry: 2, findtime: 300, bantime: 3600) do
-      if req.path == "/publications" && req.params["search"].present?
-        req.params["search"].to_s.match?(SPAM_SEARCH_PATTERN)
-      end
-    end
-  end
-
   # Block requests with obvious spam patterns in search
   blocklist("spam-searches") do |req|
     if req.path == "/publications" && req.params["search"].present?
