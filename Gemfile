@@ -50,6 +50,7 @@ end
 group :development, :test do
   gem 'annotate'
   gem 'byebug'
+  gem 'minitest', '~> 5.0'
   gem 'rails-erd'
   gem 'spring'
   gem 'sqlite3', '~> 1.6.9'
