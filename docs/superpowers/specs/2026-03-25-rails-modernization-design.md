@@ -26,53 +26,75 @@
 
 ---
 
-## Completed Phases
+## Progress
 
-### Phase 0: Safety Net Tests — DONE
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 0 | Safety net tests | Done |
+| 1 | Bootstrap 3 → 5 | Done |
+| 2 | Rails 5.2 → 6.0 (Zeitwerk, rails-ujs) | Done |
+| 3 | Rails 6.0 → 6.1 | Done |
+| 4 | Ruby 2.7 → 3.2 | Done |
+| 5 | CoffeeScript removal | Done |
+| 6 | rails_admin 3.x, remove jQuery | Done |
+| 6a | CAPTCHA (Cloudflare Turnstile) | Done |
+| 6b | Bluesky feed | Done |
+| 6c | Threads feed | Blocked (Meta API) |
+| 6d | Social media handles | Done |
+| 6e | User role consolidation | Done |
+| 6f | Breadcrumb navigation | Todo |
+| — | HTTPS / Let's Encrypt | Done |
+| — | Memory management (file_store, puma_worker_killer) | Done |
+| — | Rack::Attack (throttles, CJK block, spam patterns, logging) | Done |
+| — | robots.txt (crawl-delay, disallow storage/csv/pdf) | Done |
+| — | CSV exports require auth, links hidden | Done |
+| — | N+1 query fixes, eager loading | Done |
+| — | UI polish (Bootstrap Icons, cards, fonts) | Done |
+| — | Canonical URL (www → mesophotic.org) | Todo |
+| **7** | **Rails 6.1 → 7.0** | **Next** |
+| 8 | Turbolinks → Turbo (requires 7.0) | Todo |
+| 9 | Turbo Frames (replace render_async) | Todo |
+| 10 | Rails 7.0 → 7.1 | Todo |
+| 11 | Rails 7.1 → 7.2 | Todo |
+| 12 | Ruby 3.2 → 3.4 | Todo |
+| 13 | Rails 7.2 → 8.0 | Todo |
+| 14 | Rails 8.0 → 8.1 | Todo |
 
-Established regression tests covering critical paths before any changes.
+---
 
-### Phase 1: Bootstrap 3 → 5 — DONE
+## Completed Details
 
-Migrated from `bootstrap-sass` (3.4) to `bootstrap` (5.3). Panels → cards, grid updates, form class migration (~136 occurrences across 21 views), data attributes, labels → badges, Kaminari Bootstrap 5 views.
+### Phases 0–6: Core Upgrades
 
-### Phase 2: Rails 5.2 → 6.0 — DONE
+- **Phase 0:** Regression tests covering critical paths before any changes.
+- **Phase 1:** `bootstrap-sass` (3.4) → `bootstrap` (5.3). Panels → cards, grid, forms (~136 occurrences across 21 views), data attributes, labels → badges, Kaminari views.
+- **Phase 2:** Zeitwerk autoloader, `rails-ujs` (replaced `jquery_ujs`), class-level DB query constants → memoized class methods, `config.load_defaults '6.0'`.
+- **Phase 3:** Removed `represent_boolean_as_integer`, boolean scopes → `where(draft: false)`, `config.load_defaults '6.1'`.
+- **Phase 4:** CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd service → Ruby 3.2 path.
+- **Phase 5:** CoffeeScript removed (completed in Phase 2).
+- **Phase 6:** rails_admin 3.x, jQuery removed.
 
-Zeitwerk autoloader, `rails-ujs` (replaced `jquery_ujs`), class-level DB query constants converted to memoized class methods, `config.load_defaults '6.0'`.
+### Features
 
-### Phase 3: Rails 6.0 → 6.1 — DONE
+- **6a: CAPTCHA** — Replaced broken `acts_as_textcaptcha` with Cloudflare Turnstile. Direct API integration, no gem. Keys in Rails encrypted credentials.
+- **6b: Bluesky Feed** — `BlueskyFeed` model fetches from AT Protocol API with session auth. Tabbed UI on home page with Mastodon/Bluesky toggle, colour-switching icons.
+- **6c: Threads Feed** — BLOCKED. Meta's Threads API requires OAuth app review for `threads_keyword_search`. Parked until API access improves. UI is ready to add the tab.
+- **6d: Social Media Handles** — `mastodon_handle`, `bluesky_handle`, `threads_handle`, `twitter_handle` columns. Profile form updated, member page shows platform-specific icons.
+- **6e: User Role Consolidation** — Single `role` column (`member`, `editor`, `admin`). `admin?`, `editor?`, `editor_or_admin?` methods.
 
-Removed `represent_boolean_as_integer` config, converted raw SQL boolean scopes to `where(draft: false)`, `config.load_defaults '6.1'`.
+### Infrastructure
 
-### Phase 4: Ruby 2.7 → 3.2 — DONE
+- **HTTPS** — Let's Encrypt via Dreamhost panel for mesophotic.org, www, assets, and mesophotic.com. `force_ssl = true`, mailer protocol updated, hardcoded http:// URLs fixed.
+- **Memory management** — Production cache: `:memory_store` → `:file_store` (256 MB cap). Added `puma_worker_killer` (768 MB RAM limit, 90% threshold, 6hr rolling restart).
+- **Rack::Attack** — Search throttle (20/min), page throttle (300/min, excludes assets), spam pattern blocklist (URLs, spam TLDs, gambling/scam domains, CJK Unicode range blocks all Chinese/Japanese/Korean spam), IP blocklist (85.208.96.*), ActiveSupport::Notifications logging for all blocks and throttles. Note: Fail2Ban is incompatible with `:file_store` cache (increments on all requests regardless of block result) — needs Redis.
+- **robots.txt** — Served via Rails route (Apache doesn't serve static files). Crawl-delay for all bots (2s), 10s for bingbot, block SEO scrapers (AhrefsBot, SemrushBot, MJ12bot), disallow search URLs, /admin/, /rails/active_storage/, *.csv, *.pdf.
+- **CSV exports** — Require authentication. Download links hidden from anonymous visitors. Prevents bots triggering expensive CSV queries (500-600ms each).
 
-CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd service updated to Ruby 3.2 path.
+### Performance
 
-### Phase 5: CoffeeScript Removal — DONE (completed in Phase 2)
+- **N+1 queries** — Eager loading across pages, publications, and admin controllers. About page contributors batch-loaded via `@users_by_name` hash.
 
-### Phase 6: rails_admin 2.x → 3.x, remove jQuery — DONE
-
-### Feature Work (completed)
-
-- **6a: CAPTCHA** — DONE. Replaced broken `acts_as_textcaptcha` with Cloudflare Turnstile. Direct API integration, no gem dependency. Keys in Rails encrypted credentials.
-- **6b: Bluesky Feed** — DONE. `BlueskyFeed` model fetches from AT Protocol API with session auth. Tabbed UI on home page with Mastodon/Bluesky toggle, colour-switching icons.
-- **6c: Threads Feed** — BLOCKED. Meta's Threads API requires OAuth app review for `threads_keyword_search` permission. Parked until API access is more accessible. UI is ready to add the tab.
-- **6d: Social Media Handles** — DONE. Users have `mastodon_handle`, `bluesky_handle`, `threads_handle`, `twitter_handle` columns. Profile form updated, member page shows platform-specific icons.
-- **6e: User Role Consolidation** — DONE. Single `role` column (`member`, `editor`, `admin`). `admin?` and `editor?` methods, `editor_or_admin?` helper.
-
-### Infrastructure (completed)
-
-- **HTTPS** — DONE. Let's Encrypt via Dreamhost panel for mesophotic.org, www, assets subdomain, and mesophotic.com. `force_ssl = true`, mailer protocol updated, hardcoded http:// URLs fixed.
-- **Memory management** — DONE. Production cache switched from `:memory_store` to `:file_store` (256 MB cap). Added `puma_worker_killer` (768 MB RAM limit, 90% threshold, 6hr rolling restart).
-- **Rack::Attack** — DONE. Search throttle (20/min), page throttle (300/min, excludes assets), spam pattern blocklist (URLs, spam TLDs, gambling/scam domains, CJK Unicode range blocks all Chinese/Japanese/Korean spam), IP blocklist (85.208.96.*), ActiveSupport::Notifications logging for all blocks and throttles. Note: Fail2Ban is incompatible with `:file_store` cache (increments on all requests regardless of block result) — needs Redis.
-- **robots.txt** — DONE. Served via Rails route (Apache doesn't serve static files). Crawl-delay for all bots (2s), aggressive delay for bingbot (10s), block SEO scrapers (AhrefsBot, SemrushBot, MJ12bot), disallow search URLs, /admin/, /rails/active_storage/, *.csv, *.pdf.
-- **CSV exports** — DONE. Require authentication. Download links hidden from anonymous visitors. Prevents bots from triggering expensive CSV generation queries (500-600ms each).
-
-### Performance (completed)
-
-- **N+1 queries** — DONE. Eager loading across pages, publications, and admin controllers. About page contributors batch-loaded via `@users_by_name` hash.
-
-### UI Polish (completed)
+### UI Polish
 
 - Bootstrap Icons 1.13.1 (replaced glyphicons and Font Awesome)
 - Publication card restyling (outline badges, title link hover, font sizing)
@@ -81,7 +103,7 @@ CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd servic
 
 ---
 
-## Remaining Phases
+## Remaining Phase Details
 
 ### Phase 7: Rails 6.1 → 7.0
 
