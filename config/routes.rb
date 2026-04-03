@@ -3,6 +3,8 @@ Mesophotic::Application.routes.draw do
 
   root "pages#home"
 
+  get "robots.txt", to: proc { |_| [200, { "Content-Type" => "text/plain" }, [Rails.root.join("public/robots.txt").read]] }
+
   resources :publications do
     member do
       get :add_validation

@@ -1,9 +1,9 @@
 class Rack::Attack
-  SPAM_SEARCH_PATTERN = /https?:\/\/|\.cc\b|\.lol\b|\.shop\b|\.xyz\b|\.top\b|\.vip\b|hkcash|sgbot|tf88|bet365|miyao|qqwechat|购买|驾照|毕业证|成绩单|学历认证/i
+  SPAM_SEARCH_PATTERN = /https?:\/\/|\.cc\b|\.lol\b|\.shop\b|\.xyz\b|\.top\b|\.vip\b|\.net\b|hkcash|sgbot|tf88|bet365|miyao|qqwechat|购买|驾照|毕业证|成绩单|学历认证|色情|娛樂城|188金寶博/i
 
   # Throttle search requests: 20 per minute per IP
   throttle("search/ip", limit: 20, period: 60) do |req|
-    req.ip if req.path == "/publications" && req.params["search"].present?
+    req.ip if req.path.start_with?("/publications") && req.params["search"].present?
   end
 
   # Throttle page requests: 300 per minute per IP (excludes images/assets)
@@ -18,7 +18,7 @@ class Rack::Attack
 
   # Block requests with obvious spam patterns in search
   blocklist("spam-searches") do |req|
-    if req.path == "/publications" && req.params["search"].present?
+    if req.path.start_with?("/publications") && req.params["search"].present?
       req.params["search"].to_s.match?(SPAM_SEARCH_PATTERN)
     end
   end
