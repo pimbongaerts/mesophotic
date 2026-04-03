@@ -1,11 +1,11 @@
 class Rack::Attack
-  # Throttle search requests: 10 per minute per IP
-  throttle("search/ip", limit: 10, period: 60) do |req|
+  # Throttle search requests: 20 per minute per IP
+  throttle("search/ip", limit: 20, period: 60) do |req|
     req.ip if req.path == "/publications" && req.params["search"].present?
   end
 
-  # Throttle all requests: 60 per minute per IP
-  throttle("requests/ip", limit: 60, period: 60) do |req|
+  # Throttle all requests: 120 per minute per IP
+  throttle("requests/ip", limit: 120, period: 60) do |req|
     req.ip
   end
 
