@@ -67,6 +67,7 @@
 | 4 | robots.txt (crawl-delay, disallow storage/csv/pdf) | Done |
 | 5 | CSV exports require auth, links hidden | Done |
 | 6 | Canonical URL (www → mesophotic.org) | Todo |
+| 7 | Automated deployment (replace manual SSH + git pull) | Todo |
 
 ## Performance
 
@@ -247,6 +248,18 @@ Add a Threads `#mesophotic` feed alongside Mastodon and Bluesky feeds on the hom
 ### Canonical URL
 
 Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redirect `www.mesophotic.org` → `mesophotic.org` instead. Investigate where the current redirect is configured (Dreamhost panel, Apache config, or `.htaccess`).
+
+### Automated Deployment
+
+Replace manual SSH + git pull + restart workflow with automated deployment. Current process: SSH into Dreamhost VPS, `git pull`, `bundle install`, `rails assets:precompile`, `sudo systemctl restart puma`.
+
+**Options (evaluate based on Dreamhost VPS constraints):**
+1. **Kamal** — Rails 8 default. Docker-based, zero-downtime deploys, built-in SSL. May not suit Dreamhost VPS if Docker isn't available or RAM is too tight (1GB).
+2. **Capistrano** — Battle-tested for traditional VPS deploys. SSH-based, no Docker needed. Handles releases, rollbacks, asset compilation, restart. Good fit for current Dreamhost setup.
+3. **GitHub Actions + SSH** — Lightweight: push to main triggers a workflow that SSHs in and runs deploy commands. No new gem dependencies. Easiest to set up.
+4. **Thruster** — Rails 8 proxy, pairs with Kamal. Not standalone.
+
+Capistrano or GitHub Actions are the most practical given the Dreamhost VPS. Kamal becomes viable if/when moving to a Docker-capable host or after the Rails 8 upgrade (Phase 14).
 
 ---
 
