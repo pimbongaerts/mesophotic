@@ -1,54 +1,50 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Publications",
-          subtitle: @publication.short_citation,
+       locals: {title: @publication.title,
+          supertitle: @publication.short_citation,
           breadcrumbs: [["Publications", publications_path], [@publication.title_truncated, nil]] } %>
+<p class="text-muted" style="margin-top: -0.5rem;"><%= @publication.authors %></p>
 
 <div class="row">
   <div class="col-sm-8">
 
     <div class="card">
-      <div class="card-body" style="background: #CCCCCC;">
-        <div class="col-sm-10">
-          <p>
-            <strong>
-              <%= @publication.publication_type %>
-              <%= @publication.publication_format %> |
-              <%= @publication.journal.name if @publication.journal %>
-              <% if @publication.open_access? %>
-                |
-                <font color="red">
-                  open access
-                </font>
-                <%= image_tag 'open_access.svg', style: 'float: right; height: 1.5rem;', alt: 'Open Access' %>
-              <% end %>
-            </strong>
-            <% if current_user.try(:editor_or_admin?) %>
-              | <%= link_to "edit",
-                            edit_publication_path(@publication) %>
+      <div class="card-body bg-light">
+        <div class="d-flex align-items-center justify-content-between gap-2">
+          <div class="d-flex flex-wrap gap-1">
+            <span class="badge bg-secondary bg-opacity-75"><%= @publication.publication_type %></span>
+            <span class="badge bg-secondary bg-opacity-75"><%= @publication.publication_format %></span>
+            <% if @publication.journal %>
+              <span class="badge border border-secondary text-secondary"><%= @publication.journal.name %></span>
             <% end %>
-          </p>
-          <h3><%= @publication.title %></h3>
-          <p><%= @publication.authors %></p>
-        </div>
-        <div class="col-sm-2" align="right">
-          <%= render partial: 'publication_links', locals: { user: @user } %>
+            <% if @publication.open_access? %>
+              <span class="badge border" style="color: #f68212; border-color: #f68212 !important;"><%= image_tag 'open_access.svg', style: 'height: 0.9em; vertical-align: -0.1em;', alt: '' %> Open Access</span>
+            <% end %>
+          </div>
+          <div class="d-flex gap-2 flex-shrink-0">
+            <%= render partial: 'publication_links', locals: { user: @user } %>
+            <% if current_user.try(:editor_or_admin?) %>
+              <%= link_to edit_publication_path(@publication), class: "text-muted icon-btn" do %><i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i><% end %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
 
     <% if @publication.abstract.present? %>
-      <div class="card">
-        <div class="card-header"><strong>Abstract</strong></div>
-        <div class="card-body">
-          <p><%= linkify(@publication.abstract) %></p>
+      <% cache ["pub_abstract", @publication] do %>
+        <div class="card">
+          <div class="card-header"><strong>Abstract</strong></div>
+          <div class="card-body">
+            <p class="mb-0"><%= linkify(@publication.abstract) %></p>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
 
     <% if @publication.behind_the_science? %>
       <div class="card">
         <div class="card-header">
-          <strong>Behind the science</strong>
+          <strong>Behind the Science</strong>
         </div>
         <div class="card-body">
           <%= render partial: 'shared/behind_the_scenes',
@@ -65,13 +61,13 @@
           <%= render_async world_map_path(key: "publications_show", model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
         </div>
         <div class="card-footer">
-          <table width="100%">
+          <table class="table table-sm mb-0">
             <% for site in @publication.sites %>
               <tr>
                 <td><%= site.location.description %></td>
                 <td><%= site.site_name %></td>
-                <td>Lat: <%= site.latitude %></td>
-                <td>Lon: <%= site.longitude %></td>
+                <td class="text-muted"><small>Lat: <%= site.latitude %></small></td>
+                <td class="text-muted"><small>Lon: <%= site.longitude %></small></td>
               </tr>
             <% end %>
           </table>
@@ -80,11 +76,10 @@
     <% end %>
   </div>
 
-
   <div class="col-sm-4">
     <% if @publication.pdf.attached? %>
       <div class="card">
-        <div class="card-body" align="center">
+        <div class="card-body text-center">
           <%= image_tag @publication.pdf.preview(resize: "450x640>") %>
         </div>
       </div>
@@ -99,76 +94,78 @@
       </div>
     <% end %>
 
+    <% cache ["pub_metadata", @publication] do %>
     <div class="card">
-      <div class="card-header"><strong>Meta-data</strong>
+      <div class="card-header">
+        <strong>Metadata</strong>
         <% if @publication.validated? %>
-          <i class="bi bi-check-circle-fill" info="At least two editors have validated these metadata."></i>
+          <i class="bi bi-check-circle-fill text-success" title="At least two editors have validated these metadata."></i>
         <% else %>
-          (pending validation)
+          <small class="text-muted">(pending validation)</small>
         <% end %>
       </div>
       <div class="card-body">
         <% if @publication.min_depth and @publication.max_depth %>
-          <strong>Depth range</strong><br>
-          <%= @publication.min_depth %>-
-          <%= @publication.max_depth %> m<br>
-        <% end %>
-        <br>
-        <strong>Mesophotic &ldquo;mentions&rdquo;</strong>
-        <% if not @publication.contents.blank? %>
-          <% deep_count, word_count = mesophotic_score(@publication.contents) %>
-          <br>
-          <%= deep_count %> x
-          (total of <%= word_count %> words)<br>
-          <br>
-        <% else %>
-          <p class="bg-warning">&nbsp;Full text not (yet) indexed.</p>
+          <div class="mb-3">
+            <strong>Depth Range</strong><br>
+            <%= @publication.min_depth %>&ndash;<%= @publication.max_depth %> m
+          </div>
         <% end %>
 
-        <b>Classification</b><br>
-        <% if @publication.original_data %>
-          * Presents original data<br>
+        <div class="mb-3">
+          <strong>Mesophotic Mentions</strong><br>
+          <% if not @publication.contents.blank? %>
+            <% deep_count, word_count = mesophotic_score(@publication.contents) %>
+            <%= deep_count %> &times; <small class="text-muted">(total of <%= word_count %> words)</small>
+          <% else %>
+            <small class="text-warning">Full text not yet indexed.</small>
+          <% end %>
+        </div>
+
+        <% classifications = [] %>
+        <% classifications << "Presents original data" if @publication.original_data %>
+        <% classifications << "Reports new species" if @publication.new_species %>
+        <% classifications << "Focused on 'mesophotic' depth range" if @publication.mesophotic %>
+        <% classifications << "Focused on 'mesophotic coral ecosystem'" if @publication.mce %>
+        <% classifications << "Focused on 'temperate mesophotic ecosystem'" if @publication.tme %>
+        <% if classifications.any? %>
+          <div class="mb-3">
+            <strong>Classification</strong>
+            <ul class="mb-0 ps-3">
+              <% classifications.each do |c| %>
+                <li><small><%= c %></small></li>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-        <% if @publication.new_species %>
-          * Reports new species<br>
-        <% end %>
-        <% if @publication.mesophotic %>
-          * Focused on 'mesophotic' depth range<br>
-        <% end %>
-        <% if @publication.mce %>
-          * Focused on 'mesophotic coral ecosystem'<br>
-        <% end %>
-        <% if @publication.tme %>
-          * Focused on 'temperate mesophotic ecosystem'<br>
-        <% end %>
-        <br>
 
         <%= render partial: 'shared/metadata',
                    locals: { entity: @publication } %>
-
       </div>
-      <div class="card-footer">
-        <%
-        credits = []
-        if @publication.contributor.present?
-          credits << "Contributed by: #{link_to @publication.contributor.full_name_normal, member_pages_path(@publication.contributor.id)}"
-        end
-        if @publication.validations.count > 0
-          credits << "Validated by: #{@publication.validations.map { |validation|
-              link_to validation.user.full_name_normal, member_pages_path(validation.user.id)
-          }.join(" | ")}"
-        end
-        %>
-        <%=raw credits.join("<br>") %>
-      </div>
+      <% if @publication.contributor.present? || @publication.validations.count > 0 %>
+        <div class="card-footer">
+          <small class="text-muted">
+            <% if @publication.contributor.present? %>
+              Contributed by: <%= link_to @publication.contributor.full_name_normal, member_pages_path(@publication.contributor.id) %><br>
+            <% end %>
+            <% if @publication.validations.count > 0 %>
+              Validated by: <%= @publication.validations.map { |v|
+                link_to v.user.full_name_normal, member_pages_path(v.user.id)
+              }.join(" | ").html_safe %>
+            <% end %>
+          </small>
+        </div>
+      <% end %>
     </div>
+    <% end %>
 
-    <div class="card">
-      <div class="card-header"><strong>Author Profiles</strong></div>
-      <div class="card-body">
-        <%= render_async publication_authors_path(id: @publication.id) %>
+    <% if @publication.users.any? %>
+      <div class="card">
+        <div class="card-header"><strong>Author Profiles</strong></div>
+        <div class="card-body">
+          <%= render_async publication_authors_path(id: @publication.id) %>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
-<br /><br />

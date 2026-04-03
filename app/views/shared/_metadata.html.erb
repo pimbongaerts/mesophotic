@@ -1,10 +1,10 @@
 <% [:fields, :focusgroups, :locations, :platforms].each do |keyword| %>
   <% if entity.try(keyword).count > 0 %>
-    <p>
+    <div class="mb-3">
       <strong><%= keyword.to_s.titleize %></strong><br>
-      <% for object in entity.try(keyword) || [] %>
-        <%= link_to object.description, summary_path(keyword.to_s, object) %><br>
+      <% entity.try(keyword).each do |object| %>
+        <%= link_to object.description, summary_path(keyword.to_s, object), class: "badge border border-secondary text-secondary text-decoration-none me-1" %>
       <% end %>
-    </p>
+    </div>
   <% end %>
 <% end %>

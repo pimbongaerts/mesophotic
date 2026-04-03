@@ -1,10 +1,7 @@
 <% if user_signed_in? && @publication.pdf.attached? %>
-  <%= link_to url_for(@publication.pdf), class: "text-danger" do %><i class="bi bi-file-earmark-pdf" style="font-size: 1.5rem;"></i><% end %>
-  <br>
+  <%= link_to url_for(@publication.pdf), class: "text-danger icon-btn", title: "Download PDF" do %><i class="bi bi-file-earmark-pdf"></i><i class="bi bi-file-earmark-pdf-fill"></i><% end %>
 <% end %>
 <% if !@publication.DOI.blank? %>
-  <%= link_to @publication.doi_url, class: "text-muted" do %><i class="bi bi-link-45deg" style="font-size: 1.5rem;"></i><% end %><br>
-<% end %>
-<% if !@publication.DOI.blank? %>
-  <%= link_to @publication.scholar_url, class: "text-muted" do %><i class="bi bi-mortarboard-fill" style="font-size: 1.5rem;"></i><% end %>
+  <%= link_to @publication.doi_url, class: "text-muted icon-btn", title: "DOI" do %><i class="bi bi-link-45deg"></i><% end %>
+  <%= link_to @publication.scholar_url, class: "text-muted icon-btn", title: "Google Scholar" do %><i class="bi bi-mortarboard"></i><i class="bi bi-mortarboard-fill"></i><% end %>
 <% end %>
