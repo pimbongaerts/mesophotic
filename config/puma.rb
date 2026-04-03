@@ -21,8 +21,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers ENV.fetch("WEB_CONCURRENCY") { 1 }
-#silence_single_worker_warning
+workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -34,7 +33,7 @@ preload_app!
 before_fork do
   require 'puma_worker_killer'
   PumaWorkerKiller.config do |config|
-    config.ram           = 512 # MB - restart worker if total RAM exceeds this
+    config.ram           = 768 # MB - restart worker if total RAM exceeds this
     config.frequency     = 30  # seconds between checks
     config.percent_usage = 0.9 # restart at 90% of ram limit
     config.rolling_restart_frequency = 6 * 3600 # force restart every 6 hours
