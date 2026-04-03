@@ -407,6 +407,7 @@ These are noted for future planning but not part of this effort:
   - **Dreamhost:** Install certbot, configure Apache to use Let's Encrypt certificates, set up auto-renewal cron.
   - **Rails:** Set `config.force_ssl = true` in production, update `config.action_mailer.default_url_options` to use `https`, update any hardcoded `http://` URLs in views/models, ensure Active Storage serves via HTTPS.
   - **Mixed content:** Audit all external resources (CDNs, APIs, images) to ensure they use HTTPS.
+- **Canonical URL:** `mesophotic.org` currently redirects to `www.mesophotic.org`. Make `mesophotic.org` the canonical URL — remove the `www` redirect, and redirect `www.mesophotic.org` → `mesophotic.org` instead. Investigate where the current redirect is configured (Dreamhost panel, Apache config, or `.htaccess`).
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
