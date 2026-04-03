@@ -402,6 +402,12 @@ These are noted for future planning but not part of this effort:
 - **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.
 - **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
 
+### Infrastructure
+- **HTTPS via Let's Encrypt:** Enable HTTPS for mesophotic.org.
+  - **Dreamhost:** Install certbot, configure Apache to use Let's Encrypt certificates, set up auto-renewal cron.
+  - **Rails:** Set `config.force_ssl = true` in production, update `config.action_mailer.default_url_options` to use `https`, update any hardcoded `http://` URLs in views/models, ensure Active Storage serves via HTTPS.
+  - **Mixed content:** Audit all external resources (CDNs, APIs, images) to ensure they use HTTPS.
+
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
 - **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline. (Recommended during or after Phase 8.)
