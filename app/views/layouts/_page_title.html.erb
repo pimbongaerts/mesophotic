@@ -1,8 +1,9 @@
 <div class="row">
-  <% if defined?(title) && defined?(subtitle) %>
-    <% title("#{title}: #{subtitle}") %>
+  <% plain_title = defined?(page_title) && page_title.present? ? page_title : title %>
+  <% if defined?(subtitle) && subtitle.present? %>
+    <% title("#{strip_tags(plain_title)}: #{strip_tags(subtitle)}") %>
   <% else %>
-    <% title("#{title}") %>
+    <% title("#{strip_tags(plain_title)}") %>
   <% end %>
 </div>
 

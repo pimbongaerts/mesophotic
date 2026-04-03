@@ -1,6 +1,7 @@
 <%= render partial: "layouts/page_title",
            locals: {
-             title: "<i>#{object.name}</i>".html_safe,
+             title: content_tag(:i, object.name),
+             page_title: object.name,
              breadcrumbs: [["Species", species_index_path], [object.name, nil]]
            } %>
 
