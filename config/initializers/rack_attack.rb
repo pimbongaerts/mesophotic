@@ -6,9 +6,9 @@ class Rack::Attack
     req.ip if req.path == "/publications" && req.params["search"].present?
   end
 
-  # Throttle all requests: 300 per minute per IP
+  # Throttle page requests: 300 per minute per IP (excludes images/assets)
   throttle("requests/ip", limit: 300, period: 60) do |req|
-    req.ip
+    req.ip unless req.path.match?(/\.(jpg|jpeg|png|gif|svg|ico|css|js|woff2?|ttf|eot|map|webp)$/i)
   end
 
   # Block known spam source IPs
