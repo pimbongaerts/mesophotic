@@ -3,6 +3,8 @@ Mesophotic::Application.routes.draw do
 
   root "pages#home"
 
+  get "up" => "rails/health#show", as: :rails_health_check
+
   get "robots.txt", to: proc { |_| [200, { "Content-Type" => "text/plain" }, [Rails.root.join("public/robots.txt").read]] }
 
   resources :publications do
