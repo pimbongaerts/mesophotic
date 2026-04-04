@@ -4,7 +4,7 @@ module PublicationsHelper
     return "…" if contents.blank?
 
     start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
-    snippet = contents.force_encoding("UTF-8")[start, 400]
+    snippet = contents.dup.force_encoding("UTF-8")[start, 400]
                       .squish
                       .gsub(/(#{search_term})/i, '<strong>\1</strong>')
     "…#{snippet}…".html_safe
