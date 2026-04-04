@@ -38,9 +38,9 @@
 | 6 | CoffeeScript removal | Done |
 | 7 | rails_admin 3.x, remove jQuery | Done |
 | 8 | Rails 6.1 → 7.0 | Done |
-| **9** | **Turbolinks → Turbo (requires 7.0)** | **Next** |
-| 10 | Turbo Frames (replace render_async) | Todo |
-| 11 | Rails 7.0 → 7.1 | Todo |
+| **9** | **Rails 7.0 → 7.1** | **Next** |
+| 10 | Sprockets JS → importmap-rails + Turbolinks → Turbo (requires 7.1) | Todo |
+| 11 | Turbo Frames (replace render_async) | Todo |
 | 12 | Rails 7.1 → 7.2 | Todo |
 | 13 | Ruby 3.2 → 3.4 | Todo |
 | 14 | Rails 7.2 → 8.0 | Todo |
