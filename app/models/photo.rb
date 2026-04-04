@@ -63,19 +63,11 @@ class Photo < ApplicationRecord
 
   # instance methods
   def previous
-    if id == Photo.first.id
-      Photo.first
-    else
-      Photo.where("id < ?", id).last
-    end
+    Photo.where("id < ?", id).order(id: :desc).first || Photo.order(id: :desc).first
   end
 
   def next
-    if id == Photo.last.id
-      Photo.last
-    else
-      Photo.where("id > ?", id).first
-    end
+    Photo.where("id > ?", id).order(id: :asc).first || Photo.order(id: :asc).first
   end
 
   def description_truncated
