@@ -1,6 +1,6 @@
 # Locations controller
 class LocationsController < ApplicationController
-  before_action :require_admin_or_editor!, :except => [:show, :index]
+  before_action :require_admin_or_editor!, :except => [:index]
   before_action :set_location, only: [:edit, :update, :destroy, :detach_publication]
 
   def index
