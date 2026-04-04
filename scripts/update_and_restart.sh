@@ -8,10 +8,10 @@ export RAILS_ENV=${RAILS_ENV:-production}
 
 pushd "$SCRIPT_DIR"/..
 git pull
-bin/bundle install
+bundle install
 bin/rails db:migrate
 rm -rf tmp/cache
 bin/rails assets:precompile
-bin/bundle exec whenever --update-crontab
+bundle exec whenever --update-crontab
 touch tmp/restart.txt
 popd
