@@ -4,18 +4,26 @@
 
 <div class="row">
   <div class="col-sm-8">
+    <%= paginate @users %>
+    <div class="mb-3" style="margin-top: -0.5rem;">
+      <small class="text-muted">Displaying members <b><%= @users.offset_value + 1 %>&ndash;<%= @users.offset_value + @users.length %></b> of <b><%= @users.total_count %></b></small>
+    </div>
     <div class="card">
       <div class="card-header">
         <small class="text-muted">
-          <%= @users.count %> people from the publications and member list.
+          <%= @users.total_count %> people from the publications and member list.
         </small>
       </div>
       <div class="card-body p-0">
-        <% cache ["members_list", User.maximum(:updated_at).to_i, Publication.maximum(:updated_at).to_i] do %>
+        <% cache ["members_list", params[:page], User.maximum(:updated_at).to_i, Publication.maximum(:updated_at).to_i] do %>
           <%= render partial: 'memberlist', locals: { users: @users } %>
         <% end %>
       </div>
     </div>
+    <div class="mt-2 mb-2">
+      <small class="text-muted">Displaying members <b><%= @users.offset_value + 1 %>&ndash;<%= @users.offset_value + @users.length %></b> of <b><%= @users.total_count %></b></small>
+    </div>
+    <%= paginate @users %>
   </div>
 
   <div class="col-sm-4">
