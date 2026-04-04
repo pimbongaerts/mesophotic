@@ -44,6 +44,9 @@
             ffi = withPlatformSuffix;
             nokogiri = withPlatformSuffix;
             sqlite3 = withPlatformSuffix;
+            psych = attrs: {
+              buildInputs = [ pkgs.libyaml ];
+            };
           };
 
           gemfile = ./Gemfile;
