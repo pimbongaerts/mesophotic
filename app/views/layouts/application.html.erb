@@ -7,9 +7,14 @@
   <%= favicon_link_tag 'favicon.ico' %>
   <%= favicon_link_tag 'apple-icon.png', rel: 'apple-touch-icon', type: 'image/png' %>
 
-  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "application", media: "all", "data-turbo-track" => "reload" %>
 
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_importmap_tags %>
+  <%= javascript_include_tag "bootstrap5", "data-turbo-track" => "reload" %>
+  <%= javascript_include_tag "dual_range", "data-turbo-track" => "reload" %>
+  <%= javascript_include_tag "wordcloud2", "data-turbo-track" => "reload" %>
+  <%= javascript_include_tag "charts", "data-turbo-track" => "reload" %>
+  <%= javascript_include_tag "feed_tabs", "data-turbo-track" => "reload" %>
   <%= yield :head %>
   <%= javascript_include_tag "proj4" %>
   <%= javascript_include_tag "highcharts" %>
