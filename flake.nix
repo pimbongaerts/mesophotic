@@ -25,10 +25,10 @@
           inherit ruby;
           name = "${gemName}-${version}";
           gemName = "bundler";
-          version = "2.4.22";
+          version = "2.6.9";
           source = {
             remotes = ["https://rubygems.org"];
-            sha256 = "sha256-dHulCw5n3yXL07SPlYMad6TVOlgdVfBjly/LFG0ULF8=";
+            sha256 = "sha256-olZ1/70FWuEYZ2bMHhILTPYliOiKu1m5nFfiKxxVyes=";
             type = "gem";
           };
         };
