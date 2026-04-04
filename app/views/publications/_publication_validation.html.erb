@@ -28,8 +28,8 @@
         <%= link_to edit_publication_path(publication), target: :_blank, class: "text-muted icon-btn" do %>
           <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
         <% end %>
-        <%= link_to publication, method: :delete, target: :_blank,
-                    data: {confirm: 'Are you sure?'}, class: "text-danger icon-btn" do %>
+        <%= link_to publication, target: :_blank,
+                    data: {turbo_method: :delete, turbo_confirm: 'Are you sure?'}, class: "text-danger icon-btn" do %>
           <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i>
         <% end %>
       </div>

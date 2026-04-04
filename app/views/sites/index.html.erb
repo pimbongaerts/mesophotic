@@ -30,8 +30,8 @@
           &nbsp;&nbsp;
         </td>
         <td>
-          <%= link_to site, method: :delete,
-                      data: { confirm: 'Are you sure?' } do %>
+          <%= link_to site,
+                      data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } do %>
             <i class="bi bi-x"></i>
           <% end %>
         </td>
