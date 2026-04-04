@@ -12,8 +12,16 @@ gem 'puma_worker_killer'
 gem 'sassc-rails'
 gem 'turbolinks'
 gem 'terser'
-gem 'rss'  # extracted from stdlib in Ruby 3.1+
+gem 'rss'        # extracted from stdlib in Ruby 3.1+
 gem 'rack-attack'
+
+# Gems promoted from default to bundled in Ruby 3.4
+gem 'bigdecimal'
+gem 'mutex_m'
+gem 'csv'
+gem 'base64'
+gem 'drb'
+gem 'ostruct'
 
 # RailsBricks gems
 gem 'bootstrap', '~> 5.3'
