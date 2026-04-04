@@ -34,7 +34,7 @@ class PagesController < ApplicationController
   end
 
   def members
-    @users = User.all.order(last_name: :asc).includes(:publications, :organisation)
+    @users = User.all.order(last_name: :asc).includes(:publications, :organisation).page(params[:page]).per(50)
     @publications = Publication.all
     @latest_members = User.order(updated_at: :desc).includes(:publications).limit(15)
     @featured_member = User.joins(:publications)
@@ -47,7 +47,7 @@ class PagesController < ApplicationController
                            .order(Arel.sql("RANDOM()"))
                            .first
     @people_map_data = Rails.cache.fetch(["people_map", User.maximum(:updated_at).to_i]) do
-      helpers.count_geographic_occurrences_of_users(@users)
+      helpers.count_geographic_occurrences_of_users(User.all.includes(:organisation))
     end
     @author_growth = Rails.cache.fetch(["author_growth", Publication.maximum(:updated_at).to_i]) do
       helpers.count_first_authors_over_time(@publications, Time.new.year - 1)
