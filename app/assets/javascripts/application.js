@@ -11,7 +11,7 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require turbolinks
+//= require turbo
 //= require bootstrap5
 //= require dual_range
 //= require wordcloud2
