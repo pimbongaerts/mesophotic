@@ -39,7 +39,7 @@
 | 7 | rails_admin 3.x, remove jQuery | Done |
 | 8 | Rails 6.1 → 7.0 | Done |
 | **9** | **Rails 7.0 → 7.1** | **Next** |
-| 10 | Sprockets JS → importmap-rails + Turbolinks → Turbo (requires 7.1) | Todo |
+| 10 | Sprockets → Propshaft + importmap-rails + Turbolinks → Turbo | Todo |
 | 11 | Turbo Frames (replace render_async) | Todo |
 | 12 | Rails 7.1 → 7.2 | Todo |
 | 13 | Ruby 3.2 → 3.4 | Todo |
