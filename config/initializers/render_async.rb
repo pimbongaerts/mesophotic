@@ -1,4 +1,4 @@
 RenderAsync.configure do |config|
   config.jquery = false
-  config.turbolinks = true
+  config.turbo = true
 end
