@@ -392,9 +392,6 @@ GEM
     turbo-rails (2.0.12)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unaccent (0.4.0)
@@ -462,7 +459,7 @@ DEPENDENCIES
   stackprof
   switch_user
   terser
-  turbolinks
+  turbo-rails
   web-console
   whenever
 

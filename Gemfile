@@ -10,7 +10,7 @@ gem 'listen'
 gem 'puma'
 gem 'puma_worker_killer'
 gem 'sassc-rails'
-gem 'turbolinks'
+gem 'turbo-rails'
 gem 'terser'
 gem 'rss'  # extracted from stdlib in Ruby 3.1+
 gem 'rack-attack'
