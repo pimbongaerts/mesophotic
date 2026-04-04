@@ -1,5 +1,5 @@
 class PublicationsController < ApplicationController
-  before_action :require_admin_or_editor!, :except => [:pdfs, :show, :index, :behind, :publication_authors, :publication_keywords]
+  before_action :require_admin_or_editor!, :except => [:show, :index, :behind, :publication_authors, :publication_keywords]
   before_action :set_publication, only: [:show, :edit, :edit_meta, :update,
                                          :behind, :destroy, :detach_field,
                                          :detach_focusgroup, :detach_platform,
