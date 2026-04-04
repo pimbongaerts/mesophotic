@@ -2,24 +2,16 @@
   description = "Mesophotic Rails development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-ruby.url = "github:bobvanderlinden/nixpkgs-ruby";
-    nixpkgs-ruby.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-ruby, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ nixpkgs-ruby.overlays.default ];
-        };
+        pkgs = import nixpkgs { inherit system; };
 
-        ruby = nixpkgs-ruby.lib.packageFromRubyVersionFile {
-          file = ./.ruby-version;
-          inherit system;
-        };
+        ruby = pkgs.ruby_3_4;
 
         bundler = pkgs.buildRubyGem rec {
           inherit ruby;
@@ -42,7 +34,9 @@
             withPlatformSuffix = attrs: { version = "${attrs.version}-${platformSuffix}"; };
           in {
             ffi = withPlatformSuffix;
+            google-protobuf = withPlatformSuffix;
             nokogiri = withPlatformSuffix;
+            sass-embedded = withPlatformSuffix;
             sqlite3 = withPlatformSuffix;
             psych = attrs: {
               buildInputs = [ pkgs.libyaml ];
