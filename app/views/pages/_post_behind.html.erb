@@ -5,7 +5,7 @@
           supertitle: "Behind the Science",
           breadcrumbs: [["News", posts_pages_path], [@publication.title_truncated, nil]] } %>
 <p class="text-muted mb-4" style="font-size: 0.85em;">
-  <%= @post.created_at.strftime("%B %-d, %Y") %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
+  <%= l @post.created_at.to_date, format: :long %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
   <% if current_user.try(:editor_or_admin?) %>
     <%= link_to edit_admin_post_path(@post.slug), class: "text-muted icon-btn ms-2" do %><i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i><% end %>
   <% end %>
