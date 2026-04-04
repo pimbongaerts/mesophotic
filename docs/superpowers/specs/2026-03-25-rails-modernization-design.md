@@ -5,7 +5,7 @@
 
 ## Current State
 
-- **Rails** 7.0, **Ruby** 3.2, **Bootstrap** 5.3 (via `bootstrap` gem)
+- **Rails** 7.1, **Ruby** 3.2, **Bootstrap** 5.3 (via `bootstrap` gem)
 - **Frontend:** Sprockets, Bootstrap Icons 1.13.1, vanilla JS + jQuery, Turbolinks, SCSS
 - **Database:** SQLite3 (all environments)
 - **Auth:** Devise with Cloudflare Turnstile CAPTCHA on registration
@@ -38,13 +38,13 @@
 | 6 | CoffeeScript removal | Done |
 | 7 | rails_admin 3.x, remove jQuery | Done |
 | 8 | Rails 6.1 → 7.0 | Done |
-| **9** | **Rails 7.0 → 7.1** | **Next** |
-| 10 | Sprockets → Propshaft + importmap-rails + Turbolinks → Turbo | Todo |
-| 11 | Turbo Frames (replace render_async) | Todo |
-| 12 | Rails 7.1 → 7.2 | Todo |
-| 13 | Ruby 3.2 → 3.4 | Todo |
-| 14 | Rails 7.2 → 8.0 | Todo |
-| 15 | Rails 8.0 → 8.1 | Todo |
+| 9 | Rails 7.0 → 7.1 | Done |
+| **10** | **Rails 7.1 → 7.2** | **Next** |
+| 11 | Ruby 3.2 → 3.4 | Todo |
+| 12 | Rails 7.2 → 8.0 | Todo |
+| 13 | Rails 8.0 → 8.1 | Todo |
+| 14 | Sprockets → Propshaft + importmap + Turbolinks → Turbo | Todo |
+| 15 | Turbo Frames (replace render_async) | Todo |
 
 ## Features
 
