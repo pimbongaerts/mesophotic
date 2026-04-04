@@ -50,6 +50,9 @@ Rails.application.configure do
   # Enable server timing headers.
   config.server_timing = true
 
+  # Raise error when a before_action's only/except options reference missing actions.
+  config.action_controller.raise_on_missing_callback_actions = true
+
   ### Extra settings
 
   # Mailer settings
