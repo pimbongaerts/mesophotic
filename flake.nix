@@ -67,6 +67,7 @@
 
               awscli
               imagemagick
+              libyaml
               ghostscript
               mupdf
               nodejs.libv8
