@@ -70,4 +70,4 @@
 <% end %>
 
 <br><strong>Date uploaded</strong><br>
-<%= @photo.image.created_at.to_date %><br>
+<%= l @photo.image.created_at.to_date, format: :long %><br>

@@ -8,6 +8,6 @@
     <% if user.updated_at.to_date == user.created_at.to_date %>
       <span class="badge bg-success" style="font-size: 0.7em;">new</span>
     <% end %>
-    <small class="text-muted"><%= user.updated_at.to_date %></small>
+    <small class="text-muted"><%= l user.updated_at.to_date, format: :long %></small>
   </div>
 <% end %>
