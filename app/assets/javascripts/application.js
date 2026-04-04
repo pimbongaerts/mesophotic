@@ -10,7 +10,6 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
 //= require bootstrap5
 //= require dual_range
 //= require wordcloud2

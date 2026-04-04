@@ -5,7 +5,7 @@
 <%= render 'form' %>
 
 <div class="mt-3">
-  <%= link_to admin_post_path(@post), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger icon-btn" do %>
+  <%= link_to admin_post_path(@post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger icon-btn" do %>
     <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i> Delete Post
   <% end %>
 </div>
