@@ -66,7 +66,7 @@ class PublicationsHelperTest < ActionView::TestCase
     # Verify checked items are marked
     assert_match /scientific.*checked/, result
     # Verify unchecked item does not have checked attribute within its own element
-    technical_li = result[/publication_types\[technical\]\]"[^<]*>/, 0]
+    technical_li = result[/publication_types\]\[technical\]"[^<]*>/, 0]
     assert_not_includes technical_li, "checked"
   end
 end

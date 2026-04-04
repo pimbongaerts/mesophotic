@@ -92,7 +92,7 @@ module PublicationsHelper
     open_tag = scrollable ? "<ul class=\"scrollable\">" : "<ul>"
     heading = title.present? ? "<h5>#{title}</h5>" : ""
     return (heading + open_tag + options.map do |option|
-      identifier = "search_params[#{param_name}[#{option}]]"
+      identifier = "search_params[#{param_name}][#{option}]"
       "<li>" \
       "  <label for=\"#{identifier}\">" \
       "    <input type=\"checkbox\" class=\"form-check-input\"" \
