@@ -6,7 +6,7 @@
   <div class="col-sm-8">
     <%= paginate @users %>
     <div class="mb-3" style="margin-top: -0.5rem;">
-      <small class="text-muted">Displaying members <b><%= @users.offset_value + 1 %>&ndash;<%= @users.offset_value + @users.length %></b> of <b><%= @users.total_count %></b></small>
+      <small class="text-muted"><%= page_entries_info @users %></small>
     </div>
     <div class="card">
       <div class="card-header">
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="mt-2 mb-2">
-      <small class="text-muted">Displaying members <b><%= @users.offset_value + 1 %>&ndash;<%= @users.offset_value + @users.length %></b> of <b><%= @users.total_count %></b></small>
+      <small class="text-muted"><%= page_entries_info @users %></small>
     </div>
     <%= paginate @users %>
   </div>
