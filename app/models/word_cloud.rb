@@ -5,7 +5,7 @@ class WordCloud
     exclusions = WordExclusion.select("LOWER(word) AS word").distinct.order(Arel.sql("LOWER(word) ASC")).map(&:word)
     species = Species.select("LOWER(name) AS name").distinct.order(Arel.sql("LOWER(name) ASC")).flat_map { |s| s.name.split(/\s/) }
     
-    frequencies = content
+    frequencies = content.dup
       .force_encoding("UTF-8")
       .downcase
       .scan(/[\w']+/)
