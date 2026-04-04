@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # Standard Rails gems
 gem 'rails', '~> 7.0.0'
 gem 'sprockets-rails'
+gem 'importmap-rails'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'jbuilder'

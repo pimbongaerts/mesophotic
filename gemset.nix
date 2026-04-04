@@ -649,6 +649,17 @@
     };
     version = "1.14.0";
   };
+  importmap-rails = {
+    dependencies = ["actionpack" "activesupport" "railties"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0smixr7l97pky55k0kz9rxmmyk2032kp7xdqixaz2z699lmbw0bi";
+      type = "gem";
+    };
+    version = "2.2.3";
+  };
   io-console = {
     groups = ["default" "development" "test"];
     platforms = [];
