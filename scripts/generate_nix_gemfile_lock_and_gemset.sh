@@ -2,5 +2,5 @@
 
 NIXPKGS_ALLOW_INSECURE=1 \
 nix-shell \
-  --run 'bundle lock && bundix --ruby=ruby-3.2' \
+  --run 'bundle lock && bundix --ruby=ruby-3.4' \
   --impure
