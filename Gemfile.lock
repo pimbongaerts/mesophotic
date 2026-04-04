@@ -149,8 +149,6 @@ GEM
     bootstrap (5.3.8)
       popper_js (>= 2.11.8, < 3)
     builder (3.3.0)
-    byebug (13.0.0)
-      reline (>= 0.6.0)
     cgi (0.5.1)
     choice (0.2.0)
     chronic (0.10.2)
@@ -163,6 +161,9 @@ GEM
     crass (1.0.6)
     csv (3.3.5)
     date (3.5.1)
+    debug (1.11.1)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     derailed_benchmarks (2.2.1)
       base64
       benchmark-ips (~> 2)
@@ -457,9 +458,9 @@ DEPENDENCIES
   bigdecimal
   bootsnap
   bootstrap (~> 5.3)
-  byebug
   country_select
   csv
+  debug
   derailed_benchmarks
   devise (>= 4.6.0)
   drb

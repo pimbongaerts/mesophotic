@@ -397,17 +397,6 @@
     };
     version = "3.3.0";
   };
-  byebug = {
-    dependencies = ["reline"];
-    groups = ["development" "test"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0pg05blj56sxdxq9d54386y9rlvj36vl95x21x9clh8rfpz3w9nj";
-      type = "gem";
-    };
-    version = "13.0.0";
-  };
   cgi = {
     groups = ["default" "development"];
     platforms = [];
@@ -509,6 +498,17 @@
       type = "gem";
     };
     version = "3.5.1";
+  };
+  debug = {
+    dependencies = ["irb" "reline"];
+    groups = ["development" "test"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1djjx5332d1hdh9s782dyr0f9d4fr9rllzdcz2k0f8lz2730l2rf";
+      type = "gem";
+    };
+    version = "1.11.1";
   };
   derailed_benchmarks = {
     dependencies = ["base64" "benchmark-ips" "bigdecimal" "drb" "get_process_mem" "heapy" "logger" "memory_profiler" "mini_histogram" "mutex_m" "ostruct" "rack" "rack-test" "rake" "ruby-statistics" "ruby2_keywords" "thor"];
