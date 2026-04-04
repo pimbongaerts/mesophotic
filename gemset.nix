@@ -1453,15 +1453,14 @@
     version = "3.5.2";
   };
   sqlite3 = {
-    dependencies = ["mini_portile2"];
     groups = ["development" "test"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0iv1hjbcb4haxzrsjwn11ch5mpx1i9f5l3x2qr6h3nsnzk747mmy";
+      sha256 = "1sd5b18sgpy79sv1az2iazfwmj7ghnah7gms614xby85k9hdjnyi";
       type = "gem";
     };
-    version = "1.6.9";
+    version = "2.9.2";
   };
   stackprof = {
     groups = ["development"];

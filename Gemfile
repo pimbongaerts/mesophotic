@@ -61,7 +61,7 @@ group :development, :test do
   gem 'minitest', '~> 5.0'
   gem 'rails-erd'
   gem 'spring'
-  gem 'sqlite3', '~> 1.6.9'
+  gem 'sqlite3', '~> 2.0'
 end
 
 group :development do
