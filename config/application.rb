@@ -2,6 +2,9 @@ require_relative 'boot'
 
 require 'rails/all'
 
+# Suppress deprecated to_s warnings from Rails internals (all our code is fixed).
+ENV['RAILS_DISABLE_DEPRECATED_TO_S_CONVERSION'] = 'true'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
