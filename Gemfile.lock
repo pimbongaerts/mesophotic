@@ -452,13 +452,17 @@ DEPENDENCIES
   annotate
   aws-sdk-rails
   aws-sdk-s3
+  base64
   bcrypt
+  bigdecimal
   bootsnap
   bootstrap (~> 5.3)
   byebug
   country_select
+  csv
   derailed_benchmarks
   devise (>= 4.6.0)
+  drb
   figaro
   flamegraph
   friendly_id
@@ -470,7 +474,9 @@ DEPENDENCIES
   memory_profiler
   mini_magick
   minitest (~> 5.0)
+  mutex_m
   newrelic_rpm
+  ostruct
   paper_trail
   puma
   puma_worker_killer
