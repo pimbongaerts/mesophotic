@@ -1,73 +1,86 @@
-<strong>Image category tags</strong><br>
-<% if @photo.contains_species %>
-	<span class="badge bg-secondary">Contains species</span>&nbsp;
-<% end %>
-<% if @photo.underwater %>
-	<span class="badge bg-secondary">Underwater photo</span>&nbsp;
-<% else %>
-	<span class="badge bg-secondary">Surface photo</span>&nbsp;
-<% end %><br>
-<% if @photo.platforms.count > 0 %>
+<div class="mb-3">
+  <strong>Tags</strong><br>
+  <% if @photo.contains_species %>
+    <span class="badge border border-secondary text-secondary">Contains species</span>
+  <% end %>
+  <% if @photo.underwater %>
+    <span class="badge border border-secondary text-secondary">Underwater</span>
+  <% else %>
+    <span class="badge border border-secondary text-secondary">Surface</span>
+  <% end %>
   <% @photo.platforms.each do |platform| %>
-  	<span class="badge bg-secondary"><%= platform.description %></span>&nbsp;
-  <% end %><br>
-<% end %>
-
+    <span class="badge border border-secondary text-secondary"><%= platform.description %></span>
+  <% end %>
+</div>
 
 <% if @photo.underwater? %>
-	<br><strong>Image depth</strong><br>
-	<%= @photo.depth %> m<br>
+  <div class="mb-3">
+    <strong>Depth</strong><br>
+    <%= @photo.depth %> m
+  </div>
 <% end %>
 
 <% if @photo.location %>
-  <br><strong>Image location</strong><br>
-  <%= link_to @photo.location.description, location_path(@photo.location) %><br>
+  <div class="mb-3">
+    <strong>Location</strong><br>
+    <%= link_to @photo.location.description, location_path(@photo.location) %>
+  </div>
 <% end %>
 
 <% if @photo.site %>
-  <br><strong>Image site</strong><br>
-  <%= link_to @photo.site.site_name, site_path(@photo.site) %><br>
+  <div class="mb-3">
+    <strong>Site</strong><br>
+    <%= link_to @photo.site.site_name, site_path(@photo.site) %>
+  </div>
 <% end %>
 
 <% if @photo.expedition %>
-  <br><strong>Coupled expedition</strong><br>
-  <%= link_to @photo.expedition.title, expedition_path(@photo.expedition) %>
-  <br>
+  <div class="mb-3">
+    <strong>Expedition</strong><br>
+    <%= link_to @photo.expedition.title, expedition_path(@photo.expedition) %>
+  </div>
 <% end %>
 
 <% if @photo.meeting %>
-  <br><strong>Coupled meeting</strong><br>
-  <%= link_to @photo.meeting.title, meeting_path(@photo.meeting) %>
-  <br>
+  <div class="mb-3">
+    <strong>Meeting</strong><br>
+    <%= link_to @photo.meeting.title, meeting_path(@photo.meeting) %>
+  </div>
 <% end %>
 
 <% if @photo.post %>
-  <br><strong>Coupled post</strong><br>
-  <%= link_to @photo.post.title,
-              post_pages_path(@photo.post.slug) %>
-  <br>
+  <div class="mb-3">
+    <strong>Post</strong><br>
+    <%= link_to @photo.post.title, post_pages_path(@photo.post.slug) %>
+  </div>
 <% end %>
 
 <% if @photo.publication %>
-  <br><strong>Coupled publication</strong><br>
-  <%= link_to @photo.publication.short_citation_with_title,
-  						publication_path(@photo.publication) %>
-  <br>
+  <div class="mb-3">
+    <strong>Publication</strong><br>
+    <%= link_to @photo.publication.short_citation_with_title, publication_path(@photo.publication) %>
+  </div>
 <% end %>
 
 <% if @photo.organisations.count > 0 %>
-  <br><strong>Organisations (tagged)</strong><br>
-  <% @photo.organisations.each do |organisation| %>
-  	<%= organisation.name %><br>
-  <% end %>
+  <div class="mb-3">
+    <strong>Organisations</strong><br>
+    <% @photo.organisations.each do |organisation| %>
+      <%= organisation.name %><br>
+    <% end %>
+  </div>
 <% end %>
 
 <% if @photo.users.count > 0 %>
-  <br><strong>Researchers (tagged)</strong><br>
-  <% @photo.users.each do |user| %>
-  	<%= link_to user.full_name, member_pages_path(user) %><br>
-  <% end %>
+  <div class="mb-3">
+    <strong>Researchers</strong><br>
+    <% @photo.users.each do |user| %>
+      <%= link_to user.full_name, member_pages_path(user) %><br>
+    <% end %>
+  </div>
 <% end %>
 
-<br><strong>Date uploaded</strong><br>
-<%= l @photo.image.created_at.to_date, format: :long %><br>
+<div class="mb-0">
+  <strong>Uploaded</strong><br>
+  <small class="text-muted"><%= l @photo.image.created_at.to_date, format: :long %></small>
+</div>
