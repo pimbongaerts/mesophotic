@@ -1,18 +1,18 @@
 # Mesophotic.org Modernization Design
 
-**Date:** 2026-03-25 (last updated 2026-04-03)
+**Date:** 2026-03-25 (last updated 2026-04-04)
 **Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 8.1 / Ruby 3.4, with a baseline test suite as a safety net.
 
 ## Current State
 
-- **Rails** 6.1, **Ruby** 3.2, **Bootstrap** 5.3 (via `bootstrap` gem)
+- **Rails** 7.0, **Ruby** 3.2, **Bootstrap** 5.3 (via `bootstrap` gem)
 - **Frontend:** Sprockets, Bootstrap Icons 1.13.1, vanilla JS + jQuery, Turbolinks, SCSS
 - **Database:** SQLite3 (all environments)
 - **Auth:** Devise with Cloudflare Turnstile CAPTCHA on registration
 - **Admin:** rails_admin (mounted at `/admin/db`)
 - **Cache:** `:file_store` (256 MB) in production
 - **Process:** Puma (2 workers, 1–3 threads) with `puma_worker_killer`
-- **Security:** Rack::Attack (throttling, spam blocklists, CJK blocking, notification logging), `force_ssl = true`
+- **Security:** Rack::Attack (throttling, spam blocklists, CJK/Korean blocking, notification logging), `force_ssl = true`
 - **Test coverage:** ~3.8% — Minitest with fixtures
 - **Dev environment:** Nix flake + direnv
 - **VCS:** jj (colocated with git)
@@ -37,8 +37,8 @@
 | 5 | Ruby 2.7 → 3.2 | Done |
 | 6 | CoffeeScript removal | Done |
 | 7 | rails_admin 3.x, remove jQuery | Done |
-| **8** | **Rails 6.1 → 7.0** | **Next** |
-| 9 | Turbolinks → Turbo (requires 7.0) | Todo |
+| 8 | Rails 6.1 → 7.0 | Done |
+| **9** | **Turbolinks → Turbo (requires 7.0)** | **Next** |
 | 10 | Turbo Frames (replace render_async) | Todo |
 | 11 | Rails 7.0 → 7.1 | Todo |
 | 12 | Rails 7.1 → 7.2 | Todo |
@@ -67,7 +67,7 @@
 | 4 | robots.txt (crawl-delay, disallow storage/csv/pdf) | Done |
 | 5 | CSV exports require auth, links hidden | Done |
 | 6 | Canonical URL (www → mesophotic.org) | Todo |
-| 7 | Automated deployment (replace manual SSH + git pull) | Todo |
+| 7 | Automated deployment (Capistrano, manual trigger, rollback) | Todo |
 
 ## Performance
 
@@ -75,20 +75,22 @@
 |---|-------------|--------|
 | 1 | N+1 query fixes, eager loading | Done |
 | 2 | Fragment caching (about, home, posts, sidebar, members) | Done |
-| 3 | word_association / species_association memoization | Todo |
-| 4 | CSV export streaming | Todo |
-| 5 | MiniMagick → VIPS | Todo |
-| 6 | ResizeObserver cleanup in charts.js | Todo |
-| 7 | Species image bug (open() on URLs) | Todo |
+| 3 | Species image caching (24hr) + spinner | Done |
+| 4 | word_association / species_association caching | Done |
+| 5 | CSV export streaming | Done |
+| 6 | ResizeObserver cleanup in charts.js | Done |
+| 7 | Species image bug (open() → URI.open, HTTPS) | Done |
+| 8 | MiniMagick → VIPS | Todo |
 
 ## UI
 
 | # | Description | Status |
 |---|-------------|--------|
 | 1 | Bootstrap Icons 1.13.1 | Done |
-| 2 | Publication card restyling | Done |
-| 3 | Open Access SVG icon | Done |
-| 4 | Google Fonts HTTPS | Done |
+| 2 | Publication card restyling (index) | Done |
+| 3 | Publication show page polish (badges, supertitle, icons, caching) | Done |
+| 4 | Open Access SVG icon | Done |
+| 5 | Google Fonts HTTPS | Done |
 
 ---
 
