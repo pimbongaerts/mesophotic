@@ -13,19 +13,7 @@
 
         ruby = pkgs.ruby_3_4;
 
-        bundler = pkgs.buildRubyGem rec {
-          inherit ruby;
-          name = "${gemName}-${version}";
-          gemName = "bundler";
-          version = "2.6.9";
-          source = {
-            remotes = ["https://rubygems.org"];
-            sha256 = "sha256-olZ1/70FWuEYZ2bMHhILTPYliOiKu1m5nFfiKxxVyes=";
-            type = "gem";
-          };
-        };
-
-        gems = pkgs.bundlerEnv.override { inherit bundler; } {
+        gems = pkgs.bundlerEnv {
           inherit ruby;
           name = "gemset";
 
@@ -56,7 +44,6 @@
             buildInputs = [
               gems
               ruby
-              bundler
               bundix
 
               awscli
