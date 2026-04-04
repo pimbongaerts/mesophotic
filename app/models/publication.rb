@@ -189,13 +189,20 @@ class Publication < ApplicationRecord
         "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
 
-      records = select("publications.*, (#{filter}) / LENGTH(#{st}) AS relevance")
-      limited = records.where("relevance > 0")
+      relevance_expr = "(#{filter}) / LENGTH(#{st})"
 
-      records
-      .where("publications.id IN (SELECT id FROM (#{limited.to_sql}))")
+      # Subquery: find matching publication IDs with relevance score
+      inner_sql = unscoped
+        .select("publications.id, #{relevance_expr} AS relevance")
+        .where("(#{relevance_expr}) > 0")
+        .to_sql
+
+      # Outer query: join with subquery for relevance, apply filters.
+      # select("publications.*") ensures COUNT(*) works (Rails 7.2 puts custom select inside COUNT).
+      joins("INNER JOIN (#{inner_sql}) AS scored ON scored.id = publications.id")
+      .select("publications.*, scored.relevance")
       .base_search(search_params)
-      .order(Arel.sql("relevance DESC"), publication_year: :desc, filename: :asc)
+      .order(Arel.sql("scored.relevance DESC"), publication_year: :desc, filename: :asc)
     else
       all
     end

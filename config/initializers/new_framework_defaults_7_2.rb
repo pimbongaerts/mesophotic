@@ -7,3 +7,7 @@
 # Active Storage variant processor: keep mini_magick until libvips is
 # installed on the production server (Dreamhost VPS).
 Rails.application.config.active_storage.variant_processor = :mini_magick
+
+# SQLite strict strings: disabled until raw SQL scopes are audited.
+# Strict mode disables double-quoted string literals in SQLite.
+Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default = false
