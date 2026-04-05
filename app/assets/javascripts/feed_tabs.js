@@ -35,5 +35,4 @@ function checkBlueskyFeed() {
   var hasContent = blueskyFeed.querySelector('.mastodon-status');
   blueskyTab.style.display = hasContent ? '' : 'none';
 }
-document.addEventListener('render_async_load', checkBlueskyFeed);
 document.addEventListener('turbo:frame-load', checkBlueskyFeed);

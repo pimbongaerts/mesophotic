@@ -1,5 +1,5 @@
 // Auto-initialize Highcharts, Highcharts Maps, and WordCloud2 from data attributes.
-// Works with both direct rendering and render_async injection (no inline scripts needed).
+// Works with both direct rendering and Turbo Frames lazy loading (no inline scripts needed).
 
 (function() {
   var resizeObservers = [];
@@ -154,6 +154,5 @@
 
   document.addEventListener('turbo:load', initAll);
   document.addEventListener('turbo:frame-load', initAll);
-  document.addEventListener('render_async_load', initAll);
-  document.addEventListener('turbo:before-cache', cleanupObservers);
+document.addEventListener('turbo:before-cache', cleanupObservers);
 })();

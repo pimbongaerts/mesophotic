@@ -1318,16 +1318,6 @@
     };
     version = "0.6.3";
   };
-  render_async = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1pv6q9whsa5ywwpd6sah3nbhl2yn5lk9m4sgi9f8v4143r3cv0pv";
-      type = "gem";
-    };
-    version = "2.1.11";
-  };
   request_store = {
     dependencies = ["rack"];
     groups = ["default"];
