@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 
-NIXPKGS_ALLOW_INSECURE=1 \
-nix-shell \
-  --run 'bundle lock && bundix --ruby=ruby-3.4' \
-  --impure
+# Generate Gemfile.lock and gemset.nix from the current Gemfile.
+# Uses Ruby from nixpkgs (same as flake) without the frozen bundlerEnv wrapper.
+
+set -e
+cd "$(dirname "$0")/.."
+
+nix shell nixpkgs#ruby_3_4 --command bundle lock
+
+bundix

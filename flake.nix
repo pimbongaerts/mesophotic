@@ -21,6 +21,7 @@
           inherit system;
         };
 
+        # Pin bundler to match what Ruby ships (nixpkgs default is older)
         bundler = pkgs.buildRubyGem rec {
           inherit ruby;
           name = "${gemName}-${version}";

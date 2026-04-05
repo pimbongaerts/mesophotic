@@ -975,7 +975,7 @@
     version = "2.7.5";
   };
   nokogiri = {
-    dependencies = ["racc"];
+    dependencies = ["mini_portile2" "racc"];
     groups = ["default" "development"];
     platforms = [];
     source = {
@@ -1454,6 +1454,7 @@
     version = "3.5.2";
   };
   sqlite3 = {
+    dependencies = ["mini_portile2"];
     groups = ["development" "test"];
     platforms = [];
     source = {
