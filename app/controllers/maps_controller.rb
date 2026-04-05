@@ -8,7 +8,7 @@ class MapsController < ApplicationController
                        backgroundcolor: params[:backgroundcolor],
                        height: params[:height] }
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("world-map-#{params[:key]}") { cached }
   end
 
   private
