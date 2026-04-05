@@ -70,6 +70,15 @@
 | 6 | Canonical URL (www → mesophotic.org) | Todo |
 | 7 | Automated deployment (Capistrano, manual trigger, rollback) | Todo |
 
+## Security
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | Brakeman scan + fix findings | Todo |
+| 2 | OWASP top 10 audit (SQL injection, XSS, CSRF, mass assignment) | Todo |
+| 3 | Content Security Policy review | Todo |
+| 4 | Dependency vulnerability scan (bundler-audit) | Todo |
+
 ## Performance
 
 | # | Description | Status |
@@ -82,6 +91,9 @@
 | 6 | ResizeObserver cleanup in charts.js | Done |
 | 7 | Species image bug (open() → URI.open, HTTPS) | Done |
 | 8 | ~~MiniMagick → VIPS~~ | Dropped (libvips not available on Dreamhost) |
+| 9 | SQL query profiling + slow query analysis | Todo |
+| 10 | Missing database indexes audit | Todo |
+| 11 | Remaining N+1 query audit (bullet gem or log analysis) | Todo |
 
 ## UI
 
@@ -139,6 +151,31 @@
 - Google Fonts URLs updated to HTTPS
 
 ---
+
+## Remaining Security Work
+
+### Security audit
+
+Run Brakeman and bundler-audit to get a baseline. Manually review OWASP top 10 areas:
+
+- **SQL injection** — Audit raw SQL in model scopes and controller queries (stats, summary, publications). Check for string interpolation in `.where()` clauses.
+- **XSS** — Audit `.html_safe` usage across views and controllers (including `render_in_turbo_frame`). Check for unescaped user input.
+- **CSRF** — Verify `protect_from_forgery` coverage, especially on Turbo Frame endpoints.
+- **Mass assignment** — Audit `permit` params in controllers for over-permissive whitelists.
+- **Content Security Policy** — Review `config/initializers/content_security_policy.rb`, tighten if possible.
+- **Dependency vulnerabilities** — `bundle audit` for known CVEs in gems.
+
+### Remaining Performance Work
+
+### SQL profiling + slow queries
+
+Profile production queries via New Relic or `rack-mini-profiler` in development. Identify:
+
+- Slow queries (>100ms) — especially on stats pages, publication search, and CSV exports.
+- Missing indexes — audit foreign keys and columns used in `WHERE`, `JOIN`, and `ORDER BY` clauses.
+- Remaining N+1 queries — use `bullet` gem in development to catch lazy-loaded associations the earlier eager loading work missed.
+- `word_association` / `species_association` helpers still load all records per call — consider further caching or restructuring.
+- `Publication#to_csv` builds large in-memory hashes — consider streaming or batching.
 
 ## Remaining Feature Work
 
