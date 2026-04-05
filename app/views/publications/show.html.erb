@@ -89,7 +89,7 @@
       <div class="card">
         <div class="card-header"><strong>Keywords</strong></div>
         <div class="card-body" style="min-height: 232px;">
-          <%= render_async publication_keywords_path(id: @publication.id) %>
+          <%= turbo_frame_tag "publication-keywords-#{@publication.id}", src: publication_keywords_path(id: @publication.id), loading: :lazy %>
         </div>
       </div>
     <% end %>
@@ -163,7 +163,7 @@
       <div class="card">
         <div class="card-header"><strong>Author Profiles</strong></div>
         <div class="card-body">
-          <%= render_async publication_authors_path(id: @publication.id) %>
+          <%= turbo_frame_tag "publication-authors-#{@publication.id}", src: publication_authors_path(id: @publication.id), loading: :lazy %>
         </div>
       </div>
     <% end %>

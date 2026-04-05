@@ -166,18 +166,16 @@ class PublicationsController < ApplicationController
   end
 
   def publication_authors
-    render partial: "authors", object: @publication.users
+    render_in_turbo_frame("publication-authors-#{@publication.id}") { render_to_string partial: "authors", object: @publication.users }
   end
 
   def publication_keywords
     publications = Publication.select(:contents).where(id: params[:id])
     word_cloud = publications.word_cloud(40)
 
-    if word_cloud.present?
-      render partial: 'shared/wordcloud',
-             object: word_cloud,
-             locals: { title: 'publication_contents' }
-    end
+    render_in_turbo_frame("publication-keywords-#{params[:id]}") {
+      word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: 'publication_contents' }) : ""
+    }
   end
 
   private
