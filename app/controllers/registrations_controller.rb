@@ -51,8 +51,6 @@ class RegistrationsController < Devise::RegistrationsController
     :email,
     :password,
     :password_confirmation,
-    :role,
-    :locked,
     :title,
     :first_name,
     :last_name,

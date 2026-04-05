@@ -5,7 +5,7 @@ class SummaryController < ApplicationController
     respond_to do |format|
       format.html {
         @publications = publications.page(params[:page]).per(10)
-        @objects = @model.joins(:publications).group("#{params[:model]}.id").order(description: :asc)
+        @objects = @model.joins(:publications).group("#{@model.table_name}.id").order(description: :asc)
       }
 
       format.csv {
@@ -46,8 +46,12 @@ class SummaryController < ApplicationController
 
   private
 
+  ALLOWED_MODELS = %w[Platform Location Focusgroup Field Species].freeze
+
   def model
-    @model = params[:model].singularize.classify.constantize
+    class_name = params[:model].to_s.singularize.classify
+    raise ActiveRecord::RecordNotFound unless ALLOWED_MODELS.include?(class_name)
+    @model = class_name.constantize
   end
 
   def object

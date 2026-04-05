@@ -14,10 +14,11 @@ class PublicationsController < ApplicationController
   def index
     respond_to do |format|
       params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
-      args = params[:validation_type] == 'expired' ? [current_user] : []
+      validation_type = Validation::VALIDATION_TYPES.include?(params[:validation_type]) ? params[:validation_type] : 'all'
+      args = validation_type == 'expired' ? [current_user] : []
 
       @publications = Publication
-        .send(params[:validation_type] || :all, *args)
+        .send(validation_type, *args)
         .search(params[:search], params[:search_params], is_editor_or_admin)
 
       format.html {
