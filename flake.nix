@@ -2,39 +2,18 @@
   description = "Mesophotic Rails development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-ruby.url = "github:bobvanderlinden/nixpkgs-ruby";
-    nixpkgs-ruby.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-ruby, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ nixpkgs-ruby.overlays.default ];
-        };
+        pkgs = import nixpkgs { inherit system; };
 
-        ruby = nixpkgs-ruby.lib.packageFromRubyVersionFile {
-          file = ./.ruby-version;
-          inherit system;
-        };
+        ruby = pkgs.ruby_3_4;
 
-        # Pin bundler to match what Ruby ships (nixpkgs default is older)
-        bundler = pkgs.buildRubyGem rec {
-          inherit ruby;
-          name = "${gemName}-${version}";
-          gemName = "bundler";
-          version = "2.6.9";
-          source = {
-            remotes = ["https://rubygems.org"];
-            sha256 = "sha256-olZ1/70FWuEYZ2bMHhILTPYliOiKu1m5nFfiKxxVyes=";
-            type = "gem";
-          };
-        };
-
-        gems = pkgs.bundlerEnv.override { inherit bundler; } {
+        gems = pkgs.bundlerEnv {
           inherit ruby;
           name = "gemset";
 
@@ -63,7 +42,6 @@
             buildInputs = [
               gems
               ruby
-              bundler
               bundix
 
               awscli
