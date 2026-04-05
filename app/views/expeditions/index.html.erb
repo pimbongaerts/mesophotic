@@ -26,7 +26,7 @@
         <td><%= expedition.url %></td>
         <td><%= link_to 'Show', expedition %></td>
         <td><%= link_to 'Edit', edit_expedition_path(expedition) %></td>
-        <td><%= link_to 'Destroy', expedition, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', expedition, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
