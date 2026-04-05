@@ -629,7 +629,7 @@
     version = "1.3.0";
   };
   google-protobuf = {
-    dependencies = ["bigdecimal"];
+    dependencies = ["bigdecimal" "rake"];
     groups = ["default"];
     platforms = [];
     source = {
