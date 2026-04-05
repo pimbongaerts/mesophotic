@@ -22,14 +22,14 @@ class SummaryController < ApplicationController
       word_cloud = publications.word_cloud(40)
       word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: "#{params[:model]}_publication_contents" }) : ""
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("summary-keywords-#{params[:model]}-#{params[:id]}") { cached }
   end
 
   def summary_researchers
     cached = Rails.cache.fetch(["summary_researchers", params[:model], params[:id], Publication.maximum(:updated_at).to_i]) do
       render_to_string partial: 'author', collection: publications.authors
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("summary-researchers-#{params[:model]}-#{params[:id]}") { cached }
   end
 
   def summary_publications
@@ -41,7 +41,7 @@ class SummaryController < ApplicationController
                "Platforms": platforms
              }
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("summary-publications-#{params[:model]}-#{params[:id]}") { cached }
   end
 
   private
