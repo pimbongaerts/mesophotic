@@ -9,10 +9,10 @@
   <div class="card-body">
     <div class="row">
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async summarized_fields_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-summarized_fields", src: summarized_fields_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async summarized_journals_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-summarized_journals", src: summarized_journals_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
 
@@ -20,10 +20,10 @@
 
     <div class="row">
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async summarized_focusgroups_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-summarized_focusgroups", src: summarized_focusgroups_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async summarized_platforms_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-summarized_platforms", src: summarized_platforms_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
   </div>

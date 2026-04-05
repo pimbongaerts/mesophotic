@@ -47,19 +47,19 @@ class StatsController < ApplicationController
   end
 
   def growing_depth_range
-    render partial: "growing_depth_range"
+    render_in_turbo_frame("stats-growing_depth_range") { render_to_string partial: "growing_depth_range" }
   end
 
   def growing_publications_over_time
-    render partial: "growing_publications_over_time"
+    render_in_turbo_frame("stats-growing_publications_over_time") { render_to_string partial: "growing_publications_over_time" }
   end
 
   def growing_locations_over_time
-    render partial: "growing_locations_over_time"
+    render_in_turbo_frame("stats-growing_locations_over_time") { render_to_string partial: "growing_locations_over_time" }
   end
 
   def growing_authors_over_time
-    render partial: "growing_authors_over_time"
+    render_in_turbo_frame("stats-growing_authors_over_time") { render_to_string partial: "growing_authors_over_time" }
   end
 
   def summarized_fields
@@ -71,7 +71,7 @@ class StatsController < ApplicationController
       .group('fields.id')
       .order(Arel.sql('count(fields.id) DESC'))
 
-    render partial: "summarized_fields"
+    render_in_turbo_frame("stats-summarized_fields") { render_to_string partial: "summarized_fields" }
   end
 
   def summarized_journals
@@ -83,7 +83,7 @@ class StatsController < ApplicationController
       .group('journals.id')
       .order(Arel.sql('count(journals.id) DESC'))
 
-    render partial: "summarized_journals"
+    render_in_turbo_frame("stats-summarized_journals") { render_to_string partial: "summarized_journals" }
   end
 
   def summarized_focusgroups
@@ -95,7 +95,7 @@ class StatsController < ApplicationController
       .group('focusgroups.id')
       .order(Arel.sql('count(focusgroups.id) DESC'))
 
-    render partial: "summarized_focusgroups"
+    render_in_turbo_frame("stats-summarized_focusgroups") { render_to_string partial: "summarized_focusgroups" }
   end
 
   def summarized_platforms
@@ -107,17 +107,17 @@ class StatsController < ApplicationController
       .group('platforms.id')
       .order(Arel.sql('count(platforms.id) DESC'))
 
-    render partial: "summarized_platforms"
+    render_in_turbo_frame("stats-summarized_platforms") { render_to_string partial: "summarized_platforms" }
   end
 
   def world_publications
-    render partial: "world_publications"
+    render_in_turbo_frame("stats-world_publications") { render_to_string partial: "world_publications" }
   end
 
   def world_users
     @users = User.all
 
-    render partial: "world_users"
+    render_in_turbo_frame("stats-world_users") { render_to_string partial: "world_users" }
   end
 
   def world_locations
@@ -129,19 +129,19 @@ class StatsController < ApplicationController
       .group('locations.id')
       .order(Arel.sql('count(locations.id) DESC'))
 
-    render partial: "world_locations"
+    render_in_turbo_frame("stats-world_locations") { render_to_string partial: "world_locations" }
   end
 
   def time_refuge
     @annual_refuge_counts = @publications.relevance('refug').annual_counts
 
-    render partial: "time_refuge"
+    render_in_turbo_frame("stats-time_refuge") { render_to_string partial: "time_refuge" }
   end
 
   def time_mesophotic
     @annual_mesophotic_counts = @publications.relevance('mesophotic').annual_counts
 
-    render partial: "time_mesophotic"
+    render_in_turbo_frame("stats-time_mesophotic") { render_to_string partial: "time_mesophotic" }
   end
 
   private

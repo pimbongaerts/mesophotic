@@ -3,10 +3,10 @@
   <div class="card-body">
     <div class="row">
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async time_refuge_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-time_refuge", src: time_refuge_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 300px;">
-        <%= render_async time_mesophotic_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-time_mesophotic", src: time_mesophotic_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
   </div>
