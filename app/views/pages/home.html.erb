@@ -3,7 +3,7 @@
 <div class="card">
   <div class="card-body background_image d-flex align-items-center justify-content-center p-0">
     <div style="width: 100%; max-width: 700px; height: 300px;">
-      <%= render_async world_map_path(key: "pages_home", model: Location, ids: @locations.map(&:id).join(','), height: 300, backgroundcolor: '#FCFFC5') %>
+      <%= turbo_frame_tag "world-map-pages_home", src: world_map_path(key: "pages_home", model: Location, ids: @locations.map(&:id).join(','), height: 300, backgroundcolor: '#FCFFC5') %>
     </div>
   </div>
 </div>

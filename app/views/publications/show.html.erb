@@ -58,7 +58,7 @@
       <div class="card">
         <div class="card-header"><strong>Research Sites</strong></div>
         <div class="card-body" style="min-height: 300px;">
-          <%= render_async world_map_path(key: "publications_show", model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1) %>
+          <%= turbo_frame_tag "world-map-publications_show", src: world_map_path(key: "publications_show", model: Site, ids: @publication.sites.map(&:id).join(','), height: 300, z: 1), loading: :lazy %>
         </div>
         <div class="card-footer">
           <table class="table table-sm mb-0">

@@ -50,7 +50,7 @@
       <div class="card">
         <div class="card-header"><strong>Image Location</strong></div>
         <div class="card-body p-1" style="min-height: 150px;">
-          <%= render_async world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1) %>
+          <%= turbo_frame_tag "world-map-photos_show", src: world_map_path(key: "photos_show", model: Photo, ids: @photo.id, height: 150, z: 1), loading: :lazy %>
         </div>
       </div>
     <% end %>

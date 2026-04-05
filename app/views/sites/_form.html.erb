@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="col-5" style="min-height: 230px;">
-        <%= render_async world_map_path(key: "sites_form", model: Site, ids: site.id, height: 230, z: 10) %>
+        <%= turbo_frame_tag "world-map-sites_form", src: world_map_path(key: "sites_form", model: Site, ids: site.id, height: 230, z: 10), loading: :lazy %>
       </div>
     </div>
   </div>
