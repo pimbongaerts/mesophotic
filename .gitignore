@@ -32,6 +32,10 @@ storage/
 /config/credentials/development.key
 .secret
 
+# dartsass build output (regenerated on deploy)
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
 # direnv
 .direnv/
 backup/
