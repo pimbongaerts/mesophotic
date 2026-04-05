@@ -153,6 +153,7 @@
   // --- Event listeners ---
 
   document.addEventListener('turbo:load', initAll);
+  document.addEventListener('turbo:frame-load', initAll);
   document.addEventListener('render_async_load', initAll);
   document.addEventListener('turbo:before-cache', cleanupObservers);
 })();
