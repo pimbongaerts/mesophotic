@@ -52,15 +52,13 @@ class SitesController < ApplicationController
     publications = Publication.select(:contents).joins(:sites).where("sites.id == ?", params[:id])
     word_cloud = publications.word_cloud(40)
 
-    if word_cloud.present?
-      render partial: 'shared/wordcloud',
-             object: word_cloud,
-             locals: { title: 'location_publication_contents' }
-    end
+    render_in_turbo_frame("site-keywords-#{params[:id]}") {
+      word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: 'location_publication_contents' }) : ""
+    }
   end
 
   def site_research_details
-    render partial: 'research_details', object: @site.publications
+    render_in_turbo_frame("site-research-details-#{params[:id]}") { render_to_string partial: 'research_details', object: @site.publications }
   end
 
   private
