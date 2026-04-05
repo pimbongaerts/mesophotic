@@ -2,16 +2,16 @@ source 'https://rubygems.org'
 
 # Standard Rails gems
 gem 'rails', '~> 8.1.0'
-gem 'sprockets-rails'
+gem 'propshaft'
+gem 'importmap-rails'
+gem 'turbo-rails'
+gem 'dartsass-rails'
 gem 'bcrypt'
 gem 'bootsnap'
 gem 'jbuilder'
 gem 'listen'
 gem 'puma'
 gem 'puma_worker_killer'
-gem 'sassc-rails'
-gem 'turbolinks'
-gem 'terser'
 gem 'rss'        # extracted from stdlib in Ruby 3.1+
 gem 'rack-attack'
 
