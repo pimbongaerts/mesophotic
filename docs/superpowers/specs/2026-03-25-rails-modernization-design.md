@@ -1,12 +1,12 @@
 # Mesophotic.org Modernization Design
 
-**Date:** 2026-03-25 (last updated 2026-04-04)
+**Date:** 2026-03-25 (last updated 2026-04-05)
 **Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 8.1 / Ruby 3.4, with a baseline test suite as a safety net.
 
 ## Current State
 
 - **Rails** 8.1, **Ruby** 3.4, **Bootstrap** 5.3 (via `bootstrap` gem)
-- **Frontend:** Sprockets, Bootstrap Icons 1.13.1, vanilla JS + jQuery, Turbolinks, SCSS
+- **Frontend:** Propshaft, importmap-rails, Turbo Drive + Turbo Frames, dartsass-rails, Bootstrap 5.3 (gem), Bootstrap Icons, vanilla JS, SCSS
 - **Database:** SQLite3 (all environments)
 - **Auth:** Devise with Cloudflare Turnstile CAPTCHA on registration
 - **Admin:** rails_admin (mounted at `/admin/db`)
@@ -43,9 +43,9 @@
 | 11 | Ruby 3.2 → 3.4 | Done |
 | 12 | Rails 7.2 → 8.0 | Done |
 | 13 | Rails 8.0 → 8.1 | Done |
-| **14** | **Sprockets → Propshaft + importmap + Turbolinks → Turbo** | **Next** |
-| 15 | Turbo Frames (replace render_async) | Todo |
-| 16 | Local CI runner (bin/ci, RuboCop, Brakeman) | Todo |
+| 14 | Sprockets → Propshaft + importmap + Turbolinks → Turbo | Done |
+| 15 | Turbo Frames (replace render_async) | Done |
+| **16** | **Local CI runner (bin/ci, RuboCop, Brakeman)** | **Next** |
 
 ## Features
 
@@ -106,6 +106,9 @@
 - **Phase 4:** CSV kwargs fix (`**options`), `rss` gem added, Nix flake updated, systemd service → Ruby 3.2 path.
 - **Phase 5:** CoffeeScript removed (completed in Phase 2).
 - **Phase 6:** rails_admin 3.x, jQuery removed.
+- **Phases 7–13:** Incremental Rails upgrades (6.1→7.0→7.1→7.2→8.0→8.1), Ruby 3.2→3.4. Each phase: `config.load_defaults`, `rails app:update`, fix deprecations, verify tests.
+- **Phase 14:** Sprockets → Propshaft + importmap-rails + Turbolinks → Turbo Drive. Bootstrap 5.3 via gem + popper_js gem. dartsass-rails for SCSS. RailsAdmin uses importmap asset_source with vendored CSS from rails_admin-nobuild. Highcharts/WordCloud2/feed_tabs as Propshaft script tags.
+- **Phase 15:** render_async → Turbo Frames. Shared `render_in_turbo_frame` helper in ApplicationController. 35 calls across 8 controllers converted. render_async gem removed entirely.
 
 ### Features
 
@@ -134,111 +137,6 @@
 - Publication card restyling (outline badges, title link hover, font sizing)
 - Open Access SVG icon restored
 - Google Fonts URLs updated to HTTPS
-
----
-
-## Remaining Phase Details
-
-### Phase 7: Rails 6.1 → 7.0
-
-**Bookmark:** `ryan/rails-7.0`
-**Parent:** main
-**Ruby:** 3.2
-
-- `config.load_defaults '7.0'`.
-- `rails app:update` — resolve config diffs.
-- `button_to` default method changes from POST to PATCH in some contexts — audit forms.
-- `Rails.application.credentials` changes — verify Figaro still works.
-- `rails_admin` compatibility — verify current version works on Rails 7.0.
-
-### Phase 8: Turbolinks → Turbo
-
-**Bookmark:** `ryan/turbo`
-**Parent:** `ryan/rails-7.0`
-**Ruby:** 3.2, **Rails:** 7.0+
-
-**IMPORTANT:** Turbo migration requires Rails 7.0 first. The `turbo-rails` 2.x gem's JavaScript does not compile through Sprockets on Rails 6.1 — `//= require turbo` silently fails and breaks all subsequent `//= require` directives. This was attempted and fully reverted.
-
-- Remove `turbolinks` gem, add `turbo-rails`.
-- `data-turbolinks-*` → `data-turbo-*`.
-- Update `turbolinks:load` event listeners → `turbo:load` (in `charts.js`, `feed_tabs.js`, etc.).
-- `turbolinks-cache-control` → `turbo-cache-control`.
-- Update render_async config: `turbolinks` → `turbo`.
-
-### Phase 9: Turbo Frames (replace render_async)
-
-**Bookmark:** `ryan/turbo-frames`
-**Parent:** `ryan/turbo`
-**Ruby:** 3.2
-
-Replace `render_async` with Turbo Frames across the app (~30 call sites). This enables proper caching behaviour (fixes the stats page caching issue) and removes the render_async gem dependency.
-
-- Convert each `render_async` call to a `<turbo-frame>` with `src` attribute.
-- Move async controller actions to return Turbo Frame responses.
-- Remove `render_async` gem from Gemfile.
-- Fix stats page caching (Turbo Frames handle this natively).
-
-**Note:** Do NOT attempt to cache stats graphs until this phase is complete. Fragment caching + render_async don't mix (cached placeholder HTML loses the JavaScript that triggers async loading).
-
-### Phase 10: Rails 7.0 → 7.1
-
-**Bookmark:** `ryan/rails-7.1`
-**Parent:** `ryan/turbo-frames`
-**Ruby:** 3.2
-
-- Mostly additive: async queries, `normalizes`, Trilogy adapter, BYO auth generator.
-- `config.load_defaults '7.1'`.
-- `rails app:update`.
-- Verify all tests pass.
-- Expected to be a smooth step.
-
-### Phase 11: Rails 7.1 → 7.2
-
-**Bookmark:** `ryan/rails-7.2`
-**Parent:** `ryan/rails-7.1`
-**Ruby:** 3.2
-
-- `config.load_defaults '7.2'`.
-- `rails app:update`.
-- Progressive job enqueuing, default health check endpoint, dev containers.
-- Verify all tests pass.
-
-### Phase 12: Ruby 3.2 → 3.4
-
-**Bookmark:** `ryan/ruby-3.4`
-**Parent:** `ryan/rails-7.2`
-
-- Update `.ruby-version` to `3.4`.
-- Update Nix flake: change Ruby version.
-- Ruby 3.3 changes: `it` as a block parameter name, Prism parser default.
-- Ruby 3.4 changes: `frozen_string_literal` warning by default, `it` fully available.
-- Run `bundle lock && bundix`.
-- Run full test suite. Fix all failures.
-
-### Phase 13: Rails 7.2 → 8.0
-
-**Bookmark:** `ryan/rails-8.0`
-**Parent:** `ryan/ruby-3.4`
-**Ruby:** 3.4
-
-- `config.load_defaults '8.0'`.
-- `rails app:update`.
-- Kamal 2 for deployment, Thruster as default proxy, Propshaft replaces Sprockets as default (but Sprockets still works).
-- Solid Cable, Solid Cache, Solid Queue — new defaults but optional.
-- Authentication generator available.
-- `rails_admin` compatibility — verify works on Rails 8.0.
-- **Note:** Sprockets → Propshaft migration is optional but recommended.
-
-### Phase 14: Rails 8.0 → 8.1
-
-**Bookmark:** `ryan/rails-8.1`
-**Parent:** `ryan/rails-8.0`
-**Ruby:** 3.4
-
-- `config.load_defaults '8.1'`.
-- `rails app:update`.
-- Job continuations, structured events, local CI.
-- Verify all tests pass.
 
 ---
 
@@ -273,26 +171,20 @@ These are noted for future planning but not part of this effort:
 ### Performance
 - **word_association / species_association helper:** `application_helper.rb` loads ALL platforms, fields, focusgroups, locations, and species into memory every time it's called (per publication view). Cache per request or memoize.
 - **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
-- **ResizeObserver cleanup:** `charts.js` creates ResizeObservers for wordclouds that may not be fully garbage collected on Turbolinks navigation. Add cleanup on `turbolinks:before-cache`.
 - **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
-
-### Bugs
-- **Species image helper:** `species_helper.rb` uses `open(url)` on URLs as if they were local file paths, causing `No such file or directory` errors. Needs `URI.open` or `Net::HTTP`.
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
-- **Sprockets → Propshaft or importmap-rails:** Modernize the asset pipeline. (Recommended during or after Rails 8.0.)
 - **`owlcarousel-rails` → modern alternative:** The gem is unmaintained. Replace with a vanilla JS carousel or CSS-only solution.
 - **`nested_form` / `remotipart` → Turbo Streams:** Replace legacy remote form gems with Hotwire patterns.
 - **System tests:** Add Capybara-based browser tests for full user flow coverage.
 - **HABTM → `has_many :through`:** Convert join tables for better auditability and flexibility.
 - **Figaro → Rails credentials:** Migrate environment variable management.
 
-## Risk Notes
+## Lessons Learned
 
-- **Turbo migration (Phase 8):** `turbo-rails` 2.x JS does NOT compile through Sprockets on Rails 6.1. Must upgrade to Rails 7.0 first. Attempted and fully reverted — see Phase 8 notes.
-- **Stats page caching:** Do NOT attempt to cache stats graphs until Turbo Frames migration (Phase 9). Fragment caching + render_async don't mix. Multiple approaches tried and all caused worse issues.
-- **`rails_admin` 3.x (Rails 7.0):** Major rewrite. Config API changes, transitive dependencies removed. Cannot be deferred — `rails_admin` 2.x won't install on Rails 7.
-- **Ruby 3.2 kwargs:** Already handled in Phase 4. Test suite is critical for catching remaining issues.
-- **SQLite3 gem:** Version constraints may shift. The `~> 1.6.9` pin may need updating.
+- **Turbo requires Rails 7.0+:** `turbo-rails` 2.x JS does not compile through Sprockets on Rails 6.1. Attempted and reverted.
+- **Sprockets + Propshaft can't coexist:** Both register as the asset pipeline. RailsAdmin needed vendored CSS + importmap to work without Sprockets.
+- **render_async + Turbo Drive incompatible:** Inline `<script>` tags injected via `content_for` don't re-evaluate under Turbo Drive. Replaced with Turbo Frames.
+- **Nix bundlerEnv freezes bundler:** Use `nix shell nixpkgs#ruby_3_4 --command bundle lock` to bypass. Script at `scripts/generate_nix_gemfile_lock_and_gemset.sh`.
 - **`owlcarousel-rails`:** Currently commented out in `application.js` and `application.scss`. Not actively breaking anything.

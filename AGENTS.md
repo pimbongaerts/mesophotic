@@ -4,11 +4,11 @@ A Ruby on Rails application that serves as a curated database of scientific publ
 
 ## Stack
 
-- **Ruby** 3.2 / **Rails** 6.1
+- **Ruby** 3.4 / **Rails** 8.1
 - **Database**: SQLite3 (all environments)
-- **Frontend**: Sprockets, Bootstrap 3 (bootstrap-sass), jQuery, Turbolinks, CoffeeScript, SCSS
+- **Frontend**: Propshaft, importmap-rails, Turbo Drive + Turbo Frames, dartsass-rails, Bootstrap 5.3 (gem), vanilla JS, SCSS
 - **Auth**: Devise
-- **Admin**: RailsAdmin (mounted at `/admin/db`)
+- **Admin**: RailsAdmin (mounted at `/admin/db`, importmap asset_source, vendored CSS)
 - **Dev environment**: Nix flake (enter with `nix develop` or direnv)
 
 ## Development
@@ -39,9 +39,10 @@ rails test
 After changing the Gemfile, update the Nix gemset:
 
 ```sh
-bundle lock
-bundix
+sh scripts/generate_nix_gemfile_lock_and_gemset.sh
 ```
+
+This uses a clean Ruby from nixpkgs (bypassing the frozen bundlerEnv wrapper) to regenerate `Gemfile.lock` and `gemset.nix`.
 
 ## Architecture
 
@@ -58,7 +59,7 @@ bundix
 - HABTM join tables for many-to-many relationships
 - `before_save` callbacks for creating associated records from form inputs
 - View helpers for formatting and filtering logic
-- `render_async` for deferred partial loading
+- Turbo Frames for deferred partial loading (`render_in_turbo_frame` helper in ApplicationController)
 - Background jobs via Active Job (default async adapter)
 - Cron via `whenever` gem (`config/schedule.rb`)
 
@@ -68,11 +69,11 @@ bundix
 
 ### Frontend
 
-- Bootstrap 3 grid layout with custom SCSS
-- Bootstrap Icons (recently replaced glyphicons and Font Awesome)
-- jQuery UJS for AJAX
-- Turbolinks for page transitions
-- Asset pipeline via Sprockets; no Webpacker/esbuild/importmap
+- Bootstrap 5.3 grid layout with custom SCSS (compiled by dartsass-rails)
+- Bootstrap Icons
+- Turbo Drive for page transitions, Turbo Frames for deferred loading
+- importmap-rails for ES modules (Turbo); other JS via Propshaft script tags
+- Highcharts for charts, WordCloud2 for word clouds
 
 ## Code style
 
