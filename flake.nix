@@ -22,7 +22,9 @@
             withPlatformSuffix = attrs: { version = "${attrs.version}-${platformSuffix}"; };
           in {
             ffi = withPlatformSuffix;
+            google-protobuf = withPlatformSuffix;
             nokogiri = withPlatformSuffix;
+            sass-embedded = withPlatformSuffix;
             sqlite3 = withPlatformSuffix;
             psych = attrs: {
               buildInputs = [ pkgs.libyaml ];
