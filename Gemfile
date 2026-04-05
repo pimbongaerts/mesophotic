@@ -64,6 +64,8 @@ group :development, :test do
 end
 
 group :development do
+  gem 'brakeman'
+  gem 'bundler-audit'
   gem 'web-console'
 
   # Profiling
