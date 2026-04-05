@@ -102,4 +102,10 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :require_admin_or_editor!
+
+  # Wrap content in a turbo-frame tag for Turbo Frames lazy loading.
+  def render_in_turbo_frame(id)
+    content = yield
+    render html: helpers.turbo_frame_tag(id) { content.html_safe }.html_safe, layout: false
+  end
 end
