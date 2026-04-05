@@ -12,7 +12,7 @@ class SpeciesController < ApplicationController
   end
 
   def species_image
-    render partial: 'species_image', locals: { object: @species }
+    render_in_turbo_frame("species-image-#{params[:id]}") { render_to_string partial: 'species_image', locals: { object: @species } }
   end
 
   private

@@ -30,7 +30,7 @@
   <div class="col-sm-4">
     <div class="card" style="min-height: 200px; background-color: #f0f1f3;">
       <div class="card-header"><strong>Species Image</strong></div>
-      <%= render_async species_image_path(id: object.id) do %>
+      <%= turbo_frame_tag "species-image-#{object.id}", src: species_image_path(id: object.id) do %>
         <div class="d-flex justify-content-center align-items-center" style="min-height: 150px;">
           <div class="spinner-border text-secondary" role="status">
             <span class="visually-hidden">Loading...</span>
