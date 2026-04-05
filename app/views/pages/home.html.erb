@@ -50,7 +50,7 @@
       </div>
       <div class="card-body">
         <div id="feed-mastodon" style="display: none;">
-          <%= render_async mastodon_feed_pages_path do %>
+          <%= turbo_frame_tag "mastodon-feed", src: mastodon_feed_pages_path do %>
             <div class="text-center text-muted py-4">
               <div class="spinner-border spinner-border-sm me-2" role="status"></div>
               Loading feed...
@@ -58,7 +58,7 @@
           <% end %>
         </div>
         <div id="feed-bluesky">
-          <%= render_async bluesky_feed_pages_path do %>
+          <%= turbo_frame_tag "bluesky-feed", src: bluesky_feed_pages_path do %>
             <div class="text-center text-muted py-4">
               <div class="spinner-border spinner-border-sm me-2" role="status"></div>
               Loading feed...

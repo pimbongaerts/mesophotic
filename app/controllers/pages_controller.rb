@@ -14,7 +14,7 @@ class PagesController < ApplicationController
       u = User.where(mastodon_handle: s.map { |status| ["@#{status.username}", status.username] }.flatten)
       [s, u]
     end
-    render partial: 'mastodon_feed', locals: { statuses: statuses, users: users }
+    render_in_turbo_frame("mastodon-feed") { render_to_string partial: 'mastodon_feed', locals: { statuses: statuses, users: users } }
   end
 
   def bluesky_feed
@@ -23,7 +23,7 @@ class PagesController < ApplicationController
       u = User.where(bluesky_handle: s.map(&:username))
       [s, u]
     end
-    render partial: 'bluesky_feed', locals: { statuses: statuses, users: users }
+    render_in_turbo_frame("bluesky-feed") { render_to_string partial: 'bluesky_feed', locals: { statuses: statuses, users: users } }
   end
 
   def inside
@@ -116,13 +116,13 @@ class PagesController < ApplicationController
       word_cloud = publications.word_cloud(40)
       word_cloud.present? ? render_to_string(partial: 'shared/wordcloud', object: word_cloud, locals: { title: 'publication_contents' }) : ""
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("member-keywords-#{params[:id]}") { cached }
   end
 
   def member_research_summary
     cached = Rails.cache.fetch(["member_research_summary", params[:id], Publication.maximum(:updated_at).to_i]) do
       render_to_string partial: 'research_summary', locals: { user: User.find(params[:id]) }
     end
-    render html: cached.html_safe
+    render_in_turbo_frame("member-research-summary-#{params[:id]}") { cached }
   end
 end
