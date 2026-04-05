@@ -81,7 +81,7 @@
 | 5 | CSV export streaming | Done |
 | 6 | ResizeObserver cleanup in charts.js | Done |
 | 7 | Species image bug (open() → URI.open, HTTPS) | Done |
-| 8 | MiniMagick → VIPS | Todo |
+| 8 | ~~MiniMagick → VIPS~~ | Dropped (libvips not available on Dreamhost) |
 
 ## UI
 
@@ -171,7 +171,7 @@ These are noted for future planning but not part of this effort:
 ### Performance
 - **word_association / species_association helper:** `application_helper.rb` loads ALL platforms, fields, focusgroups, locations, and species into memory every time it's called (per publication view). Cache per request or memoize.
 - **CSV export memory:** `Publication#to_csv` builds large in-memory hashes for all associations before generating CSV. Consider streaming.
-- **MiniMagick → VIPS:** Switch Active Storage variant processor from MiniMagick (loads full image into memory) to VIPS (streams, much lower memory). Requires installing `libvips` on dev (Nix flake) and production (Dreamhost VPS). `ruby-vips` gem is already in the bundle.
+- ~~**MiniMagick → VIPS:**~~ Dropped. `libvips` is not available on Dreamhost shared hosting and can't be compiled without `meson`. Not worth the effort.
 
 ### Technical Modernization
 - **jQuery → vanilla JS / Stimulus:** Replace jQuery DOM manipulation and AJAX with Stimulus controllers and `fetch()`.
