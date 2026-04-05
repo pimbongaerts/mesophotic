@@ -388,6 +388,17 @@
     };
     version = "5.3.8";
   };
+  brakeman = {
+    dependencies = ["racc"];
+    groups = ["development"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0vyg9l6xivamb49r4kzkcw12r9x943kv79wsvwslhm1qjvx23ybv";
+      type = "gem";
+    };
+    version = "8.0.4";
+  };
   builder = {
     groups = ["default" "development"];
     platforms = [];
@@ -397,6 +408,17 @@
       type = "gem";
     };
     version = "3.3.0";
+  };
+  bundler-audit = {
+    dependencies = ["thor"];
+    groups = ["development"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1sdlr4rj7x5nbrl8zkd3dqdg4fc50bnpx37rl0l0szg4f5n7dj41";
+      type = "gem";
+    };
+    version = "0.9.3";
   };
   choice = {
     groups = ["default" "development" "test"];
