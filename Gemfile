@@ -36,7 +36,6 @@ gem 'figaro'
 gem 'histogram'
 gem 'paper_trail'
 gem 'rails_admin'
-gem 'render_async'
 gem 'switch_user'
 
 # ActiveStorage, wont be required after we migrate to Rails 6+

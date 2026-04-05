@@ -193,7 +193,6 @@ GEM
     drb (2.2.3)
     erb (6.0.2)
     erubi (1.13.1)
-    ffi (1.17.4)
     ffi (1.17.4-arm64-darwin)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
@@ -382,7 +381,6 @@ GEM
     redcarpet (3.6.1)
     reline (0.6.3)
       io-console (~> 0.5)
-    render_async (2.1.11)
     request_store (1.7.0)
       rack (>= 1.4)
     responders (3.2.0)
@@ -486,7 +484,6 @@ DEPENDENCIES
   rails-erd
   rails_admin
   redcarpet
-  render_async
   rss
   spring
   sqlite3 (~> 2.0)
