@@ -22,14 +22,7 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :terser
-  config.assets.css_compressor = :sass
-
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
-
-  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
+  # Propshaft serves assets. dartsass-rails compiles CSS with --style=compressed.
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = 'assets.mesophotic.org'
@@ -93,10 +86,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   ### Extra settings
-
-  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
-  # yet still be able to expire them through the digest params.
-  config.assets.digest = true
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

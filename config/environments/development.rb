@@ -44,8 +44,6 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
 
   # Enable server timing headers.
   config.server_timing = true
@@ -69,9 +67,5 @@ Rails.application.configure do
     user_name: ENV["SMTP_USER"],
     password: ENV["SMTP_PWD"]
   }
-
-  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
-  # yet still be able to expire them through the digest params.
-  config.assets.digest = true
 
 end
