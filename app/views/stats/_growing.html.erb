@@ -7,10 +7,10 @@
   <div class="card-body">
     <div class="row">
       <div class="col-sm-6" style="min-height: 330px;">
-        <%= render_async growing_depth_range_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-growing_depth_range", src: growing_depth_range_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 330px;">
-        <%= render_async growing_publications_over_time_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-growing_publications_over_time", src: growing_publications_over_time_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
 
@@ -18,10 +18,10 @@
 
     <div class="row">
       <div class="col-sm-6" style="min-height: 230px;">
-        <%= render_async growing_locations_over_time_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-growing_locations_over_time", src: growing_locations_over_time_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 230px;">
-        <%= render_async growing_authors_over_time_path(:status => @status, :year => @year) %>
+        <%= turbo_frame_tag "stats-growing_authors_over_time", src: growing_authors_over_time_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
   </div>
