@@ -35,8 +35,8 @@
                 <i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i>
               <% end %>
               <% if current_user.try(:admin?) && current_user.id != user.id %>
-                <%= link_to admin_user_path(user.id), method: :delete,
-                            data: { confirm: "Delete #{user.email}? This cannot be undone." },
+                <%= link_to admin_user_path(user.id),
+                            data: { turbo_method: :delete, turbo_confirm: "Delete #{user.email}? This cannot be undone." },
                             class: "text-danger icon-btn" do %>
                   <i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i>
                 <% end %>

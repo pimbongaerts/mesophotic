@@ -31,30 +31,26 @@
 	  <% for field in publication.fields %>
 	    <span class="badge bg-success"><%= field.description %>
 	  	<%= link_to "x", admin_publication_field_path(publication, field),
-	  									 data: {:confirm => 'Are you sure?'},
-	  									 :method => :delete %></span>
+	  									 data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } %></span>
 	  <% end %>
 	  <br>
 		<strong>Focusgroups</strong>:
 	  <% for focusgroup in publication.focusgroups %>
 	    <span class="badge bg-info"><%= focusgroup.description %>
 	  	<%= link_to "x", admin_publication_focusgroup_path(publication, focusgroup),
-	  									 data: {:confirm => 'Are you sure?'},
-	  									 :method => :delete %></span>
+	  									 data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } %></span>
 	  <% end %><br>
 		<strong>Platforms</strong>:
 	  <% for platform in publication.platforms %>
 	    <span class="badge bg-warning text-dark"><%= platform.description %>
 	  	<%= link_to "x", admin_publication_platform_path(publication, platform),
-	  									 data: {:confirm => 'Are you sure?'},
-	  									 :method => :delete %></span>
+	  									 data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } %></span>
 	  <% end %><br>
 		<strong>Locations</strong>:
 	  <% for location in publication.locations %>
 	    <span class="badge bg-danger"><%= location.description %>
 	  	<%= link_to "x", admin_publication_location_path(publication, location),
-	  									 data: {:confirm => 'Are you sure?'},
-	  									 :method => :delete %></span>
+	  									 data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } %></span>
 	  <% end %><br>
 	  <strong>Depth range</strong>:
 	 	<%= publication.min_depth %>- <%= publication.max_depth %> m<br>
@@ -78,8 +74,8 @@
       <% end %>
     <% end %>
     <%= link_to 'Edit', edit_publication_path(publication) %><br>
-  	<%= link_to 'Delete', publication, method: :delete,
-  				data: { confirm: 'Are you sure?' } %>
+  	<%= link_to 'Delete', publication,
+  				data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
   </td>
 </tr>
 
