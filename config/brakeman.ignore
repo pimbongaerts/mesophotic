@@ -51,11 +51,6 @@
       "note": "Uses GROUP_CONCAT of model data (species names), not user input"
     },
     {
-      "fingerprint": "c013150171c46be8b97b5ecaaa179672c40bc20a0d5d402ea00628e906d4ab3c",
-      "code": "format_publication_citation(Post.friendly.find(params[:id]).featured_publication)",
-      "note": "format_publication_citation returns intentional HTML from trusted model data"
-    },
-    {
       "fingerprint": "d16c85d58786b42f2f74fa4b29389175190e134989b5f7ba673b1e20691df6e6",
       "code": "Organisation.joins(objects_table_name.to_sym).where(\"#{objects_table_name}.id IN (?)\", objects.map(&",
       "note": "objects_table_name derived from model class, not user input"

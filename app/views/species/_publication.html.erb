@@ -1,7 +1,7 @@
 <tr>
   <%# Formatted publication %>
   <td>
-    <%= format_publication_citation(publication).html_safe %><br>
+    <%= format_publication_citation(publication) %><br>
     <small><font color="red">
       <%= publication.species_relevance(object) %> occurrence(s)
     </font></small>

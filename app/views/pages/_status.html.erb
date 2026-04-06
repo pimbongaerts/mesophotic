@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="mt-1 mastodon-content" style="font-size: 0.9em;">
-      <%= status.content.html_safe %>
+      <%= sanitize status.content, tags: %w[p br a span em strong], attributes: %w[href class rel target] %>
     </div>
   </div>
 </div>
