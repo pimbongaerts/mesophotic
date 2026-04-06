@@ -169,7 +169,7 @@ class Publication < ApplicationRecord
 
   scope :sift, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
-      fields = search_params["search_fields"] || []
+      fields = (search_params["search_fields"] || []) & PUBLICATION_SEARCH_FIELDS
       clause = fields.map { |field| "LOWER(#{field}) LIKE ?"}.join(" OR ")
       terms = Array.new(fields.count, "%#{search_term.downcase}%")
       select("publications.*")
@@ -185,7 +185,7 @@ class Publication < ApplicationRecord
     if search_term.present?
       st = ActiveRecord::Base.sanitize_sql_for_conditions ["?", search_term]
 
-      filter = (search_params["search_fields"] || PUBLICATION_SEARCH_FIELDS).map { |field|
+      filter = ((search_params["search_fields"] || PUBLICATION_SEARCH_FIELDS) & PUBLICATION_SEARCH_FIELDS).map { |field|
         "(IFNULL(LENGTH(#{field}), 0) - IFNULL(LENGTH(REPLACE(LOWER(#{field}), LOWER(#{st}), '')), 0))"
       }.join(" + ")
 
