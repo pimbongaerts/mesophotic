@@ -15,8 +15,9 @@
       <tr>
         <td>
           <% if user.publications.count > 0 or user.research_interests %>
-            <%= link_to "#{user.first_name} <strong>#{user.last_name}</strong>".html_safe,
-                        member_pages_path(user.id), style: "text-decoration: none;" %>
+            <%= link_to member_pages_path(user.id), style: "text-decoration: none;" do %>
+              <%= user.first_name %> <strong><%= user.last_name %></strong>
+            <% end %>
           <% else %>
             <%= user.first_name %> <strong><%= user.last_name %></strong>
           <% end %>

@@ -4,10 +4,9 @@ module PublicationsHelper
     return "…" if contents.blank?
 
     start = [0, contents.downcase.index(search_term.downcase) || 0 - 300].max
-    snippet = contents[start, 400]
-                      .squish
-                      .gsub(/(#{search_term})/i, '<strong>\1</strong>')
-    "…#{snippet}…".html_safe
+    snippet = ERB::Util.html_escape(contents[start, 400].squish)
+    highlighted = snippet.gsub(/(#{Regexp.escape(search_term)})/i, '<strong>\1</strong>')
+    "…#{highlighted}…".html_safe
   end
 
   # Count occurrence of word in contents
@@ -55,53 +54,63 @@ module PublicationsHelper
           end
         end
       end
-      # If none of the users represent the author then output unformatted
+      # If none of the users represent the author then output escaped
       if not found_user
-        authors_formatted << author
+        authors_formatted << ERB::Util.html_escape(author)
       end
     end
-    return authors_formatted.join(", ").html_safe
+    return safe_join(authors_formatted, ", ")
   end
 
   # Return formatted Publication
   def format_publication_citation(publication)
+    h = method(:sanitize_and_escape)
     publication_title = link_to truncate(publication.title, length: 150),
                                 publication
     formatted_authors = format_authors(publication)
-    citation = "<strong>#{publication_title}</strong>" \
-               "<strong> | #{publication.publication_format}</strong><br>" \
-               "#{formatted_authors} " \
-               "(#{publication.publication_year})<br>"
+    parts = []
+    parts << content_tag(:strong, publication_title)
+    parts << content_tag(:strong, " | #{h.(publication.publication_format)}")
+    parts << tag.br
+    parts << formatted_authors
+    parts << " (#{h.(publication.publication_year)})"
+    parts << tag.br
     if publication.scientific_article?
-      publication_journal = publication.journal.name if publication.journal
-      citation << "<em>#{publication_journal}</em> "
-      if !publication.pages.blank? && !publication.volume.blank?
-        citation << "#{publication.volume}:#{publication.pages} "
+      parts << content_tag(:em, h.(publication.journal&.name)) << " "
+      if publication.pages.present? && publication.volume.present?
+        parts << "#{h.(publication.volume)}:#{h.(publication.pages)} "
       end
     elsif publication.chapter?
-      citation << "in: <em>#{publication.book_title}</em>" \
-                  " (#{publication.book_publisher})" \
-                  " by #{publication.book_authors}"
+      parts << "in: " << content_tag(:em, h.(publication.book_title))
+      parts << " (#{h.(publication.book_publisher)})"
+      parts << " by #{h.(publication.book_authors)}"
     else
-      citation << "<em>#{publication.book_publisher}</em> "
+      parts << content_tag(:em, h.(publication.book_publisher)) << " "
     end
-    return citation
+    safe_join(parts)
+  end
+
+  private
+
+  def sanitize_and_escape(value)
+    ERB::Util.html_escape(value.to_s)
   end
 
   def search_param title, options, param_name, params, scrollable=false
-    open_tag = scrollable ? "<ul class=\"scrollable\">" : "<ul>"
-    heading = title.present? ? "<h5>#{title}</h5>" : ""
-    return (heading + open_tag + options.map do |option|
+    parts = []
+    parts << content_tag(:h5, title) if title.present?
+    list_items = options.map do |option|
       identifier = "search_params[#{param_name}][#{option}]"
-      "<li>" \
-      "  <label for=\"#{identifier}\">" \
-      "    <input type=\"checkbox\" class=\"form-check-input\"" \
-      "           name=\"#{identifier}\"" \
-      "           id=\"#{identifier}\"" \
-      "           #{params[:search_params][param_name].try(:include?, option) ? "checked=\"checked\"" : ""}>" \
-      "    #{option.length > 3 ? option.titleize : option.upcase}" \
-      "  </label>" \
-      "</li>"
-    end.join + "</ul>").html_safe
+      checked = params[:search_params][param_name].try(:include?, option)
+      label_text = option.length > 3 ? option.titleize : option.upcase
+      content_tag(:li) do
+        label_tag(identifier) do
+          check_box_tag(identifier, option, checked, id: identifier, class: "form-check-input") +
+          " #{label_text}"
+        end
+      end
+    end
+    parts << content_tag(:ul, safe_join(list_items), class: (scrollable ? "scrollable" : nil))
+    safe_join(parts)
   end
 end

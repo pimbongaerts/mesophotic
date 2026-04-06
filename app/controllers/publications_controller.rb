@@ -268,14 +268,19 @@ class PublicationsController < ApplicationController
       )
     end
 
+    ALLOWED_SEARCH_KEYS = %w[
+      search_fields depth_range year_range types formats
+      characteristics locations focusgroups platforms fields
+    ].freeze
+
     def search_params params
       return params if params.blank?
 
-      # Ensure params are in the format key => [option], as checklists are
-      # posted with the format key => {option => option}
-      params.permit!.to_h.reduce({}) { |ps, p|
-        ps.merge(p.first => p.last.try(:keys) || p.last)
-      }
+      # Only process known search keys. Checklists are posted as
+      # key => {option => option}, so normalize to key => [option].
+      params.to_unsafe_h
+        .slice(*ALLOWED_SEARCH_KEYS)
+        .transform_values { |v| v.is_a?(Hash) ? v.keys : v }
     end
 
     def is_editor_or_admin
