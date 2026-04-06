@@ -149,9 +149,9 @@
               Contributed by: <%= link_to @publication.contributor.full_name_normal, member_pages_path(@publication.contributor.id) %><br>
             <% end %>
             <% if @publication.validations.count > 0 %>
-              Validated by: <%= @publication.validations.map { |v|
+              Validated by: <%= safe_join(@publication.validations.map { |v|
                 link_to v.user.full_name_normal, member_pages_path(v.user.id)
-              }.join(" | ").html_safe %>
+              }, " | ") %>
             <% end %>
           </small>
         </div>

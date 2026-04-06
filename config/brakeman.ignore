@@ -1,0 +1,91 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "0d00604dd77eebca0a0304a08a489c83943b06649b844c8ce6bda3439e041d0d",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "12de5bae294acab57781ad74982b7fb662653f68a1f732298ca11b90ba59e24d",
+      "code": "User.joins(objects_table_name.to_sym).where(\"#{objects_table_name}.id IN (?)\", objects.map(&:id))",
+      "note": "objects_table_name derived from model class, not user input"
+    },
+    {
+      "fingerprint": "2b3fbc5e9a96b20c5935e9feee473bcb767028da7f6e4de3f975cf0416287f9e",
+      "code": "link_to(Publication.includes(:users, :journal, :validations, :sites => :location).find(params[:id]).",
+      "note": "DOI and Scholar URLs constructed from model data, not freeform user input"
+    },
+    {
+      "fingerprint": "3ec8f8cddac157936c9dfaeaa2abebacbc3c9fcb8a62009c34f582a2c7abff13",
+      "code": "Publication.send((params[:validation_type] or \"all\"), *([current_user] or []))",
+      "note": "Allowlisted against Validation::VALIDATION_TYPES; Brakeman cannot trace conditional assignment"
+    },
+    {
+      "fingerprint": "43508000164bbde4856ad8f597c2b38f59af286113e814a3587957a9fe95a40a",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "548bb1062183cff0d5c47441f37af4112dc7f4f38178182c469b5b9596094713",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "8087cc70bd98cd46a04eec4ea1f8bb12e57878273fb8fcb2c2cc901931c80ef9",
+      "code": "keyword.joins(objects_table_name.to_sym).where(\"#{objects_table_name}.id IN (?)\", objects.map(&:id))",
+      "note": "table_name and objects_table_name derived from model class, not user input"
+    },
+    {
+      "fingerprint": "85ee3aed7912a844aacdb8426ee51533e14f7af7395d96cfa34beddd410b0bd4",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "8e1c35cc70b927b7716a24874df031adf82c16a6ec2ff146c600d06435ae24e6",
+      "code": "link_to(Publication.includes(:users, :journal, :validations, :sites => :location).find(params[:id]).",
+      "note": "DOI and Scholar URLs constructed from model data, not freeform user input"
+    },
+    {
+      "fingerprint": "bada684386aab3a617b28844eb99c161de2b29d5e415d2ce006a3218742c6a2a",
+      "code": "ActiveRecord::Base.connection.execute(\"\\n      WITH RECURSIVE split(content, last, rest) AS (\\n     ",
+      "note": "Uses GROUP_CONCAT of model data (species names), not user input"
+    },
+    {
+      "fingerprint": "c013150171c46be8b97b5ecaaa179672c40bc20a0d5d402ea00628e906d4ab3c",
+      "code": "format_publication_citation(Post.friendly.find(params[:id]).featured_publication)",
+      "note": "format_publication_citation returns intentional HTML from trusted model data"
+    },
+    {
+      "fingerprint": "d16c85d58786b42f2f74fa4b29389175190e134989b5f7ba673b1e20691df6e6",
+      "code": "Organisation.joins(objects_table_name.to_sym).where(\"#{objects_table_name}.id IN (?)\", objects.map(&",
+      "note": "objects_table_name derived from model class, not user input"
+    },
+    {
+      "fingerprint": "d8e34f39f4eec3cfe2dd0d172a4b1eb3dd68f612a2f50a1d59001b57b6af28c8",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "da85376c479728306ed9254e643f728a7ac6a49fa39729de2f36def3dbd7f60b",
+      "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find",
+      "note": "URLs validated by model (http/https URI format) or constructed from handles by model methods"
+    },
+    {
+      "fingerprint": "f104b0f0b745340d7cd778fdf3fea669ddc39a0b949593d4f902f0a1b8975b2a",
+      "code": "l(Publication.maximum(:updated_at).to_date, :format => :long)",
+      "note": "Date formatting via l() helper, not user-controlled"
+    },
+    {
+      "fingerprint": "f281a026827a271344a7d13c5f75e3ca69b1c2df716a7a5f462f9c4753a89ae9",
+      "code": "params.require(:user).permit(:email, :password, :password_confirmation, :role, :locked, :twitter_han",
+      "note": "Admin-only controller (require_admin!), role/locked validated in update action"
+    },
+    {
+      "fingerprint": "e866a9a6dfc6dca446bb3a64e137d6eeeb540675e5e7f3c56e81541ba6232260",
+      "code": "unscoped.select(\"publications.id, #{\"(#{((search_params[\"search_fields\"] or [\"title\", \"abstract\", \"c",
+      "note": "search_fields intersected with PUBLICATION_SEARCH_FIELDS allowlist; Brakeman cannot trace"
+    }
+  ],
+  "updated": "2026-04-06",
+  "brakeman_version": "8.0.4"
+}
