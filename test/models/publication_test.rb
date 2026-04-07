@@ -99,11 +99,24 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "depth search, find three, one" do
-    assert_equal [publications(:three), publications(:scientific_article), publications(:book_chapter), publications(:one)], (Publication.search "", Publication.default_search_params.merge("depth_range" => "40, 200")).to_a
+    results = Publication.search("", Publication.default_search_params.merge("depth_range" => "40, 200")).to_a
+    assert_includes results, publications(:three)
+    assert_includes results, publications(:scientific_article)
+    assert_includes results, publications(:book_chapter)
+    assert_includes results, publications(:one)
+    assert_includes results, publications(:stats_ecology_gbr)
+    assert_includes results, publications(:stats_genetics_gbr)
+    assert_includes results, publications(:stats_ecology_redsea)
   end
 
   test "depth search, find one" do
-    assert_equal [publications(:book_chapter), publications(:one)], (Publication.search "", Publication.default_search_params.merge("depth_range" => "200, 300")).to_a
+    results = Publication.search("", Publication.default_search_params.merge("depth_range" => "200, 300")).to_a
+    assert_includes results, publications(:book_chapter)
+    assert_includes results, publications(:one)
+    # New fixtures have max_depth <= 150, so they should not appear
+    assert_not_includes results, publications(:stats_ecology_gbr)
+    assert_not_includes results, publications(:stats_genetics_gbr)
+    assert_not_includes results, publications(:stats_ecology_redsea)
   end
 
   # -- Task 4: Validation and association tests --

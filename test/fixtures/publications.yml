@@ -83,6 +83,61 @@ scientific_article:
   contributor: admin_user
   created_at: "2024-01-01 00:00:00"
   updated_at: "2024-01-01 00:00:00"
+  fields: ecology, genetics
+  focusgroups: corals
+  platforms: scuba, rov
+  locations: great_barrier_reef
+
+stats_ecology_gbr:
+  title: "Ecology of mesophotic reefs at the Great Barrier Reef"
+  authors: "Alpha, A.; Beta, B."
+  publication_year: 2020
+  publication_type: "scientific"
+  publication_format: "article"
+  min_depth: 30
+  max_depth: 100
+  original_data: true
+  mesophotic: true
+  mce: true
+  journal: open_journal
+  fields: ecology
+  focusgroups: corals
+  platforms: scuba
+  locations: great_barrier_reef
+
+stats_genetics_gbr:
+  title: "Genetic connectivity of deep reef populations"
+  authors: "Gamma, G.; Delta, D."
+  publication_year: 2020
+  publication_type: "scientific"
+  publication_format: "article"
+  min_depth: 40
+  max_depth: 150
+  original_data: true
+  mesophotic: true
+  mce: true
+  journal: closed_journal
+  fields: genetics
+  focusgroups: corals
+  platforms: rov
+  locations: great_barrier_reef
+
+stats_ecology_redsea:
+  title: "Mesophotic fish assemblages of the Red Sea"
+  authors: "Epsilon, E.; Zeta, Z."
+  publication_year: 2020
+  publication_type: "scientific"
+  publication_format: "article"
+  min_depth: 30
+  max_depth: 120
+  original_data: true
+  mesophotic: true
+  mce: true
+  journal: open_journal
+  fields: ecology
+  focusgroups: fish
+  platforms: scuba
+  locations: red_sea
 
 book_chapter:
   title: "Chapter 5: Deep Reef Refugia"
