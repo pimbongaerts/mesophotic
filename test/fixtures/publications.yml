@@ -87,6 +87,7 @@ scientific_article:
   focusgroups: corals
   platforms: scuba, rov
   locations: great_barrier_reef
+  sites: osprey_reef
 
 stats_ecology_gbr:
   title: "Ecology of mesophotic reefs at the Great Barrier Reef"

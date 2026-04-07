@@ -7,6 +7,9 @@ admin_user:
   locked: false
   confirmed_at: "2024-01-01 00:00:00"
   organisation: csiro
+  platforms: scuba, rov
+  photos: cc_photo
+  publications: scientific_article
 
 editor_user:
   email: "editor@example.com"
@@ -25,6 +28,8 @@ regular_user:
   role: "member"
   locked: false
   confirmed_at: "2024-01-01 00:00:00"
+  platforms: scuba
+  publications: scientific_article
 
 locked_user:
   email: "locked@example.com"
