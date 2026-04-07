@@ -1,6 +1,6 @@
 # Mesophotic.org Modernization Design
 
-**Date:** 2026-03-25 (last updated 2026-04-05)
+**Date:** 2026-03-25 (last updated 2026-04-07)
 **Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 8.1 / Ruby 3.4, with a baseline test suite as a safety net.
 
 ## Current State
@@ -74,10 +74,10 @@
 
 | # | Description | Status |
 |---|-------------|--------|
-| 1 | Brakeman scan + fix findings | Todo |
-| 2 | OWASP top 10 audit (SQL injection, XSS, CSRF, mass assignment) | Todo |
-| 3 | Content Security Policy review | Todo |
-| 4 | Dependency vulnerability scan (bundler-audit) | Todo |
+| 1 | Brakeman scan + fix findings | Done |
+| 2 | OWASP top 10 audit (access control, auth, XSS, SQL injection) | Done |
+| 3 | Content Security Policy (enforced, nonces, vendored Bootstrap Icons) | Done |
+| 4 | Dependency vulnerability scan (bundler-audit) | Done |
 
 ## Performance
 
