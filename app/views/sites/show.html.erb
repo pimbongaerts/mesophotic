@@ -35,7 +35,7 @@
           <strong>Research details</strong> (top 5 / category)
         </div>
         <div class="card-body">
-          <%= turbo_frame_tag "site-research-details-#{@site.id}", src: site_research_details_path(id: @site.id), loading: :lazy %>
+          <%= turbo_frame_tag "site-research-details-#{@site.id}", src: site_research_details_path(id: @site.id), loading: :lazy, target: "_top" %>
         </div>
       </div>
     <% end %>

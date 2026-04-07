@@ -163,7 +163,7 @@
       <div class="card">
         <div class="card-header"><strong>Author Profiles</strong></div>
         <div class="card-body">
-          <%= turbo_frame_tag "publication-authors-#{@publication.id}", src: publication_authors_path(id: @publication.id), loading: :lazy %>
+          <%= turbo_frame_tag "publication-authors-#{@publication.id}", src: publication_authors_path(id: @publication.id), loading: :lazy, target: "_top" %>
         </div>
       </div>
     <% end %>
