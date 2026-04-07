@@ -40,7 +40,7 @@
         <strong>Research Keywords</strong>
       </div>
       <div class="card-body" style="min-height: 232px;">
-         <%= turbo_frame_tag "summary-keywords-#{title.downcase}-#{object.id}", src: summary_keywords_path(model: title.downcase, id: object.id), loading: :lazy %>
+         <%= turbo_frame_tag "summary-keywords-#{title.downcase}-#{object.id}", src: summary_keywords_path(model: title.downcase, id: object.id), loading: :lazy, target: "_top" %>
       </div>
     </div>
 
@@ -50,7 +50,7 @@
           <strong>Researchers</strong> (that published on this location)
         </div>
         <div class="card-body">
-          <%= turbo_frame_tag "summary-researchers-#{title.downcase}-#{object.id}", src: summary_researchers_path(model: title.downcase, id: object.id), loading: :lazy %>
+          <%= turbo_frame_tag "summary-researchers-#{title.downcase}-#{object.id}", src: summary_researchers_path(model: title.downcase, id: object.id), loading: :lazy, target: "_top" %>
         </div>
       </div>
     <% end %>
@@ -82,7 +82,7 @@
           <strong>Publication Summary</strong> (top 5 / category)
         </div>
         <div class="card-body">
-          <%= turbo_frame_tag "summary-publications-#{title.downcase}-#{object.id}", src: summary_publications_path(model: title.downcase, id: object.id), loading: :lazy %>
+          <%= turbo_frame_tag "summary-publications-#{title.downcase}-#{object.id}", src: summary_publications_path(model: title.downcase, id: object.id), loading: :lazy, target: "_top" %>
         </div>
       </div>
     <% end %>
