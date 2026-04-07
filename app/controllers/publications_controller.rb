@@ -14,11 +14,7 @@ class PublicationsController < ApplicationController
   def index
     respond_to do |format|
       params[:search_params] = search_params(params[:search_params]) || Publication.default_search_params
-      validation_type = Validation::VALIDATION_TYPES.include?(params[:validation_type]) ? params[:validation_type] : 'all'
-      args = validation_type == 'expired' ? [current_user] : []
-
-      @publications = Publication
-        .send(validation_type, *args)
+      @publications = publications_for_validation_type(params[:validation_type])
         .search(params[:search], params[:search_params], is_editor_or_admin)
 
       format.html {
@@ -281,6 +277,16 @@ class PublicationsController < ApplicationController
       params.to_unsafe_h
         .slice(*ALLOWED_SEARCH_KEYS)
         .transform_values { |v| v.is_a?(Hash) ? v.keys : v }
+    end
+
+    def publications_for_validation_type(type)
+      case type
+      when 'validated'    then Publication.validated
+      when 'unvalidated'  then Publication.unvalidated
+      when 'expired'      then Publication.expired(current_user)
+      when 'all_expired'  then Publication.all_expired
+      else                     Publication.all
+      end
     end
 
     def is_editor_or_admin

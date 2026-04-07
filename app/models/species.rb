@@ -30,10 +30,11 @@ class Species < ApplicationRecord
 
   scope :names, -> () {
     names = select("GROUP_CONCAT(LOWER(TRIM(name)), ' ') AS names").first.names
-    
+    quoted_names = ActiveRecord::Base.connection.quote(names)
+
     ActiveRecord::Base.connection.execute("
       WITH RECURSIVE split(content, last, rest) AS (
-        VALUES('', '', \"#{names}\")
+        VALUES('', '', #{quoted_names})
         UNION ALL
         SELECT 
           CASE 

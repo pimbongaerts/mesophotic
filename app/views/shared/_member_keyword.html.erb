@@ -1,9 +1,9 @@
 <p>
   <strong><%= title %></strong><br>
-  <% objects_table_name = objects.first.class.table_name %>
+  <% assoc_tbl = ActiveRecord::Base.connection.quote_table_name(objects.first.class.table_name) %>
   <%
-    users = User.joins(objects_table_name.to_sym)
-                .where("#{objects_table_name}.id IN (?)", objects.map(&:id))
+    users = User.joins(objects.first.class.table_name.to_sym)
+                .where("#{assoc_tbl}.id IN (?)", objects.map(&:id))
                 .select("users.last_name, users.id, count(users.id) AS count")
                 .group("users.id")
                 .order("count DESC")
