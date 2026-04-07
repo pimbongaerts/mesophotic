@@ -91,9 +91,9 @@
 | 6 | ResizeObserver cleanup in charts.js | Done |
 | 7 | Species image bug (open() → URI.open, HTTPS) | Done |
 | 8 | ~~MiniMagick → VIPS~~ | Dropped (libvips not available on Dreamhost) |
-| 9 | SQL query profiling + slow query analysis | Todo |
-| 10 | Missing database indexes audit | Todo |
-| 11 | Remaining N+1 query audit (bullet gem or log analysis) | Todo |
+| 9 | SQL query profiling + missing indexes | Done |
+| 10 | ~~Missing database indexes audit~~ | Covered by #9 |
+| 11 | N+1 query audit (bullet gem, ongoing detection) | Done |
 
 ## UI
 
