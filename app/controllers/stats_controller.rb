@@ -55,6 +55,7 @@ class StatsController < ApplicationController
   end
 
   def growing_locations_over_time
+    @publications = @publications.includes(:locations)
     render_in_turbo_frame("stats-growing_locations_over_time") { render_to_string partial: "growing_locations_over_time" }
   end
 
@@ -111,6 +112,7 @@ class StatsController < ApplicationController
   end
 
   def world_publications
+    @publications = @publications.includes(:locations)
     render_in_turbo_frame("stats-world_publications") { render_to_string partial: "world_publications" }
   end
 

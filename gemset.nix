@@ -409,6 +409,17 @@
     };
     version = "3.3.0";
   };
+  bullet = {
+    dependencies = ["activesupport" "uniform_notifier"];
+    groups = ["development"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1zwq7g98c1mdigahb50c980a0fcc4ib1m9ivmgf3f8gc6qk7wjv0";
+      type = "gem";
+    };
+    version = "8.1.0";
+  };
   bundler-audit = {
     dependencies = ["thor"];
     groups = ["development"];
@@ -1557,6 +1568,16 @@
       type = "gem";
     };
     version = "0.4.0";
+  };
+  uniform_notifier = {
+    groups = ["default" "development"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "17ffzyq6482yn27r7rz2k3zslf9jigbz383d90c68vznarapi1s7";
+      type = "gem";
+    };
+    version = "1.18.0";
   };
   uri = {
     groups = ["default" "development" "test"];
