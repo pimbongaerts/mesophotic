@@ -59,6 +59,7 @@ class PublicationsController < ApplicationController
   end
 
   def show
+    @publication = Publication.includes(:users, :journal, { validations: :user }, sites: :location).find(params[:id])
   end
 
   def behind
@@ -177,7 +178,7 @@ class PublicationsController < ApplicationController
 
   private
     def set_publication
-      @publication = Publication.includes(:users, :journal, { validations: :user }, sites: :location).find(params[:id])
+      @publication = Publication.find(params[:id])
     rescue
       redirect_back fallback_location: publications_path
     end
