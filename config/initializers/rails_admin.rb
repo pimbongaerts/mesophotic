@@ -5,12 +5,10 @@ RailsAdmin.config do |config|
 
   ## == Devise ==
   config.authenticate_with do
-     warden.authenticate! scope: :user
-   end
+    warden.authenticate! scope: :user
+    redirect_to main_app.root_path unless current_user&.admin?
+  end
   config.current_user_method(&:current_user)
-
-  ## == Pundit ==
-  # config.authorize_with :pundit
 
   ## == PaperTrail ==
   #config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
