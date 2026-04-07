@@ -53,7 +53,7 @@
 |---|-------------|--------|
 | 1 | CAPTCHA (Cloudflare Turnstile) | Done |
 | 2 | Bluesky feed | Done |
-| 3 | Threads feed | Blocked (Meta API) |
+| 3 | ~~Threads feed~~ | Dropped (Meta API requires OAuth app review) |
 | 4 | Social media handles | Done |
 | 5 | User role consolidation | Done |
 | 6 | Breadcrumb navigation | Done |
