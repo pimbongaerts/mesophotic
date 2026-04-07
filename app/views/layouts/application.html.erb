@@ -8,6 +8,7 @@
   <%= favicon_link_tag 'apple-icon.png', rel: 'apple-touch-icon', type: 'image/png' %>
 
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "bootstrap-icons", "data-turbo-track": "reload" %>
 
   <%= javascript_importmap_tags %>
   <%= javascript_include_tag "popper", "data-turbo-track": "reload" %>
@@ -17,17 +18,16 @@
   <%= javascript_include_tag "charts", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "feed_tabs", "data-turbo-track": "reload" %>
   <%= yield :head %>
-  <%= javascript_include_tag "proj4" %>
-  <%= javascript_include_tag "highcharts" %>
-  <%= javascript_include_tag "highcharts-more" %>
-  <%= javascript_include_tag "highcharts-exporting" %>
-  <%= javascript_include_tag "highcharts-export-data" %>
-  <%= javascript_include_tag "highcharts-map" %>
-  <%= javascript_include_tag "highcharts-world-continents" %>
-  <%= javascript_include_tag "highcharts-accessibility" %>
-  <%= render 'layouts/google_analytics' %>
-
+  <%= javascript_include_tag "proj4", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-more", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-exporting", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-export-data", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-map", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-world-continents", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "highcharts-accessibility", "data-turbo-track": "reload" %>
   <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 </head>
 <body>
   <div id="wrap">

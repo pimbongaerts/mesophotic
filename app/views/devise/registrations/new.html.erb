@@ -42,7 +42,7 @@
       </div>
 
       <div class="mb-3">
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        <%= javascript_include_tag "https://challenges.cloudflare.com/turnstile/v0/api.js", async: true, defer: true %>
         <div class="cf-turnstile" data-sitekey="<%= Rails.application.credentials.dig(:turnstile, :site_key) %>"></div>
       </div>
 

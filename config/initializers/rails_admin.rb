@@ -1,3 +1,10 @@
+# Disable CSP for RailsAdmin — its layout uses inline scripts without nonces
+# (jQuery global setup, importmap shims) that can't be patched without forking.
+# RailsAdmin is restricted to admin users only, so this is acceptable.
+Rails.application.config.to_prepare do
+  RailsAdmin::MainController.content_security_policy(false)
+end
+
 RailsAdmin.config do |config|
   config.asset_source = :importmap
 
