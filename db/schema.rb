@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_07_105246) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.integer "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -376,6 +376,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_105246) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "url", limit: 255
     t.string "volume", limit: 255
+    t.index ["contributor_id"], name: "index_publications_on_contributor_id"
+    t.index ["journal_id"], name: "index_publications_on_journal_id"
+    t.index ["publication_format"], name: "index_publications_on_publication_format"
+    t.index ["publication_type"], name: "index_publications_on_publication_type"
+    t.index ["publication_year"], name: "index_publications_on_publication_year"
+    t.index ["updated_at"], name: "index_publications_on_updated_at"
   end
 
   create_table "publications_sites", id: false, force: :cascade do |t|
@@ -477,6 +483,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_105246) do
     t.integer "user_id"
     t.integer "validatable_id"
     t.string "validatable_type"
+    t.index ["user_id"], name: "index_validations_on_user_id"
     t.index ["validatable_type", "validatable_id"], name: "index_validations_on_validatable_type_and_validatable_id"
   end
 
