@@ -41,4 +41,28 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Bullet N+1 detection
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.raise = true
+
+    # Shared set_publication loads associations needed by show but not edit/delete
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :users
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :publications_users
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :journal
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :validations
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :sites
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Publication", association: :publications_sites
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Validation", association: :user
+
+    # show_member/about includes associations for conditional rendering;
+    # bullet flags as unused when fixture user has none
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :platforms
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :platforms_users
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :photos
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :photos_users
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :organisation
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :profile_picture_attachment
+  end
 end

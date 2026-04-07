@@ -56,6 +56,7 @@ end
 # RailsBricks development gems
 group :development, :test do
   gem 'annotate'
+  gem 'bullet'
   gem 'debug'
   gem 'minitest', '~> 5.0'
   gem 'rails-erd'
