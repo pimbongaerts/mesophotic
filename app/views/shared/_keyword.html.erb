@@ -1,9 +1,9 @@
-<% table_name = keyword.table_name %>
-<% objects_table_name = objects.first.class.table_name %>
-<% item_count = keyword.joins(objects_table_name.to_sym)
-                        .where("#{objects_table_name}.id IN (?)", objects.map(&:id))
-                        .select("#{table_name}.description, #{table_name}.id, count(#{table_name}.id) AS count")
-                        .group("#{table_name}.id")
+<% tbl = ActiveRecord::Base.connection.quote_table_name(keyword.table_name) %>
+<% assoc_tbl = ActiveRecord::Base.connection.quote_table_name(objects.first.class.table_name) %>
+<% item_count = keyword.joins(objects.first.class.table_name.to_sym)
+                        .where("#{assoc_tbl}.id IN (?)", objects.map(&:id))
+                        .select("#{tbl}.description, #{tbl}.id, count(#{tbl}.id) AS count")
+                        .group("#{tbl}.id")
                         .order("count DESC")
                         .limit(5) %>
 
