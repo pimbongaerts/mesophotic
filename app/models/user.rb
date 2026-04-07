@@ -86,7 +86,7 @@ class User < ApplicationRecord
   # other
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
-         :validatable, :confirmable
+         :validatable, :confirmable, :lockable, :timeoutable
   paginates_per 100
 
   # class methods

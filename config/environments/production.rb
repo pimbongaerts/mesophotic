@@ -94,7 +94,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: ENV["SMTP_SERVER"],
-    openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE,
+    openssl_verify_mode: OpenSSL::SSL::VERIFY_PEER,
     port: ENV["SMTP_PORT"].to_i,
     domain: ENV["MAILER_DOMAIN"],
     authentication: "plain",

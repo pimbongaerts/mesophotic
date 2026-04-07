@@ -59,28 +59,30 @@ module ApplicationHelper
   end
 
   def linkify content
+    content = ERB::Util.html_escape(content)
+
     word_association.each { |m, ws|
       ws.each { |w, id|
-        content = content.gsub(/\b(#{w}[\w]*|#{w.pluralize})\b/i) { |match|
-          link_to (raw $1), summary_path(m, id)
+        content = content.gsub(/\b(#{Regexp.escape(w)}[\w]*|#{Regexp.escape(w.pluralize)})\b/i) { |match|
+          link_to match, summary_path(m, id)
         }
       }
     }
 
     species_association.each { |s|
       original = content
-      content = content.gsub(/\b(#{s.keys.first}[\w]*)\b/i) { |match|
-        link_to (raw "<em>#{$1}</em>"), summary_path('species', s.values.first)
+      content = content.gsub(/\b(#{Regexp.escape(s.keys.first)}[\w]*)\b/i) { |match|
+        link_to content_tag(:em, match), summary_path('species', s.values.first)
       }
 
       if original != content
-        content = content.gsub(/\b(#{s.keys.last}[\w]*)\b/i) { |match|
-          link_to (raw "<em>#{$1}</em>"), summary_path('species', s.values.last)
+        content = content.gsub(/\b(#{Regexp.escape(s.keys.last)}[\w]*)\b/i) { |match|
+          link_to content_tag(:em, match), summary_path('species', s.values.last)
         }
       end
     }
 
-    raw content
+    content.html_safe
   end
 
   # Determine a score for how relevant the publication is to deep reefs
