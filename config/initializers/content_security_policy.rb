@@ -4,14 +4,16 @@
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
+  asset_host = "https://assets.mesophotic.org"
+
   policy.default_src :self
-  policy.font_src    :self, "https://fonts.gstatic.com"
-  policy.img_src     :self, :https, :data  # https: needed for federated Mastodon/Bluesky avatars and species images from fishbase/cotw
+  policy.font_src    :self, asset_host, "https://fonts.gstatic.com"
+  policy.img_src     :self, :https, :data
   policy.object_src  :none
-  policy.script_src  :self, "https://challenges.cloudflare.com", "https://ga.jspm.io"
-  policy.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"  # unsafe-inline needed for 70+ files with style="" attributes
+  policy.script_src  :self, asset_host, "https://challenges.cloudflare.com", "https://ga.jspm.io"
+  policy.style_src   :self, :unsafe_inline, asset_host, "https://fonts.googleapis.com"
   policy.connect_src :self, "https://fonts.googleapis.com", "https://fonts.gstatic.com"
-  policy.frame_src   "https://challenges.cloudflare.com"  # Cloudflare Turnstile iframe
+  policy.frame_src   "https://challenges.cloudflare.com"
 end
 
 # Generate nonces for script tags (importmap, javascript_include_tag).
