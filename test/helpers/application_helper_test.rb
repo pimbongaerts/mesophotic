@@ -72,7 +72,21 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_equal first, second
   end
 
-  # linkify depends on word_association, species_association, and generates
-  # link_to calls with summary_path which requires routing context not
-  # available in a helper test. Skipping — better tested via integration tests.
+  test "linkify links plural focusgroup words" do
+    content = linkify("Research on sponges in the deep reef")
+    assert_match /href=.*focusgroups/, content
+    assert_match />sponges</, content
+  end
+
+  test "linkify links singular focusgroup words" do
+    content = linkify("A sponge was found at 60m depth")
+    assert_match /href=.*focusgroups/, content
+    assert_match />sponge</, content
+  end
+
+  test "linkify links both singular and plural in same text" do
+    content = linkify("The sponge community included many sponges")
+    assert_match />sponge</, content
+    assert_match />sponges</, content
+  end
 end

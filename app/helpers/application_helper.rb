@@ -63,7 +63,7 @@ module ApplicationHelper
 
     word_association.each { |m, ws|
       ws.each { |w, id|
-        content = content.gsub(/\b(#{Regexp.escape(w)}[\w]*|#{Regexp.escape(w.pluralize)})\b/i) { |match|
+        content = content.gsub(/\b(#{Regexp.escape(w)}[\w]*|#{Regexp.escape(w.pluralize)}|#{Regexp.escape(w.singularize)}[\w]*)\b/i) { |match|
           link_to match, summary_path(m, id)
         }
       }

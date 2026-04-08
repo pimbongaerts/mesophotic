@@ -5,3 +5,7 @@ fish:
 corals:
   description: "Corals"
   short_description: "Corals"
+
+sponges:
+  description: "Porifera (Sponges)"
+  short_description: "Porifera; Sponges"
