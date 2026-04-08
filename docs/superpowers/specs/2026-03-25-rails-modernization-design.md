@@ -57,6 +57,22 @@
 | 4 | Social media handles | Done |
 | 5 | User role consolidation | Done |
 | 6 | Breadcrumb navigation | Done |
+| 7 | EEZ table + location mapping ([#153][]) | Todo |
+| 8 | CSV export: search word count column ([#146][]) | Todo |
+| 9 | Location search autocomplete ([#59][]) | Todo |
+| 10 | Combined newsfeed on home page ([#39][]) | Todo |
+| 11 | Media gallery for CC-licensed photos ([#38][]) | Todo |
+
+## Bugs
+
+| # | Description | Status |
+|---|-------------|--------|
+| 1 | Singular "sponge" not linked in abstracts ([#154][]) | Todo |
+| 2 | Line breaks in Abstract/Contents not stripped ([#139][]) | Todo |
+| 3 | Photos metadata summary shows per-page only ([#102][]) | Todo |
+| 4 | Behind the Science post format broken ([#98][]) | Todo |
+| 5 | Abstracts missing from some full texts ([#138][]) | Data task |
+| 6 | Journal full names missing for new entries ([#136][]) | Data task |
 
 ## Infrastructure
 
@@ -69,6 +85,7 @@
 | 5 | CSV exports require auth, links hidden | Done |
 | 6 | Canonical URL (www → mesophotic.org) | Todo |
 | 7 | Automated deployment (Capistrano, manual trigger, rollback) | Todo |
+| 8 | Remove old Paperclip columns ([#113][]) | Todo |
 
 ## Security
 
@@ -152,36 +169,7 @@
 
 ---
 
-## Remaining Security Work
-
-### Security audit
-
-Run Brakeman and bundler-audit to get a baseline. Manually review OWASP top 10 areas:
-
-- **SQL injection** — Audit raw SQL in model scopes and controller queries (stats, summary, publications). Check for string interpolation in `.where()` clauses.
-- **XSS** — Audit `.html_safe` usage across views and controllers (including `render_in_turbo_frame`). Check for unescaped user input.
-- **CSRF** — Verify `protect_from_forgery` coverage, especially on Turbo Frame endpoints.
-- **Mass assignment** — Audit `permit` params in controllers for over-permissive whitelists.
-- **Content Security Policy** — Review `config/initializers/content_security_policy.rb`, tighten if possible.
-- **Dependency vulnerabilities** — `bundle audit` for known CVEs in gems.
-
-### Remaining Performance Work
-
-### SQL profiling + slow queries
-
-Profile production queries via New Relic or `rack-mini-profiler` in development. Identify:
-
-- Slow queries (>100ms) — especially on stats pages, publication search, and CSV exports.
-- Missing indexes — audit foreign keys and columns used in `WHERE`, `JOIN`, and `ORDER BY` clauses.
-- Remaining N+1 queries — use `bullet` gem in development to catch lazy-loaded associations the earlier eager loading work missed.
-- `word_association` / `species_association` helpers still load all records per call — consider further caching or restructuring.
-- `Publication#to_csv` builds large in-memory hashes — consider streaming or batching.
-
-## Remaining Feature Work
-
-### Threads Feed (blocked)
-
-Add a Threads `#mesophotic` feed alongside Mastodon and Bluesky feeds on the home page. Blocked by Meta's Threads API requiring OAuth app review for `threads_keyword_search` permission. Parked until API access improves. The tabbed UI is designed to accommodate additional feeds.
+## Remaining Work Details
 
 ### Canonical URL
 
@@ -225,3 +213,16 @@ These are noted for future planning but not part of this effort:
 - **render_async + Turbo Drive incompatible:** Inline `<script>` tags injected via `content_for` don't re-evaluate under Turbo Drive. Replaced with Turbo Frames.
 - **Nix bundlerEnv freezes bundler:** Use `nix shell nixpkgs#ruby_3_4 --command bundle lock` to bypass. Script at `scripts/generate_nix_gemfile_lock_and_gemset.sh`.
 - **`owlcarousel-rails`:** Currently commented out in `application.js` and `application.scss`. Not actively breaking anything.
+
+[#38]: https://github.com/pimbongaerts/mesophotic/issues/38
+[#39]: https://github.com/pimbongaerts/mesophotic/issues/39
+[#59]: https://github.com/pimbongaerts/mesophotic/issues/59
+[#98]: https://github.com/pimbongaerts/mesophotic/issues/98
+[#102]: https://github.com/pimbongaerts/mesophotic/issues/102
+[#113]: https://github.com/pimbongaerts/mesophotic/issues/113
+[#136]: https://github.com/pimbongaerts/mesophotic/issues/136
+[#138]: https://github.com/pimbongaerts/mesophotic/issues/138
+[#139]: https://github.com/pimbongaerts/mesophotic/issues/139
+[#146]: https://github.com/pimbongaerts/mesophotic/issues/146
+[#153]: https://github.com/pimbongaerts/mesophotic/issues/153
+[#154]: https://github.com/pimbongaerts/mesophotic/issues/154
