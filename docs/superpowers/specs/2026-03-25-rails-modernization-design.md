@@ -67,7 +67,7 @@
 
 | # | Description | Status |
 |---|-------------|--------|
-| 1 | Singular "sponge" not linked in abstracts ([#154][]) | Todo |
+| 1 | Singular "sponge" not linked in abstracts ([#154][]) | Done |
 | 2 | Line breaks in Abstract/Contents not stripped ([#139][]) | Todo |
 | 3 | Photos metadata summary shows per-page only ([#102][]) | Todo |
 | 4 | Behind the Science post format broken ([#98][]) | Todo |
@@ -109,7 +109,7 @@
 | 7 | Species image bug (open() → URI.open, HTTPS) | Done |
 | 8 | ~~MiniMagick → VIPS~~ | Dropped (libvips not available on Dreamhost) |
 | 9 | SQL query profiling + missing indexes | Done |
-| 10 | ~~Missing database indexes audit~~ | Covered by #9 |
+| 10 | Missing database indexes audit | Done |
 | 11 | N+1 query audit (bullet gem, ongoing detection) | Done |
 
 ## UI
