@@ -69,7 +69,7 @@
 |---|-------------|--------|
 | 1 | Singular "sponge" not linked in abstracts ([#154][]) | Done |
 | 2 | Line breaks in Abstract/Contents not stripped ([#139][]) | Todo |
-| 3 | Photos metadata summary shows per-page only ([#102][]) | Todo |
+| 3 | Photos metadata summary shows per-page only ([#102][]) | Done |
 | 4 | Behind the Science post format broken ([#98][]) | Todo |
 | 5 | Abstracts missing from some full texts ([#138][]) | Data task |
 | 6 | Journal full names missing for new entries ([#136][]) | Data task |
