@@ -85,7 +85,7 @@
 | 5 | CSV exports require auth, links hidden | Done |
 | 6 | Canonical URL (www → mesophotic.org) | Todo |
 | 7 | Automated deployment (Capistrano, manual trigger, rollback) | Todo |
-| 8 | Remove old Paperclip columns ([#113][]) | Todo |
+| 8 | Remove old Paperclip columns ([#113][]) | Done |
 
 ## Security
 
