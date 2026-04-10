@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_121530) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.integer "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -55,11 +55,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.datetime "created_at", precision: nil, null: false
     t.text "description"
     t.date "end_date"
-    t.string "featured_image_content_type"
     t.string "featured_image_credits"
-    t.string "featured_image_file_name"
-    t.integer "featured_image_file_size"
-    t.datetime "featured_image_updated_at", precision: nil
     t.date "start_date"
     t.string "title"
     t.datetime "updated_at", precision: nil, null: false
@@ -186,11 +182,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.datetime "created_at", precision: nil, null: false
     t.text "description"
     t.date "end_date"
-    t.string "featured_image_content_type"
     t.string "featured_image_credits"
-    t.string "featured_image_file_name"
-    t.integer "featured_image_file_size"
-    t.datetime "featured_image_updated_at", precision: nil
     t.date "start_date"
     t.string "title"
     t.datetime "updated_at", precision: nil, null: false
@@ -249,10 +241,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.integer "depth"
     t.string "description"
     t.integer "expedition_id"
-    t.string "image_content_type"
-    t.string "image_file_name"
-    t.integer "image_file_size"
-    t.datetime "image_updated_at", precision: nil
     t.integer "location_id"
     t.boolean "media_gallery", default: false
     t.integer "meeting_id"
@@ -326,10 +314,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.string "location"
     t.integer "meeting_id"
     t.boolean "oral"
-    t.string "pdf_content_type"
-    t.string "pdf_file_name"
-    t.integer "pdf_file_size"
-    t.datetime "pdf_updated_at", precision: nil
     t.integer "poster_id"
     t.string "session"
     t.string "time"
@@ -364,10 +348,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.boolean "new_species", limit: 1
     t.boolean "original_data", limit: 1
     t.string "pages", limit: 255
-    t.string "pdf_content_type"
-    t.string "pdf_file_name"
-    t.integer "pdf_file_size"
-    t.datetime "pdf_updated_at", precision: nil
     t.string "publication_format", default: "article"
     t.string "publication_type"
     t.integer "publication_year", limit: 4
@@ -428,7 +408,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "users", id: :integer, default: nil, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.text "address", limit: 65535
     t.string "alt_website", limit: 255
     t.string "bluesky_handle"
@@ -454,10 +434,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_124856) do
     t.integer "organisation_id", limit: 4
     t.text "other_organizations", limit: 65535
     t.string "phone", limit: 255
-    t.string "profile_picture_content_type", limit: 255
-    t.string "profile_picture_file_name", limit: 255
-    t.integer "profile_picture_file_size", limit: 4
-    t.datetime "profile_picture_updated_at", precision: nil
     t.datetime "remember_created_at", precision: nil
     t.text "research_interests", limit: 65535
     t.datetime "reset_password_sent_at", precision: nil
