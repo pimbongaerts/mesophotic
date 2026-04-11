@@ -329,45 +329,58 @@ class Publication < ApplicationRecord
     [validated, fields, focusgroups, platforms, locations]
   end
 
-  def self.csv_enumerator(scope)
+  def self.csv_enumerator(scope, search_term: nil)
+    has_relevance = search_term.present? && scope.to_sql.include?("scored")
     Enumerator.new do |yielder|
-      yielder << CSV.generate_line(csv_header)
+      if has_relevance
+        yielder << "# Search term: #{search_term}\n"
+      end
+      header = csv_header
+      header.insert(1, "occurrences") if has_relevance
+      yielder << CSV.generate_line(header)
       validated, fields, focusgroups, platforms, locations = csv_association_data
-      scope.csv_rows.find_each(batch_size: 100) do |publication|
-        yielder << CSV.generate_line(csv_row(publication, validated, fields, focusgroups, platforms, locations))
+      rows = has_relevance ? scope.csv_rows_with_relevance : scope.csv_rows
+      rows.find_each(batch_size: 100) do |publication|
+        row = csv_row(publication, validated, fields, focusgroups, platforms, locations)
+        row.insert(1, publication.relevance.to_i) if has_relevance
+        yielder << CSV.generate_line(row)
       end
     end
   end
 
-  scope :csv_rows, -> {
-    select(
-      """
-      publications.id,
+  CSV_ROW_COLUMNS = """
+    publications.id,
+    publications.publication_type,
+    publications.publication_format,
+    publications.publication_year,
+    publications.authors,
+    publications.title,
+    journals.name AS journal_name,
+    publications.volume,
+    publications.issue,
+    publications.pages,
+    publications.DOI,
+    publications.url,
+    publications.book_title,
+    publications.book_authors,
+    publications.book_publisher,
+    active_storage_attachments.id AS pdf_id,
+    publications.mesophotic,
+    publications.mce,
+    publications.tme,
+    publications.original_data,
+    publications.new_species,
+    publications.min_depth,
+    publications.max_depth
+  """.freeze
 
-      publications.publication_type,
-      publications.publication_format,
-      publications.publication_year,
-      publications.authors,
-      publications.title,
-      journals.name AS journal_name,
-      publications.volume,
-      publications.issue,
-      publications.pages,
-      publications.DOI,
-      publications.url,
-      publications.book_title,
-      publications.book_authors,
-      publications.book_publisher,
-      active_storage_attachments.id AS pdf_id,
-      publications.mesophotic,
-      publications.mce,
-      publications.tme,
-      publications.original_data,
-      publications.new_species,
-      publications.min_depth,
-      publications.max_depth
-      """
-    )
+  scope :csv_rows, -> {
+    select(CSV_ROW_COLUMNS)
+    .left_joins(:journal, :pdf_attachment)
+  }
+
+  scope :csv_rows_with_relevance, -> {
+    select("#{CSV_ROW_COLUMNS}, scored.relevance")
     .left_joins(:journal, :pdf_attachment)
   }
 
