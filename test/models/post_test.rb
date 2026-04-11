@@ -110,6 +110,88 @@ class PostTest < ActiveSupport::TestCase
     assert post.valid?
   end
 
+  # -- method_feature validations --
+
+  test "method_feature requires both featured_publication and featured_user" do
+    post = Post.new(
+      title: "Method Post",
+      content_md: "Content",
+      post_type: "method_feature",
+      user: users(:admin_user)
+    )
+    assert_not post.valid?
+    assert post.errors[:featured_publication_id].any? || post.errors[:featured_publication].any?
+    assert post.errors[:featured_user_id].any? || post.errors[:featured_user].any?
+  end
+
+  test "method_feature is valid with both featured_publication and featured_user" do
+    post = Post.new(
+      title: "Valid Method Post",
+      content_md: "Content",
+      post_type: "method_feature",
+      user: users(:admin_user),
+      featured_user: users(:admin_user),
+      featured_publication: publications(:scientific_article)
+    )
+    assert post.valid?
+  end
+
+  # -- parsed_content --
+
+  test "parsed_content returns empty array for nil content" do
+    post = Post.new(content_md: nil)
+    assert_equal [], post.parsed_content
+  end
+
+  test "parsed_content returns sections for normal headings" do
+    post = Post.new(content_md: "#### Question one\nAnswer\n\n#### Question two\nAnswer")
+    blocks = post.parsed_content
+    assert_equal 2, blocks.length
+    assert_equal :section, blocks[0][:type]
+    assert_equal :section, blocks[1][:type]
+  end
+
+  test "parsed_content groups consecutive quick questions" do
+    post = Post.new(content_md: "##### Q1\nA1\n\n##### Q2\nA2\n\n#### Normal\nAnswer")
+    blocks = post.parsed_content
+    assert_equal 2, blocks.length
+    assert_equal :quick_question_group, blocks[0][:type]
+    assert_equal 2, blocks[0][:questions].length
+    assert_equal :section, blocks[1][:type]
+  end
+
+  test "parsed_content separates non-consecutive quick question groups" do
+    post = Post.new(content_md: "##### Q1\nA1\n\n#### Normal\nAnswer\n\n##### Q2\nA2")
+    blocks = post.parsed_content
+    assert_equal 3, blocks.length
+    assert_equal :quick_question_group, blocks[0][:type]
+    assert_equal 1, blocks[0][:questions].length
+    assert_equal :section, blocks[1][:type]
+    assert_equal :quick_question_group, blocks[2][:type]
+    assert_equal 1, blocks[2][:questions].length
+  end
+
+  test "parsed_content handles all quick questions" do
+    post = Post.new(content_md: "##### Q1\nA1\n\n##### Q2\nA2\n\n##### Q3\nA3")
+    blocks = post.parsed_content
+    assert_equal 1, blocks.length
+    assert_equal :quick_question_group, blocks[0][:type]
+    assert_equal 3, blocks[0][:questions].length
+  end
+
+  test "parsed_content handles all normal sections" do
+    post = Post.new(content_md: "#### S1\nA1\n\n#### S2\nA2")
+    blocks = post.parsed_content
+    assert_equal 2, blocks.length
+    assert blocks.all? { |b| b[:type] == :section }
+  end
+
+  test "parsed_content skips blank sections" do
+    post = Post.new(content_md: "#### S1\nA1\n\n\n\n#### S2\nA2")
+    blocks = post.parsed_content
+    assert_equal 2, blocks.length
+  end
+
   # -- Line ending normalisation --
 
   test "normalises Windows line endings on save" do

@@ -35,9 +35,9 @@ class Post < ApplicationRecord
   validates :post_type, presence: true
   validates :user_id, presence: true
   validates :featured_publication_id, presence: true,
-            :if => lambda { self.post_type == 'behind_the_science'}
+            :if => lambda { post_type.in?(%w[behind_the_science method_feature]) }
   validates :featured_user_id, presence: true,
-            :if => lambda { self.post_type == 'early_career'}
+            :if => lambda { post_type.in?(%w[early_career method_feature]) }
   validates :title, presence: true, length: { maximum: 100 }, uniqueness: true
   validates :content_md, presence: true
 
@@ -90,14 +90,35 @@ class Post < ApplicationRecord
   # class methods
   # instance methods
   def category
-    if post_type == 'behind_the_science'
-      "Behind the Science"
-    elsif post_type == 'early_career'
-      "Early Career Scientist"
-    elsif post_type == 'method_feature'
-      "Methods Exposed"
-    elsif post_type == 'announcement'
-      "Announcement"
+    case post_type
+    when 'behind_the_science' then "Behind the Science"
+    when 'early_career' then "Early Career Scientist"
+    when 'method_feature' then "Methods Exposed"
+    when 'announcement' then "Announcement"
     end
+  end
+
+  # Parse content_md into an ordered array of content blocks.
+  # Sections starting with ##### are "quick questions" — grouped consecutively.
+  # Everything else is a normal section that gets paired with photos.
+  def parsed_content
+    return [] unless content_md.present?
+
+    raw_sections = content_md.split("\n\n").reject(&:blank?)
+    blocks = []
+
+    raw_sections.each do |section|
+      if section.start_with?("#####")
+        if blocks.last && blocks.last[:type] == :quick_question_group
+          blocks.last[:questions] << section
+        else
+          blocks << { type: :quick_question_group, questions: [section] }
+        end
+      else
+        blocks << { type: :section, content: section }
+      end
+    end
+
+    blocks
   end
 end
