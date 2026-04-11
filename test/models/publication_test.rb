@@ -209,6 +209,15 @@ class PublicationTest < ActiveSupport::TestCase
     assert pub.valid?
   end
 
+  test "publication without contributor is valid" do
+    pub = Publication.new(
+      title: "Legacy Publication",
+      authors: "Author B",
+      publication_year: 2015
+    )
+    assert pub.valid?
+  end
+
   test "belongs to journal" do
     pub = publications(:scientific_article)
     assert_equal journals(:open_journal), pub.journal

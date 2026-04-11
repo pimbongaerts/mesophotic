@@ -82,7 +82,7 @@ class Publication < ApplicationRecord
   has_many :observations, as: :observable
   has_many :photos
   has_one :featured_post, class_name: 'Post', primary_key: 'id', foreign_key: 'featured_publication_id'
-  belongs_to :contributor, class_name: 'User'
+  belongs_to :contributor, class_name: 'User', optional: true
   has_one_attached :pdf
 
   paginates_per 20
