@@ -19,10 +19,16 @@
   <div class="col-sm-3">
 
     <%# Featured user card %>
-    <% featured_person = researcher || (@post.post_type == 'announcement' ? @post.user : nil) %>
+    <% if @post.post_type == 'announcement' %>
+      <% featured_person = @post.user %>
+      <% card_title = "Posted By" %>
+    <% else %>
+      <% featured_person = researcher %>
+      <% card_title = "An Interview With" %>
+    <% end %>
     <% if featured_person.present? %>
       <div class="card">
-        <div class="card-header"><strong><%= researcher.present? ? "An Interview With" : "Posted By" %></strong></div>
+        <div class="card-header"><strong><%= card_title %></strong></div>
         <div class="card-body" align="center">
           <% if featured_person.profile_picture.attached? %>
             <div class="rounded-3 d-inline-block" style="width: 200px; height: 200px; background-color: #f0f1f3; overflow: hidden;">
@@ -65,15 +71,15 @@
       </div>
     </div>
 
-    <%# Location map %>
-    <% if publication.present? %>
+    <%# Location map (not for announcements) %>
+    <% if @post.post_type != 'announcement' && publication.present? %>
       <div class="card">
         <div class="card-header"><strong>Study Location</strong></div>
         <div class="card-body" style="min-height: 150px;">
           <%= turbo_frame_tag "world-map-post-#{@post.id}", src: world_map_path(key: "post_#{@post.id}", model: Location, ids: publication.locations.map(&:id).join(','), height: 150, z: 1), loading: :lazy, target: "_top" %>
         </div>
       </div>
-    <% elsif researcher.present? && researcher.publications.count > 0 %>
+    <% elsif @post.post_type != 'announcement' && researcher.present? && researcher.publications.count > 0 %>
       <div class="card">
         <div class="card-header"><strong>Study Locations</strong></div>
         <div class="card-body">
@@ -85,8 +91,8 @@
       </div>
     <% end %>
 
-    <%# Publication metadata %>
-    <% if publication.present? %>
+    <%# Publication metadata (not for announcements) %>
+    <% if @post.post_type != 'announcement' && publication.present? %>
       <div class="card">
         <div class="card-header"><strong>Publication Metadata</strong></div>
         <div class="card-body">
@@ -106,15 +112,21 @@
 
       <div class="row">
         <div class="col-sm-12">
-          <% if publication.present? %>
+          <% if @post.post_type == 'announcement' %>
             <font color="#2b82bc">
               <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
             </font><br>
-          <% elsif researcher.present? %>
-            <font color="#2b82bc">
-              <h1><%= @post.category %>: <%= researcher.full_name_normal %></h1>
-            </font><br>
-          <% end %>
+            <%= markdown(@post.content_md) %>
+          <% else %>
+            <% if publication.present? %>
+              <font color="#2b82bc">
+                <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
+              </font><br>
+            <% elsif researcher.present? %>
+              <font color="#2b82bc">
+                <h1><%= @post.category %>: <%= researcher.full_name_normal %></h1>
+              </font><br>
+            <% end %>
 
           <% blocks.each do |block| %>
             <% if block[:type] == :quick_question_group %>
@@ -157,6 +169,7 @@
                   </div>
                 </div>
               <% end %>
+            <% end %>
             <% end %>
           <% end %>
 

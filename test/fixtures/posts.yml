@@ -9,6 +9,25 @@ published_post:
   featured_publication: scientific_article
   slug: "behind-the-science-mesophotic-reefs"
 
+announcement_post:
+  title: "Collaborative Mesophotic Project"
+  content_md: "We are launching a new collaborative project to study mesophotic reefs worldwide."
+  content_html: "<p>We are launching a new collaborative project to study mesophotic reefs worldwide.</p>"
+  draft: false
+  post_type: "announcement"
+  user: admin_user
+  slug: "collaborative-mesophotic-project"
+
+ecr_post:
+  title: "Interview with a Researcher"
+  content_md: "##### Mee-so or meh-so?\nDefinitely meh-so\n\n##### Charismatic megafauna or cool critters?\nCool critters\n\n#### What is your research interest?\nMesophotic coral ecosystems\n\n#### Describe your study site\nGreat Barrier Reef"
+  content_html: "<p>Interview content</p>"
+  draft: false
+  post_type: "early_career"
+  user: admin_user
+  featured_user: regular_user
+  slug: "interview-with-a-researcher"
+
 drafted_post:
   title: "Draft Announcement"
   content_md: "This is a draft post."
