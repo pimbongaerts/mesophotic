@@ -39,6 +39,53 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # -- Post type rendering --
+
+  test "behind_the_science post shows An Interview With" do
+    get post_pages_path(posts(:published_post))
+    assert_response :success
+    assert_match /An Interview With/, response.body
+  end
+
+  test "behind_the_science post shows featured publication link" do
+    get post_pages_path(posts(:published_post))
+    assert_match /Featured Article/, response.body
+  end
+
+  test "announcement post shows Posted By" do
+    get post_pages_path(posts(:announcement_post))
+    assert_response :success
+    assert_match /Posted By/, response.body
+    assert_no_match /An Interview With/, response.body
+  end
+
+  test "announcement post shows title in quotes" do
+    get post_pages_path(posts(:announcement_post))
+    assert_match /Collaborative Mesophotic Project/, response.body
+  end
+
+  test "announcement post does not show location map" do
+    get post_pages_path(posts(:announcement_post))
+    assert_no_match /Study Location/, response.body
+  end
+
+  test "announcement post does not show publication metadata" do
+    get post_pages_path(posts(:announcement_post))
+    assert_no_match /Publication Metadata/, response.body
+  end
+
+  test "early_career post shows quick questions in card" do
+    get post_pages_path(posts(:ecr_post))
+    assert_response :success
+    assert_match /Mee-so or meh-so/, response.body
+    assert_match /Charismatic megafauna/, response.body
+  end
+
+  test "early_career post shows An Interview With" do
+    get post_pages_path(posts(:ecr_post))
+    assert_match /An Interview With/, response.body
+  end
+
   test "inside redirects unauthenticated user" do
     get inside_pages_path
     assert_redirected_to new_user_session_path

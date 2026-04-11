@@ -54,6 +54,9 @@ Rails.application.configure do
     Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :photos
     Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :photos_users
 
+    # Post.photos.count used in templates triggers counter cache suggestion
+    Bullet.add_safelist type: :counter_cache, class_name: "Post", association: :photos
+
     # About page eager loads organisation/profile_picture for contributor
     # partial, but fixture users don't match the hardcoded contributor
     # names in the template, so the associations appear unused in tests.
