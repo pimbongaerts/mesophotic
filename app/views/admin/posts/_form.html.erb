@@ -8,53 +8,93 @@
 
 <%= form_for [:admin, @post], role: "form" do |f| %>
 
-<div class="mb-3">
-  <%= f.label :post_type, "Post Type", class: "required" %><br>
-  <%= f.select :post_type, Post::POST_TYPES.map { |t| [t.titleize, t] },
-               {}, class: "form-select" %>
-</div>
+<div class="row">
+  <div class="col-sm-8">
 
-<div class="mb-3">
-  <%= f.label :title, "Title" %>
-  <%= f.text_field :title, autofocus: true, class: "form-control", placeholder: "Title (also used for URL slug)..." %>
-</div>
+    <div class="card mb-3">
+      <div class="card-header"><strong>Post Details</strong></div>
+      <div class="card-body">
+        <div class="mb-3">
+          <%= f.label :post_type, "Type", class: "required" %><br>
+          <%= f.select :post_type, Post::POST_TYPES.map { |t| [t.titleize, t] },
+                       {}, class: "form-select" %>
+        </div>
 
-<div class="mb-3">
-  <%= f.label :content_md, "Content (Markdown)" %>
-  <%= f.text_area :content_md, rows: 20, class: "form-control font-monospace", placeholder: "Use #### for section headings, ##### for quick questions..." %>
-</div>
+        <div class="mb-3">
+          <%= f.label :title, "Title" %>
+          <%= f.text_field :title, autofocus: true, class: "form-control", placeholder: "Title (also used for URL slug)..." %>
+        </div>
 
-<div class="mb-3">
-  <%= f.check_box :draft, class: "form-check-input" %>
-  <%= f.label :draft, "Draft", class: "form-check-label" %>
-</div>
+        <div class="mb-3">
+          <%= f.label :content_md, "Content (Markdown)" %>
+          <%= f.text_area :content_md, rows: 20, class: "form-control font-monospace", placeholder: "Use #### for section headings, ##### for quick questions..." %>
+        </div>
 
-<div class="mb-3">
-  <%= f.label :featured_publication_id, "Featured Publication" %><br>
-  <%= f.collection_select :featured_publication_id,
-                          Publication.all.order("authors ASC, publication_year ASC"),
-                          :id, :short_citation_with_title,
-                          { include_blank: "— None —" },
-                          class: "form-select" %>
-</div>
+        <div class="mb-3">
+          <%= f.label :featured_publication_id, "Featured Publication" %><br>
+          <%= f.collection_select :featured_publication_id,
+                                  Publication.all.order("authors ASC, publication_year ASC"),
+                                  :id, :short_citation_with_title,
+                                  { include_blank: "— None —" },
+                                  { class: "form-select" } %>
+        </div>
 
-<div class="mb-3">
-  <%= f.label :featured_user_id, "Featured User" %><br>
-  <%= f.collection_select :featured_user_id,
-                          User.all.order("last_name ASC, first_name ASC"),
-                          :id, :full_name,
-                          { include_blank: "— None —" },
-                          class: "form-select" %>
-</div>
+        <div class="mb-3">
+          <%= f.label :featured_user_id, "Featured User" %><br>
+          <%= f.collection_select :featured_user_id,
+                                  User.all.order("last_name ASC, first_name ASC"),
+                                  :id, :full_name,
+                                  { include_blank: "— None —" },
+                                  { class: "form-select" } %>
+        </div>
+      </div>
+    </div>
 
-<div class="mb-3">
-  <%= f.label :updated_at, "Published Date" %>
-  <%= f.datetime_select :updated_at, {}, class: "form-select d-inline-block w-auto" %>
-</div>
+    <div class="mb-3 d-flex align-items-center gap-3">
+      <%= f.label :updated_at, "Published Date" %>
+      <%= f.datetime_select :updated_at, {}, class: "form-select d-inline-block w-auto" %>
+      <div class="form-check d-inline-flex align-items-center gap-1 mb-0">
+        <%= f.check_box :draft, class: "form-check-input mt-0" %>
+        <%= f.label :draft, class: "form-check-label" do %><strong>Draft</strong><% end %>
+      </div>
+    </div>
 
-<div class="d-flex gap-2">
-  <%= f.submit "Save", class: "btn btn-primary" %>
-  <%= link_to "Cancel", dashboard_admin_posts_path, class: "btn btn-outline-secondary" %>
+    <div class="d-flex gap-2">
+      <%= f.submit "Save Post", class: "btn btn-primary" %>
+      <%= link_to "Cancel", dashboard_admin_posts_path, class: "btn btn-outline-secondary" %>
+    </div>
+
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header"><strong>Content Guide</strong></div>
+      <div class="card-body">
+        <small class="text-muted">
+          <p>All post types support both section types. Use any combination in any order.</p>
+          <p><strong>Section types:</strong></p>
+          <p><code>####</code> Normal section<br>
+          Rendered with the interview text. Photos are inserted in pairs after every two sections.</p>
+          <p><code>#####</code> Quick question<br>
+          Short Q&A displayed in a two-column card. Consecutive quick questions are grouped together. Does not consume photos.</p>
+
+          <p class="mt-3"><strong>Post types:</strong></p>
+          <p><strong>Behind the Science</strong><br>
+          Interview about a publication. Requires a featured publication.</p>
+          <p><strong>Early Career Scientist</strong><br>
+          Interview with a researcher. Requires a featured user. Use <code>#####</code> for the opening quick questions.</p>
+          <p><strong>Methods Exposed</strong><br>
+          Feature on a research method. Requires both a featured publication and featured user.</p>
+          <p><strong>Announcement</strong><br>
+          General news. No featured publication or user required.</p>
+
+          <p class="mt-3"><strong>Photos:</strong></p>
+          <p>Photos are linked separately via the photo edit page. They appear in upload order, paired after every two normal sections.</p>
+          <p class="mb-0"><%= link_to "Markdown syntax reference", "https://daringfireball.net/projects/markdown/syntax", target: "_blank", rel: "noopener" %></p>
+        </small>
+      </div>
+    </div>
+  </div>
 </div>
 
 <% end %>

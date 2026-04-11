@@ -11,6 +11,7 @@
   <%= l @post.created_at.to_date, format: :long %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
   <% if current_user.try(:editor_or_admin?) %>
     <%= link_to edit_admin_post_path(@post.slug), class: "text-muted icon-btn ms-2" do %><i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i><% end %>
+    <%= link_to admin_post_path(@post), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this post?" }, class: "text-danger icon-btn ms-1" do %><i class="bi bi-trash"></i><i class="bi bi-trash-fill"></i><% end %>
   <% end %>
 </p>
 
