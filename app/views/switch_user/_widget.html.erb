@@ -1,0 +1,4 @@
+<%= form_tag switch_user_path, method: :get, class: "d-inline-flex align-items-center gap-2" do %>
+  <%= select_tag "scope_identifier", option_tags, class: classes, style: styles %>
+  <%= submit_tag "Switch", class: "btn btn-sm btn-outline-secondary" %>
+<% end %>
