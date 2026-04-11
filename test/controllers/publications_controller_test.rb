@@ -101,6 +101,31 @@ class PublicationsControllerIntegrationTest < ActionDispatch::IntegrationTest
     get publications_path(format: :csv)
     assert_response :success
   end
+
+  test "CSV without search has no occurrences column" do
+    sign_in users(:regular_user)
+    get publications_path(format: :csv)
+    lines = response.body.lines
+    header = lines.first
+    assert_not_includes header, "occurrences"
+    assert_no_match(/# Search term:/, response.body)
+  end
+
+  test "CSV with search includes occurrences column and search term comment" do
+    sign_in users(:regular_user)
+    get publications_path(format: :csv, search: "mesophotic")
+    lines = response.body.lines
+    assert_match(/# Search term: mesophotic/, lines.first)
+    header = lines.second
+    assert_includes header, "occurrences"
+  end
+
+  test "CSV with search for editor does not include occurrences" do
+    sign_in users(:editor_user)
+    get publications_path(format: :csv, search: "mesophotic")
+    assert_not_includes response.body, "occurrences"
+    assert_no_match(/# Search term:/, response.body)
+  end
 end
 
 class PublicationsControllerTest < ActionController::TestCase

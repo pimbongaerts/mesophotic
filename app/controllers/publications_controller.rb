@@ -51,9 +51,10 @@ class PublicationsController < ApplicationController
 
       format.csv {
         authenticate_user!
-        headers["Content-Disposition"] = "attachment; filename=\"publications.csv\""
+        filename = params[:search].present? ? "publications_search_#{params[:search].parameterize}.csv" : "publications.csv"
+        headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
         headers["Content-Type"] = "text/csv"
-        self.response_body = Publication.csv_enumerator(@publications.reorder(:id))
+        self.response_body = Publication.csv_enumerator(@publications.reorder(:id), search_term: params[:search])
       }
     end
   end
