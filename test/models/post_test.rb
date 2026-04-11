@@ -89,6 +89,27 @@ class PostTest < ActiveSupport::TestCase
     assert post.errors[:featured_user_id].any? || post.errors[:featured_user].any?
   end
 
+  test "post without featured_user is valid for behind_the_science" do
+    post = Post.new(
+      title: "No Featured User BTS",
+      content_md: "Content",
+      post_type: "behind_the_science",
+      user: users(:admin_user),
+      featured_publication: publications(:scientific_article)
+    )
+    assert post.valid?
+  end
+
+  test "post without featured_user is valid for announcement" do
+    post = Post.new(
+      title: "No Featured User Announcement",
+      content_md: "Content",
+      post_type: "announcement",
+      user: users(:admin_user)
+    )
+    assert post.valid?
+  end
+
   test "generates slug from title" do
     post = Post.new(
       title: "A New Unique Post Title",
