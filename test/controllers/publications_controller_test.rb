@@ -60,6 +60,24 @@ class PublicationsControllerIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "create sets contributor to current user" do
+    sign_in users(:editor_user)
+    post publications_path, params: {
+      publication: { title: "Contributor Test", authors: "Author A", publication_year: 2021 }
+    }
+    pub = Publication.find_by(title: "Contributor Test")
+    assert_equal users(:editor_user), pub.contributor
+  end
+
+  test "update succeeds for publication without contributor" do
+    sign_in users(:editor_user)
+    pub = publications(:one) # has no contributor
+    patch publication_path(pub), params: {
+      publication: { title: "Updated Title" }
+    }
+    assert_equal "Updated Title", pub.reload.title
+  end
+
   test "destroy redirects unauthenticated user" do
     delete publication_path(publications(:scientific_article))
     assert_redirected_to new_user_session_path
