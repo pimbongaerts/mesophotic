@@ -72,7 +72,7 @@
             <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
           </font><br>
 
-          <% @post.content_md.split(/\s*?\r\n\s*?\r\n\s*?/).zip(@post.photos).in_groups_of(2).each do |bs| %>
+          <% @post.content_md.split("\n\n").zip(@post.photos).in_groups_of(2).each do |bs| %>
             <%= markdown(bs[0][0]) if bs[0].present? %>
             <%= markdown(bs[1][0]) if bs[1].present? %>
             <div class="card">

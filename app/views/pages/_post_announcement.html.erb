@@ -50,7 +50,7 @@
 
   <div class="col-sm-9">
     <% if @post.content_md? %>
-      <% behind_sections = @post.content_md.split("\r\n\r\n") %>
+      <% behind_sections = @post.content_md.split("\n\n") %>
       <div class="row">
         <div class="col-sm-12">
           <font color="#2b82bc">
