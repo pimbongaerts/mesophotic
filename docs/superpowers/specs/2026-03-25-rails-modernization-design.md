@@ -58,7 +58,7 @@
 | 5 | User role consolidation | Done |
 | 6 | Breadcrumb navigation | Done |
 | 7 | EEZ table + location mapping ([#153][]) | Todo |
-| 8 | CSV export: search word count column ([#146][]) | Todo |
+| 8 | CSV export: search word count column ([#146][]) | Done |
 | 9 | Location search autocomplete ([#59][]) | Todo |
 | 10 | Combined newsfeed on home page ([#39][]) | Todo |
 | 11 | Media gallery for CC-licensed photos ([#38][]) | Todo |
@@ -73,6 +73,8 @@
 | 4 | Behind the Science post format broken ([#98][]) | Todo |
 | 5 | Abstracts missing from some full texts ([#138][]) | Data task |
 | 6 | Journal full names missing for new entries ([#136][]) | Data task |
+| 7 | Can't save old publications — contributor validation ([#211][]) | Done |
+| 8 | Suspected duplicate journal entries ([#209][]) | Todo |
 
 ## Infrastructure
 
@@ -226,3 +228,5 @@ These are noted for future planning but not part of this effort:
 [#146]: https://github.com/pimbongaerts/mesophotic/issues/146
 [#153]: https://github.com/pimbongaerts/mesophotic/issues/153
 [#154]: https://github.com/pimbongaerts/mesophotic/issues/154
+[#209]: https://github.com/pimbongaerts/mesophotic/issues/209
+[#211]: https://github.com/pimbongaerts/mesophotic/issues/211
