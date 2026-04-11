@@ -45,7 +45,8 @@
 | 13 | Rails 8.0 → 8.1 | Done |
 | 14 | Sprockets → Propshaft + importmap + Turbolinks → Turbo | Done |
 | 15 | Turbo Frames (replace render_async) | Done |
-| **16** | **Local CI runner (bin/ci, RuboCop, Brakeman)** | **Next** |
+| 16 | Local CI runner (bin/ci, Brakeman, bundler-audit) | Done |
+| 17 | RuboCop linting | Todo |
 
 ## Features
 

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+echo "== Tests =="
+rails test
+
+echo ""
+echo "== Brakeman =="
+brakeman --no-pager -q
+
+echo ""
+echo "== Bundle Audit =="
+bundle audit check
+
+echo ""
+echo "All checks passed."
