@@ -86,6 +86,31 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_match /An Interview With/, response.body
   end
 
+  # -- Admin dropdown menu --
+
+  test "admin user sees quick-create links in navigation" do
+    sign_in users(:admin_user)
+    get root_path
+    assert_match /New Publication/, response.body
+    assert_match /New Post/, response.body
+    assert_match /New Photo/, response.body
+    assert_match /Dashboard/, response.body
+  end
+
+  test "regular user does not see quick-create links" do
+    sign_in users(:regular_user)
+    get root_path
+    assert_no_match /New Publication/, response.body
+    assert_no_match /New Post/, response.body
+    assert_no_match /New Photo/, response.body
+  end
+
+  test "unauthenticated user does not see quick-create links" do
+    get root_path
+    assert_no_match /New Publication/, response.body
+    assert_no_match /New Post/, response.body
+  end
+
   test "inside redirects unauthenticated user" do
     get inside_pages_path
     assert_redirected_to new_user_session_path
