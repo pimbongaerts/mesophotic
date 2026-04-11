@@ -42,7 +42,15 @@ class Post < ApplicationRecord
   validates :content_md, presence: true
 
   # callbacks
-  before_save {
+  before_save :normalise_line_endings
+  before_save :render_markdown
+
+  def normalise_line_endings
+    return unless content_md.present?
+    self.content_md = content_md.gsub("\r\n", "\n").gsub("\r", "\n")
+  end
+
+  def render_markdown
     renderer = Redcarpet::Render::HTML.new(
       filter_html: false,
       no_styles: true,
@@ -53,7 +61,7 @@ class Post < ApplicationRecord
 
     converter = Redcarpet::Markdown.new(renderer)
     self.content_html = converter.render(self.content_md)
-  }
+  end
 
   # other
   extend FriendlyId

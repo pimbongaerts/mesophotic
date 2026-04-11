@@ -110,6 +110,54 @@ class PostTest < ActiveSupport::TestCase
     assert post.valid?
   end
 
+  # -- Line ending normalisation --
+
+  test "normalises Windows line endings on save" do
+    post = Post.new(
+      title: "Windows Line Endings",
+      content_md: "Section one\r\n\r\nSection two\r\n\r\nSection three",
+      post_type: "announcement",
+      user: users(:admin_user)
+    )
+    post.save!
+    assert_equal "Section one\n\nSection two\n\nSection three", post.content_md
+    assert_not_includes post.content_md, "\r"
+  end
+
+  test "normalises old Mac line endings on save" do
+    post = Post.new(
+      title: "Mac Line Endings",
+      content_md: "Section one\r\rSection two",
+      post_type: "announcement",
+      user: users(:admin_user)
+    )
+    post.save!
+    assert_not_includes post.content_md, "\r"
+  end
+
+  test "preserves Unix line endings on save" do
+    post = Post.new(
+      title: "Unix Line Endings",
+      content_md: "Section one\n\nSection two",
+      post_type: "announcement",
+      user: users(:admin_user)
+    )
+    post.save!
+    assert_equal "Section one\n\nSection two", post.content_md
+  end
+
+  test "normalisation runs before markdown rendering" do
+    post = Post.new(
+      title: "Render After Normalise",
+      content_md: "**bold**\r\n\r\n*italic*",
+      post_type: "announcement",
+      user: users(:admin_user)
+    )
+    post.save!
+    assert_match "<strong>bold</strong>", post.content_html
+    assert_match "<em>italic</em>", post.content_html
+  end
+
   test "generates slug from title" do
     post = Post.new(
       title: "A New Unique Post Title",
