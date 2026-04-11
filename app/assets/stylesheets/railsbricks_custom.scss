@@ -88,6 +88,13 @@ $text-muted: #bbbbbb;
 //***********************************************************
 // IMPORT BOOTSTRAP
 @import "bootstrap";
+@import "tom-select-rails/scss/tom-select";
+@import "tom-select-rails/scss/tom-select.bootstrap5";
+
+// Hide raw selects until Tom Select initialises them to prevent flash
+select[data-tom-select] {
+  display: none;
+}
 
 //***********************************************************
 // CLASSES FOR VISUAL TESTING

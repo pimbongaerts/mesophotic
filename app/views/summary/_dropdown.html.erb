@@ -1,6 +1,3 @@
-<select onchange="window.location=this.value" class="fw-bold" style="width: auto; display: inline-block; border: none; background-color: #dfe3e7; padding: 2px 8px; border-radius: 4px;">
-<% if !object %>
-  <option>Select a <%= object.class.name.downcase %></option>
-<% end %>
+<select data-tom-select="navigate" data-placeholder="Search for a <%= model.singularize %>…" class="form-select" style="width: auto; display: inline-block;">
 <%= render partial: 'dropdown_item', locals: { object: object, model: model }, collection: objects %>
 </select>

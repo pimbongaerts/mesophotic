@@ -4,20 +4,12 @@
 
 <div class="row">
   <div class="col-sm-6">
-    <select onchange="window.location=this.value">
-      <% if !@location %>
-        <option>Select a location</option>
-      <% end %>
-      <% @locations.each do |location| %> 
-        <% if @location && @location == location %>
-          <option value="<%= location_path(location) %>" selected="selected">
-            <%= location.description %>
-          </option>
-        <% else %>
-          <option value="<%= location_path(location) %>">
-            <%= location.description %>
-          </option>
-        <% end %>
+    <select data-tom-select="navigate" data-placeholder="Search for a location…" class="form-select">
+      <option value="">Search for a location…</option>
+      <% @locations.each do |location| %>
+        <option value="<%= location_path(location) %>" <%= "selected" if @location == location %>>
+          <%= location.description %>
+        </option>
       <% end %>
     </select>
   </div>

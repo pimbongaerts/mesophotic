@@ -1527,6 +1527,16 @@
     };
     version = "0.6.1";
   };
+  tom-select-rails = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0ag4f1a7xiblsf2isg0z637b170r974xizrihf9aqkfl48gq4vmj";
+      type = "gem";
+    };
+    version = "2.5.1";
+  };
   tsort = {
     groups = ["default" "development"];
     platforms = [];
