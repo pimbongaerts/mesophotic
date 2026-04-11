@@ -60,7 +60,7 @@
 | 6 | Breadcrumb navigation | Done |
 | 7 | EEZ table + location mapping ([#153][]) | Todo |
 | 8 | CSV export: search word count column ([#146][]) | Done |
-| 9 | Location search autocomplete ([#59][]) | Todo |
+| 9 | Location search autocomplete ([#59][]) | Done |
 | 10 | Combined newsfeed on home page ([#39][]) | Todo |
 | 11 | Media gallery for CC-licensed photos ([#38][]) | Todo |
 

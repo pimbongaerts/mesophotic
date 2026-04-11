@@ -2,20 +2,20 @@
        locals: {title: "Locations",
                 breadcrumbs: [["Locations", nil]] } %>
 
-<div class="mb-3">
-  <select onchange="window.location=this.value" class="fw-bold" style="width: auto; display: inline-block; border: none; background-color: #dfe3e7; padding: 2px 8px; border-radius: 4px;">
-    <option>Select a location</option>
-    <% @locations.each do |location| %>
-      <option value="<%= summary_path(model: "locations", id: location.id) %>">
-        <%= location.description %>
-      </option>
-    <% end %>
-  </select>
-</div>
-
 <div class="row">
   <div class="col-sm-8">
-    <div class="card mb-0 h-100">
+    <div class="mb-3">
+      <select data-tom-select="navigate" data-placeholder="Search for a location…" class="form-select" style="width: auto; display: inline-block;">
+        <option value="">Search for a location…</option>
+        <% @locations.each do |location| %>
+          <option value="<%= summary_path(model: "locations", id: location.id) %>">
+            <%= location.description %>
+          </option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="card mb-0">
       <div class="card-body p-0" style="min-height: 380px;">
         <%= turbo_frame_tag "world-map-locations_index", src: world_map_path(key: "locations_index", model: Location, ids: @locations.map(&:id).join(','), height: 380), loading: :lazy %>
       </div>

@@ -25,6 +25,7 @@ gem 'ostruct'
 
 # RailsBricks gems
 gem 'bootstrap', '~> 5.3'
+gem 'tom-select-rails'
 gem 'devise', '>= 4.6.0'
 gem 'friendly_id'
 gem 'kaminari'
