@@ -9,70 +9,52 @@
 <%= form_for [:admin, @post], role: "form" do |f| %>
 
 <div class="mb-3">
-  <%= f.label :post_type, class: "required" %><br>
-  <%= f.select :post_type, Post::POST_TYPES,
-               class: "form-control" %>
+  <%= f.label :post_type, "Post Type", class: "required" %><br>
+  <%= f.select :post_type, Post::POST_TYPES.map { |t| [t.titleize, t] },
+               {}, class: "form-select" %>
 </div>
 
 <div class="mb-3">
-  <%= f.label :title %>
-  <div class="row">
-    <div class="col-12">
-      <%= f.text_field :title, :autofocus => true, class: "form-control monospaced-control", placeholder: "Title (also used for URL slug)..." %>
-    </div>
-  </div>
+  <%= f.label :title, "Title" %>
+  <%= f.text_field :title, autofocus: true, class: "form-control", placeholder: "Title (also used for URL slug)..." %>
 </div>
 
 <div class="mb-3">
-  <%= f.label :content_md, "Content" %>
-  <div class="row">
-    <div class="col-12">
-      <%= f.text_area :content_md, rows: 15, class: "form-control monospaced-control", placeholder: "Post content (Markdown format)..." %>
-    </div>
-  </div>
+  <%= f.label :content_md, "Content (Markdown)" %>
+  <%= f.text_area :content_md, rows: 20, class: "form-control font-monospace", placeholder: "Use #### for section headings, ##### for quick questions..." %>
 </div>
 
 <div class="mb-3">
-  <div class="row">
-    <div class="col-12">
-      <%= f.check_box :draft %> <%= f.label :draft, "draft" %>
-    </div>
-  </div>
+  <%= f.check_box :draft, class: "form-check-input" %>
+  <%= f.label :draft, "Draft", class: "form-check-label" %>
 </div>
 
 <div class="mb-3">
-  <%= f.label :featured_publication %><br>
+  <%= f.label :featured_publication_id, "Featured Publication" %><br>
   <%= f.collection_select :featured_publication_id,
                           Publication.all.order("authors ASC, publication_year ASC"),
                           :id, :short_citation_with_title,
-                          :include_blank => true,
-                          class: "form-control" %>
+                          { include_blank: "— None —" },
+                          class: "form-select" %>
 </div>
 
 <div class="mb-3">
-  <%= f.label :featured_user %><br>
+  <%= f.label :featured_user_id, "Featured User" %><br>
   <%= f.collection_select :featured_user_id,
                           User.all.order("last_name ASC, first_name ASC"),
                           :id, :full_name,
-                          :include_blank => true,
-                          class: "form-control" %>
+                          { include_blank: "— None —" },
+                          class: "form-select" %>
 </div>
 
 <div class="mb-3">
-  <%= f.label :updated_at, "Published date" %>
-  <div class="row">
-    <div class="col-12">
-      <%= f.datetime_select :updated_at, class: "form-control" %>
-    </div>
-  </div>
+  <%= f.label :updated_at, "Published Date" %>
+  <%= f.datetime_select :updated_at, {}, class: "form-select d-inline-block w-auto" %>
 </div>
 
-<div class="row">
-  <div class="col-12 padded">
-    <button class='btn btn-primary'>
-      <i class='bi bi-plus-square'></i> Publish
-    </button> - <%= link_to "Cancel", dashboard_admin_posts_path %>
-  </div>
+<div class="d-flex gap-2">
+  <%= f.submit "Save", class: "btn btn-primary" %>
+  <%= link_to "Cancel", dashboard_admin_posts_path, class: "btn btn-outline-secondary" %>
 </div>
 
 <% end %>
