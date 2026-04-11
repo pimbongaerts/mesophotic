@@ -95,6 +95,7 @@ class Publication < ApplicationRecord
 
   # callbacks
   before_save :create_journal_from_name
+  before_save :clean_line_breaks
 
   # other
   scope :validated, -> {
@@ -497,6 +498,21 @@ class Publication < ApplicationRecord
   # instance methods
   def create_journal_from_name
     create_journal(name: new_journal_name) unless new_journal_name.blank?
+  end
+
+  def clean_line_breaks
+    %i[abstract contents].each do |field|
+      next unless self[field].present?
+      text = self[field]
+      text = text.gsub("\r\n", "\n")        # normalise Windows line endings
+      text = text.gsub("\r", "\n")           # normalise old Mac line endings
+      text = text.gsub(/\n\n+/, "\u0000")   # preserve paragraph breaks (2+ newlines)
+      text = text.gsub("\n", " ")            # replace single newlines with space
+      text = text.gsub("\u0000", "\n\n")     # restore paragraph breaks
+      text = text.squeeze(" ")               # collapse multiple spaces
+      text = text.strip                      # trim leading/trailing whitespace
+      self[field] = text
+    end
   end
 
   def generate_filename_from_doi

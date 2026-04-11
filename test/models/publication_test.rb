@@ -119,6 +119,66 @@ class PublicationTest < ActiveSupport::TestCase
     assert_not_includes results, publications(:stats_ecology_redsea)
   end
 
+  # -- Line break cleaning --
+
+  test "clean_line_breaks replaces single newlines with spaces" do
+    pub = publications(:scientific_article)
+    pub.abstract = "Thirty\nnew\nrecords\nof\nfishes"
+    pub.save!
+    assert_equal "Thirty new records of fishes", pub.abstract
+  end
+
+  test "clean_line_breaks preserves double newlines as paragraph breaks" do
+    pub = publications(:scientific_article)
+    pub.abstract = "First paragraph.\n\nSecond paragraph."
+    pub.save!
+    assert_equal "First paragraph.\n\nSecond paragraph.", pub.abstract
+  end
+
+  test "clean_line_breaks handles Windows line endings" do
+    pub = publications(:scientific_article)
+    pub.abstract = "Thirty\r\nnew\r\nrecords"
+    pub.save!
+    assert_equal "Thirty new records", pub.abstract
+  end
+
+  test "clean_line_breaks handles Windows double line endings as paragraph breaks" do
+    pub = publications(:scientific_article)
+    pub.abstract = "First paragraph.\r\n\r\nSecond paragraph."
+    pub.save!
+    assert_equal "First paragraph.\n\nSecond paragraph.", pub.abstract
+  end
+
+  test "clean_line_breaks collapses multiple spaces" do
+    pub = publications(:scientific_article)
+    pub.abstract = "word   word"
+    pub.save!
+    assert_equal "word word", pub.abstract
+  end
+
+  test "clean_line_breaks strips leading and trailing whitespace" do
+    pub = publications(:scientific_article)
+    pub.abstract = "  some text  \n"
+    pub.save!
+    assert_equal "some text", pub.abstract
+  end
+
+  test "clean_line_breaks handles nil fields" do
+    pub = publications(:scientific_article)
+    pub.abstract = nil
+    pub.contents = nil
+    pub.save!
+    assert_nil pub.abstract
+    assert_nil pub.contents
+  end
+
+  test "clean_line_breaks cleans contents field too" do
+    pub = publications(:scientific_article)
+    pub.contents = "INTRODUCTION\r\nOne  of  the\r\nmost  important"
+    pub.save!
+    assert_equal "INTRODUCTION One of the most important", pub.contents
+  end
+
   # -- Task 4: Validation and association tests --
 
   test "requires title" do
