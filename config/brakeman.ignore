@@ -16,11 +16,6 @@
       "note": "table_name from ActiveRecord class, quoted with quote_table_name for defense-in-depth"
     },
     {
-      "fingerprint": "2b3fbc5e9a96b20c5935e9feee473bcb767028da7f6e4de3f975cf0416287f9e",
-      "code": "link_to(Publication.includes(:users, :journal, :validations, :sites => :location).find(params[:id]).scholar_url, :class ",
-      "note": "doi_url and scholar_url are constructed as https://doi.org/{DOI} and https://scholar.google.com/scholar?q={DOI}"
-    },
-    {
       "fingerprint": "43508000164bbde4856ad8f597c2b38f59af286113e814a3587957a9fe95a40a",
       "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find(params[:id]).websit",
       "note": "User.website/alt_website validated as http/https URI by model; social URLs constructed from handles with https:// prefix"
@@ -41,11 +36,6 @@
       "note": "User.website/alt_website validated as http/https URI by model; social URLs constructed from handles with https:// prefix"
     },
     {
-      "fingerprint": "8e1c35cc70b927b7716a24874df031adf82c16a6ec2ff146c600d06435ae24e6",
-      "code": "link_to(Publication.includes(:users, :journal, :validations, :sites => :location).find(params[:id]).doi_url, :class => \"",
-      "note": "doi_url and scholar_url are constructed as https://doi.org/{DOI} and https://scholar.google.com/scholar?q={DOI}"
-    },
-    {
       "fingerprint": "d8e34f39f4eec3cfe2dd0d172a4b1eb3dd68f612a2f50a1d59001b57b6af28c8",
       "code": "link_to(User.includes(:organisation, :platforms, :photos, :profile_picture_attachment => :blob).find(params[:id]).bluesk",
       "note": "User.website/alt_website validated as http/https URI by model; social URLs constructed from handles with https:// prefix"
@@ -64,8 +54,18 @@
       "fingerprint": "f104b0f0b745340d7cd778fdf3fea669ddc39a0b949593d4f902f0a1b8975b2a",
       "code": "l(Publication.maximum(:updated_at).to_date, :format => :long)",
       "note": "l() helper formatting a Date object from Publication.maximum(:updated_at)"
+    },
+    {
+      "fingerprint": "7a26b5a3093119cead2453bc293071ce835a190395f948f874fd515758d82d0b",
+      "code": "link_to(Publication.includes(:users, :journal, { :validations => :user }, :sites => :location).find(params[:id]).doi_url",
+      "note": "DOI and Scholar URLs constructed as https://doi.org/{DOI} and https://scholar.google.com/scholar?q={DOI}"
+    },
+    {
+      "fingerprint": "bac46985d451f597c1e30615f6c3de8f3cdadbdb8a1541ccfc1d75b4a793f9f1",
+      "code": "link_to(Publication.includes(:users, :journal, { :validations => :user }, :sites => :location).find(params[:id]).scholar",
+      "note": "DOI and Scholar URLs constructed as https://doi.org/{DOI} and https://scholar.google.com/scholar?q={DOI}"
     }
   ],
-  "updated": "2026-04-07",
+  "updated": "2026-04-11",
   "brakeman_version": "8.0.4"
 }
