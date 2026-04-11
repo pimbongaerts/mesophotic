@@ -1,0 +1,186 @@
+<% researcher = @post.featured_user %>
+<% publication = @post.featured_publication %>
+
+<%= render partial: "layouts/page_title",
+       locals: {
+         title: publication.present? ? publication.title : @post.title,
+         supertitle: @post.category,
+         breadcrumbs: [["News", posts_pages_path], [(publication.present? ? publication.title_truncated : @post.title), nil]]
+       } %>
+<p class="text-muted mb-4" style="font-size: 0.85em;">
+  <%= l @post.created_at.to_date, format: :long %> · Posted by <%= link_to "#{@post.user.first_name} #{@post.user.last_name}", member_pages_path(@post.user), style: "text-decoration: none;" %>
+  <% if current_user.try(:editor_or_admin?) %>
+    <%= link_to edit_admin_post_path(@post.slug), class: "text-muted icon-btn ms-2" do %><i class="bi bi-pencil"></i><i class="bi bi-pencil-fill"></i><% end %>
+  <% end %>
+</p>
+
+<div class="row">
+  <div class="col-sm-3">
+
+    <%# Featured user card %>
+    <% featured_person = researcher || (@post.post_type == 'announcement' ? @post.user : nil) %>
+    <% if featured_person.present? %>
+      <div class="card">
+        <div class="card-header"><strong><%= researcher.present? ? "An Interview With" : "Posted By" %></strong></div>
+        <div class="card-body" align="center">
+          <% if featured_person.profile_picture.attached? %>
+            <div class="rounded-3 d-inline-block" style="width: 200px; height: 200px; background-color: #f0f1f3; overflow: hidden;">
+              <%= link_to member_pages_path(featured_person) do %>
+                <%= image_tag featured_person.profile_picture.variant(resize: "200x200>"),
+                              style: "width: 100%; height: 100%; object-fit: cover;" %>
+              <% end %>
+            </div>
+          <% end %>
+          <strong>
+            <%= link_to "#{featured_person.first_name} #{featured_person.last_name}", member_pages_path(featured_person) %>
+          </strong><br>
+          <small>
+            <% if featured_person.organisation %>
+              <%= featured_person.organisation.name %>&nbsp;
+              (<%= ISO3166::Country[featured_person.organisation.country] %>)<br>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Short bio (ECR / Method) %>
+    <% if researcher.present? && researcher.research_interests.present? %>
+      <div class="card">
+        <div class="card-header"><strong>Short Bio</strong></div>
+        <div class="card-body">
+          <small><%= markdown(researcher.research_interests) %></small>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Word cloud %>
+    <div class="card">
+      <div class="card-header"><strong><%= @post.category %> Keywords</strong></div>
+      <div class="card-body">
+        <%= render partial: 'shared/wordcloud',
+                   object: @post.word_cloud(20),
+                   locals: { title: 'post_contents' } %>
+      </div>
+    </div>
+
+    <%# Location map %>
+    <% if publication.present? %>
+      <div class="card">
+        <div class="card-header"><strong>Study Location</strong></div>
+        <div class="card-body" style="min-height: 150px;">
+          <%= turbo_frame_tag "world-map-post-#{@post.id}", src: world_map_path(key: "post_#{@post.id}", model: Location, ids: publication.locations.map(&:id).join(','), height: 150, z: 1), loading: :lazy, target: "_top" %>
+        </div>
+      </div>
+    <% elsif researcher.present? && researcher.publications.count > 0 %>
+      <div class="card">
+        <div class="card-header"><strong>Study Locations</strong></div>
+        <div class="card-body">
+          <% data = count_geographic_occurrences_of_publications_from_user(researcher) %>
+          <%= render partial: 'shared/world_map', locals: { title: 'Locations',
+                                                            data: data,
+                                                            height: 150 } %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Publication metadata %>
+    <% if publication.present? %>
+      <div class="card">
+        <div class="card-header"><strong>Publication Metadata</strong></div>
+        <div class="card-body">
+          <%= render partial: 'shared/metadata',
+                     locals: { entity: publication } %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+
+  <div class="col-sm-9">
+    <% if @post.content_md? %>
+      <% blocks = @post.parsed_content %>
+      <% photos = @post.photos.to_a %>
+      <% section_count = 0 %>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <% if publication.present? %>
+            <font color="#2b82bc">
+              <h1>&ldquo;<%= @post.title %>&rdquo;</h1>
+            </font><br>
+          <% elsif researcher.present? %>
+            <font color="#2b82bc">
+              <h1><%= @post.category %>: <%= researcher.full_name_normal %></h1>
+            </font><br>
+          <% end %>
+
+          <% blocks.each do |block| %>
+            <% if block[:type] == :quick_question_group %>
+              <div class="card">
+                <div class="card-body" align="center" style="background-color: #f5f5f5">
+                  <div class="row">
+                    <% block[:questions].each_slice(2) do |pair| %>
+                      <% if pair.length == 2 %>
+                        <div class="col-sm-6"><%= markdown(pair[0]) %></div>
+                        <div class="col-sm-6"><%= markdown(pair[1]) %></div>
+                      <% else %>
+                        <div class="col-sm-12"><%= markdown(pair[0]) %></div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <% section_count += 1 %>
+              <%= markdown(block[:content]) %>
+
+              <%# Show a photo pair after every 2 normal sections %>
+              <% if section_count.even? && photos.any? %>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <% photo = photos.shift %>
+                      <% if photo %>
+                        <div class="col-sm-6">
+                          <%= render partial: 'photo_with_subtitle', locals: { photo: photo } %>
+                        </div>
+                      <% end %>
+                      <% photo = photos.shift %>
+                      <% if photo %>
+                        <div class="col-sm-6">
+                          <%= render partial: 'photo_with_subtitle', locals: { photo: photo } %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <%# Featured publication link %>
+          <% if publication.present? %>
+            <h4>Featured Article:</h4>
+            <table class="table table-striped">
+              <%= render partial: 'publications/publication',
+                 locals: { publication: publication } %>
+            </table>
+          <% end %>
+        </div>
+      </div>
+    <% elsif @post.photos.count > 0 %>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header"><strong>Photos</strong></div>
+            <div class="card-body">
+              <%= render partial: 'shared/behind_the_scenes',
+                         locals: { publication: @post, style: 'full' } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
