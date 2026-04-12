@@ -12,6 +12,9 @@
       <div class="col-sm-6" style="min-height: 600px;">
         <%= turbo_frame_tag "stats-world_locations", src: world_locations_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
+      <div class="col-sm-6" style="min-height: 600px;">
+        <%= turbo_frame_tag "stats-world_sovereigns", src: world_sovereigns_path(:status => @status, :year => @year), loading: :lazy %>
+      </div>
     </div>
   </div>
 </div>

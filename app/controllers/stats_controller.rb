@@ -6,6 +6,7 @@ class StatsController < ApplicationController
     :growing_authors_over_time,
     :world_publications,
     :world_locations,
+    :world_sovereigns,
     :summarized_fields,
     :summarized_journals,
     :summarized_focusgroups,
@@ -132,6 +133,17 @@ class StatsController < ApplicationController
       .order(Arel.sql('count(locations.id) DESC'))
 
     render_in_turbo_frame("stats-world_locations") { render_to_string partial: "world_locations" }
+  end
+
+  def world_sovereigns
+    @sovereigns = Eez
+      .joins(locations: :publications)
+      .select("eezs.sovereign AS description, eezs.sovereign AS chart_description, COUNT(DISTINCT publications.id) AS publications_count")
+      .where("publications.id IN (SELECT id FROM (#{@publications.to_sql}))")
+      .group("eezs.sovereign")
+      .order(Arel.sql("COUNT(DISTINCT publications.id) DESC"))
+
+    render_in_turbo_frame("stats-world_sovereigns") { render_to_string partial: "world_sovereigns" }
   end
 
   def time_refuge

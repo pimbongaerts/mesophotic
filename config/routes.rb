@@ -67,6 +67,7 @@ Mesophotic::Application.routes.draw do
   get :world_publications, controller: :stats
   get :world_users, controller: :stats
   get :world_locations, controller: :stats
+  get :world_sovereigns, controller: :stats
   get :time_refuge, controller: :stats
   get :time_mesophotic, controller: :stats
 
