@@ -17,6 +17,16 @@
           <%= f.label :longitude, class: "required" %><br>
           <%= f.text_field :longitude, class: "form-control", required: true, placeholder: "e.g. 145.81735" %>
         </div>
+        <div class="mb-3">
+          <%= f.label :eez_id, "EEZ" %><br>
+          <%= f.select :eez_id,
+              options_for_select(
+                Eez.order(:sovereign, :territory).map { |e| ["#{e.territory} (#{e.sovereign})", e.id] },
+                location.eez_id
+              ),
+              { include_blank: "Select EEZ..." },
+              { class: "form-select", "data-tom-select" => "" } %>
+        </div>
         <% if location.publications.count > 0 %>
           <div class="alert alert-warning mb-0 py-2">
             <strong>Note:</strong> <%= location.publications.count %>

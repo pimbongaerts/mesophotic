@@ -146,4 +146,33 @@ class LocationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_equal "", loc.reload.description
   end
+
+  # --- EEZ dropdown ---
+
+  test "new form has EEZ dropdown" do
+    sign_in users(:editor_user)
+    get new_location_path
+    assert_select 'select[name="location[eez_id]"]'
+  end
+
+  test "edit form has EEZ dropdown" do
+    sign_in users(:editor_user)
+    get edit_location_path(locations(:great_barrier_reef))
+    assert_select 'select[name="location[eez_id]"]'
+  end
+
+  test "create with eez_id saves association" do
+    sign_in users(:editor_user)
+    eez = eezs(:australian_gbr)
+    post locations_path, params: { location: { description: "New Reef", latitude: -15.5, longitude: 145.8, eez_id: eez.id } }
+    assert_equal eez, Location.last.eez
+  end
+
+  test "update with eez_id saves association" do
+    sign_in users(:editor_user)
+    loc = locations(:great_barrier_reef)
+    new_eez = eezs(:australian_coral_sea)
+    patch location_path(loc), params: { location: { eez_id: new_eez.id } }
+    assert_equal new_eez, loc.reload.eez
+  end
 end
