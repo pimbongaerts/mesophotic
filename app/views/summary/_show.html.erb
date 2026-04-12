@@ -9,6 +9,10 @@
 
     <%= render partial: "#{title.downcase}/dropdown_body", locals: { object: object } if lookup_context.template_exists? "dropdown_body", title.downcase, true %>
 
+    <% if object.respond_to?(:eez) && object.eez.present? %>
+      <p><strong>EEZ:</strong> <%= link_to "#{object.eez.territory} (#{object.eez.sovereign})", eez_path(object.eez) %></p>
+    <% end %>
+
     <div class="mb-3">
       <%= render partial: 'dropdown',
                  locals: { objects: objects, object: object, model: title.downcase } %>
