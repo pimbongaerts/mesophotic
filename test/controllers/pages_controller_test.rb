@@ -94,6 +94,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_match /New Publication/, response.body
     assert_match /New Post/, response.body
     assert_match /New Photo/, response.body
+    assert_match /New Location/, response.body
     assert_match /Dashboard/, response.body
   end
 
@@ -103,6 +104,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_no_match /New Publication/, response.body
     assert_no_match /New Post/, response.body
     assert_no_match /New Photo/, response.body
+    assert_no_match /New Location/, response.body
   end
 
   test "unauthenticated user does not see quick-create links" do

@@ -6,7 +6,8 @@ class MapsController < ApplicationController
     return head(:bad_request) unless model_class
 
     cached = Rails.cache.fetch(["world_map", params[:model], params[:ids], params[:z], Publication.maximum(:updated_at).to_i]) do
-      data = model_class.where(id: params[:ids].split(','))
+      ids = params[:ids].to_s.split(',').reject(&:blank?)
+      data = ids.any? ? model_class.where(id: ids) : model_class.none
       render_to_string partial: 'shared/world_map_clickable',
              locals: { title: params[:model].pluralize.titleize,
                        data: get_coordinates(data, params[:z]),

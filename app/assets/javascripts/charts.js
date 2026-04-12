@@ -108,7 +108,43 @@
     'depth-series': function(el) { seriesChart(el, 'area', { inverted: true, stacking: 'percent', legend: true }); },
     'map': function(el) { mapChart(el, {}); },
     'map-clickable': function(el) { mapChart(el, { nav: true, clickable: true, dataLabels: true, seriesName: 'Locations', tooltipFormat: '{point.name}' }); },
+    'map-preview': function(el) { mapPreview(el); },
   };
+
+  function mapPreview(el) {
+    var latField = document.getElementById(el.dataset.latField);
+    var lonField = document.getElementById(el.dataset.lonField);
+    var nameField = document.getElementById(el.dataset.nameField);
+    var chart = Highcharts.mapChart(el, {
+      title: { text: '' },
+      credits: { enabled: false },
+      legend: { enabled: false },
+      exporting: { enabled: false },
+      chart: { backgroundColor: 'rgba(255, 255, 255, 0)' },
+      mapNavigation: { enabled: true, buttonOptions: { verticalAlign: 'top' } },
+      series: [
+        { name: 'Countries', mapData: Highcharts.maps['custom/world-continents'], color: '#E0E0E0', enableMouseTracking: false },
+        { type: 'mapbubble', name: 'Location', data: [], maxSize: '12%',
+          dataLabels: { enabled: true, format: '{point.name}' } }
+      ]
+    });
+
+    function updateMarker() {
+      var lat = parseFloat(latField.value);
+      var lon = parseFloat(lonField.value);
+      var name = nameField ? nameField.value.trim() : '';
+      var data = [];
+      if (latField.value.trim() !== '' && lonField.value.trim() !== '' && !isNaN(lat) && !isNaN(lon)) {
+        data = [{ lat: lat, lon: lon, z: 1, name: name }];
+      }
+      chart.series[1].setData(data, true);
+    }
+
+    latField.addEventListener('input', updateMarker);
+    lonField.addEventListener('input', updateMarker);
+    if (nameField) nameField.addEventListener('input', updateMarker);
+    updateMarker();
+  }
 
   // --- WordCloud2 ---
 

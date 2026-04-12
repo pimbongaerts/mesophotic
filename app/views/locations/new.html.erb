@@ -1,10 +1,21 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "New location",
-          subtitle: "",
+       locals: {title: "New Location",
           breadcrumbs: [["Locations", locations_path], ["New", nil]] } %>
 
 <%= form_for(@location) do |f| %>
-  <%= render partial: 'form', locals: {f: f, 
-  									   location: @location} %>
-  <div class="actions"><%= f.submit "Save Location", class: "btn btn-primary" %></div>
+  <% if @location.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h5>
+      <ul class="mb-0">
+        <% @location.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= render partial: 'form', locals: {f: f, location: @location} %>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Location", class: "btn btn-primary" %>
+    <%= link_to "Cancel", locations_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>
