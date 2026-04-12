@@ -19,4 +19,10 @@ class PublicationEezTest < ActiveSupport::TestCase
     assert_equal sovereigns, sovereigns.sort
     assert_equal sovereigns.uniq, sovereigns
   end
+
+  test "csv_header includes EEZ columns" do
+    header = Publication.csv_header
+    assert_includes header, "eez_sovereign"
+    assert_includes header, "eez_territory"
+  end
 end
