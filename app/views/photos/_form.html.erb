@@ -1,123 +1,123 @@
+<%# Metadata %>
 <div class="card">
   <div class="card-header">
-    <h4 class="card-title">Photo Metadata</h4>
+    <strong>Metadata</strong>
   </div>
   <div class="card-body">
-    <% if @photo.image.attached? %>
-      <div class="row">
-        <div class="col-12">
-          <div style="background-color: #f0f1f3;">
-            <%= image_tag @photo.image.variant(resize: "640x480>"), style: "width: 100%;" %>
-          </div>
-          <hr>
-        </div>
-      </div>
-    <% end %>
-
     <div class="row">
-      <div class="col-7">
-        <div class="mb-3">
-          <%= f.label :image %><br>
-          <%= f.file_field :image %>
-        </div>
+      <div class="col-6">
         <div class="mb-3">
           <%= f.label :description %><br>
-          <%= f.text_field :description, style: 'width:90%;',
-                           class: "form-control monospaced-control"  %>
+          <%= f.text_field :description, class: "form-control", placeholder: "Brief description of the photo" %>
         </div>
         <div class="mb-3">
-          <%= f.label :credit %>&nbsp;
-          <small>
-            (do not include a copyright symbol - this will automatically
-            be added)
-          </small><br>
-          <%= f.text_field :credit, style: 'width:90%;',
-                           class: "form-control monospaced-control"  %>
+          <%= f.label :credit %> <small class="text-muted">(do not include a copyright symbol)</small><br>
+          <%= f.text_field :credit, class: "form-control", placeholder: "e.g. John Smith" %>
         </div>
         <div class="mb-3">
           <%= f.label :photographer %><br>
           <%= f.collection_select :photographer_id,
                                   User.all.order("last_name ASC, first_name ASC"),
                                   :id, :full_name,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select photographer..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :creative_commons %>
-          <%= f.label "Creative Commons license applies" %>
-        </div>
-      </div>
-      <div class="col-5">
         <div class="mb-3">
           <%= f.label :location %><br>
           <%= f.collection_select :location_id,
                                   Location.all.order("description ASC"),
                                   :id, :description,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select location..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
         <div class="mb-3">
           <%= f.label :site %><br>
           <%= f.collection_select :site_id,
                                   Site.all.order("site_name ASC"),
                                   :id, :site_name,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select site..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
         <div class="mb-3">
-          <%= f.label :depth %> <small>(use `0` for surface shots and '-1' for unknown depth)</small><br>
-          <%= f.text_field :depth,
-              class: "form-control monospaced-control",
-              value: 0 %>
+          <%= f.label :depth %> <small class="text-muted">(0 for surface, -1 for unknown)</small><br>
+          <%= f.text_field :depth, class: "form-control", placeholder: "e.g. 45" %>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :contains_species %>
-          <%= f.label "Photo contains species" %>
+        <div class="form-check">
+          <%= f.check_box :creative_commons, class: "form-check-input" %>
+          <%= f.label :creative_commons, "Creative Commons license applies", class: "form-check-label" %>
         </div>
-        <div class="mb-3">
-          <%= f.check_box :underwater %>
-          <%= f.label "Photo taken underwater" %>
+        <div class="form-check">
+          <%= f.check_box :contains_species, class: "form-check-input" %>
+          <%= f.label :contains_species, "Photo contains species", class: "form-check-label" %>
         </div>
+        <div class="form-check">
+          <%= f.check_box :underwater, class: "form-check-input" %>
+          <%= f.label :underwater, "Photo taken underwater", class: "form-check-label" %>
+        </div>
+        <div class="form-check">
+          <%= f.check_box :showcases_location, class: "form-check-input" %>
+          <%= f.label :showcases_location, "Feature on location page", class: "form-check-label" %>
+        </div>
+      </div>
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.check_box :showcases_location %>
-          <%= f.label "Photo should be featured on Location page" %>
+          <%= f.label :image, class: "required" %><br>
+          <div data-image-drop="photo_image"
+               class="rounded-3 mb-2 d-flex align-items-center justify-content-center"
+               style="max-width: 100%; aspect-ratio: 4/3; max-height: 355px; border: 2px dashed #dee2e6; cursor: pointer; overflow: hidden; background-color: #f8f9fa; position: relative; transition: all 0.15s ease;">
+            <% if @photo.image.attached? %>
+              <%= image_tag @photo.image.variant(resize: "640x480>"),
+                            data: { image_drop_preview: true },
+                            style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;" %>
+            <% else %>
+              <div data-image-drop-placeholder class="text-center text-muted">
+                <i class="bi bi-cloud-arrow-up" style="font-size: 2rem;"></i>
+                <br><small>Drop image or click</small>
+              </div>
+              <img data-image-drop-preview style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none;">
+            <% end %>
+          </div>
+          <%= f.file_field :image, class: "form-control" %>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="card">
+<%# Researchers / Organisations %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Tag researchers / organisations depicted in the photo
-    </h4>
+    <strong>Researchers / Organisations</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-5">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label "Researchers:" %><br>
+          <%= f.label "Researchers" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "photo[user_ids][]", "" %>
             <% for user in User.all.order("last_name ASC, first_name ASC") %>
-              <%= check_box_tag "photo[user_ids][]", user.id,
-                                @photo.users.include?(user) %>
-              <%= user.first_name %> <em><%= user.last_name %></em><br>
+              <div class="form-check">
+                <%= check_box_tag "photo[user_ids][]", user.id,
+                                  @photo.users.include?(user), class: "form-check-input" %>
+                <label class="form-check-label"><%= user.first_name %> <em><%= user.last_name %></em></label>
+              </div>
             <% end %>
           </div>
         </div>
       </div>
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label "Organisations:" %><br>
+          <%= f.label "Organisations" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "photo[organisation_ids][]", "" %>
             <% for organisation in Organisation.all.order("name ASC") %>
-              <%= check_box_tag "photo[organisation_ids][]",
-                                organisation.id,
-                                @photo.organisations.include?(organisation) %>
-              <%= organisation.name %><br>
+              <div class="form-check">
+                <%= check_box_tag "photo[organisation_ids][]",
+                                  organisation.id,
+                                  @photo.organisations.include?(organisation), class: "form-check-input" %>
+                <label class="form-check-label"><%= organisation.name %></label>
+              </div>
             <% end %>
           </div>
         </div>
@@ -126,42 +126,42 @@
   </div>
 </div>
 
-<div class="card">
+<%# Categories %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Tag technologies / species depicted in the photo
-    </h4>
+    <strong>Categories</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :platforms %><br>
+          <%= f.label :platforms, "Technologies / Platforms" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "photo[platform_ids][]", "" %>
             <% for platform in Platform.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "photo[platform_ids][]", platform.id,
-                                @photo.platforms.include?(platform) %>
-              <%= platform.description %>&nbsp;<br>
+              <div class="form-check">
+                <%= check_box_tag "photo[platform_ids][]", platform.id,
+                                  @photo.platforms.include?(platform), class: "form-check-input" %>
+                <label class="form-check-label"><%= platform.description %></label>
+              </div>
             <% end %>
           </div>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :species %><br>
-          Not yet available.
+          <%= f.label :species, "Species" %><br>
+          <span class="text-muted">Not yet available.</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="card">
+<%# Link to entities %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Link photo to specific entities:
-    </h4>
+    <strong>Link to Entities</strong>
   </div>
   <div class="card-body">
     <div class="row">
@@ -171,34 +171,34 @@
           <%= f.collection_select :publication_id,
                                   Publication.all.order("authors ASC, publication_year ASC"),
                                   :id, :short_citation_with_title,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select publication..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
         <div class="mb-3">
           <%= f.label :expedition %><br>
           <%= f.collection_select :expedition_id,
-                                  Expedition.find_each,
+                                  Expedition.all.order("title ASC"),
                                   :id, :title,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select expedition..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
       </div>
       <div class="col-6">
         <div class="mb-3">
           <%= f.label :meeting %><br>
           <%= f.collection_select :meeting_id,
-                                  Meeting.find_each,
+                                  Meeting.all.order("title ASC"),
                                   :id, :title,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select meeting..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
         <div class="mb-3">
           <%= f.label :post %><br>
           <%= f.collection_select :post_id,
-                                  Post.find_each,
+                                  Post.all.order("title ASC"),
                                   :id, :title,
-                                  :include_blank => true,
-                                  class: "form-control" %>
+                                  { include_blank: "Select post..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
       </div>
     </div>
