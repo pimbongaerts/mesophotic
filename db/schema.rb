@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_022620) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_030155) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.integer "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -49,6 +49,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_022620) do
     t.string "request_response"
     t.integer "user_id"
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
+  end
+
+  create_table "eezs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "geoname", null: false
+    t.integer "mrgid", null: false
+    t.string "sovereign", null: false
+    t.string "territory", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mrgid"], name: "index_eezs_on_mrgid", unique: true
+    t.index ["sovereign"], name: "index_eezs_on_sovereign"
   end
 
   create_table "expeditions", force: :cascade do |t|
@@ -164,10 +175,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_022620) do
   create_table "locations", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "description", limit: 255
+    t.integer "eez_id"
     t.decimal "latitude", precision: 15, scale: 10
     t.decimal "longitude", precision: 15, scale: 10
     t.text "short_description"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["eez_id"], name: "index_locations_on_eez_id"
   end
 
   create_table "locations_publications", id: false, force: :cascade do |t|
@@ -481,4 +494,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_022620) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "locations", "eezs"
 end

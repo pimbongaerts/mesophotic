@@ -6,9 +6,10 @@
 #  description       :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  latitude          :decimal(15, 10)  default(0.0)
-#  longitude         :decimal(15, 10)  default(0.0)
+#  latitude          :decimal(15, 10)
+#  longitude         :decimal(15, 10)
 #  short_description :text
+#  eez_id            :integer
 #
 
 class Location < ApplicationRecord
@@ -20,6 +21,7 @@ class Location < ApplicationRecord
   has_and_belongs_to_many :expeditions, touch: true
   has_many :sites # TODO: CHECK
   has_many :photos
+  belongs_to :eez, optional: true
 
   # validations
   validates :description, presence: true

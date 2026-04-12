@@ -1,0 +1,23 @@
+australian_gbr:
+  mrgid: 8440
+  geoname: "Australian Exclusive Economic Zone (Great Barrier Reef)"
+  sovereign: "Australia"
+  territory: "Great Barrier Reef"
+
+australian_coral_sea:
+  mrgid: 48188
+  geoname: "Australian Exclusive Economic Zone (Coral Sea)"
+  sovereign: "Australia"
+  territory: "Coral Sea"
+
+red_sea_egypt:
+  mrgid: 8441
+  geoname: "Egyptian Exclusive Economic Zone"
+  sovereign: "Egypt"
+  territory: "Egypt"
+
+unstudied_eez:
+  mrgid: 99998
+  geoname: "Unstudied Exclusive Economic Zone"
+  sovereign: "Unstudied Country"
+  territory: "Unstudied Territory"
