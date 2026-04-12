@@ -317,9 +317,21 @@ class Publication < ApplicationRecord
         .joins(:publications)
         .group("publications.id")
         .reduce({}) { |result, a| result.update(a.id => a.description) }
+      eez_sovereigns = Location
+        .select("publications.id, GROUP_CONCAT(DISTINCT eezs.sovereign) AS sovereign_names")
+        .joins(:publications)
+        .left_joins(:eez)
+        .group("publications.id")
+        .reduce({}) { |result, a| result.update(a.id => a.sovereign_names) }
+      eez_territories = Location
+        .select("publications.id, GROUP_CONCAT(DISTINCT eezs.territory) AS territory_names")
+        .joins(:publications)
+        .left_joins(:eez)
+        .group("publications.id")
+        .reduce({}) { |result, a| result.update(a.id => a.territory_names) }
 
       for publication in csv_rows
-        csv << csv_row(publication, validated, fields, focusgroups, platforms, locations)
+        csv << csv_row(publication, validated, fields, focusgroups, platforms, locations, eez_sovereigns, eez_territories)
       end
     end
   }
@@ -346,7 +358,19 @@ class Publication < ApplicationRecord
       .joins(:publications)
       .group("publications.id")
       .reduce({}) { |result, a| result.update(a.id => a.description) }
-    [validated, fields, focusgroups, platforms, locations]
+    eez_sovereigns = Location
+      .select("publications.id, GROUP_CONCAT(DISTINCT eezs.sovereign) AS sovereign_names")
+      .joins(:publications)
+      .left_joins(:eez)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.sovereign_names) }
+    eez_territories = Location
+      .select("publications.id, GROUP_CONCAT(DISTINCT eezs.territory) AS territory_names")
+      .joins(:publications)
+      .left_joins(:eez)
+      .group("publications.id")
+      .reduce({}) { |result, a| result.update(a.id => a.territory_names) }
+    [validated, fields, focusgroups, platforms, locations, eez_sovereigns, eez_territories]
   end
 
   def self.csv_enumerator(scope, search_term: nil)
@@ -358,10 +382,10 @@ class Publication < ApplicationRecord
       header = csv_header
       header.insert(1, "occurrences") if has_relevance
       yielder << CSV.generate_line(header)
-      validated, fields, focusgroups, platforms, locations = csv_association_data
+      validated, fields, focusgroups, platforms, locations, eez_sovereigns, eez_territories = csv_association_data
       rows = has_relevance ? scope.csv_rows_with_relevance : scope.csv_rows
       rows.find_each(batch_size: 100) do |publication|
-        row = csv_row(publication, validated, fields, focusgroups, platforms, locations)
+        row = csv_row(publication, validated, fields, focusgroups, platforms, locations, eez_sovereigns, eez_territories)
         row.insert(1, publication.relevance.to_i) if has_relevance
         yielder << CSV.generate_line(row)
       end
@@ -434,11 +458,13 @@ class Publication < ApplicationRecord
       "fields",
       "focusgroups",
       "platforms",
-      "locations"
+      "locations",
+      "eez_sovereign",
+      "eez_territory"
     ]
   end
 
-  def self.csv_row publication, validated, fields, focusgroups, platforms, locations
+  def self.csv_row publication, validated, fields, focusgroups, platforms, locations, eez_sovereigns, eez_territories
     isValidated = validated.include?(publication.id)
 
     [
@@ -471,6 +497,8 @@ class Publication < ApplicationRecord
       focusgroups[publication.id],
       platforms[publication.id],
       locations[publication.id],
+      eez_sovereigns[publication.id],
+      eez_territories[publication.id],
     ]
   end
 
