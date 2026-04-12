@@ -1,10 +1,12 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Edit location",
-          subtitle: "#{@location.description}",
+       locals: {title: "Editing \"#{@location.description}\"",
           breadcrumbs: [["Locations", locations_path], [@location.description, nil]] } %>
 
 <%= form_for(@location) do |f| %>
   <%= render partial: 'form', locals: {f: f, 
   									   location: @location} %>
-  <div class="actions"><%= f.submit "Save Location", class: "btn btn-primary" %></div>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Location", class: "btn btn-primary" %>
+    <%= link_to "Cancel", locations_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>

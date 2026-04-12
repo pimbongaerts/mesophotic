@@ -1,31 +1,42 @@
-<div class="card">
-  <div class="card-header">
-    <h4 class="card-title">Location</h4>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-7">
+<div class="row">
+  <div class="col-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <strong>Details</strong>
+      </div>
+      <div class="card-body pb-0">
         <div class="mb-3">
-          <%= f.label :description %><br>
-          <%= f.text_field :description, style: 'width:90%;' %>
+          <%= f.label :description, class: "required" %><br>
+          <%= f.text_field :description, class: "form-control",required: true, placeholder: "e.g. Australia - Great Barrier Reef" %>
         </div>
         <div class="mb-3">
-          <%= f.label :latitude %><br>
-          <%= f.text_field :latitude, style: 'width:90%;' %>
+          <%= f.label :latitude, class: "required" %><br>
+          <%= f.text_field :latitude, class: "form-control", required: true, placeholder: "e.g. -16.447284" %>
         </div>
         <div class="mb-3">
-          <%= f.label :longitude %><br>
-          <%= f.text_field :longitude, style: 'width:90%;' %>
+          <%= f.label :longitude, class: "required" %><br>
+          <%= f.text_field :longitude, class: "form-control", required: true, placeholder: "e.g. 145.81735" %>
         </div>
         <% if location.publications.count > 0 %>
-          <p class="bg-danger">
-            &nbsp;Note: <%= location.publications.count %>
-            publications are linked to this location
-          </p>
+          <div class="alert alert-warning mb-0 py-2">
+            <strong>Note:</strong> <%= location.publications.count %>
+            <%= "publication".pluralize(location.publications.count) %> linked to this location
+          </div>
         <% end %>
       </div>
-      <div class="col-5" style="min-height: 230px;">
-        <%= turbo_frame_tag "world-map-locations_form", src: world_map_path(key: "locations_form", model: Location, ids: location.id, height: 230), loading: :lazy %>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <strong>Map</strong>
+      </div>
+      <div class="card-body d-flex flex-column p-2">
+        <div data-chart="map-preview"
+             data-lat-field="location_latitude"
+             data-lon-field="location_longitude"
+             data-name-field="location_description"
+             class="flex-grow-1" style="min-height: 200px;"></div>
       </div>
     </div>
   </div>
