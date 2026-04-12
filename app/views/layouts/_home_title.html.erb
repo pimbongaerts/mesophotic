@@ -2,14 +2,8 @@
   <% title("Home") %>
 </div>
 
-<div class="row">
-  <div class="col-sm-9">
-    <h3 class="page-title">
-      The repository for scientific information on mesophotic ecosystems
-    </h3>
-  </div>
-  <div class="col-sm-3 text-sm-end">
-    <span class="badge fw-normal" style="font-size: 0.75em; color: #c7254e; background-color: #f9f2f4;"><%= l @latest_update.to_date, format: :long %></span>
-  </div>
-</div>
+<%= render partial: "layouts/page_title", locals: {
+      title: "The repository for scientific information on mesophotic ecosystems",
+      badge: content_tag(:span, l(@latest_update.to_date, format: :long), class: "badge fw-normal ms-0 ms-sm-2", style: "font-size: 0.85rem; color: #c7254e; background-color: #f9f2f4;")
+    } %>
 <hr>

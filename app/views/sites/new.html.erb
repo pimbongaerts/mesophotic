@@ -1,5 +1,21 @@
-<h1>New Site</h1>
+<%= render partial: "layouts/page_title",
+       locals: {title: "New Site",
+          breadcrumbs: [["Sites", sites_path], ["New", nil]] } %>
 
-<%= render 'form' %>
-
-<%= link_to 'Back', sites_path %>
+<%= form_for(@site) do |f| %>
+  <% if @site.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(@site.errors.count, "error") %> prohibited this site from being saved:</h5>
+      <ul class="mb-0">
+        <% @site.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= render partial: 'form', locals: {f: f, site: @site} %>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Site", class: "btn btn-primary" %>
+    <%= link_to "Cancel", sites_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_030155) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_084721) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.integer "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -401,9 +401,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_030155) do
   create_table "sites", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.boolean "estimated", limit: 1
-    t.decimal "latitude", precision: 15, scale: 10, default: "0.0"
+    t.decimal "latitude", precision: 15, scale: 10
     t.integer "location_id", limit: 4
-    t.decimal "longitude", precision: 15, scale: 10, default: "0.0"
+    t.decimal "longitude", precision: 15, scale: 10
     t.string "site_name", limit: 255
     t.string "siteable_type", limit: 255
     t.datetime "updated_at", precision: nil, null: false

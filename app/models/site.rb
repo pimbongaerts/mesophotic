@@ -4,8 +4,8 @@
 #
 #  id            :integer          not null, primary key
 #  site_name     :string(255)
-#  latitude      :decimal(15, 10)  default(0.0)
-#  longitude     :decimal(15, 10)  default(0.0)
+#  latitude      :decimal(15, 10)
+#  longitude     :decimal(15, 10)
 #  estimated     :boolean
 #  location_id   :integer
 #  siteable_type :string(255)
