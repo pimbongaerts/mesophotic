@@ -1,5 +1,21 @@
-<h1>New Presentation</h1>
+<%= render partial: "layouts/page_title",
+       locals: {title: "New Presentation",
+          breadcrumbs: [["Presentations", presentations_path], ["New", nil]] } %>
 
-<%= render 'form' %>
-
-<%= link_to 'Back', presentations_path %>
+<%= form_for(@presentation) do |f| %>
+  <% if @presentation.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(@presentation.errors.count, "error") %> prohibited this presentation from being saved:</h5>
+      <ul class="mb-0">
+        <% @presentation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Presentation", class: "btn btn-primary" %>
+    <%= link_to "Cancel", presentations_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
