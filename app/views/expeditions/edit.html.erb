@@ -1,9 +1,21 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "Edit expedition",
-          subtitle: @expedition.title,
+       locals: {title: "Editing \"#{@expedition.title}\"",
           breadcrumbs: [["Expeditions", expeditions_path], [@expedition.title, nil]] } %>
 
 <%= form_for(@expedition) do |f| %>
+  <% if @expedition.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(@expedition.errors.count, "error") %> prohibited this expedition from being saved:</h5>
+      <ul class="mb-0">
+        <% @expedition.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
   <%= render partial: 'form', locals: {f: f} %>
-  <div class="actions"><%= f.submit "Save Expedition", class: "btn btn-primary" %></div>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Expedition", class: "btn btn-primary" %>
+    <%= link_to "Cancel", expeditions_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>
