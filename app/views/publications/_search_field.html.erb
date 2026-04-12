@@ -97,6 +97,12 @@
             <%= search_param "Academic Fields", Publication.publication_fields, :fields, params, true %>
           </div>
         </div>
+        <div class="row">
+          <hr>
+          <div class="col-sm-6">
+            <%= search_param "EEZ / Country", Publication.publication_sovereigns, :sovereigns, params, true %>
+          </div>
+        </div>
       </div>
     </div>
   </div>

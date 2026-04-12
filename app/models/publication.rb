@@ -63,6 +63,14 @@ class Publication < ApplicationRecord
   def self.publication_fields
     @publication_fields ||= Field.select(:description).order(:description).map(&:description).uniq.freeze
   end
+
+  def self.publication_sovereigns
+    Eez.joins(locations: :publications)
+      .distinct
+      .pluck(:sovereign)
+      .sort
+  end
+
   WORDCLOUD_FREQLIMIT = 50.freeze
 
   # attributes
@@ -149,6 +157,7 @@ class Publication < ApplicationRecord
     .focusgroups(search_params["focusgroups"])
     .platforms(search_params["platforms"])
     .fields(search_params["fields"])
+    .by_sovereign(search_params["sovereigns"])
     .where("publication_type IN (?) OR publication_type IS NULL", search_params["types"])
     .where("publication_format IN (?) OR publication_format IS NULL", search_params["formats"])
     .where(((search_params["characteristics"] || []) & publication_characteristics).map { |c| "#{c} = 1" }.join(" OR "))
@@ -167,6 +176,17 @@ class Publication < ApplicationRecord
       end
     }
   end
+
+  scope :by_sovereign, ->(params) {
+    if params.present?
+      joins("INNER JOIN locations_publications ON publications.id = locations_publications.publication_id")
+      .joins("INNER JOIN locations ON locations.id = locations_publications.location_id")
+      .joins("INNER JOIN eezs ON eezs.id = locations.eez_id")
+      .where("eezs.sovereign IN (?)", params)
+    else
+      all
+    end
+  }
 
   scope :sift, -> (search_term, search_params = Publication.default_search_params) {
     if search_term.present?
@@ -461,6 +481,7 @@ class Publication < ApplicationRecord
       "year_range" => "#{min_year},#{max_year}",
       "types" => PUBLICATION_TYPES,
       "formats" => PUBLICATION_FORMATS,
+      "sovereigns" => nil,
       # "characteristics" => [],
       # "locations" => [],
       # "focusgroups" => [],
