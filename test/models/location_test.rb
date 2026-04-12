@@ -42,4 +42,14 @@ class LocationTest < ActiveSupport::TestCase
     loc = locations(:great_barrier_reef)
     assert_includes loc.sites, sites(:osprey_reef)
   end
+
+  test "valid without eez" do
+    loc = Location.new(description: "Open Ocean", latitude: 10, longitude: 20)
+    assert loc.valid?
+  end
+
+  test "belongs to eez" do
+    loc = locations(:great_barrier_reef)
+    assert_equal eezs(:australian_gbr), loc.eez
+  end
 end
