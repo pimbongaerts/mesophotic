@@ -1,0 +1,71 @@
+<%= render partial: "layouts/page_title",
+           locals: {
+             title: @eez.territory,
+             subtitle: @eez.sovereign,
+             breadcrumbs: [["EEZ / Countries", eezs_path], [@eez.territory, nil]]
+           } %>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card mb-3">
+      <div class="card-header">
+        <strong>Details</strong>
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Sovereign</dt>
+          <dd class="col-sm-8"><%= @eez.sovereign %></dd>
+
+          <dt class="col-sm-4">Territory</dt>
+          <dd class="col-sm-8"><%= @eez.territory %></dd>
+
+          <dt class="col-sm-4">MRGID</dt>
+          <dd class="col-sm-8">
+            <%= link_to @eez.mrgid, "https://www.marineregions.org/gazetteer.php?p=details&id=#{@eez.mrgid}", target: "_blank", rel: "noopener" %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        <strong>Locations</strong>
+        <span class="text-muted">(<%= @locations.size %>)</span>
+      </div>
+      <% if @locations.any? %>
+        <ul class="list-group list-group-flush">
+          <% @locations.each do |location| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <%= link_to location.description, summary_path(model: "locations", id: location.id) %>
+              <span class="badge bg-secondary rounded-pill"><%= location.publications_count %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="card-body">
+          <p class="text-muted mb-0">No locations assigned to this EEZ yet.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <% if @locations.any? %>
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Map</strong>
+        </div>
+        <div class="card-body p-0" style="min-height: 300px;">
+          <%= turbo_frame_tag "world-map-eez_show",
+                src: world_map_path(
+                  key: "eez_show",
+                  model: Location,
+                  ids: @locations.map(&:id).join(','),
+                  height: 300
+                ),
+                loading: :lazy %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

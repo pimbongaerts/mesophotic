@@ -1,0 +1,102 @@
+<%= render partial: "layouts/page_title",
+           locals: {
+             title: "EEZ / Countries",
+             breadcrumbs: [["EEZ / Countries", nil]]
+           } %>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="mb-3">
+      <select data-tom-select="navigate" data-placeholder="Search for a country or territory..." class="form-select" style="width: auto; display: inline-block;">
+        <option value="">Search for a country or territory...</option>
+        <% @studied.each do |sovereign, eezs| %>
+          <% eezs.each do |eez| %>
+            <option value="<%= eez_path(eez) %>">
+              <%= eez.sovereign %> &mdash; <%= eez.territory %> (<%= eez.publications_count %> publications)
+            </option>
+          <% end %>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        <strong>Studied EEZ / Countries</strong>
+        <span class="text-muted">(<%= @studied.values.flatten.size %> EEZs across <%= @studied.keys.size %> countries)</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="accordion accordion-flush" id="studied-sovereigns">
+          <% @studied.each_with_index do |(sovereign, eezs), index| %>
+            <% sovereign_id = "sovereign-#{sovereign.parameterize}" %>
+            <% total_pubs = eezs.sum { |e| e.publications_count.to_i } %>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<%= sovereign_id %>" aria-expanded="false" aria-controls="<%= sovereign_id %>">
+                  <strong><%= sovereign %></strong>
+                  <span class="badge bg-primary ms-2"><%= total_pubs %></span>
+                </button>
+              </h2>
+              <div id="<%= sovereign_id %>" class="accordion-collapse collapse" data-bs-parent="#studied-sovereigns">
+                <div class="accordion-body p-0">
+                  <ul class="list-group list-group-flush">
+                    <% eezs.each do |eez| %>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <%= link_to eez.territory, eez_path(eez) %>
+                        <span class="badge bg-secondary rounded-pill"><%= eez.publications_count %></span>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if @unstudied.any? %>
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Unstudied EEZ / Countries</strong>
+          <span class="text-muted">(<%= @unstudied.values.flatten.size %> EEZs across <%= @unstudied.keys.size %> countries)</span>
+        </div>
+        <div class="card-body p-0">
+          <div class="accordion accordion-flush" id="unstudied-sovereigns">
+            <% @unstudied.each do |sovereign, eezs| %>
+              <% sovereign_id = "unstudied-#{sovereign.parameterize}" %>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#<%= sovereign_id %>" aria-expanded="false" aria-controls="<%= sovereign_id %>">
+                    <%= sovereign %>
+                  </button>
+                </h2>
+                <div id="<%= sovereign_id %>" class="accordion-collapse collapse" data-bs-parent="#unstudied-sovereigns">
+                  <div class="accordion-body p-0">
+                    <ul class="list-group list-group-flush">
+                      <% eezs.each do |eez| %>
+                        <li class="list-group-item text-muted">
+                          <%= eez.territory %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header">
+        <strong>Map</strong>
+      </div>
+      <div class="card-body" style="min-height: 380px; background-color: #f0f1f3;">
+        <p class="text-muted text-center mt-5">Map placeholder</p>
+      </div>
+    </div>
+  </div>
+</div>
