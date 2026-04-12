@@ -95,7 +95,9 @@
         <strong>Map</strong>
       </div>
       <div class="card-body" style="min-height: 380px; background-color: #f0f1f3;">
-        <p class="text-muted text-center mt-5">Map placeholder</p>
+        <div data-chart="map-colored"
+             data-values="<%= @map_data.to_json %>"
+             style="height: 400px;"></div>
       </div>
     </div>
   </div>

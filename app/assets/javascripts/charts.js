@@ -109,6 +109,7 @@
     'map': function(el) { mapChart(el, {}); },
     'map-clickable': function(el) { mapChart(el, { nav: true, clickable: true, dataLabels: true, seriesName: 'Locations', tooltipFormat: '{point.name}' }); },
     'map-preview': function(el) { mapPreview(el); },
+    'map-colored': function(el) { mapColored(el); },
   };
 
   function mapPreview(el) {
@@ -144,6 +145,45 @@
     lonField.addEventListener('input', updateMarker);
     if (nameField) nameField.addEventListener('input', updateMarker);
     updateMarker();
+  }
+
+  function mapColored(el) {
+    var data = JSON.parse(el.dataset.values);
+    var config = baseOpts(el);
+    config.chart = { backgroundColor: 'rgba(255, 255, 255, 0)' };
+    config.mapNavigation = { enabled: true, buttonOptions: { verticalAlign: 'top' } };
+    config.exporting = { enabled: false };
+
+    var palette = ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5',
+                   '#64E572', '#FF9655', '#FFF263', '#6AF9C4', '#FF6B6B',
+                   '#C49C94', '#9EDAE5', '#DBDB8D', '#E377C2', '#7F7F7F'];
+    var groups = {};
+    data.forEach(function(point) {
+      if (!groups[point.sovereign]) groups[point.sovereign] = [];
+      groups[point.sovereign].push(point);
+    });
+
+    var series = [
+      { name: 'Countries', mapData: Highcharts.maps['custom/world-continents'], color: '#E0E0E0', enableMouseTracking: false }
+    ];
+
+    var sovereigns = Object.keys(groups).sort();
+    sovereigns.forEach(function(sov, i) {
+      series.push({
+        type: 'mapbubble',
+        name: sov,
+        data: groups[sov],
+        color: palette[i % palette.length],
+        maxSize: '12%',
+        dataLabels: { enabled: true, format: '{point.name}' },
+        cursor: 'pointer',
+        point: { events: { click: function() { if (this.options.url) window.location = this.options.url; } } }
+      });
+    });
+
+    config.legend = { enabled: true };
+    config.series = series;
+    Highcharts.mapChart(el, config);
   }
 
   // --- WordCloud2 ---
