@@ -1,77 +1,95 @@
+<%# Expedition details %>
 <div class="card">
   <div class="card-header">
-    <h4 class="card-title">Expedition Metadata</h4>
+    <strong>Details</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :title %><br>
-          <%= f.text_field :title, style: 'width:90%;' %>
+          <%= f.label :title, class: "required" %><br>
+          <%= f.text_field :title, class: "form-control", placeholder: "Expedition title" %>
         </div>
         <div class="mb-3">
           <%= f.label :description %><br>
-          <%= f.text_area :description, style: 'width:90%;',
-                          rows: 4 %>
+          <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "Brief description of the expedition" %>
         </div>
         <div class="mb-3">
           <%= f.label :url %><br>
-          <%= f.text_field :url, style: 'width:90%;' %>
+          <%= f.text_field :url, class: "form-control", placeholder: "e.g. https://..." %>
         </div>
-      </div>
-      <div class="col-5">
         <div class="mb-3">
           <%= f.label :start_date %><br>
-          <%= f.date_select :start_date, start_year: 1990  %>
+          <%= f.date_select :start_date, { start_year: 1990 }, { class: "form-select d-inline-block w-auto me-1" } %>
         </div>
         <div class="mb-3">
           <%= f.label :end_date %><br>
-          <%= f.date_select :end_date, start_year: 1990 %>
+          <%= f.date_select :end_date, { start_year: 1990 }, { class: "form-select d-inline-block w-auto me-1" } %>
         </div>
+      </div>
+      <div class="col-6">
         <div class="mb-3">
           <%= f.label :featured_image %><br>
-          <%= f.file_field :featured_image %>
+          <div data-image-drop="expedition_featured_image"
+               class="rounded-3 mb-2 d-flex align-items-center justify-content-center"
+               style="max-width: 100%; aspect-ratio: 4/3; max-height: 355px; border: 2px dashed #dee2e6; cursor: pointer; overflow: hidden; background-color: #f8f9fa; position: relative; transition: all 0.15s ease;">
+            <% if @expedition.featured_image.attached? %>
+              <%= image_tag @expedition.featured_image.variant(resize: "640x480>"),
+                            data: { image_drop_preview: true },
+                            style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;" %>
+            <% else %>
+              <div data-image-drop-placeholder class="text-center text-muted">
+                <i class="bi bi-cloud-arrow-up" style="font-size: 2rem;"></i>
+                <br><small>Drop image or click</small>
+              </div>
+              <img data-image-drop-preview style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none;">
+            <% end %>
+          </div>
+          <%= f.file_field :featured_image, class: "form-control" %>
         </div>
         <div class="mb-3">
-          <%= f.label :featured_image_credits %><br>
-          <%= f.text_field :featured_image_credits %>
+          <%= f.label :featured_image_credits, "Image Credits" %><br>
+          <%= f.text_field :featured_image_credits, class: "form-control", placeholder: "e.g. John Smith" %>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="card">
+<%# People %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Expedition researchers / organisations
-    </h4>
+    <strong>Researchers / Organisations</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label "Organisations involved:" %><br>
-          <div class="scrollbox">
-            <%= hidden_field_tag "expedition[organisation_ids][]", "" %>
-            <% for organisation in Organisation.all.order("name ASC") %>
-              <%= check_box_tag "expedition[organisation_ids][]",
-                                organisation.id,
-                                @expedition.organisations.include?(organisation) %>
-              <%= organisation.name %><br>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="col-5">
-        <div class="mb-3">
-          <%= f.label "Researchers involved:" %><br>
+          <%= f.label "Researchers" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "expedition[user_ids][]", "" %>
             <% for user in User.all.order("last_name ASC, first_name ASC") %>
-              <%= check_box_tag "expedition[user_ids][]", user.id,
-                                @expedition.users.include?(user) %>
-              <%= user.first_name %> <em><%= user.last_name %></em><br>
+              <div class="form-check">
+                <%= check_box_tag "expedition[user_ids][]", user.id,
+                                  @expedition.users.include?(user), class: "form-check-input" %>
+                <label class="form-check-label"><%= user.first_name %> <em><%= user.last_name %></em></label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label "Organisations" %><br>
+          <div class="scrollbox">
+            <%= hidden_field_tag "expedition[organisation_ids][]", "" %>
+            <% for organisation in Organisation.all.order("name ASC") %>
+              <div class="form-check">
+                <%= check_box_tag "expedition[organisation_ids][]",
+                                  organisation.id,
+                                  @expedition.organisations.include?(organisation), class: "form-check-input" %>
+                <label class="form-check-label"><%= organisation.name %></label>
+              </div>
             <% end %>
           </div>
         </div>
@@ -80,58 +98,65 @@
   </div>
 </div>
 
-<div class="card">
+<%# Categories %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Expedition metadata
-    </h4>
+    <strong>Categories</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :platform %><br>
+          <%= f.label :platform, "Technologies / Platforms" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "expedition[platform_ids][]", "" %>
             <% for platform in Platform.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[platform_ids][]", platform.id,
-                                @expedition.platforms.include?(platform) %>
-              <%= platform.description %>&nbsp;<br>
+              <div class="form-check">
+                <%= check_box_tag "expedition[platform_ids][]", platform.id,
+                                  @expedition.platforms.include?(platform), class: "form-check-input" %>
+                <label class="form-check-label"><%= platform.description %></label>
+              </div>
             <% end %>
           </div>
         </div>
         <div class="mb-3">
-          <%= f.label :field %><br>
+          <%= f.label :field, "Research Fields" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "expedition[field_ids][]", "" %>
             <% for field in Field.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[field_ids][]", field.id,
-                                @expedition.fields.include?(field) %>
-              <%= field.description %>&nbsp;<br>
+              <div class="form-check">
+                <%= check_box_tag "expedition[field_ids][]", field.id,
+                                  @expedition.fields.include?(field), class: "form-check-input" %>
+                <label class="form-check-label"><%= field.description %></label>
+              </div>
             <% end %>
           </div>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :focusgroup %><br>
+          <%= f.label :focusgroup, "Focus Groups" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "expedition[focusgroup_ids][]", "" %>
             <% for focusgroup in Focusgroup.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[focusgroup_ids][]", focusgroup.id,
-                                @expedition.focusgroups.include?(focusgroup) %>
-              <%= focusgroup.description %>&nbsp;<br>
+              <div class="form-check">
+                <%= check_box_tag "expedition[focusgroup_ids][]", focusgroup.id,
+                                  @expedition.focusgroups.include?(focusgroup), class: "form-check-input" %>
+                <label class="form-check-label"><%= focusgroup.description %></label>
+              </div>
             <% end %>
           </div>
         </div>
         <div class="mb-3">
-          <%= f.label :location %><br>
+          <%= f.label :location, "Locations" %><br>
           <div class="scrollbox">
             <%= hidden_field_tag "expedition[location_ids][]", "" %>
             <% for location in Location.all.order("LOWER(description) ASC") %>
-              <%= check_box_tag "expedition[location_ids][]", location.id,
-                                @expedition.locations.include?(location) %>
-              <%= location.description %>&nbsp;<br>
+              <div class="form-check">
+                <%= check_box_tag "expedition[location_ids][]", location.id,
+                                  @expedition.locations.include?(location), class: "form-check-input" %>
+                <label class="form-check-label"><%= location.description %></label>
+              </div>
             <% end %>
           </div>
         </div>
