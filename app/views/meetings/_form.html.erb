@@ -1,85 +1,103 @@
+<%# Details %>
 <div class="card">
   <div class="card-header">
-    <h4 class="card-title">Meeting Information</h4>
+    <strong>Details</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label :title %><br>
-          <%= f.text_field :title, style: 'width:90%;' %>
+          <%= f.label :title, class: "required" %><br>
+          <%= f.text_field :title, class: "form-control", placeholder: "Meeting title" %>
         </div>
         <div class="mb-3">
           <%= f.label :description %><br>
-          <%= f.text_area :description, style: 'width:90%;',
-                          rows: 4 %>
+          <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "Brief description of the meeting" %>
         </div>
         <div class="mb-3">
           <%= f.label :url %><br>
-          <%= f.text_field :url, style: 'width:90%;' %>
-        </div>
-        <div class="mb-3">
-          <%= f.label :country %><br />
-          <%= f.country_select :country, class: "form-control" %>
-        </div>
-      </div>
-      <div class="col-5">
-        <div class="mb-3">
-          <%= f.label :start_date %><br>
-          <%= f.date_select :start_date, start_year: 1990  %>
-        </div>
-        <div class="mb-3">
-          <%= f.label :end_date %><br>
-          <%= f.date_select :end_date, start_year: 1990 %>
-        </div>
-        <div class="mb-3">
-          <%= f.label :featured_image %><br>
-          <%= f.file_field :featured_image %>
-        </div>
-        <div class="mb-3">
-          <%= f.label :featured_image_credits %><br>
-          <%= f.text_field :featured_image_credits %>
+          <%= f.text_field :url, class: "form-control", placeholder: "e.g. https://..." %>
         </div>
         <div class="mb-3">
           <%= f.label :venue %><br>
-          <%= f.text_field :venue %>
+          <%= f.text_field :venue, class: "form-control", placeholder: "e.g. Convention Centre, Sydney" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :country %><br>
+          <%= f.country_select :country, { prompt: "Select country..." }, { class: "form-select" } %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :start_date %><br>
+          <%= f.date_select :start_date, { start_year: 1990 }, { class: "form-select d-inline-block w-auto me-1" } %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :end_date %><br>
+          <%= f.date_select :end_date, { start_year: 1990 }, { class: "form-select d-inline-block w-auto me-1" } %>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label :featured_image %><br>
+          <div data-image-drop="meeting_featured_image"
+               class="rounded-3 mb-2 d-flex align-items-center justify-content-center"
+               style="max-width: 100%; aspect-ratio: 4/3; max-height: 355px; border: 2px dashed #dee2e6; cursor: pointer; overflow: hidden; background-color: #f8f9fa; position: relative; transition: all 0.15s ease;">
+            <% if @meeting.featured_image.attached? %>
+              <%= image_tag @meeting.featured_image.variant(resize: "640x480>"),
+                            data: { image_drop_preview: true },
+                            style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;" %>
+            <% else %>
+              <div data-image-drop-placeholder class="text-center text-muted">
+                <i class="bi bi-cloud-arrow-up" style="font-size: 2rem;"></i>
+                <br><small>Drop image or click</small>
+              </div>
+              <img data-image-drop-preview style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none;">
+            <% end %>
+          </div>
+          <%= f.file_field :featured_image, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :featured_image_credits, "Image Credits" %><br>
+          <%= f.text_field :featured_image_credits, class: "form-control", placeholder: "e.g. John Smith" %>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="card">
+<%# Organisers %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Meeting organisers
-    </h4>
+    <strong>Organisers</strong>
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col-7">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label "Institutions involved in organisation:" %><br>
+          <%= f.label "Session Chairs / Organising Members" %><br>
           <div class="scrollbox">
-            <%= hidden_field_tag "meeting[organisation_ids][]", "" %>
-            <% for organisation in Organisation.all.order("name ASC") %>
-              <%= check_box_tag "meeting[organisation_ids][]",
-                                organisation.id,
-                                @meeting.organisations.include?(organisation) %>
-              <%= organisation.name %><br>
+            <%= hidden_field_tag "meeting[user_ids][]", "" %>
+            <% for user in User.all.order("last_name ASC, first_name ASC") %>
+              <div class="form-check">
+                <%= check_box_tag "meeting[user_ids][]", user.id,
+                                  @meeting.users.include?(user), class: "form-check-input" %>
+                <label class="form-check-label"><%= user.first_name %> <em><%= user.last_name %></em></label>
+              </div>
             <% end %>
           </div>
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-6">
         <div class="mb-3">
-          <%= f.label "Session chairs / organising members:" %><br>
+          <%= f.label "Institutions" %><br>
           <div class="scrollbox">
-            <%= hidden_field_tag "meeting[user_ids][]", "" %>
-            <% for user in User.all.order("last_name ASC, first_name ASC") %>
-              <%= check_box_tag "meeting[user_ids][]", user.id,
-                                @meeting.users.include?(user) %>
-              <%= user.first_name %> <em><%= user.last_name %></em><br>
+            <%= hidden_field_tag "meeting[organisation_ids][]", "" %>
+            <% for organisation in Organisation.all.order("name ASC") %>
+              <div class="form-check">
+                <%= check_box_tag "meeting[organisation_ids][]",
+                                  organisation.id,
+                                  @meeting.organisations.include?(organisation), class: "form-check-input" %>
+                <label class="form-check-label"><%= organisation.name %></label>
+              </div>
             <% end %>
           </div>
         </div>
@@ -88,24 +106,22 @@
   </div>
 </div>
 
-<div class="card">
+<%# Presentations %>
+<div class="card mt-3">
   <div class="card-header">
-    <h4 class="card-title">
-      Presentations
-    </h4>
+    <strong>Presentations</strong>
   </div>
   <div class="card-body">
-    <div class="mb-3">
-      <%= hidden_field_tag "meeting[presentation_ids][]", "" %>
-      <% Presentation.all.each do |presentation| %>
-        <div class="field">
-          <%= check_box_tag "meeting[presentation_ids][]",
-                            presentation.id,
-                            @meeting.presentations.include?(presentation) %>
-          <%= presentation.authors %>
-          <%= presentation.title %>
-        </div>
-      <% end %>
-    </div>
+    <%= hidden_field_tag "meeting[presentation_ids][]", "" %>
+    <% Presentation.all.each do |presentation| %>
+      <div class="form-check">
+        <%= check_box_tag "meeting[presentation_ids][]",
+                          presentation.id,
+                          @meeting.presentations.include?(presentation), class: "form-check-input" %>
+        <label class="form-check-label">
+          <%= presentation.authors %> — <%= presentation.title %>
+        </label>
+      </div>
+    <% end %>
   </div>
 </div>

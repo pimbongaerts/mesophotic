@@ -1,9 +1,21 @@
 <%= render partial: "layouts/page_title",
-       locals: {title: "New meeting",
-          subtitle: "",
+       locals: {title: "New Meeting",
           breadcrumbs: [["Meetings", meetings_path], ["New", nil]] } %>
 
 <%= form_for(@meeting) do |f| %>
+  <% if @meeting.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(@meeting.errors.count, "error") %> prohibited this meeting from being saved:</h5>
+      <ul class="mb-0">
+        <% @meeting.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
   <%= render partial: 'form', locals: {f: f} %>
-  <div class="actions"><%= f.submit "Save Meeting", class: "btn btn-primary" %></div>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit "Save Meeting", class: "btn btn-primary" %>
+    <%= link_to "Cancel", meetings_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>
