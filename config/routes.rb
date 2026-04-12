@@ -73,6 +73,7 @@ Mesophotic::Application.routes.draw do
   resources :expeditions
   resources :photos
   resources :locations, except: :show
+  resources :eezs, only: [:index, :show]
   resources :meetings
   resources :presentations
   resources :species, except: :show
