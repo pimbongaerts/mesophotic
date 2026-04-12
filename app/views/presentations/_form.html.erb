@@ -1,53 +1,50 @@
-<%= form_for(@presentation) do |f| %>
-  <% if @presentation.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@presentation.errors.count, "error") %> prohibited this presentation from being saved:</h2>
-
-      <ul>
-      <% @presentation.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+<%# Details %>
+<div class="card">
+  <div class="card-header">
+    <strong>Details</strong>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label :title, class: "required" %><br>
+          <%= f.text_field :title, class: "form-control", placeholder: "Presentation title" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :authors, class: "required" %><br>
+          <%= f.text_area :authors, class: "form-control", rows: 3, placeholder: "Author names" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :abstract %><br>
+          <%= f.text_area :abstract, class: "form-control", rows: 5, placeholder: "Abstract text" %>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="mb-3">
+          <%= f.label :session %><br>
+          <%= f.text_field :session, class: "form-control", placeholder: "e.g. Session 3A" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :date %><br>
+          <%= f.text_field :date, class: "form-control", placeholder: "e.g. 2024-06-15" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :time %><br>
+          <%= f.text_field :time, class: "form-control", placeholder: "e.g. 14:30" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :location %><br>
+          <%= f.text_field :location, class: "form-control", placeholder: "e.g. Room 201" %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :poster_id, "Poster ID" %><br>
+          <%= f.number_field :poster_id, class: "form-control", placeholder: "e.g. 42" %>
+        </div>
+        <div class="form-check">
+          <%= f.check_box :oral, class: "form-check-input" %>
+          <%= f.label :oral, "Oral presentation", class: "form-check-label" %>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
   </div>
-  <div class="field">
-    <%= f.label :abstract %><br>
-    <%= f.text_area :abstract %>
-  </div>
-  <div class="field">
-    <%= f.label :authors %><br>
-    <%= f.text_area :authors %>
-  </div>
-  <div class="field">
-    <%= f.label :oral %><br>
-    <%= f.check_box :oral %>
-  </div>
-  <div class="field">
-    <%= f.label :session %><br>
-    <%= f.text_field :session %>
-  </div>
-  <div class="field">
-    <%= f.label :date %><br>
-    <%= f.text_field :date %>
-  </div>
-  <div class="field">
-    <%= f.label :time %><br>
-    <%= f.text_field :time %>
-  </div>
-  <div class="field">
-    <%= f.label :location %><br>
-    <%= f.text_field :location %>
-  </div>
-  <div class="field">
-    <%= f.label :poster_id %><br>
-    <%= f.number_field :poster_id %>
-  </div>
-  <div class="actions">
-    <%= f.submit "Save Presentation", class: "btn btn-primary" %>
-  </div>
-<% end %>
+</div>
