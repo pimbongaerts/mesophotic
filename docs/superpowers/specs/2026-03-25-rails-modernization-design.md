@@ -1,6 +1,6 @@
 # Mesophotic.org Modernization Design
 
-**Date:** 2026-03-25 (last updated 2026-04-07)
+**Date:** 2026-03-25 (last updated 2026-04-12)
 **Goal:** Bring the application from Rails 5.2 / Ruby 2.7 / Bootstrap 3 to Rails 8.1 / Ruby 3.4, with a baseline test suite as a safety net.
 
 ## Current State
@@ -58,7 +58,7 @@
 | 4 | Social media handles | Done |
 | 5 | User role consolidation | Done |
 | 6 | Breadcrumb navigation | Done |
-| 7 | EEZ table + location mapping ([#153][]) | Todo |
+| 7 | EEZ table + location mapping ([#153][]) | Done |
 | 8 | CSV export: search word count column ([#146][]) | Done |
 | 9 | Location search autocomplete ([#59][]) | Done |
 | 10 | Combined newsfeed on home page ([#39][]) | Todo |
@@ -124,6 +124,9 @@
 | 3 | Publication show page polish (badges, supertitle, icons, caching) | Done |
 | 4 | Open Access SVG icon | Done |
 | 5 | Google Fonts HTTPS | Done |
+| 6 | Admin form standardization (all new/edit forms) | Done |
+| 7 | Reusable image drop zone component | Done |
+| 8 | Unified page title date badge | Done |
 
 ---
 
@@ -149,6 +152,7 @@
 - **6c: Threads Feed** — BLOCKED. Meta's Threads API requires OAuth app review for `threads_keyword_search`. Parked until API access improves. UI is ready to add the tab.
 - **6d: Social Media Handles** — `mastodon_handle`, `bluesky_handle`, `threads_handle`, `twitter_handle` columns. Profile form updated, member page shows platform-specific icons.
 - **6e: User Role Consolidation** — Single `role` column (`member`, `editor`, `admin`). `admin?`, `editor?`, `editor_or_admin?` methods.
+- **6g: EEZ** — 285 real VLIZ Marine Regions v12 EEZ records with MRGIDs. `Eez` model with sovereign/territory, `Location belongs_to :eez`. EEZ index page with sovereign-first accordion, Tom Select search (countries + locations), colored map markers. EEZ show page with MRGID link, locations list. Publication filter by sovereign, CSV export with EEZ columns, stats chart (Publications by Country). Rake tasks: `eez:seed` + `eez:link_locations`. Categories nav menu item.
 
 ### Infrastructure
 
@@ -169,6 +173,10 @@
 - Publication card restyling (outline badges, title link hover, font sizing)
 - Open Access SVG icon restored
 - Google Fonts URLs updated to HTTPS
+- Admin form standardization: all new/edit forms (photos, expeditions, meetings, presentations, sites, locations) updated with consistent card layouts, `<strong>` headers, Tom Select dropdowns, form-control/form-select/form-check classes, placeholders, required asterisks, error display, Save/Cancel buttons, `Editing "Name"` title pattern
+- Reusable `image_drop.js` component for drag/drop image upload with preview (used on photos, expeditions, meetings, profile picture)
+- Admin menu grouped: content (Publication/Post/Photo), geography (Location/Site), events (Expedition/Meeting/Presentation)
+- Unified date badge in `_page_title` partial — consistent rendering on home and stats pages, responsive wrapping
 
 ---
 
