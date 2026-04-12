@@ -1,32 +1,48 @@
-<div class="card">
-  <div class="card-header">
-    <h4 class="card-title">Site</h4>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-7">
+<div class="row">
+  <div class="col-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <strong>Details</strong>
+      </div>
+      <div class="card-body">
         <div class="mb-3">
-          <%= f.label :site_name %><br>
-          <%= f.text_field :site_name, style: 'width:90%;' %>
+          <%= f.label :site_name, "Name", class: "required" %><br>
+          <%= f.text_field :site_name, class: "form-control", placeholder: "e.g. Osprey Reef" %>
         </div>
         <div class="mb-3">
-          <%= f.label :latitude %><br>
-          <%= f.text_field :latitude, style: 'width:90%;' %>
+          <%= f.label :latitude, class: "required" %><br>
+          <%= f.text_field :latitude, class: "form-control", placeholder: "e.g. -16.447284" %>
         </div>
         <div class="mb-3">
-          <%= f.label :longitude %><br>
-          <%= f.text_field :longitude, style: 'width:90%;' %>
+          <%= f.label :longitude, class: "required" %><br>
+          <%= f.text_field :longitude, class: "form-control", placeholder: "e.g. 145.81735" %>
         </div>
         <div class="mb-3">
-          <%= f.label :location %><br />
-          <%= f.collection_select :location_id, 
-                                  Location.find_each, 
-                                  :id, :description, 
-                                  class: "form-control" %>
+          <%= f.label :location %><br>
+          <%= f.collection_select :location_id,
+                                  Location.all.order("description ASC"),
+                                  :id, :description,
+                                  { include_blank: "Select location..." },
+                                  { class: "form-select", "data-tom-select" => "" } %>
         </div>
       </div>
-      <div class="col-5" style="min-height: 230px;">
-        <%= turbo_frame_tag "world-map-sites_form", src: world_map_path(key: "sites_form", model: Site, ids: site.id, height: 230, z: 10), loading: :lazy %>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card h-100">
+      <div class="card-header">
+        <strong>Map</strong>
+      </div>
+      <div class="card-body d-flex flex-column p-2">
+        <% if site.persisted? %>
+          <%= turbo_frame_tag "world-map-sites_form", src: world_map_path(key: "sites_form", model: Site, ids: site.id, height: 230, z: 10), loading: :lazy, class: "flex-grow-1" %>
+        <% else %>
+          <div data-chart="map-preview"
+               data-lat-field="site_latitude"
+               data-lon-field="site_longitude"
+               data-name-field="site_site_name"
+               class="flex-grow-1" style="min-height: 200px;"></div>
+        <% end %>
       </div>
     </div>
   </div>

@@ -4,7 +4,7 @@
 <%= render partial: "layouts/page_title", locals: {
       title: @stats_subtitle,
       supertitle: @title,
-      subtitle: raw("<span class=\"badge fw-normal float-end\" style=\"font-size: 0.65em; color: #c7254e; background-color: #f9f2f4;\">#{l @latest_update.to_date, format: :long}</span>"),
+      badge: content_tag(:span, l(@latest_update.to_date, format: :long), class: "badge fw-normal ms-0 ms-sm-2", style: "font-size: 0.85rem; color: #c7254e; background-color: #f9f2f4;"),
       breadcrumbs: [["Stats", nil]]
     } %>
 <div class="row">

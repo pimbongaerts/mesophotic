@@ -18,6 +18,7 @@
     <% end %>
     <h3 class="page-title">
       <%= title %><% if defined?(subtitle) && subtitle.present? %> <span style="font-weight: normal; font-size: 0.75em;" class="text-muted"><%= subtitle %></span><% end %>
+      <% if defined?(badge) && badge.present? %><span class="d-block d-sm-inline float-sm-end mt-1 mt-sm-0"><%= badge %></span><% end %>
     </h3>
   </div>
 </div>
