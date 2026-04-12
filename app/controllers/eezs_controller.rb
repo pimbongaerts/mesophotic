@@ -11,6 +11,10 @@ class EezsController < ApplicationController
       .order(:sovereign, :territory)
       .group_by(&:sovereign)
 
+    @location_eez_map = Location.includes(:eez).where.not(eez_id: nil)
+      .order(:description)
+      .map { |l| { description: l.description, eez_path: "#{eez_path(l.eez)}#loc-#{l.id}", territory: l.eez.territory, sovereign: l.eez.sovereign } }
+
     @map_data = Location.joins(:publications, :eez)
       .select("locations.*, eezs.sovereign, COUNT(DISTINCT publications.id) AS pub_count")
       .group("locations.id")

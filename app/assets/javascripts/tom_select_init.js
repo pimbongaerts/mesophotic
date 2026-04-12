@@ -8,6 +8,7 @@ function initTomSelectOn(el) {
     create: false,
     allowEmptyOption: true,
     selectOnTab: true,
+    maxOptions: el.dataset.maxOptions ? parseInt(el.dataset.maxOptions) : 1000,
     onFocus: function() {
       this._previousValue = this.getValue();
       this.clear(true);

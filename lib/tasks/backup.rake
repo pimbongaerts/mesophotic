@@ -1,15 +1,15 @@
-ACCESS_KEY_ID = Rails.application.credentials.dig(:aws, :access_key_id)
-SECRET_ACCESS_KEY = Rails.application.credentials.dig(:aws, :secret_access_key)
-BUCKET = Rails.application.credentials.dig(:aws, :bucket)
+ACCESS_KEY_ID = Rails.application.credentials.dig(:aws, :access_key_id) unless defined?(ACCESS_KEY_ID)
+SECRET_ACCESS_KEY = Rails.application.credentials.dig(:aws, :secret_access_key) unless defined?(SECRET_ACCESS_KEY)
+BUCKET = Rails.application.credentials.dig(:aws, :bucket) unless defined?(BUCKET)
 
-DATABASE_NAME = "production.sqlite3"
-DATABASE_DIR = Rails.root.join("db")
-DATABASE_PATH = "#{DATABASE_DIR}/#{DATABASE_NAME}"
-STORAGE_DIR = Rails.root.join("storage")
+DATABASE_NAME = "production.sqlite3" unless defined?(DATABASE_NAME)
+DATABASE_DIR = Rails.root.join("db") unless defined?(DATABASE_DIR)
+DATABASE_PATH = "#{DATABASE_DIR}/#{DATABASE_NAME}" unless defined?(DATABASE_PATH)
+STORAGE_DIR = Rails.root.join("storage") unless defined?(STORAGE_DIR)
 
-YEAR = `TZ=Australia/Brisbane date "+%Y"`.chomp
-COMPRESSED_DATABASE_NAME = `TZ=Australia/Brisbane date "+%Y%m%d-#{DATABASE_NAME}.xz"`.chomp
-COMPRESSED_DATABASE_PATH = "#{DATABASE_DIR}/#{COMPRESSED_DATABASE_NAME}"
+YEAR = `TZ=Australia/Brisbane date "+%Y"`.chomp unless defined?(YEAR)
+COMPRESSED_DATABASE_NAME = `TZ=Australia/Brisbane date "+%Y%m%d-#{DATABASE_NAME}.xz"`.chomp unless defined?(COMPRESSED_DATABASE_NAME)
+COMPRESSED_DATABASE_PATH = "#{DATABASE_DIR}/#{COMPRESSED_DATABASE_NAME}" unless defined?(COMPRESSED_DATABASE_PATH)
 
 namespace :backup do
   desc "Backup database and storage to AWS S3"

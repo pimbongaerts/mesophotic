@@ -7,15 +7,24 @@
 <div class="row">
   <div class="col-sm-8">
     <div class="mb-3">
-      <select data-tom-select="navigate" data-placeholder="Search for a country or territory..." class="form-select" style="width: auto; display: inline-block;">
-        <option value="">Search for a country or territory...</option>
-        <% @studied.each do |sovereign, eezs| %>
-          <% eezs.each do |eez| %>
-            <option value="<%= eez_path(eez) %>">
-              <%= eez.sovereign %> &mdash; <%= eez.territory %> (<%= eez.publications_count %> publications)
+      <select data-tom-select="navigate" data-placeholder="Search for a country, territory, or location..." data-max-options="500" class="form-select" style="width: auto; display: inline-block;">
+        <option value="">Search for a country, territory, or location...</option>
+        <optgroup label="Countries / Territories">
+          <% @studied.each do |sovereign, eezs| %>
+            <% eezs.each do |eez| %>
+              <option value="<%= eez_path(eez) %>">
+                <%= eez.sovereign %> — <%= eez.territory %> (<%= eez.publications_count %> publications)
+              </option>
+            <% end %>
+          <% end %>
+        </optgroup>
+        <optgroup label="Locations">
+          <% @location_eez_map.each do |loc| %>
+            <option value="<%= loc[:eez_path] %>">
+              <%= loc[:description] %> - <%= loc[:territory] %> (<%= loc[:sovereign] %>)
             </option>
           <% end %>
-        <% end %>
+        </optgroup>
       </select>
     </div>
 
@@ -32,8 +41,10 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<%= sovereign_id %>" aria-expanded="false" aria-controls="<%= sovereign_id %>">
-                  <strong><%= sovereign %></strong>
-                  <span class="badge bg-primary ms-2"><%= total_pubs %></span>
+                  <span class="d-flex w-100 align-items-center">
+                    <strong><%= sovereign %></strong>
+                    <span class="badge bg-primary ms-auto me-2"><%= total_pubs %></span>
+                  </span>
                 </button>
               </h2>
               <div id="<%= sovereign_id %>" class="accordion-collapse collapse" data-bs-parent="#studied-sovereigns">
@@ -100,5 +111,10 @@
              style="height: 400px;"></div>
       </div>
     </div>
+    <p class="text-muted small mt-2 mb-0">
+      EEZ data: Flanders Marine Institute (2023). Maritime Boundaries Geodatabase: Maritime Boundaries and Exclusive Economic Zones (200NM), version 12. Available online at
+      <%= link_to "marineregions.org", "https://www.marineregions.org/", target: "_blank" %>.
+      <%= link_to "https://doi.org/10.14284/632", "https://doi.org/10.14284/632", target: "_blank" %>
+    </p>
   </div>
 </div>
