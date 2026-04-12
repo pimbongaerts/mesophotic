@@ -5,14 +5,16 @@
 	</a>
 	<ul class="dropdown-menu">
 	   <li><span class="dropdown-item-text">Publications by ...</span></li>
-	   <li><%= link_to "Geographic location",
+	   <li><%= link_to "Geographic Location",
 	   				   locations_path, class: "dropdown-item" %></li>
-	   <li><%= link_to "Technology / platform",
+	   <li><%= link_to "Country / EEZ",
+	   				   eezs_path, class: "dropdown-item" %></li>
+	   <li><%= link_to "Technology / Platform",
 	   				   summary_path(model: "platforms", id: 10), class: "dropdown-item" %></li>
-	   <li><%= link_to "Research field",
+	   <li><%= link_to "Research Field",
 	   				   summary_path(model: "fields", id: 10), class: "dropdown-item" %></li>
-	   <li><%= link_to "Research focus",
+	   <li><%= link_to "Research Focus",
 	   				   summary_path(model: "focusgroups", id: 9), class: "dropdown-item" %></li>
-	   <li><%= link_to "Species list", species_index_path, class: "dropdown-item" %></li>
+	   <li><%= link_to "Species List", species_index_path, class: "dropdown-item" %></li>
 	</ul>
 </li>
