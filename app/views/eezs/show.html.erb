@@ -1,7 +1,7 @@
 <%= render partial: "layouts/page_title",
            locals: {
              title: @eez.territory,
-             subtitle: @eez.sovereign,
+             supertitle: @eez.sovereign,
              breadcrumbs: [["EEZ / Countries", eezs_path], [@eez.territory, nil]]
            } %>
 
@@ -30,7 +30,7 @@
     <div class="card mb-3">
       <div class="card-header">
         <strong>Locations</strong>
-        <span class="text-muted">(<%= @locations.size %>)</span>
+        <span class="text-muted">(<%= @locations.length %>)</span>
       </div>
       <% if @locations.any? %>
         <ul class="list-group list-group-flush">

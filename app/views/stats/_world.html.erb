@@ -2,18 +2,21 @@
   <div class="card-header">
     <strong>Our knowledge of mesophotic ecosystems across the world</strong>
   </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-sm-6" style="min-height: 430px;">
-        <%= turbo_frame_tag "stats-world_publications", src: world_publications_path(:status => @status, :year => @year), loading: :lazy %>
-        <br><br>
-        <%= turbo_frame_tag "stats-world_users", src: world_users_path(:status => @status, :year => @year), loading: :lazy %>
-      </div>
+  <div class="card-body pb-0">
+    <div class="row mb-5">
       <div class="col-sm-6" style="min-height: 600px;">
         <%= turbo_frame_tag "stats-world_locations", src: world_locations_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
       <div class="col-sm-6" style="min-height: 600px;">
         <%= turbo_frame_tag "stats-world_sovereigns", src: world_sovereigns_path(:status => @status, :year => @year), loading: :lazy %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <%= turbo_frame_tag "stats-world_publications", src: world_publications_path(:status => @status, :year => @year), loading: :lazy %>
+      </div>
+      <div class="col-sm-6">
+        <%= turbo_frame_tag "stats-world_users", src: world_users_path(:status => @status, :year => @year), loading: :lazy %>
       </div>
     </div>
   </div>
