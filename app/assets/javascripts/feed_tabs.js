@@ -20,6 +20,15 @@ function switchFeed(platform) {
   document.getElementById('feed-platform').textContent = names[platform];
 }
 
+function initFeedTabs() {
+  document.querySelectorAll('[data-feed]').forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchFeed(this.dataset.feed);
+    });
+  });
+}
+
 // After Bluesky feed loads, hide the tab if empty
 function checkBlueskyFeed() {
   var blueskyTab = document.getElementById('tab-bluesky');
@@ -35,4 +44,6 @@ function checkBlueskyFeed() {
   var hasContent = blueskyFeed.querySelector('.mastodon-status');
   blueskyTab.style.display = hasContent ? '' : 'none';
 }
+
+document.addEventListener('turbo:load', initFeedTabs);
 document.addEventListener('turbo:frame-load', checkBlueskyFeed);
