@@ -24,7 +24,7 @@ rails s            # starts Puma on port 8765
 
 ### Environment variables
 
-Managed via Figaro (`config/application.yml`, gitignored). AWS credentials are needed for S3/DynamoDB in production.
+Managed via Figaro (`config/application.yml`, gitignored): SMTP settings and mailer addresses. The AWS keys and bucket for S3 backups live in Rails encrypted credentials (`config/credentials.yml.enc`, decrypted by the gitignored `config/master.key`).
 
 ### Tests
 
@@ -84,7 +84,9 @@ This uses a clean Ruby from nixpkgs (bypassing the frozen bundlerEnv wrapper) to
 
 ## Deployment
 
-- Puma (1 worker, 1–3 threads)
-- Production assets served from `assets.mesophotic.org`
-- AWS S3 for Active Storage, DynamoDB for session store
+- DreamHost VPS, with Apache in front of Puma
+- Puma (`WEB_CONCURRENCY` workers, default 2; 1–3 threads)
+- Production assets served from `assets.mesophotic.org`, a DNS alias for the same VPS. Apache serves the precompiled files directly, so the app holds no credentials for it.
+- Active Storage on local disk (`storage/`); sessions in the cookie store
+- AWS S3 holds weekly backups of the database and `storage/` (`lib/tasks/backup.rake`, Sundays 04:00 via `config/schedule.rb`)
 - New Relic for monitoring (production only)
