@@ -18,14 +18,28 @@
           name = "gemset";
 
           gemConfig = let
-            platformSuffix = if system == "aarch64-darwin" then "arm64-darwin" else system;
-            withPlatformSuffix = attrs: { version = "${attrs.version}-${platformSuffix}"; };
-          in {
-            ffi = withPlatformSuffix;
-            google-protobuf = withPlatformSuffix;
-            nokogiri = withPlatformSuffix;
-            sass-embedded = withPlatformSuffix;
-            sqlite3 = withPlatformSuffix;
+            # Ruby platforms that can run on this system, most specific first.
+            rubyPlatforms = {
+              aarch64-darwin = [ "arm64-darwin" ];
+              x86_64-darwin = [ "x86_64-darwin" ];
+              x86_64-linux = [ "x86_64-linux-gnu" "x86_64-linux" ];
+              aarch64-linux = [ "aarch64-linux-gnu" "aarch64-linux" ];
+            }.${system} ++ [ "ruby" ];
+
+            # Fetch the precompiled variant that matches this system, using the
+            # hashes in gemset-platforms.nix rather than bundix's single hash.
+            withPlatformVariant = name: variants: attrs:
+              let
+                matches = builtins.filter (platform: variants ? ${platform}) rubyPlatforms;
+                variant =
+                  if matches == [ ]
+                  then throw "Gemfile.lock has no ${name} variant for ${system}"
+                  else variants.${builtins.head matches};
+              in {
+                inherit (variant) version;
+                source = attrs.source // { inherit (variant) sha256; };
+              };
+          in builtins.mapAttrs withPlatformVariant (import ./gemset-platforms.nix) // {
             psych = attrs: {
               buildInputs = [ pkgs.libyaml ];
             };

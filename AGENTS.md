@@ -42,7 +42,7 @@ After changing the Gemfile, update the Nix gemset:
 sh scripts/generate_nix_gemfile_lock_and_gemset.sh
 ```
 
-This uses a clean Ruby from nixpkgs (bypassing the frozen bundlerEnv wrapper) to regenerate `Gemfile.lock` and `gemset.nix`.
+This uses a clean Ruby from nixpkgs (bypassing the frozen bundlerEnv wrapper) to regenerate `Gemfile.lock`, `gemset.nix` and `gemset-platforms.nix`. The script pins the lockfile to the platforms the flake builds for. It records a hash for every platform variant of each precompiled gem in `gemset-platforms.nix`, and `flake.nix` fetches the variant that matches the current system.
 
 ## Architecture
 
